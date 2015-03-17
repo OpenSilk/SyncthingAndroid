@@ -17,7 +17,8 @@
 
 package syncthing.api.model;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +33,8 @@ public class SystemInfo {
     public long sys;
     public String pathSeparator;
     public String tilde;
-    public Map<String, Boolean> extAnnounceOK;
+    public Map<String, Boolean> extAnnounceOK = Collections.emptyMap();
     //pojo
     public transient int announceServersTotal;
-    public transient List<String> announceServersFailed = new LinkedList<>();
+    public transient List<String> announceServersFailed = new ArrayList<>();
 }
