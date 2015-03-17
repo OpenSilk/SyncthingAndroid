@@ -17,30 +17,32 @@
 
 package syncthing.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by drew on 3/1/15.
  */
 public class OptionsConfig {
-    public String[] listenAddress = new String[]{"0.0.0.0:22000"};
-    public String[] globalAnnounceServers = new String[]{"udp4://announce.syncthing.net:22026", "udp6://announce-v6.syncthing.net:22026"};
-    public boolean globalAnnounceEnabled = true;
-    public boolean localAnnounceEnabled = true;
-    public int localAnnouncePort = 21025;
-    public String localAnnounceMCAddr = "[ff32::5222]:21026";
-    public int maxSendKbps;
-    public int maxRecvKbps;
-    public int reconnectionIntervalS = 60;
-    public boolean startBrowser = true;
-    public boolean upnpEnabled = true;
-    public int upnpLeaseMinutes = 0;
-    public int upnpRenewalMinutes = 30;
-    public int urAccepted; //0 off, -1 permanent
-    public String urUniqueId;
-    public boolean restartOnWakeup = true;
-    public int autoUpgradeIntervalH = 12;
-    public int keepTemporariesH = 24;
-    public boolean cacheIgnoredFiles = true;
-    public int progressUpdateIntervalS = 5;
-    public boolean symlinksEnabled = true;
-    public boolean limitBandwidthInLan = false;
+    @SerializedName("ListenAddress")public String[] listenAddress = new String[]{"0.0.0.0:22000"};
+    @SerializedName("GlobalAnnServers")public String[] globalAnnounceServers = new String[]{"udp4://announce.syncthing.net:22026", "udp6://announce-v6.syncthing.net:22026"};
+    @SerializedName("GlobalAnnEnabled")public boolean globalAnnounceEnabled = true;
+    @SerializedName("LocalAnnEnabled")public boolean localAnnounceEnabled = true;
+    @SerializedName("LocalAnnPort")public int localAnnouncePort = 21025;
+    @SerializedName("LocalAnnMCAddr")public String localAnnounceMCAddr = "[ff32::5222]:21026";
+    @SerializedName("MaxSendKbps")public int maxSendKbps;
+    @SerializedName("MaxRecvKbps")public int maxRecvKbps;
+    @SerializedName("ReconnectionIntervalS")public int reconnectionIntervalS = 60;
+    @SerializedName("StartBrowser")public boolean startBrowser = true;
+    @SerializedName("UPnPEnabled")public boolean upnpEnabled = true;
+    @SerializedName("UPnPLease")public int upnpLeaseMinutes = 0;
+    @SerializedName("UPnPRenewal")public int upnpRenewalMinutes = 30;
+    @SerializedName("URAccepted")public int urAccepted; //0 off, -1 permanent
+    @SerializedName("URUniqueID")public String urUniqueId;
+    @SerializedName("RestartOnWakeup")public boolean restartOnWakeup = true;
+    @SerializedName("AutoUpgradeIntervalH")public int autoUpgradeIntervalH = 12;
+    @SerializedName("KeepTemporariesH")public int keepTemporariesH = 24;
+    @SerializedName("CacheIgnoredFiles")public boolean cacheIgnoredFiles = true;
+    @SerializedName("ProgressUpdateIntervalS")public int progressUpdateIntervalS = 5;
+    @SerializedName("SymlinksEnabled")public boolean symlinksEnabled = true;
+    @SerializedName("LimitBandwidthInLan")public boolean limitBandwidthInLan = false;
 }

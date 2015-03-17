@@ -17,6 +17,8 @@
 
 package syncthing.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -24,10 +26,10 @@ import java.util.List;
  * Created by drew on 3/1/15.
  */
 public class Config {
-    public int version;
-    public List<FolderConfig> folders = Collections.emptyList();
-    public List<DeviceConfig> devices = Collections.emptyList();
-    public GUIConfig gui;
-    public OptionsConfig options;
-    public List<String> ignoredDevices = Collections.emptyList();
+    @SerializedName("Version") public int version;
+    @SerializedName("Folders") public List<FolderConfig> folders = Collections.emptyList();
+    @SerializedName("Devices") public List<DeviceConfig> devices = Collections.emptyList();
+    @SerializedName("GUI") public GUIConfig gui;
+    @SerializedName("Options") public OptionsConfig options;
+    @SerializedName("IgnoredDevices") public List<String> ignoredDevices = Collections.emptyList();
 }

@@ -17,10 +17,12 @@
 
 package syncthing.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by drew on 3/4/15.
  */
 public class Ignores {
-    public String[] ignore;
-    public String[] patterns;
+    @SerializedName("Ignore")public String[] ignore;
+    @SerializedName("Patterns")public String[] patterns;
 }

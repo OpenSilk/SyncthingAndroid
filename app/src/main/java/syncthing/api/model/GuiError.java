@@ -17,12 +17,14 @@
 
 package syncthing.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.joda.time.DateTime;
 
 /**
  * Created by drew on 3/15/15.
  */
 public class GuiError {
-    public DateTime time;
-    public String error;
+    @SerializedName("Time") public DateTime time;
+    @SerializedName("Error") public String error;
 }

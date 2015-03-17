@@ -17,14 +17,16 @@
 
 package syncthing.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by drew on 3/1/15.
  */
 public class GUIConfig {
-    public boolean enabled = true;
-    public String address = "127.0.0.1:8080";
-    public String user;
-    public String password;
-    public boolean useTLS;
-    public String apiKey;
+    @SerializedName("Enabled")public boolean enabled = true;
+    @SerializedName("Address")public String address = "127.0.0.1:8080";
+    @SerializedName("User")public String user;
+    @SerializedName("Password")public String password;
+    @SerializedName("UseTLS")public boolean useTLS;
+    @SerializedName("APIKey")public String apiKey;
 }

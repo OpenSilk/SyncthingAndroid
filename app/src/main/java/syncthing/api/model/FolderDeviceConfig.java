@@ -17,11 +17,13 @@
 
 package syncthing.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by drew on 3/17/15.
  */
 public class FolderDeviceConfig {
-    public String deviceID;
+    @SerializedName("DeviceID") public String deviceID;
 
     public FolderDeviceConfig(String deviceID) {
         this.deviceID = deviceID;

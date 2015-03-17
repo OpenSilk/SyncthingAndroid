@@ -17,17 +17,19 @@
 
 package syncthing.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.joda.time.DateTime;
 
 /**
  * Created by drew on 3/1/15.
  */
 public class ConnectionInfo {
-    public DateTime at;
-    public long inBytesTotal;
-    public long outBytesTotal;
-    public String address;
-    public String clientVersion;
+    @SerializedName("At") public DateTime at;
+    @SerializedName("InBytesTotal") public long inBytesTotal;
+    @SerializedName("OutBytesTotal") public long outBytesTotal;
+    @SerializedName("Address") public String address;
+    @SerializedName("ClientVersion") public String clientVersion;
     //pojo only
     public transient String deviceId;
     public transient long inbps;
