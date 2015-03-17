@@ -1,8 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="session">
+
     </style>
+
+    <style name="session.RecyclerCard">
+        <!--<item name="android:layout_marginLeft">@dimen/session_recycler_item_margin</item>-->
+        <!--<item name="android:layout_marginRight">@dimen/session_recycler_item_margin</item>-->
+        <!--<item name="android:layout_marginBottom">@dimen/session_recycler_item_margin2</item>-->
+        <!--<item name="android:layout_marginTop">@dimen/session_recycler_item_margin2</item>-->
+    </style>
+
+    <style name="session.RecyclerHeader" parent="mtrl.SingleLineListItemLinear">
+
+    </style>
+
+    <style name="session.RecyclerHeaderIcon" parent="mtrl.SingleLineListItemLinearInner.Avatar">
+
+    </style>
+
+    <style name="session.RecyclerHeaderText" parent="mtrl.SingleLineListItemLinearInner.Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="session.RecyclerExpand">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+    </style>
+
+    <style name="session.RecyclerTextLeftColumn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black_text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <style name="session.RecyclerTextRightColumn">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black_text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="session.RecyclerCard.Notif">
+        <!--<item name="android:layout_marginLeft">4dp</item>-->
+        <!--<item name="android:layout_marginRight">4dp</item>-->
+    </style>
+
+    <style name="session.RecyclerNotifHeader" parent="mtrl.SingleLineListItemLinear">
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:layout_height">56dp</item>-->
+        <item name="android:background">@color/amber_500</item>
+        <!--<item name="android:padding">8dp</item>-->
+        <!--<item name="android:gravity">center_vertical</item>-->
+    </style>
+
+    <style name="session.RecyclerNotifHeaderIcon" parent="mtrl.SingleLineListItemLinearInner.Avatar">
+
+    </style>
+
+    <style name="session.RecyclerNotifHeaderText" parent="mtrl.SingleLineListItemLinearInner.Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/white_text</item>
+    </style>
+
+    <style name="session.RecyclerNotifHeaderText.Time">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white_text_secondary</item>
+    </style>
+
+    <style name="session.RecyclerNotifExpand">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+    </style>
+
+    <style name="session.RecycleNotifMessageText">
+        <item name="android:padding">8dp</item>
+        <item name="android:gravity">center</item>
+        <!--<item name="android:textAppearance">?android:textAppearanceMedium</item>-->
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="session.RecyclerCardRow">
+
+    </style>
+
+    <style name="session.edit">
+
+    </style>
+
+    <style name="session.edit.Container">
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingLeft">8dp</item>
+    </style>
+
+    <style name="session.edit.FieldHeader">
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="session.edit.FieldDescription">
+        <item name="android:padding">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearanceFieldDescription</item>
+    </style>
+
+    <style name="session.edit.FieldError" parent="session.edit.FieldDescription">
+        <item name="android:textColor">@color/error_text</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="TextAppearanceFieldDescription" parent="TextAppearance.AppCompat.Caption">
+
+    </style>
+
+    <style name="session.edit.EditText">
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="session.edit.EditText.Number">
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="session.edit.Checkbox">
+
+    </style>
+
+    <style name="session.edit.RadioButton">
+
+    </style>
+
+    <style name="session.edit.Warning" parent="session.edit.FieldDescription">
+        <item name="android:textColor">@color/warning_text</item>
+    </style>
+
 
 </resources>

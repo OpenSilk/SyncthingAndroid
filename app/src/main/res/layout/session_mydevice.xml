@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<syncthing.android.ui.session.MyDeviceCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/session.RecyclerCard">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/header"
+            style="@style/session.RecyclerHeader">
+
+            <org.opensilk.common.widget.SquareImageView
+                android:id="@+id/identicon"
+                style="@style/session.RecyclerHeaderIcon"/>
+
+            <TextView
+                android:id="@+id/name"
+                style="@style/session.RecyclerHeaderText"
+                tools:text="name"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/expand"
+            android:layout_below="@id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            style="@style/session.RecyclerExpand"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/download_title"
+                    android:text="@string/download_rate"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/download"
+                    android:layout_toRightOf="@id/download_title"
+                    android:layout_alignBaseline="@id/download_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="0 b/s"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/upload_title"
+                    android:text="@string/upload_rate"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/upload"
+                    android:layout_toRightOf="@id/upload_title"
+                    android:layout_alignBaseline="@id/upload_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="0 b/s"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/mem_usage_title"
+                    android:text="@string/ram_utilization"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/mem_usage"
+                    android:layout_toRightOf="@id/mem_usage_title"
+                    android:layout_alignBaseline="@id/mem_usage_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="13 Mb"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/cpu_usage_title"
+                    android:text="@string/cpu_utilization"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/cpu_usage"
+                    android:layout_toRightOf="@id/cpu_usage_title"
+                    android:layout_alignBaseline="@id/cpu_usage_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="1%"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/global_discovery_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cpu_usage_title">
+
+                <TextView
+                    android:id="@+id/global_discovery_title"
+                    android:text="@string/global_discovery"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/global_discovery"
+                    android:layout_toRightOf="@id/global_discovery_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="OK"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/version_title"
+                    android:text="@string/version"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_toRightOf="@id/version_title"
+                    android:layout_alignBaseline="@id/version_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="v0.10"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</syncthing.android.ui.session.MyDeviceCardView>

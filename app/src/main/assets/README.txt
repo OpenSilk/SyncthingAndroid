@@ -1,0 +1,1 @@
+Copy the syncthing binary here... Its in gitignore

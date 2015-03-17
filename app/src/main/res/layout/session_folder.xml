@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<syncthing.android.ui.session.FolderCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/session.RecyclerCard">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/header"
+            style="@style/session.RecyclerHeader">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_folder_grey600_36dp"
+                style="@style/session.RecyclerHeaderIcon"/>
+
+            <TextView
+                android:id="@+id/id"
+                style="@style/session.RecyclerHeaderText"
+                tools:text="folderid"/>
+
+            <TextView
+                android:id="@+id/state"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                style="@style/session.RecyclerHeaderText"
+                tools:text="status (100%)"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/expand"
+            android:layout_below="@id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            style="@style/session.RecyclerExpand"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/directory_title"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    android:text="@string/folder_path"/>
+
+                <TextView
+                    android:id="@+id/directory"
+                    android:layout_toRightOf="@id/directory_title"
+                    android:layout_alignBaseline="@id/directory_title"
+                    android:ellipsize="end"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="/folder/path"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/error_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/error_title"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    android:text="@string/error"/>
+
+                <TextView
+                    android:id="@+id/error"
+                    android:layout_toRightOf="@id/error_title"
+                    android:layout_alignBaseline="@id/error_title"
+                    android:ellipsize="end"
+                    android:textColor="@color/error_text"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="error msng"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/global_state_title"
+                    android:text="@string/global_state"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/global_state"
+                    android:layout_toRightOf="@id/global_state_title"
+                    android:layout_alignBaseline="@id/global_state_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="0 items, ~0B"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/local_state_title"
+                    android:text="@string/local_state"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/local_state"
+                    android:layout_toRightOf="@id/local_state_title"
+                    android:layout_alignBaseline="@id/local_state_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="0 items, ~0B"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/need_files_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/need_files_title"
+                    android:text="@string/out_of_sync"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/need_files"
+                    android:layout_toRightOf="@id/need_files_title"
+                    android:layout_alignBaseline="@id/need_files_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="0 items, ~0B"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/folder_master"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/folder_master_title"
+                    android:text="@string/folder_master"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/folder_master_title"
+                    android:layout_alignBaseline="@id/folder_master_title"
+                    android:text="@string/yes"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ignore_patterns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/ignore_patterns_title"
+                    android:text="@string/ignore_patterns"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/ignore_patterns_title"
+                    android:layout_alignBaseline="@id/ignore_patterns_title"
+                    android:text="@string/yes"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/ignore_perms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/ignore_perms_title"
+                    android:text="@string/ignore_permissions"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/ignore_perms_title"
+                    android:layout_alignBaseline="@id/ignore_perms_title"
+                    android:text="@string/yes"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/rescan_interval_title"
+                    android:text="@string/rescan_interval"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/rescan_interval"
+                    android:layout_toRightOf="@id/rescan_interval_title"
+                    android:layout_alignBaseline="@id/rescan_interval_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="60"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/versioning_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/versioning_title"
+                    android:text="@string/file_versioning"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/versioning"
+                    android:layout_toRightOf="@id/versioning_title"
+                    android:layout_alignBaseline="@id/versioning_title"
+                    android:text="@string/simple_file_versioning"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/shared_with_title"
+                    android:text="@string/shared_with"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/shared_with"
+                    android:layout_toRightOf="@id/shared_with_title"
+                    android:layout_alignBaseline="@id/shared_with_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="master, slave"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:animateLayoutChanges="true"
+                >
+
+                <Button
+                    android:id="@+id/btn_override"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/override_changes"
+                    />
+
+                <Button
+                    android:id="@+id/btn_rescan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rescan"
+                    />
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</syncthing.android.ui.session.FolderCardView>
+
+

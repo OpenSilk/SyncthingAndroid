@@ -1,3 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
-    <string name="app_name">Syncthing Android</string>
+    <string name="app_description">Replace proprietary services with something open, trustworthy and decentralized.</string>
+    <string name="input_error">Input Error</string>
+    <string name="login_failure">Login Failure</string>
+    <string name="fetching_api_key_dots">Fetching api key…</string>
+    <string name="saving_config_dots">Saving config…</string>
+    <string name="config_saved">Config saved</string>
+    <string name="manage_devices">Manage Devices</string>
+    <string name="remove">Remove</string>
+    <string name="login">Login</string>
+    <string name="make_default">Make Default</string>
+    <string name="use_tls">Use TLS</string>
+    <string name="na">N/a</string>
+    <string name="cleaning">Cleaning</string>
+    <string name="are_you_sure_you_want_to_shutdown_syncthing">Are you sure you want to shutdown Syncthing?</string>
+    <string name="send_device_id_to">Send Device ID to</string>
+    <string name="device_id_copied_to_clipboard">Device ID copied to clipboard</string>
+    <string name="no_qr_scanner_installed">You have no QR scanner installed or your scanner is not supported. Please install a scanner or enter the device ID manually.</string>
 </resources>

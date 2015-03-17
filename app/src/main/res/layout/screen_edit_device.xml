@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<syncthing.android.ui.session.edit.EditDeviceScreenView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/session.edit.Container">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/device_id"
+            style="@style/session.edit.FieldHeader"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/edit_device_id"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/session.edit.EditText"/>
+
+            <ImageButton
+                android:id="@+id/btn_scanqr"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_qrcode"
+                android:scaleType="fitCenter"
+                android:padding="4dp"
+                style="?android:borderlessButtonStyle"/>
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/desc_device_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored"
+            style="@style/session.edit.FieldDescription"/>
+
+        <TextView
+            android:id="@+id/desc_device_id2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/when_adding_a_new_device_keep_in_mind_that_this_device_must_be_added_on_the_other_side_too"
+            style="@style/session.edit.FieldDescription"/>
+
+        <TextView
+            android:id="@+id/error_device_id_blank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_device_id_cannot_be_blank"
+            style="@style/session.edit.FieldError"/>
+
+        <TextView
+            android:id="@+id/error_device_id_invalid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional"
+            style="@style/session.edit.FieldError"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/device_name"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_device_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/session.edit.EditText"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty"
+            style="@style/session.edit.FieldDescription"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/addresses"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_addresses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/session.edit.EditText"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address"
+            style="@style/session.edit.FieldDescription"/>
+
+        <CheckBox
+            android:id="@+id/check_compression"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/use_compression"
+            style="@style/session.edit.Checkbox"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/compression_is_recommended_in_most_setups"
+            style="@style/session.edit.FieldDescription"/>
+
+        <CheckBox
+            android:id="@+id/check_introducer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/introducer"
+            style="@style/session.edit.Checkbox"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well"
+            style="@style/session.edit.FieldDescription"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/share_folders_with_device"
+            style="@style/session.edit.FieldHeader"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_the_folders_to_share_with_this_device"
+            style="@style/session.edit.FieldDescription"/>
+
+        <LinearLayout
+            android:id="@+id/share_folders_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@android:string/cancel"/>
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</syncthing.android.ui.session.edit.EditDeviceScreenView>

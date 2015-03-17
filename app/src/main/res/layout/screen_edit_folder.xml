@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<syncthing.android.ui.session.edit.EditFolderScreenView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/session.edit.Container">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/folder_id"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_folder_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_folder_path"
+            style="@style/session.edit.EditText"
+            />
+
+        <TextView
+            android:id="@+id/desc_folder_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/short_identifier_for_the_folder_must_be_the_same_on_all_cluster_devices"
+            style="@style/session.edit.FieldDescription"
+            />
+
+        <TextView
+            android:id="@+id/error_folder_id_unique"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_folder_id_must_be_unique"
+            style="@style/session.edit.FieldError"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/error_folder_id_blank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_folder_id_cannot_be_blank"
+            style="@style/session.edit.FieldError"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/error_folder_id_invalid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_folder_id_must_be_a_short_identifier_64_characters_or_less_consisting_of_letters_numbers_and_the_dot_dash_and_underscode_characters_only"
+            style="@style/session.edit.FieldError"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/add_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/when_adding_a_new_folder_keep_in_mind_that_the_folder_id_is_used_to_tie_folders_together_between_devices_they_are_case_sensitive_and_must_match_exactly_between_all_devices"
+            style="@style/session.edit.Warning"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/folder_path"
+            style="@style/session.edit.FieldHeader"/>
+
+
+        <AutoCompleteTextView
+            android:id="@+id/edit_folder_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_rescan_interval"
+            style="@style/session.edit.EditText"
+            />
+
+        <TextView
+            android:id="@+id/desc_folder_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for"
+            style="@style/session.edit.FieldDescription"/>
+
+        <TextView
+            android:id="@+id/error_folder_path_blank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_folder_path_cannot_be_blank"
+            style="@style/session.edit.FieldError"
+            tools:visibility="visible"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rescan_interval"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_rescan_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/session.edit.EditText.Number"
+            />
+
+        <TextView
+            android:id="@+id/error_rescan_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_rescan_interval_must_be_a_nonnegative_number_of_seconds"
+            style="@style/session.edit.FieldError"
+            tools:visiblility="visible"/>
+
+        <CheckBox
+            android:id="@+id/check_folder_master"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/folder_master"
+            style="@style/session.edit.Checkbox"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster"
+            style="@style/session.edit.FieldDescription"/>
+
+        <CheckBox
+            android:id="@+id/check_ignore_permissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ignore_permissions"
+            style="@style/session.edit.Checkbox"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_filesystems"
+            style="@style/session.edit.FieldDescription"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/file_versioning"
+            style="@style/session.edit.FieldHeader"/>
+
+        <RadioGroup
+            android:id="@+id/radio_group_versioning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_no_versioning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_file_versioning"/>
+
+            <RadioButton
+                android:id="@+id/radio_simple_versioning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/simple_file_versioning"/>
+
+            <RadioButton
+                android:id="@+id/radio_staggered_versioning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/staggered_file_versioning"/>
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/simple_versioning_extra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/keep_versions"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_simple_versioning_keep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.edit.EditText.Number"/>
+
+            <TextView
+                android:id="@+id/desc_simple_versioning_keep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_number_of_old_versions_to_keep_per_file"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:id="@+id/error_simple_versioning_keep_blank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_number_of_versions_must_be_a_number_and_cannot_be_blank"
+                style="@style/session.edit.FieldError"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/error_simple_versioning_keep_invalid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/you_must_keep_at_least_one_version"
+                style="@style/session.edit.FieldError"
+                tools:visibility="visible"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/staggered_versioning_extra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval"
+                style="@style/session.edit.FieldDescription"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_following_intervals_are_used_for_the_first_hour_a_version_is_kept_every_30_seconds_for_the_first_day_a_version_is_kept_every_hour_for_the_first_30_days_a_version_is_kept_every_day_until_the_maximum_age_a_version_is_kept_every_week"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/maximum_age"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_staggered_max_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_staggered_path"
+                style="@style/session.edit.EditText.Number"/>
+
+            <TextView
+                android:id="@+id/desc_staggered_max_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:id="@+id/error_staggered_max_age_invalid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_maximum_age_must_be_a_number_and_cannot_be_blank"
+                style="@style/session.edit.FieldError"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/versions_path"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_staggered_path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.edit.EditText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder"
+                style="@style/session.edit.FieldDescription"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/share_with_devices"
+            style="@style/session.edit.FieldHeader"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_the_devices_to_share_this_folder_with"
+            style="@style/session.edit.FieldDescription"/>
+
+        <LinearLayout
+            android:id="@+id/share_devices_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete"/>
+
+            <Button
+                android:id="@+id/btn_ignore_ptrn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ignore_patterns"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@android:string/cancel"/>
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</syncthing.android.ui.session.edit.EditFolderScreenView>
+

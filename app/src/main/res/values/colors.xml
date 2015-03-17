@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <color name="syncthing_brand">#3498db</color>
+
+    <color name="folder_idle">@color/green_500</color>
+    <color name="folder_scanning">@color/syncthing_brand</color>
+    <color name="folder_unshared">@color/amber_500</color>
+    <color name="folder_default">@color/black_text</color>
+
+    <color name="device_idle">@color/green_500</color>
+    <color name="device_disconnected">@color/purple_500</color>
+    <color name="device_syncing">@color/syncthing_brand</color>
+
+    <color name="announce_ok">@color/green_500</color>
+    <color name="announce_fail">@color/red2_500</color>
+
+    <color name="error_text">@color/red2_500</color>
+    <color name="warning_text">@color/amber_500</color>
+</resources>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <style name="SyncthingTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="colorPrimary">#fff8f8f8</item>-->
+        <item name="colorPrimaryDark">@color/light_blue_700</item>
+        <item name="colorPrimary">@color/syncthing_brand</item>
+        <!--<item name="colorPrimaryDark">#f8f8f8</item>-->
+        <!--<item name="colorPrimary">@color/primary_material_dark</item>-->
+        <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
+        <!--<item name="android:colorBackground">@color/background</item>-->
+        <!--<item name="android:windowBackground">@color/background</item>-->
+        <!--<item name="android:listDivider">@drawable/abc_list_divider_mtrl_alpha</item>-->
+    </style>
+
+    <color name="background">@android:color/white</color>
+
+    <style name="LoginTheme" parent="Theme.Dialog.LightBase">
+        <item name="colorPrimaryDark">@color/light_blue_700</item>
+        <item name="colorPrimary">@color/syncthing_brand</item>
+    </style>
+
+    <!--<style name="SessionEditDialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.FixedSize">-->
+        <!--<item name="windowFixedWidthMajor">100%</item>-->
+        <!--<item name="windowFixedWidthMinor">100%</item>-->
+        <!--<item name="windowFixedHeightMajor">100%</item>-->
+        <!--<item name="windowFixedHeightMinor">100%</item>-->
+    <!--</style>-->
+
+    <style name="SessionEditDialogTheme" parent="android:Theme.DeviceDefault.Light.DialogWhenLarge">
+
+    </style>
+
+    <!-- Base themes for dialog activities -->
+
+    <style name="Theme.Dialog.LightBase" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <!--NoActionBar-->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <!--DarkActionBar-->
+        <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
+        <!--Light dark actionbar-->
+        <item name="colorPrimary">@color/primary_material_dark</item>
+        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+    </style>
+
+    <style name="Theme.Dialog.DarkBase" parent="Theme.AppCompat.DialogWhenLarge">
+        <!--NoActionBar-->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <!--DarkActionBar-->
+        <item name="toolbarStyle">@style/Toolbar.Dark</item>
+    </style>
+
+    <!-- end base dialog themes -->
+
+    <!--Toolbar Styles -->
+
+    <style name="Toolbar.Light" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?colorPrimary</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="Toolbar.Light.Transparent">
+        <item name="android:background">@null</item>
+        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+    </style>
+
+    <style name="Toolbar.Dark" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?colorPrimary</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="Toolbar.Dark.Transparent">
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="Toolbar.Dark.WhiteOverflow">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="Toolbar.Dark.WhiteOverflow.Transparent">
+        <item name="android:background">@null</item>
+        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+    </style>
+
+    <!-- end toolbar styles -->
+</resources>

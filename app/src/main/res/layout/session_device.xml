@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<syncthing.android.ui.session.DeviceCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/session.RecyclerCard">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/header_texts"
+                style="@style/session.RecyclerHeader">
+
+                <org.opensilk.common.widget.SquareImageView
+                    android:id="@+id/identicon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    style="@style/session.RecyclerHeaderIcon"/>
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/session.RecyclerHeaderText"
+                    tools:text="folderid"/>
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    style="@style/session.RecyclerHeaderText"
+                    tools:text="Unknown"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-4dp"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                android:max="100"
+                style="?android:progressBarStyleHorizontal"
+                tools:visibility="visible"
+                tools:progress="60"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/expand"
+            android:layout_below="@id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            style="@style/session.RecyclerExpand"
+            >
+
+            <RelativeLayout
+                android:id="@+id/download_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/download_title"
+                    android:text="@string/download_rate"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/download"
+                    android:layout_toRightOf="@id/download_title"
+                    android:layout_alignBaseline="@id/download_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="0 b/s"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/upload_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/upload_title"
+                    android:text="@string/upload_rate"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/upload"
+                    android:layout_toRightOf="@id/upload_title"
+                    android:layout_alignBaseline="@id/upload_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="0 b/s"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/address_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/address_title"
+                    android:text="@string/address"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_toRightOf="@id/address_title"
+                    android:layout_alignBaseline="@id/address_title"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="\?"/>
+
+             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/use_compression_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/use_compression_title"
+                    android:text="@string/compression"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/use_compression_title"
+                    android:layout_alignBaseline="@id/use_compression_title"
+                    android:text="@string/yes"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/introducer_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/introducer_title"
+                    android:text="@string/introducer"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/introducer_title"
+                    android:layout_alignBaseline="@id/introducer_title"
+                    android:text="@string/yes"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/version_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/version_title"
+                    android:text="@string/version"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_toRightOf="@id/version_title"
+                    android:layout_alignBaseline="@id/version_title"
+                    tools:text="\?"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/last_seen_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/last_seen_title"
+                    android:text="@string/last_seen"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/last_seen"
+                    android:layout_toRightOf="@id/last_seen_title"
+                    android:layout_alignBaseline="@id/last_seen_title"
+                    tools:text="Long time"
+                    style="@style/session.RecyclerTextRightColumn"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                >
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</syncthing.android.ui.session.DeviceCardView>
