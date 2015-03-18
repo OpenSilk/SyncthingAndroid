@@ -199,6 +199,34 @@ public class SyncthingUtils {
         return String.valueOf(Long.decode(seconds) / 86400);
     }
 
+    public static String[] rollArray(String string) {
+        return StringUtils.split(string, " ,");
+    }
+
+    public static String unrollArray(String[] strings) {
+        StringBuilder b = new StringBuilder(50);
+        if (strings.length == 0) {
+            return null;
+        }
+        for (int ii=0; ii<strings.length; ii++) {
+            b.append(strings[ii]);
+            if (ii+1 < strings.length) {
+                b.append(",");
+            }
+        }
+        return b.toString();
+    }
+
+    static final CharSequence CHARS = "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-";
+
+    public static String randomString(int len) {
+        String res = "";
+        for (int ii=0; ii<len; ii++) {
+            res += CHARS.charAt(Math.round((float)(Math.random() * (CHARS.length() - 1))));
+        }
+        return res;
+    }
+
     public static void copyDeviceId(Context context, String id) {
         int sdk = android.os.Build.VERSION.SDK_INT;
         if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {

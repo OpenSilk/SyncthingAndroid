@@ -42,6 +42,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
+import syncthing.android.service.SyncthingUtils;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
@@ -120,7 +121,7 @@ public class EditDeviceScreenView extends ScrollView {
         if (!presenter.validateAddresses(editAddresses.getText().toString())) {
             return;
         }
-        device.addresses = EditorUtils.rollArray(editAddresses.getText().toString());
+        device.addresses = SyncthingUtils.rollArray(editAddresses.getText().toString());
         device.compression = checkCompression.isChecked();
         device.introducer = checkIntroducer.isChecked();
 
@@ -145,13 +146,13 @@ public class EditDeviceScreenView extends ScrollView {
             descDeviceId.setVisibility(GONE);
             descDeviceId2.setVisibility(GONE);
             editDeviceName.setText(device.name);
-            editAddresses.setText(EditorUtils.unrollArray(device.addresses));
+            editAddresses.setText(SyncthingUtils.unrollArray(device.addresses));
             checkCompression.setChecked(device.compression);
             checkIntroducer.setChecked(device.introducer);
         } else {
             //set nice defaults
             DeviceConfig nd = new DeviceConfig();
-            editAddresses.setText(EditorUtils.unrollArray(nd.addresses));
+            editAddresses.setText(SyncthingUtils.unrollArray(nd.addresses));
             checkCompression.setChecked(nd.compression);
             checkIntroducer.setChecked(nd.introducer);
         }

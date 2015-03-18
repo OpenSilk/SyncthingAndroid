@@ -83,7 +83,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
         mActionBarOwner.takeView(this);
 
         if (mDrawerLayout != null) {
-            mDrawerToggle = new Toggle(this, mDrawerLayout);
+            mDrawerToggle = new Toggle(this, mDrawerLayout, mToolbar);
             mDrawerLayout.setDrawerListener(mDrawerToggle);
             mDrawerOwner.takeView(this);
         }
@@ -201,7 +201,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
     @Override
     public void setTransparentActionbar(boolean yes) {
-//        mToolbar.getBackground().setAlpha(yes ? 0 : 255);
+        mToolbar.getBackground().setAlpha(yes ? 0 : 255);
     }
 
     /*
@@ -213,79 +213,19 @@ public class LauncherActivity extends MortarFragmentActivity implements
         return R.id.main;
     }
 
-    /*
-    public void onApiChange(SyncthingService.State currentState) {
-        if (currentState != SyncthingService.State.ACTIVE && !isFinishing()) {
-            if (currentState == SyncthingService.State.DISABLED) {
-                if (mLoadingDialog != null) {
-                    mLoadingDialog.dismiss();
-                }
-                mDisabledDialog = SyncthingService.showDisabledDialog(this);
-            } else if (mLoadingDialog == null) {
-                final SharedPreferences prefs =
-                        PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.loading_dialog, null);
-                TextView loadingText = (TextView) dialogLayout.findViewById(R.id.loading_text);
-//                loadingText.setText((getService().isFirstStart())
-//                        ? R.string.web_gui_creating_key
-//                        : R.string.api_loading);
-
-                mLoadingDialog = new AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setView(dialogLayout)
-                        .show();
-
-                // Make sure the first start dialog is shown on top.
-                if (prefs.getBoolean("first_start", true)) {
-                    new AlertDialog.Builder(this)
-                            .setTitle(R.string.welcome_title)
-                            .setMessage(R.string.welcome_text)
-                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    prefs.edit().putBoolean("first_start", false).commit();
-                                }
-                            })
-                            .show();
-                }
-            }
-            return;
-        }
-
-        if (mLoadingDialog != null) {
-            mLoadingDialog.dismiss();
-        }
-        if (mDisabledDialog != null) {
-            mDisabledDialog.dismiss();
-        }
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-    }
-    */
-
-
-    /**
-     * Receives drawer opened and closed events.
-     */
     class Toggle extends ActionBarDrawerToggle {
-        public Toggle(Activity activity, DrawerLayout drawerLayout) {
-            super(activity, drawerLayout, R.string.app_name, R.string.app_name);
+        public Toggle(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
+            super(activity, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         }
 
         @Override
         public void onDrawerOpened(View drawerView) {
             super.onDrawerOpened(drawerView);
-//            mDrawerFragment.onDrawerOpened();
         }
 
         @Override
         public void onDrawerClosed(View view) {
             super.onDrawerClosed(view);
-//            mDrawerFragment.onDrawerClosed();
         }
     }
 

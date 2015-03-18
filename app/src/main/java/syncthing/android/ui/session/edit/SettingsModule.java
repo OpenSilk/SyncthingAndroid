@@ -17,27 +17,11 @@
 
 package syncthing.android.ui.session.edit;
 
+import dagger.Module;
+
 /**
- * Created by drew on 3/16/15.
+ * Created by drew on 3/17/15.
  */
-public class EditorUtils {
-
-    static String[] rollArray(String string) {
-        return string.split(",");
-    }
-
-    static String unrollArray(String[] strings) {
-        StringBuilder b = new StringBuilder(50);
-        if (strings.length == 0) {
-            return null;
-        }
-        for (int ii=0; ii<strings.length; ii++) {
-            b.append(strings[ii]);
-            if (ii+1 < strings.length) {
-                b.append(",");
-            }
-        }
-        return b.toString();
-    }
-
+@Module
+public class SettingsModule {
 }

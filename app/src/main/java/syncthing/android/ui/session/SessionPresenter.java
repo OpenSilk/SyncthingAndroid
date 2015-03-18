@@ -303,6 +303,10 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         doOpenScreen(EditFragment.newFolderInstance(folderId, deviceId), "folderedit"+folderId);
     }
 
+    void openSettingsScreen() {
+        doOpenScreen(EditFragment.newSettingsInstance(), "settings");
+    }
+
     void doOpenScreen(DialogFragment fragment, String tag) {
         FragmentTransaction ft = fragmentPresenter.newTransaction();
         //fragmentPresenter.decorateTrasaction(ft, fragment);

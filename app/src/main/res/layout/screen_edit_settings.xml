@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<syncthing.android.ui.session.edit.SettingsScreenView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/session.edit.Container">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/device_name"
+            style="@style/session.edit.FieldHeader"/>
+        
+        <EditText
+            android:id="@+id/edit_device_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_protocol_listen_addr"
+            style="@style/session.edit.EditText"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sync_protocol_listen_addresses"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_protocol_listen_addr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_incoming_rate_limit"
+            style="@style/session.edit.EditText"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/incoming_rate_limit_kibs"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_incoming_rate_limit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_outgoing_rate_limit"
+            style="@style/session.edit.EditText.Number"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/outgoing_rate_limit_kibs"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_outgoing_rate_limit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_global_discovery_server"
+            style="@style/session.edit.EditText.Number"/>
+
+        <CheckBox
+            android:id="@+id/check_enable_upnp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enable_upnp"
+            style="@style/session.edit.Checkbox"/>
+
+        <CheckBox
+            android:id="@+id/check_global_discovery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/global_discovery"
+            style="@style/session.edit.Checkbox"/>
+
+        <CheckBox
+            android:id="@+id/check_local_discovery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/local_discovery"
+            style="@style/session.edit.Checkbox"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/global_discovery_server"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_global_discovery_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_gui_listen_addr"
+            style="@style/session.edit.EditText"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gui_listen_addresses"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_gui_listen_addr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_gui_user"
+            style="@style/session.edit.EditText"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gui_authentication_user"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_gui_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:nextFocusDown="@+id/edit_gui_pass"
+            style="@style/session.edit.EditText"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gui_authentication_password"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_gui_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/session.edit.EditText.Password"/>
+
+        <CheckBox
+            android:id="@+id/check_use_https"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/use_https_for_gui"
+            style="@style/session.edit.Checkbox"/>
+
+        <CheckBox
+            android:id="@+id/check_start_browser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_browser"
+            style="@style/session.edit.Checkbox"/>
+
+        <CheckBox
+            android:id="@+id/check_usage_reporting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/anonymous_usage_reporting"
+            style="@style/session.edit.Checkbox"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/api_key"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_apikey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            style="@style/session.edit.EditText"/>
+
+        <Button
+            android:id="@+id/btn_generate_apikey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/generate"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@android:string/cancel"/>
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</syncthing.android.ui.session.edit.SettingsScreenView>

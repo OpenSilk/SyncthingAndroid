@@ -157,6 +157,10 @@
         <item name="android:inputType">number</item>
     </style>
 
+    <style name="session.edit.EditText.Password">
+        <item name="android:inputType">textPassword</item>
+    </style>
+
     <style name="session.edit.Checkbox">
 
     </style>

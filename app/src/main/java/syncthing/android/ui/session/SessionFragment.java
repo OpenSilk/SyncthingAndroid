@@ -113,6 +113,7 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
                 mPresenter.openAddFolderScreen();
                 return true;
             case R.id.settings:
+                mPresenter.openSettingsScreen();
                 return true;
             case R.id.show_id: {
                 Context context = mScope.createContext(getActivity());

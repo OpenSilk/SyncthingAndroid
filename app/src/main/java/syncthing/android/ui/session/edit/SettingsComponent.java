@@ -15,21 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.api.model;
+package syncthing.android.ui.session.edit;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
+import dagger.Component;
+import syncthing.android.ui.session.SessionComponent;
 
 /**
- * Created by drew on 3/1/15.
+ * Created by drew on 3/17/15.
  */
-public class GUIConfig implements Serializable {
-    private static final long serialVersionUID = -9130937931611793075L;
-    @SerializedName("Enabled")public boolean enabled = true;
-    @SerializedName("Address")public String address = "127.0.0.1:8080";
-    @SerializedName("User")public String user;
-    @SerializedName("Password")public String password;
-    @SerializedName("UseTLS")public boolean useTLS;
-    @SerializedName("APIKey")public String apiKey;
+@EditScope
+@Component (
+        dependencies = SessionComponent.class,
+        modules = SettingsModule.class
+)
+public interface SettingsComponent extends EditFragmentComponent {
+    SettingsPresenter presenter();
 }

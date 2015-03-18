@@ -68,6 +68,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         EditFragment f = new EditFragment();
         Bundle b = new Bundle();
         b.putBoolean("isFolder", false);
+        b.putBoolean("isDevice", true);
         b.putInt("title", R.string.add_device);
         f.setArguments(b);
         return f;
@@ -77,8 +78,19 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         EditFragment f = new EditFragment();
         Bundle b = new Bundle();
         b.putBoolean("isFolder", false);
+        b.putBoolean("isDevice", true);
         b.putInt("title", R.string.edit_device);
         b.putString("device", deviceId);
+        f.setArguments(b);
+        return f;
+    }
+
+    public static EditFragment newSettingsInstance() {
+        EditFragment f = new EditFragment();
+        Bundle b = new Bundle();
+        b.putBoolean("isFolder", false);
+        b.putBoolean("isDevice", false);
+        b.putInt("title", R.string.settings);
         f.setArguments(b);
         return f;
     }
@@ -86,6 +98,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
     @Override
     protected Object getScreen() {
         boolean isFolder = getArguments().getBoolean("isFolder");
+        boolean isDevice = getArguments().getBoolean("isDevice");
         if (isFolder) {
             String fid = getArguments().getString("folder");
             String did = getArguments().getString("device");
@@ -96,13 +109,15 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
             } else {
                 return new EditFolderScreen();//Add
             }
-        } else {
+        } else if (isDevice) {
             String did = getArguments().getString("device");
             if (did != null) {
                 return new EditDeviceScreen(did);//edit
             } else {
                 return new EditDeviceScreen();//add
             }
+        } else {
+            return new SettingsScreen();
         }
     }
 

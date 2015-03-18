@@ -19,10 +19,13 @@ package syncthing.api.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by drew on 3/1/15.
  */
-public class DeviceConfig {
+public class DeviceConfig implements Serializable {
+    private static final long serialVersionUID = 2383227051854131929L;
     @SerializedName("DeviceID") public String deviceID;
     @SerializedName("Name") public String name;
     @SerializedName("Addresses") public String[] addresses = new String[] {"dynamic"};

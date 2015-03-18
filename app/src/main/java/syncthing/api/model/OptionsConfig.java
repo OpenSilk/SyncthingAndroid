@@ -19,10 +19,16 @@ package syncthing.api.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.SerializationUtils;
+
+import java.io.Serializable;
+import java.util.Arrays;
+
 /**
  * Created by drew on 3/1/15.
  */
-public class OptionsConfig {
+public class OptionsConfig implements Serializable {
+    private static final long serialVersionUID = -6584204552575433781L;
     @SerializedName("ListenAddress")public String[] listenAddress = new String[]{"0.0.0.0:22000"};
     @SerializedName("GlobalAnnServers")public String[] globalAnnounceServers = new String[]{"udp4://announce.syncthing.net:22026", "udp6://announce-v6.syncthing.net:22026"};
     @SerializedName("GlobalAnnEnabled")public boolean globalAnnounceEnabled = true;

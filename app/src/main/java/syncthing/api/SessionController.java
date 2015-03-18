@@ -62,9 +62,11 @@ import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.FolderStats;
 import syncthing.api.model.FolderStatsMap;
+import syncthing.api.model.GUIConfig;
 import syncthing.api.model.GuiError;
 import syncthing.api.model.GuiErrors;
 import syncthing.api.model.Model;
+import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
@@ -899,6 +901,25 @@ public class SessionController implements EventMonitor.EventListener {
                     if (!config.ignoredDevices.contains(deviceId.id)) {
                         config.ignoredDevices.add(deviceId.id);
                     }
+                    return config;
+                })
+                .flatMap(restApi::updateConfig)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        v -> {},
+                        onError,
+                        onComplete
+                );
+    }
+
+    public Subscription editSettings(DeviceConfig thisDevice, OptionsConfig options,
+                                     GUIConfig guiConfig, Action1<Throwable> onError, Action0 onComplete) {
+        return restApi.config()
+                .map(config -> {
+                    int idx = config.devices.indexOf(thisDevice);
+                    config.devices.set(idx, thisDevice);
+                    config.options = options;
+                    config.gui = guiConfig;
                     return config;
                 })
                 .flatMap(restApi::updateConfig)
