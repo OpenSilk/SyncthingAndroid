@@ -135,9 +135,9 @@ public class SessionRecyclerAdapterTest {
         folders.add(new FolderCard(null, null));
         folders.add(new FolderCard(null, null));
         adapter.setFolders(folders, false);
-        adapter.setThisDevice(new MyDeviceCard(null, null, null), true);
+        adapter.setThisDevice(new MyDeviceCard(null, null, null, null), true);
         verify(adapter).notifyItemInserted(4);
-        adapter.setThisDevice(new MyDeviceCard(null, null, null), true);
+        adapter.setThisDevice(new MyDeviceCard(null, null, null, null), true);
         verify(adapter).notifyItemChanged(4);
     }
 
@@ -244,7 +244,7 @@ public class SessionRecyclerAdapterTest {
         folders.add(new FolderCard(null, null));//5
         adapter.setFolders(folders, false);
         //6
-        MyDeviceCard myDevice = new MyDeviceCard(null, null, null);
+        MyDeviceCard myDevice = new MyDeviceCard(null, null, null, null);
         adapter.setThisDevice(myDevice, true);//7
         List<DeviceCard> devices = new LinkedList<>();
         devices.add(new DeviceCard(null, null, null, 0));//8
