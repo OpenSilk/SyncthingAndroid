@@ -8,6 +8,7 @@
     <string name="add_new_folder">Adicionar nova pasta?</string>
     <string name="address">Endereço</string>
     <string name="addresses">Endereços</string>
+    <string name="all_data">Todos os dados</string>
     <string name="allow_anonymous_usage_reporting">Permitir envio de relatórios anónimos de utilização?</string>
     <string name="anonymous_usage_reporting">Enviar relatórios anónimos de utilização</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Quaisquer dispositivos configurados num dispositivo apresentador serão também adicionados a este dispositivo.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Registo de alterações</string>
     <string name="close">Fechar</string>
     <string name="comment_when_used_at_the_start_of_a_line">Comentário, quando usado no início de uma linha</string>
+    <string name="compression">Compressão</string>
     <string name="compression_is_recommended_in_most_setups">A compressão é recomendada na maior parte dos casos.</string>
     <string name="connection_error">Erro de ligação</string>
     <string name="copied_from_elsewhere">Copiado doutro sítio</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Busca local</string>
     <string name="local_state">Estado local</string>
     <string name="maximum_age">Idade máxima</string>
+    <string name="metadata_only">Metadados apenas</string>
     <string name="move_to_top_of_queue">Mover para o topo da fila</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Caractere polivalente multi-nível (faz corresponder a vários níveis de pastas)</string>
     <string name="never">Nunca</string>
@@ -84,6 +87,7 @@
     <string name="no">Não</string>
     <string name="no_file_versioning">Sem gestão de versões de ficheiros</string>
     <string name="notice">Avisos</string>
+    <string name="off">Desligado</string>
     <string name="offline">Desconectado</string>
     <string name="ok">OK</string>
     <string name="online">Conectado</string>
@@ -99,7 +103,7 @@
     <string name="quick_guide_to_supported_patterns">Guia rápido dos padrões suportados</string>
     <string name="ram_utilization">Utilização da RAM</string>
     <string name="rescan">Verificar agora</string>
-    <string name="rescan_all">Verificar tudo</string>
+    <string name="rescan_all">Verificar todas agora</string>
     <string name="rescan_interval">Intervalo entre verificações</string>
     <string name="restart">Reiniciar</string>
     <string name="restart_needed">É preciso reiniciar</string>

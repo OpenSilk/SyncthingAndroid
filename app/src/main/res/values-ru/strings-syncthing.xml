@@ -8,6 +8,7 @@
     <string name="add_new_folder">Добавить новую папку?</string>
     <string name="address">Адрес</string>
     <string name="addresses">Адреса</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Разрешить сбор анонимной статистики использования?</string>
     <string name="anonymous_usage_reporting">Анонимная статистика использования</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Все устройства, подключённые к устройству-рекомендателю, будут добавлены к текущему устройству.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Журнал изменений</string>
     <string name="close">Закрыть</string>
     <string name="comment_when_used_at_the_start_of_a_line">Комментарий, если используется в начале строки</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">Сжатие рекомендуется в большинстве случаев.</string>
     <string name="connection_error">Ошибка подключения</string>
     <string name="copied_from_elsewhere">Скопировано из другого места</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Локальное обнаружение</string>
     <string name="local_state">Локальное состояние</string>
     <string name="maximum_age">Максимальный срок</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Поместить в начало очереди</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Многоуровневая маска (поиск совпадений во всех подпапках)</string>
     <string name="never">Никогда</string>
@@ -84,6 +87,7 @@
     <string name="no">Нет</string>
     <string name="no_file_versioning">Без управления версиями файлов</string>
     <string name="notice">Внимание</string>
+    <string name="off">Off</string>
     <string name="offline">Оффлайн</string>
     <string name="ok">ОК</string>
     <string name="online">Онлайн</string>

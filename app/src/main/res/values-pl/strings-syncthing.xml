@@ -8,6 +8,7 @@
     <string name="add_new_folder">Dodać nowy folder?</string>
     <string name="address">Adres</string>
     <string name="addresses">Adresy</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Zezwalaj na anonimowe statystyki użycia</string>
     <string name="anonymous_usage_reporting">Anonimowe statystyki użycia</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Wszystkie urządzenia skonfigurowane na urządzeniu wprowadzającym zostaną dodane także do tego urządzenia.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Historia zmian</string>
     <string name="close">Zamknij</string>
     <string name="comment_when_used_at_the_start_of_a_line">Komentarz, jeżeli użyty na początku linii</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">Kompresja jest zalecana w większości przypadków</string>
     <string name="connection_error">Błąd połączenia</string>
     <string name="copied_from_elsewhere">Copied from elsewhere</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Lokalne odnajdywanie</string>
     <string name="local_state">Status lokalny</string>
     <string name="maximum_age">Maksymalny wiek</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Wieloznaczność na poziomie katalogów i plików (uwzględnia nazwy folderów i plików)</string>
     <string name="never">Nigdy</string>
@@ -84,6 +87,7 @@
     <string name="no">Nie</string>
     <string name="no_file_versioning">Bez wersjonowania pliku</string>
     <string name="notice">Wskazówka</string>
+    <string name="off">Off</string>
     <string name="offline">Rozłączony</string>
     <string name="ok">OK</string>
     <string name="online">Połączony</string>

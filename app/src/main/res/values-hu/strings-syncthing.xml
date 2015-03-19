@@ -8,6 +8,7 @@
     <string name="add_new_folder"> </string>
     <string name="address">Cím</string>
     <string name="addresses">Címek</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Engedélyezed a névtelen felhasználási adatok küldését?</string>
     <string name="anonymous_usage_reporting">Névtelen felhasználási adatok küldése</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Minden eszköz ami a bevezető eszközön lett beállítva hozzá lesz adva ehhez az eszközhöz is.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Változások</string>
     <string name="close">Bezárás</string>
     <string name="comment_when_used_at_the_start_of_a_line">Megjegyzés, a sor elején használva</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">A tömörítés a a legtöbb esetben ajánlott</string>
     <string name="connection_error">Kapcsolódási hiba</string>
     <string name="copied_from_elsewhere">Másolva máshonnan</string>
@@ -76,7 +78,8 @@
     <string name="local_discovery">Helyi felfedezés</string>
     <string name="local_state">Helyi állapot</string>
     <string name="maximum_age">Maximális kor</string>
-    <string name="move_to_top_of_queue">Move to top of queue</string>
+    <string name="metadata_only">Metadata Only</string>
+    <string name="move_to_top_of_queue">Sor elejére mozgatás</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Több szintű helyettesítő karakter (több könyvtár szintre érvényesül)</string>
     <string name="never">Soha</string>
     <string name="new_device">Új eszköz</string>
@@ -84,6 +87,7 @@
     <string name="no">Nem</string>
     <string name="no_file_versioning">Nincs fájl verziózás</string>
     <string name="notice">Megjegyzés</string>
+    <string name="off">Off</string>
     <string name="offline">Nincs kapcsolat</string>
     <string name="ok">Rendben</string>
     <string name="online">Kapcsolódva</string>
@@ -99,7 +103,7 @@
     <string name="quick_guide_to_supported_patterns">Rövid útmutató a használható mintákról</string>
     <string name="ram_utilization">Memória használat</string>
     <string name="rescan">Átnézés</string>
-    <string name="rescan_all">Rescan All</string>
+    <string name="rescan_all">Összes átnézése</string>
     <string name="rescan_interval">Átnézési intervallum</string>
     <string name="restart">Újraindítás</string>
     <string name="restart_needed">Újraindítás szükséges</string>

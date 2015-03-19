@@ -8,6 +8,7 @@
     <string name="add_new_folder">Дадаць новы каталёг ?</string>
     <string name="address">Адрас</string>
     <string name="addresses">Адрасы</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Allow Anonymous Usage Reporting?</string>
     <string name="anonymous_usage_reporting">Anonymous Usage Reporting</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Any devices configured on an introducer device will be added to this device as well.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Сьпіс зьменаў</string>
     <string name="close">Зачыніць</string>
     <string name="comment_when_used_at_the_start_of_a_line">Comment, when used at the start of a line</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">Сьцісканьне рэкамэндавана ў большасьці выпадкаў.</string>
     <string name="connection_error">Connection Error</string>
     <string name="copied_from_elsewhere">Copied from elsewhere</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Лякальнае вызначэньне</string>
     <string name="local_state">Лякальны стан</string>
     <string name="maximum_age">Maximum Age</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Multi level wildcard (matches multiple directory levels)</string>
     <string name="never">Ніколі</string>
@@ -84,6 +87,7 @@
     <string name="no">Не</string>
     <string name="no_file_versioning">Не захоўваць вэрсіі</string>
     <string name="notice">Notice</string>
+    <string name="off">Off</string>
     <string name="offline">Offline</string>
     <string name="ok">Добра</string>
     <string name="online">Online</string>

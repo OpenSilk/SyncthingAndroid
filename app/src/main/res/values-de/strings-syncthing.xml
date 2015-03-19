@@ -8,15 +8,17 @@
     <string name="add_new_folder">Neues Verzeichnis hinzufügen?</string>
     <string name="address">Adresse</string>
     <string name="addresses">Adressen</string>
+    <string name="all_data">Alle Daten</string>
     <string name="allow_anonymous_usage_reporting">Übertragung von anonymen Nutzungsberichten erlauben?</string>
     <string name="anonymous_usage_reporting">Anonymer Nutzungsbericht</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Alle Geräte, die beim Verteiler eingetragen sind, werden auch bei diesem Gerät eingetragen</string>
     <string name="api_key">API-Schlüssel</string>
-    <string name="automatic_upgrades">Automat. Updates</string>
+    <string name="automatic_upgrades">automatische Updates</string>
     <string name="bugs">Fehler</string>
     <string name="changelog">Versionsinfo</string>
     <string name="close">Schließen</string>
     <string name="comment_when_used_at_the_start_of_a_line">Kommentar, wenn am Anfang der Zeile benutzt.</string>
+    <string name="compression">Komprimierung</string>
     <string name="compression_is_recommended_in_most_setups">Datenkomprimierung ist für die meisten Anwendungen empfohlen</string>
     <string name="connection_error">Verbindungsfehler</string>
     <string name="copied_from_elsewhere">Von woanders kopiert</string>
@@ -32,7 +34,7 @@
     <string name="devices">Geräte</string>
     <string name="disconnected">Getrennt</string>
     <string name="documentation">Dokumentation</string>
-    <string name="download_rate">Download</string>
+    <string name="download_rate">Download-Rate</string>
     <string name="downloaded">Heruntergeladen</string>
     <string name="downloading">Lädt herunter</string>
     <string name="edit">Bearbeiten</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Lokale Auffindung</string>
     <string name="local_state">Lokaler Status</string>
     <string name="maximum_age">Höchstalter</string>
+    <string name="metadata_only">Nur Metadaten</string>
     <string name="move_to_top_of_queue">An den Anfang der Warteschlange setzen</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Verschachteltes Maskenzeichen (wird für verschachtelte Verzeichnisse verwendet)</string>
     <string name="never">Nie</string>
@@ -84,6 +87,7 @@
     <string name="no">Nein</string>
     <string name="no_file_versioning">Keine Dateiversionierung</string>
     <string name="notice">Hinweis</string>
+    <string name="off">Aus</string>
     <string name="offline">Offline</string>
     <string name="ok">OK</string>
     <string name="online">Online</string>
@@ -102,7 +106,7 @@
     <string name="rescan_all">Alle überprüfen</string>
     <string name="rescan_interval">Suchintervall</string>
     <string name="restart">Neustart</string>
-    <string name="restart_needed">Neustart notwendig</string>
+    <string name="restart_needed">Neustart benötigt</string>
     <string name="restarting">Wird neu gestartet</string>
     <string name="reused">Erneut benutzt</string>
     <string name="save">Speichern</string>

@@ -8,6 +8,7 @@
     <string name="add_new_folder">Pridėti naują aplanką?</string>
     <string name="address">Adresas</string>
     <string name="addresses">Adresai</string>
+    <string name="all_data">Visiems duomenims</string>
     <string name="allow_anonymous_usage_reporting">Siųsti anonimišką vartojimo ataskaitą?</string>
     <string name="anonymous_usage_reporting">Anoniminė vartojimo ataskaita</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Visi supažindintojo įrenginiai bus pridėti prie jūsų įrenginių sąrašo.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Pasikeitimai</string>
     <string name="close">Uždaryti</string>
     <string name="comment_when_used_at_the_start_of_a_line">Komentaras naudojamas naujoje eilutėje</string>
+    <string name="compression">Kompresija</string>
     <string name="compression_is_recommended_in_most_setups">Daugumoje atvejų spaudimas rekomenduojamas.</string>
     <string name="connection_error">Susijungimo klaida</string>
     <string name="copied_from_elsewhere">Nukopijuota iš betkur</string>
@@ -77,6 +79,7 @@ Taikyti  FAT sistemose.</string>
     <string name="local_discovery">Vietinis matomumas</string>
     <string name="local_state">Vietinė būsena</string>
     <string name="maximum_age">Maksimalus amžius</string>
+    <string name="metadata_only">Metaduomenims</string>
     <string name="move_to_top_of_queue">Perkelti į eilės priekį</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Keletos lygių pakaitos (atitinka keletą direktorijų lygių)</string>
     <string name="never">Niekada</string>
@@ -85,6 +88,7 @@ Taikyti  FAT sistemose.</string>
     <string name="no">Ne</string>
     <string name="no_file_versioning">Nėra versijų valdymo</string>
     <string name="notice">Įspėjimas</string>
+    <string name="off">Netaikoma</string>
     <string name="offline">Atsijungęs</string>
     <string name="ok">Gerai</string>
     <string name="online">Prisijungęs</string>

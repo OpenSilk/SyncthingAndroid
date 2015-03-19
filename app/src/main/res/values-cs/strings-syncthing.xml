@@ -8,6 +8,7 @@
     <string name="add_new_folder">Přidat nový adresář?</string>
     <string name="address">Adresa</string>
     <string name="addresses">Adresy</string>
+    <string name="all_data">Všechna data</string>
     <string name="allow_anonymous_usage_reporting">Povolit anonymní hlášení o používání?</string>
     <string name="anonymous_usage_reporting">Anonymní hlášení o používání</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Jakékoliv přístroje nakonfigurované na zavaděči budou přidány také na tento přístroj.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Changelog</string>
     <string name="close">Zavřít</string>
     <string name="comment_when_used_at_the_start_of_a_line">Komentář, pokud použito na začátku řádku</string>
+    <string name="compression">Komprese</string>
     <string name="compression_is_recommended_in_most_setups">Komprese je doporučena pro většinu nastavení.</string>
     <string name="connection_error">Chyba připojení</string>
     <string name="copied_from_elsewhere">Zkopírováno odjinud</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Místní oznamování</string>
     <string name="local_state">Místní status</string>
     <string name="maximum_age">Maximální časový limit</string>
+    <string name="metadata_only">Pouze metadata</string>
     <string name="move_to_top_of_queue">Přesunout na začátek fronty</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Víceúrovňový zástupný znak (shoda skrz více úrovní adresářů)</string>
     <string name="never">Nikdy</string>
@@ -84,6 +87,7 @@
     <string name="no">Ne</string>
     <string name="no_file_versioning">Bez verzí souborů</string>
     <string name="notice">Oznámení</string>
+    <string name="off">Vypnout</string>
     <string name="offline">Offline</string>
     <string name="ok">OK</string>
     <string name="online">Online</string>

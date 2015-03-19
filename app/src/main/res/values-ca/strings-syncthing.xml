@@ -8,6 +8,7 @@
     <string name="add_new_folder">Afegir nova carpeta?</string>
     <string name="address">Adreça</string>
     <string name="addresses">Adreces</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Permetre l\'enviament anònim d\'informes d\'ús?</string>
     <string name="anonymous_usage_reporting">Informe anònim d\'ús</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Qualsevol dispositiu configurat com a dispositiu introductor s\'afegirà a aquest dispositiu tambè.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Historial de canvis</string>
     <string name="close">Tancar</string>
     <string name="comment_when_used_at_the_start_of_a_line">Comentari quan és usat al principi d\'una línia</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">Generalment, la compressió és recomanada.</string>
     <string name="connection_error">Error de connexió</string>
     <string name="copied_from_elsewhere">Copiat d\'un altre lloc</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Descobriment Local</string>
     <string name="local_state">Estat local</string>
     <string name="maximum_age">Antiguitat Màxima</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Caràcter comodí de nivell múltiple (aparella en carpetes de nivells múltiples)</string>
     <string name="never">Mai</string>
@@ -84,6 +87,7 @@
     <string name="no">No</string>
     <string name="no_file_versioning">Sense Versionat de Fitxer</string>
     <string name="notice">Avís</string>
+    <string name="off">Off</string>
     <string name="offline">Desconnectat</string>
     <string name="ok">OK</string>
     <string name="online">Connectat</string>

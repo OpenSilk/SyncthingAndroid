@@ -8,15 +8,17 @@
     <string name="add_new_folder">Adicionar nova pasta?</string>
     <string name="address">Endereço</string>
     <string name="addresses">Endereços</string>
+    <string name="all_data">Todos os dados</string>
     <string name="allow_anonymous_usage_reporting">Permitir envio de relatórios anônimos de uso?</string>
     <string name="anonymous_usage_reporting">Relatórios anônimos de uso</string>
-    <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Quaisquer dispositivos configurados em um apresentador serão também adicionados a este dispositivo.</string>
+    <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Quaisquer dispositivos configurados em um apresentador também serão adicionados a este dispositivo.</string>
     <string name="api_key">Chave da API</string>
     <string name="automatic_upgrades">Atualizações automáticas</string>
     <string name="bugs">Erros</string>
     <string name="changelog">Registro de alterações</string>
     <string name="close">Fechar</string>
     <string name="comment_when_used_at_the_start_of_a_line">Comentário, se usado no início de uma linha</string>
+    <string name="compression">Compressão</string>
     <string name="compression_is_recommended_in_most_setups">A compressão é recomendada na maior parte dos casos.</string>
     <string name="connection_error">Erro de conexão</string>
     <string name="copied_from_elsewhere">Copiado de outro lugar</string>
@@ -44,11 +46,10 @@
 </string>
     <string name="enter_ignore_patterns_one_per_line">Insira os padrões de exclusão, um por linha.</string>
     <string name="error">Erro</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_filesystems">As permissões de arquivo são ignoradas ao procurar alterações. Use nos sistemas de arquivos FAT.</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_filesystems">As permissões de arquivo são ignoradas ao procurar por alterações. Use nos sistemas de arquivos FAT.</string>
     <string name="file_versioning">Versionamento de arquivos</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Os arquivos são movidos para versões marcadas com o tempo numa pasta .stversions, quando substituídos ou apagados pelo syncthing.</string>
-    <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Os arquivos estão protegidos contra alterações feitas em outros dispositivos, mas alterações feitas neste dispositivo serão enviadas ao resto do grupo.
-</string>
+    <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Os arquivos estão protegidos contra alterações feitas em outros dispositivos, mas alterações feitas neste dispositivo serão enviadas ao resto do grupo.</string>
     <string name="folder_id">ID da pasta</string>
     <string name="folder_master">Pasta mestre</string>
     <string name="folder_path">Caminho da pasta</string>
@@ -78,7 +79,8 @@
     <string name="local_discovery">Descoberta local</string>
     <string name="local_state">Estado local</string>
     <string name="maximum_age">Idade máxima</string>
-    <string name="move_to_top_of_queue">Move to top of queue</string>
+    <string name="metadata_only">Somente metadados</string>
+    <string name="move_to_top_of_queue">Mover para o topo da lista</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Coringa multi-nível (faz corresponder a vários níveis de pastas)</string>
     <string name="never">Nunca</string>
     <string name="new_device">Novo dispositivo</string>
@@ -86,6 +88,7 @@
     <string name="no">Não</string>
     <string name="no_file_versioning">Sem versionamento de arquivos</string>
     <string name="notice">Aviso</string>
+    <string name="off">Desligada</string>
     <string name="offline">Desconectado</string>
     <string name="ok">OK</string>
     <string name="online">Conectado</string>
@@ -94,14 +97,14 @@
     <string name="outgoing_rate_limit_kibs">Limite de velocidade de envio (KiB/s)</string>
     <string name="override_changes">Sobrescrever mudanças</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Caminho para a pasta na máquina local. Será criado caso não exista. O caractere til (~) pode ser usado como um atalho para</string>
-    <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Caminho onde as versões serão salvas (deixe vazio para usar a pasta padrão .stversions na pasta).</string>
+    <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">O caminho onde as versões serão salvas (deixe vazio para usar a pasta padrão .stversions dentro desta pasta).</string>
     <string name="please_wait">Aguarde</string>
     <string name="preview">Visualizar</string>
     <string name="preview_usage_report">Visualizar relatório de uso</string>
     <string name="quick_guide_to_supported_patterns">Guia rápido dos padrões suportados</string>
     <string name="ram_utilization">Uso de RAM</string>
     <string name="rescan">Verificar agora</string>
-    <string name="rescan_all">Rescan All</string>
+    <string name="rescan_all">Verificar todas</string>
     <string name="rescan_interval">Intervalo entre verificações</string>
     <string name="restart">Reiniciar</string>
     <string name="restart_needed">É necessário reiniciar</string>
@@ -121,7 +124,7 @@
     <string name="short_identifier_for_the_folder_must_be_the_same_on_all_cluster_devices">Identificador curto para a pasta. Deve ser igual em todos os dispositivos.</string>
     <string name="show_id">Mostrar ID</string>
     <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_advertised_to_other_devices_as_an_optional_default_name">Mostrado no lugar do ID do dispositivo no indicador de estado do grupo. Será divulgado aos outros dispositivos como um nome pré-definido opcional.</string>
-    <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty">Mostrado no lugar do ID do dispositivo no indicador de estado do grupo. Será actualizado para o nome que o dispositivo divulga, se for deixado em branco.</string>
+    <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty">Mostrado no lugar do ID do dispositivo no indicador de estado do grupo. Será atualizado para o nome que o dispositivo divulga, caso seja deixado em branco.</string>
     <string name="shutdown">Desligar</string>
     <string name="shutdown_complete">Desligamento completado</string>
     <string name="simple_file_versioning">Versionamento simples de arquivos</string>
@@ -159,7 +162,7 @@
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">O intervalo entre verificações deve ser um número positivo de segundos.</string>
     <string name="the_rescan_interval_must_be_at_least_5_seconds">O intervalo entre verificações deve ser de pelo menos 5 segundos.</string>
     <string name="unknown">Desconhecida</string>
-    <string name="unshared">Não compartilhado</string>
+    <string name="unshared">Não compartilhada</string>
     <string name="unused">Não utilizado</string>
     <string name="up_to_date">Sincronizada</string>
     <string name="upgrade_to_version">Atualizar para %1$s</string>

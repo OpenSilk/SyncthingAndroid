@@ -8,6 +8,7 @@
     <string name="add_new_folder">Ajouter un nouveau dossier ?</string>
     <string name="address">Adresse</string>
     <string name="addresses">Adresses</string>
+    <string name="all_data">Toutes les données</string>
     <string name="allow_anonymous_usage_reporting">Autoriser le rapport anonyme de statistiques d\'utilisation ?</string>
     <string name="anonymous_usage_reporting">Rapport anonyme de statistiques d\'utilisation</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Toute machine ajoutée depuis une machine initiatrice sera aussi ajoutée sur cette machine.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Nouveautés</string>
     <string name="close">Fermer</string>
     <string name="comment_when_used_at_the_start_of_a_line">Commentaire, lorsque utilisé en début de ligne</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">La compression est recommandée pour la plupart des configurations.</string>
     <string name="connection_error">Erreur de connexion</string>
     <string name="copied_from_elsewhere">Copié d\'ailleurs</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Recherche locale</string>
     <string name="local_state">État local</string>
     <string name="maximum_age">Ancienneté maximum</string>
+    <string name="metadata_only">Métadonnées uniquement</string>
     <string name="move_to_top_of_queue">Déplacer en haut de la file</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Astérisque à plusieurs niveaux (correspond aux répertoires et sous-répertoires)</string>
     <string name="never">Jamais</string>
@@ -84,6 +87,7 @@
     <string name="no">Non</string>
     <string name="no_file_versioning">Pas de version de fichier</string>
     <string name="notice">Notification</string>
+    <string name="off">Éteint</string>
     <string name="offline">Offline</string>
     <string name="ok">OK</string>
     <string name="online">Online</string>

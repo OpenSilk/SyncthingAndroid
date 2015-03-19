@@ -8,6 +8,7 @@
     <string name="add_new_folder">Add new folder?</string>
     <string name="address">Address</string>
     <string name="addresses">Addresses</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Allow Anonymous Usage Reporting?</string>
     <string name="anonymous_usage_reporting">Anonymous Usage Reporting</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Any devices configured on an introducer device will be added to this device as well.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Changelog</string>
     <string name="close">Close</string>
     <string name="comment_when_used_at_the_start_of_a_line">Comment, when used at the start of a line</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">Compression is recommended in most setups.</string>
     <string name="connection_error">Connection Error</string>
     <string name="copied_from_elsewhere">Copied from elsewhere</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Local Discovery</string>
     <string name="local_state">Local State</string>
     <string name="maximum_age">Maximum Age</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Multi level wildcard (matches multiple directory levels)</string>
     <string name="never">Never</string>
@@ -84,6 +87,7 @@
     <string name="no">No</string>
     <string name="no_file_versioning">No File Versioning</string>
     <string name="notice">Notice</string>
+    <string name="off">Off</string>
     <string name="offline">Offline</string>
     <string name="ok">OK</string>
     <string name="online">Online</string>

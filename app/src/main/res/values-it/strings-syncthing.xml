@@ -8,6 +8,7 @@
     <string name="add_new_folder">Aggiungere una nuova cartella?</string>
     <string name="address">Indirizzo</string>
     <string name="addresses">Indirizzi</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Abilitare Statistiche Anonime di Utilizzo?</string>
     <string name="anonymous_usage_reporting">Statistiche Anonime di Utilizzo</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Qualsiasi dispositivo configurato in un introduttore verrà aggiunto anche a questo dispositivo.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Changelog</string>
     <string name="close">Chiudi</string>
     <string name="comment_when_used_at_the_start_of_a_line">Per commentare, va inserito all\'inizio di una riga</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">La compressione è raccomandata nella maggior parte delle configurazioni.</string>
     <string name="connection_error">Errore di Connessione</string>
     <string name="copied_from_elsewhere">Copiato da qualche altra parte</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Individuazione Locale</string>
     <string name="local_state">Stato Locale</string>
     <string name="maximum_age">Durata Massima</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Metacarattere multi-livello (corrisponde alle cartelle e alle sotto-cartelle)</string>
     <string name="never">Mai</string>
@@ -84,6 +87,7 @@
     <string name="no">No</string>
     <string name="no_file_versioning">Nessun Controllo Versione</string>
     <string name="notice">Avviso</string>
+    <string name="off">Off</string>
     <string name="offline">Non in linea</string>
     <string name="ok">OK</string>
     <string name="online">In linea</string>

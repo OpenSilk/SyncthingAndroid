@@ -8,15 +8,17 @@
     <string name="add_new_folder">Yeni klasör ekle?</string>
     <string name="address">Adres</string>
     <string name="addresses">Adresler</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Anonim kullanım raporlarına izin ver ?</string>
     <string name="anonymous_usage_reporting">Anonim Kullanım Raporlama</string>
-    <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Herhangi bir cihaz, tanıtıcı cihaz olarak yapılandırıldığında bu cihaza eklenecektir.</string>
+    <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Tanıtıcı bir cihazda yapılandırılan cihazlar bu cihaza da eklenecektir.</string>
     <string name="api_key">API Anahtarı</string>
-    <string name="automatic_upgrades">Otomatik yükseltmeler</string>
+    <string name="automatic_upgrades">Otomatik güncellemeler</string>
     <string name="bugs">Hatalar</string>
     <string name="changelog">Değişim Günlüğü</string>
     <string name="close">Kapat</string>
     <string name="comment_when_used_at_the_start_of_a_line">Satır başında kullanıldığında açıklama özelliği taşır</string>
+    <string name="compression">Sıkıştırma</string>
     <string name="compression_is_recommended_in_most_setups">Sıkıştırma işlemi çoğu kurulum için önerilmektedir.</string>
     <string name="connection_error">Bağlantı hatası</string>
     <string name="copied_from_elsewhere">Başka bir yerden kopyalanmış</string>
@@ -65,7 +67,7 @@
     <string name="ignore_permissions">İzinleri yoksay</string>
     <string name="incoming_rate_limit_kibs">İndirme Oranı Limiti (KiB/s)</string>
     <string name="introducer">Tanıtıcı</string>
-    <string name="inversion_of_the_given_condition_ie_do_not_exclude">Inversion of the given condition (i.e. do not exclude)</string>
+    <string name="inversion_of_the_given_condition_ie_do_not_exclude">Verilen koşulun ters çevirilmesi (örneğin: yok sayma)</string>
     <string name="items">öğeler</string>
     <string name="keep_versions">Sürüm tut</string>
     <string name="last_file_received">Alınan Son Dosya</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Yerel bulma</string>
     <string name="local_state">Yerel Durum</string>
     <string name="maximum_age">Azami Süre</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Çoklu düzey wildcard (çok sayıda dizin düzeyinde eşleşme)</string>
     <string name="never">Asla</string>
@@ -84,6 +87,7 @@
     <string name="no">Hayır</string>
     <string name="no_file_versioning">Sürümlendirme Yok</string>
     <string name="notice">Uyarı</string>
+    <string name="off">Off</string>
     <string name="offline">Çevrim dışı</string>
     <string name="ok">Tamam</string>
     <string name="online">Çevrim içi</string>
@@ -99,7 +103,7 @@
     <string name="quick_guide_to_supported_patterns">Desteklenen kalıplar için hızlı rehber</string>
     <string name="ram_utilization">RAM Kullanımı</string>
     <string name="rescan">Tekrar Tara</string>
-    <string name="rescan_all">Rescan All</string>
+    <string name="rescan_all">Tümünü Tekrar Tara</string>
     <string name="rescan_interval">Tarama Aralığı</string>
     <string name="restart">Yeniden Başlat</string>
     <string name="restart_needed">Yeniden başlatma gereklidir</string>

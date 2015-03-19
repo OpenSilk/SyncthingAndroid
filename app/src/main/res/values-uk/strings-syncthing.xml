@@ -8,7 +8,8 @@
     <string name="add_new_folder">Додати нову директорію?</string>
     <string name="address">Адреса</string>
     <string name="addresses">Адреси</string>
-    <string name="allow_anonymous_usage_reporting">Дозволити програмі збирати анонімну статистику викроистання?</string>
+    <string name="all_data">Усі дані</string>
+    <string name="allow_anonymous_usage_reporting">Дозволити програмі збирати анонімну статистику використання?</string>
     <string name="anonymous_usage_reporting">Анонімна статистика використання</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Усі пристрої, налаштовані на пристрої-інтродукторі, будуть додані до поточного пристрою.</string>
     <string name="api_key">API ключ</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Перелік змін</string>
     <string name="close">Закрити</string>
     <string name="comment_when_used_at_the_start_of_a_line">Коментар, якщо використовується на початку рядка</string>
+    <string name="compression">Стиснення</string>
     <string name="compression_is_recommended_in_most_setups">Стиснення рекомендується у більшості випадків.</string>
     <string name="connection_error">Помилка з’єднання</string>
     <string name="copied_from_elsewhere">Скопійовано з іншого місця</string>
@@ -28,7 +30,7 @@
     <string name="device_id">ID пристрою</string>
     <string name="device_identification">Ідентифікатор пристрою</string>
     <string name="device_name">Назва пристрою</string>
-    <string name="device_wants_to_share_folder_folder">%1$s wants to share folder \"%2$s\".</string>
+    <string name="device_wants_to_share_folder_folder">%1$s хоче поділитися директорією \"%2$s\".</string>
     <string name="devices">Пристрої</string>
     <string name="disconnected">З’єднання відсутнє</string>
     <string name="documentation">Документація</string>
@@ -76,7 +78,8 @@
     <string name="local_discovery">Локальне виявлення</string>
     <string name="local_state">Локальний статус</string>
     <string name="maximum_age">Максимальний вік</string>
-    <string name="move_to_top_of_queue">Move to top of queue</string>
+    <string name="metadata_only">Тільки метадані</string>
+    <string name="move_to_top_of_queue">Пересунути у початок черги</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Багаторівнева маска (пошук збігів в усіх піддиректоріях) </string>
     <string name="never">Ніколи</string>
     <string name="new_device">Новий пристрій</string>
@@ -84,6 +87,7 @@
     <string name="no">Ні</string>
     <string name="no_file_versioning">Версіонування вимкнено</string>
     <string name="notice">Повідомлення</string>
+    <string name="off">Вимкнути</string>
     <string name="offline">Офлайн</string>
     <string name="ok">OK</string>
     <string name="online">Онлайн</string>
@@ -99,7 +103,7 @@
     <string name="quick_guide_to_supported_patterns">Швидкий посібник по шаблонам, що підтримуються</string>
     <string name="ram_utilization">Використання RAM</string>
     <string name="rescan">Пересканувати</string>
-    <string name="rescan_all">Rescan All</string>
+    <string name="rescan_all">Пересканувати усе</string>
     <string name="rescan_interval">Інтервал для повторного сканування</string>
     <string name="restart">Перезапуск</string>
     <string name="restart_needed">Необхідний перезапуск</string>

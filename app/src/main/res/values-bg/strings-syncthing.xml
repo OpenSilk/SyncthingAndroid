@@ -8,6 +8,7 @@
     <string name="add_new_folder">Добави нова папка?</string>
     <string name="address">Адрес</string>
     <string name="addresses">Адреси</string>
+    <string name="all_data">Всички данни</string>
     <string name="allow_anonymous_usage_reporting">Разреши анонимен доклад за ползване на програмата?</string>
     <string name="anonymous_usage_reporting">Анонимен Доклад</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Устройства настроени на introducer компютъра също ще бъдат добавени към този компютър.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Сипъск с промени</string>
     <string name="close">Затвори</string>
     <string name="comment_when_used_at_the_start_of_a_line">Коментар, използван в началото на реда</string>
+    <string name="compression">Компресия</string>
     <string name="compression_is_recommended_in_most_setups">Компресията е препоръчителна в повечето конфигурации.</string>
     <string name="connection_error">Грешка при Свързването</string>
     <string name="copied_from_elsewhere">Копиране от някъде другаде</string>
@@ -76,7 +78,8 @@
     <string name="local_discovery">Локално Откриване</string>
     <string name="local_state">Локално състояние</string>
     <string name="maximum_age">Максимална Възраст</string>
-    <string name="move_to_top_of_queue">Move to top of queue</string>
+    <string name="metadata_only">Само мета информация</string>
+    <string name="move_to_top_of_queue">Премести в началото на опашката</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Маска на много нива (покрива папки с много нива)</string>
     <string name="never">Никога</string>
     <string name="new_device">Ново устройство</string>
@@ -84,6 +87,7 @@
     <string name="no">Не</string>
     <string name="no_file_versioning">Няма Файлови Версии</string>
     <string name="notice">Известие</string>
+    <string name="off">Изключено</string>
     <string name="offline">Не е на линия</string>
     <string name="ok">ОК</string>
     <string name="online">На линия</string>
@@ -99,7 +103,7 @@
     <string name="quick_guide_to_supported_patterns">Бърз наръчник към поддържаните шаблони</string>
     <string name="ram_utilization">RAM Натоварване</string>
     <string name="rescan">Повторно Сканиране</string>
-    <string name="rescan_all">Rescan All</string>
+    <string name="rescan_all">Пълно повторно сканиране</string>
     <string name="rescan_interval">Интервал за Повторно Сканиране</string>
     <string name="restart">Рестартирай</string>
     <string name="restart_needed">Изискава се Рестартиране</string>

@@ -8,6 +8,7 @@
     <string name="add_new_folder">Nieuwe folder toevoegen?</string>
     <string name="address">Adres</string>
     <string name="addresses">Adressen</string>
+    <string name="all_data">Alle Gegevens</string>
     <string name="allow_anonymous_usage_reporting">Bijhouden van anonieme gebruikers statistieken toestaan?</string>
     <string name="anonymous_usage_reporting">Bijhouden anonieme gebruikers statistieken</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Toestellen geconfigureerd op een introductie toestel zullen ook aan dit toestel worden toegevoegd.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Logboek</string>
     <string name="close">Sluiten</string>
     <string name="comment_when_used_at_the_start_of_a_line">Commentaar, indien gebruikt aan het begin van de lijn</string>
+    <string name="compression">Compressie</string>
     <string name="compression_is_recommended_in_most_setups">Gegevenscompressie is aan te raden in de meeste situaties.</string>
     <string name="connection_error">Verbindingsfout</string>
     <string name="copied_from_elsewhere">Van elders gekopieerd</string>
@@ -68,7 +70,7 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Inversie van de gegeven voorwaarde (bv. niet uitsluiten)</string>
     <string name="items">objecten</string>
     <string name="keep_versions">Versies behouden</string>
-    <string name="last_file_received">Laaste ontvangen bestand</string>
+    <string name="last_file_received">Laatste ontvangen bestand</string>
     <string name="last_file_synced">Laatste Gesynchroniseerde Bestand</string>
     <string name="last_seen">Laatst gezien op</string>
     <string name="later">Later</string>
@@ -76,7 +78,8 @@
     <string name="local_discovery">Lokaal zoeken</string>
     <string name="local_state">Lokale status</string>
     <string name="maximum_age">Maximum leeftijd</string>
-    <string name="move_to_top_of_queue">Move to top of queue</string>
+    <string name="metadata_only">Alleen Metadata</string>
+    <string name="move_to_top_of_queue">Verplaats naar begin van wachtrij</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Wildcard op meerder niveaus (toepasbaar op meerdere niveaus van folders)</string>
     <string name="never">Nooit</string>
     <string name="new_device">Nieuw Apparaat</string>
@@ -84,6 +87,7 @@
     <string name="no">Nee</string>
     <string name="no_file_versioning">Geen versiebeheer</string>
     <string name="notice">Notificatie</string>
+    <string name="off">Uit</string>
     <string name="offline">Offline</string>
     <string name="ok">OK</string>
     <string name="online">Online</string>
@@ -99,7 +103,7 @@
     <string name="quick_guide_to_supported_patterns">Snelgids voor ondersteunde patronen</string>
     <string name="ram_utilization">RAM gebruik</string>
     <string name="rescan">Opnieuw scannen</string>
-    <string name="rescan_all">Rescan All</string>
+    <string name="rescan_all">Scan Alles Opnieuw</string>
     <string name="rescan_interval">Scanfrequentie</string>
     <string name="restart">Herstart</string>
     <string name="restart_needed">Herstart nodig</string>

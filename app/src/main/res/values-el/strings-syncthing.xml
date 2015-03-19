@@ -8,6 +8,7 @@
     <string name="add_new_folder">Προσθήκη νέου φακέλου;</string>
     <string name="address">Διεύθυνση</string>
     <string name="addresses">Διευθύνσεις</string>
+    <string name="all_data">Όλα τα δεδομένα</string>
     <string name="allow_anonymous_usage_reporting">Να επιτρέπεται η αποστολή ανώνυμων στοιχείων χρήσης;</string>
     <string name="anonymous_usage_reporting">Ανώνυμα στοιχεία χρήσης</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Αν δηλωθεί σαν «βασικός κόμβος», τότε όλες οι συσκευές που είναι δηλωμένες εκεί θα υπάρχουν και στον τοπικό κόμβο.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Πληροφορίες εκδόσεων</string>
     <string name="close">Τέλος</string>
     <string name="comment_when_used_at_the_start_of_a_line">Σχόλιο, όταν χρησιμοποιείται στην αρχή μιας γραμμής</string>
+    <string name="compression">Συμπίεση</string>
     <string name="compression_is_recommended_in_most_setups">Η συμπίεση προτείνεται στις περισσότερες εγκαταστάσεις</string>
     <string name="connection_error">Σφάλμα σύνδεσης</string>
     <string name="copied_from_elsewhere">Έχει αντιγραφεί από κάπου αλλού</string>
@@ -63,7 +65,7 @@
     <string name="ignore">Αγνόησε</string>
     <string name="ignore_patterns">Πρότυπο για αγνόηση</string>
     <string name="ignore_permissions">Αγνόησε τα δικαιώματα</string>
-    <string name="incoming_rate_limit_kibs">Περιορισμός ταχύτητας λήψης (KiB/δ)</string>
+    <string name="incoming_rate_limit_kibs">Περιορισμός ταχύτητας λήψης (KiB/s)</string>
     <string name="introducer">Βασικός κόμβος</string>
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Αντιστροφή της δοσμένης συνθήκης (π.χ. να μην εξαιρείς) </string>
     <string name="items">εγγραφές</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Τοπική ανεύρεση</string>
     <string name="local_state">Τοπική κατάσταση</string>
     <string name="maximum_age">Μέγιστη ηλικία</string>
+    <string name="metadata_only">Μόνο μεταδεδομένα</string>
     <string name="move_to_top_of_queue">Μεταφορά στην αρχή της λίστας</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Τελεστής μπαλαντέρ (*) για πολλά επίπεδα (χρησιμοποιείται για εμφωλευμένους φακέλους)</string>
     <string name="never">Ποτέ</string>
@@ -84,6 +87,7 @@
     <string name="no">Όχι</string>
     <string name="no_file_versioning">Να μην τηρούνται εκδόσεις</string>
     <string name="notice">Σημείωση</string>
+    <string name="off">Απενεργοποιημένο</string>
     <string name="offline">Εκτός σύνδεσης</string>
     <string name="ok">OK</string>
     <string name="online">Συνδεδεμένο</string>
@@ -157,8 +161,8 @@
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Ο χρόνος επανελέγχου για αλλαγές είναι σε δευτερόλεπτα (δηλ. θετικός αριθμός).</string>
     <string name="the_rescan_interval_must_be_at_least_5_seconds">Ο χρόνος επανελέγχου πρέπει να είναι πάνω από 5 δευτερόλεπτα.</string>
     <string name="unknown">Άγνωστο</string>
-    <string name="unshared">Δεν μοιράζεται</string>
-    <string name="unused">Δεν χρησιμοποιείται</string>
+    <string name="unshared">Δε μοιράζεται</string>
+    <string name="unused">Δε χρησιμοποιείται</string>
     <string name="up_to_date">Ενημερωμένος</string>
     <string name="upgrade_to_version">Αναβάθμιση στην έκδοση %1$s</string>
     <string name="upgrading">Αναβάθμιση</string>

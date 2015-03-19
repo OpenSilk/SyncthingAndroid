@@ -8,6 +8,7 @@
     <string name="add_new_folder">添加新文件夹？</string>
     <string name="address">地址</string>
     <string name="addresses">地址列表</string>
+    <string name="all_data">所有数据</string>
     <string name="allow_anonymous_usage_reporting">允许匿名使用报告?</string>
     <string name="anonymous_usage_reporting">匿名使用报告</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">在介绍人设备上被添加的其它设备，也将会被添加到本机。</string>
@@ -17,6 +18,7 @@
     <string name="changelog">更新日志</string>
     <string name="close">关闭</string>
     <string name="comment_when_used_at_the_start_of_a_line">注释，在行首使用</string>
+    <string name="compression">压缩</string>
     <string name="compression_is_recommended_in_most_setups">在大多数场合，建议开启压缩</string>
     <string name="connection_error">连接出错</string>
     <string name="copied_from_elsewhere">从其他地点复制</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">在局域网上寻找节点</string>
     <string name="local_state">本地状态</string>
     <string name="maximum_age">历史版本最长保留时间</string>
+    <string name="metadata_only">仅元数据</string>
     <string name="move_to_top_of_queue">移动到队列顶端</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">多级通配符（用以匹配多层文件夹）</string>
     <string name="never">从未</string>
@@ -84,6 +87,7 @@
     <string name="no">否</string>
     <string name="no_file_versioning">不启用版本控制</string>
     <string name="notice">提示</string>
+    <string name="off">关闭</string>
     <string name="offline">离线</string>
     <string name="ok">确定</string>
     <string name="online">在线</string>

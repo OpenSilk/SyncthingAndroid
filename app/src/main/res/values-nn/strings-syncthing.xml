@@ -8,6 +8,7 @@
     <string name="add_new_folder">Legg til ny mappe?</string>
     <string name="address">Adresse</string>
     <string name="addresses">Adresser</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Tillat Anonym Innsamling Av Brukardata?</string>
     <string name="anonymous_usage_reporting">Tillat Anonym Innsamling Av Brukardata</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Einingar konfigurert på ein introduksjonseining vil òg verte lagt til denne eininga.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Endringslog</string>
     <string name="close">Lukk</string>
     <string name="comment_when_used_at_the_start_of_a_line">Kommentar, når det vert brukt i starten av ei linje.</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">Komprimering er tilrådd i dei fleste høve.</string>
     <string name="connection_error">Tilkoplingsfeil</string>
     <string name="copied_from_elsewhere">Kopiert frå ein annan stad</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Lokal Søking</string>
     <string name="local_state">Lokal Tilstand</string>
     <string name="maximum_age">Maksimal Levetid</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Multinivåsøk (søkjer på fleire mappenivå)</string>
     <string name="never">Aldri</string>
@@ -84,6 +87,7 @@
     <string name="no">Nei</string>
     <string name="no_file_versioning">Ingen Versjonskontroll</string>
     <string name="notice">Merknad</string>
+    <string name="off">Off</string>
     <string name="offline">Fråkopla</string>
     <string name="ok">OK</string>
     <string name="online">Tilkopla</string>

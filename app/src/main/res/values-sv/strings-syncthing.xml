@@ -8,6 +8,7 @@
     <string name="add_new_folder">Lägg till katalog?</string>
     <string name="address">Adress</string>
     <string name="addresses">Adresser</string>
+    <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Tillåt anonym användarstatistik?</string>
     <string name="anonymous_usage_reporting">Anonym användarstatistik</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Enheter konfigurerade på en introduktörsenhet kommer också att läggas till den här enheten.</string>
@@ -17,6 +18,7 @@
     <string name="changelog">Changelog</string>
     <string name="close">Stäng</string>
     <string name="comment_when_used_at_the_start_of_a_line">Kommentar, vid början av en rad.</string>
+    <string name="compression">Compression</string>
     <string name="compression_is_recommended_in_most_setups">Komprimering är rekommenderat för de flesta.</string>
     <string name="connection_error">Anslutningsproblem</string>
     <string name="copied_from_elsewhere">Kopierat utifrån</string>
@@ -76,6 +78,7 @@
     <string name="local_discovery">Lokal uppslagning</string>
     <string name="local_state">Lokal status</string>
     <string name="maximum_age">Högsta åldersgräns</string>
+    <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Jokertecken som representerar noll eller fler godtyckliga tecken, även över kataloggränser.</string>
     <string name="never">Aldrig</string>
@@ -84,6 +87,7 @@
     <string name="no">Nej</string>
     <string name="no_file_versioning">Ingen versionshantering</string>
     <string name="notice">Observera</string>
+    <string name="off">Off</string>
     <string name="offline">Ej tillgänglig</string>
     <string name="ok">OK</string>
     <string name="online">Tillgänglig</string>
