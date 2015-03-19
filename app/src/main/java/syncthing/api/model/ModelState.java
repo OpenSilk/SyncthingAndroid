@@ -33,13 +33,13 @@ public enum ModelState {
     @SerializedName("syncing") SYNCING(R.string.syncing),
     @SerializedName("unknown") UNKNOWN(R.string.unknown);
 
-    private final int resId;
+    private final int resource;
 
-    private ModelState(int resId) {
-        this.resId = resId;
+    private ModelState(int resource) {
+        this.resource = resource;
     }
 
     public CharSequence localizedString(Context context) {
-        return context.getString(resId);
+        return context.getString(resource);
     }
 }

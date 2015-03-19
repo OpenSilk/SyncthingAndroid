@@ -24,10 +24,17 @@ import java.io.Serializable;
  */
 public class GUIConfig implements Serializable {
     private static final long serialVersionUID = 2361764664373127666L;
-    public boolean enabled = true;
-    public String address = "127.0.0.1:8080";
+    public boolean enabled;
+    public String address;
     public String user;
     public String password;
     public boolean useTLS;
     public String apiKey;
+
+    public static GUIConfig withDefaults() {
+        GUIConfig c = new GUIConfig();
+        c.enabled = true;
+        c.address = "127.0.0.1:8080";
+        return c;
+    }
 }

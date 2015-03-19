@@ -17,15 +17,13 @@
 
 package syncthing.api.model;
 
-/**
-* Created by drew on 3/17/15.
-*/
-public class VersioningParams {
-    //Simple
-    public String keep = "5";
-    //Staggered
-    public String versionPath;
-    public String maxAge = "31536000"; //365days
-    public String cleanInterval = "3600";
+import com.google.gson.annotations.SerializedName;
 
+/**
+ * Created by drew on 3/18/15.
+ */
+public enum Compression {
+    @SerializedName("metadata") METADATA,
+    @SerializedName("always") ALWAYS,
+    @SerializedName("never") NEVER,
 }

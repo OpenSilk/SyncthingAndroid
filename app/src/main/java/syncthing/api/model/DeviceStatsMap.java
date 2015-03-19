@@ -30,6 +30,7 @@ import static java.util.Collections.EMPTY_SET;
  */
 public class DeviceStatsMap extends LinkedHashMap<String, DeviceStats> {
     public static final DeviceStatsMap EMPTY = new DeviceStatsMap() {
+        private static final long serialVersionUID = -5473131681633210687L;
         @Override public boolean containsKey(Object key) {
             return false;
         }
@@ -52,4 +53,5 @@ public class DeviceStatsMap extends LinkedHashMap<String, DeviceStats> {
             return EMPTY_MAP;
         }
     };
+    private static final long serialVersionUID = 5372674188012663149L;
 }

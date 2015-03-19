@@ -17,6 +17,7 @@
 
 package syncthing.api.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,14 +29,24 @@ public class FolderConfig {
     public String path;
     public List<FolderDeviceConfig> devices = Collections.emptyList();
     public boolean readOnly;
-    public int rescanIntervalS = 60;
+    public int rescanIntervalS;
     public boolean ignorePerms;
     public VersioningConfig versioning = new VersioningConfig();
-    public boolean lenientMtimes;
-    public int copiers = 1;
-    public int pullers = 16;
-    public int hashers = 0;
+    public boolean lenientMTimes;
+    public int copiers;// = 1;
+    public int pullers;// = 16;
+    public int hashers;// = 0;
     public String invalid;
+
+    public static FolderConfig withDefaults() {
+        FolderConfig f = new FolderConfig();
+        f.devices = new ArrayList<>();
+        f.readOnly = false;
+        f.rescanIntervalS = 60;
+        f.lenientMTimes = false;
+        f.invalid = "";
+        return f;
+    }
 
     @Override
     public boolean equals(Object o) {

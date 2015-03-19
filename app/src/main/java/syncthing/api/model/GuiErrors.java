@@ -17,11 +17,12 @@
 
 package syncthing.api.model;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by drew on 3/15/15.
  */
 public class GuiErrors {
-    public List<GuiError> errors;
+    public List<GuiError> errors = Collections.emptyList();
 }

@@ -30,6 +30,7 @@ import static java.util.Collections.EMPTY_SET;
  */
 public class FolderStatsMap extends LinkedHashMap<String, FolderStats> {
     public static final FolderStatsMap EMPTY = new FolderStatsMap() {
+        private static final long serialVersionUID = -7495908676496328322L;
         @Override public boolean containsKey(Object key) {
             return false;
         }
@@ -52,4 +53,5 @@ public class FolderStatsMap extends LinkedHashMap<String, FolderStats> {
             return EMPTY_MAP;
         }
     };
+    private static final long serialVersionUID = -2891599138746539535L;
 }

@@ -24,26 +24,52 @@ import java.io.Serializable;
  */
 public class OptionsConfig implements Serializable {
     private static final long serialVersionUID = -6584204552575433781L;
-    public String[] listenAddress = new String[]{"0.0.0.0:22000"};
-    public String[] globalAnnounceServers = new String[]{"udp4://announce.syncthing.net:22026", "udp6://announce-v6.syncthing.net:22026"};
-    public boolean globalAnnounceEnabled = true;
-    public boolean localAnnounceEnabled = true;
-    public int localAnnouncePort = 21025;
-    public String localAnnounceMCAddr = "[ff32::5222]:21026";
+    public String[] listenAddress;
+    public String[] globalAnnounceServers;
+    public boolean globalAnnounceEnabled;
+    public boolean localAnnounceEnabled;
+    public int localAnnouncePort;
+    public String localAnnounceMCAddr;
     public int maxSendKbps;
     public int maxRecvKbps;
-    public int reconnectionIntervalS = 60;
-    public boolean startBrowser = true;
-    public boolean upnpEnabled = true;
-    public int upnpLeaseMinutes = 0;
-    public int upnpRenewalMinutes = 30;
-    public int urAccepted; //0 off, -1 permanent
+    public int reconnectionIntervalS;
+    public boolean startBrowser;
+    public boolean upnpEnabled;
+    public int upnpLeaseMinutes;
+    public int upnpRenewalMinutes;
+    public int urAccepted;
     public String urUniqueId;
-    public boolean restartOnWakeup = true;
-    public int autoUpgradeIntervalH = 12;
-    public int keepTemporariesH = 24;
-    public boolean cacheIgnoredFiles = true;
-    public int progressUpdateIntervalS = 5;
-    public boolean symlinksEnabled = true;
-    public boolean limitBandwidthInLan = false;
+    public boolean restartOnWakeup;
+    public int autoUpgradeIntervalH;
+    public int keepTemporariesH;
+    public boolean cacheIgnoredFiles;
+    public int progressUpdateIntervalS;
+    public boolean symlinksEnabled;
+    public boolean limitBandwidthInLan;
+
+    public static OptionsConfig withDefaults() {
+        OptionsConfig o = new OptionsConfig();
+        o.listenAddress = new String[]{"0.0.0.0:22000"};
+        o.globalAnnounceServers = new String[]{"udp4://announce.syncthing.net:22026", "udp6://announce-v6.syncthing.net:22026"};
+        o.globalAnnounceEnabled = true;
+        o.localAnnounceEnabled = true;
+        o.localAnnouncePort = 21025;
+        o.localAnnounceMCAddr = "[ff32::5222]:21026";
+        o.maxSendKbps = 0;
+        o.maxRecvKbps = 0;
+        o.reconnectionIntervalS = 60;
+        o.startBrowser = true;
+        o.upnpEnabled = true;
+        o.upnpLeaseMinutes = 0;
+        o.upnpRenewalMinutes = 30;
+        o.urAccepted = -1; //0 off, -1 permanent
+        o.restartOnWakeup = true;
+        o.autoUpgradeIntervalH = 12;
+        o.keepTemporariesH = 24;
+        o.cacheIgnoredFiles = true;
+        o.progressUpdateIntervalS = 5;
+        o.symlinksEnabled = true;
+        o.limitBandwidthInLan = false;
+        return o;
+    }
 }

@@ -26,10 +26,18 @@ public class DeviceConfig implements Serializable {
     private static final long serialVersionUID = 2383227051854131929L;
     public String deviceID;
     public String name;
-    public String[] addresses = new String[] {"dynamic"};
-    public boolean compression = true;
+    public String[] addresses;
+    public Compression compression;
     public String certName;
-    public boolean introducer = false;
+    public boolean introducer;
+
+    public static DeviceConfig withDefaults() {
+        DeviceConfig d = new DeviceConfig();
+        d.addresses = new String[]{"dynamic"};
+        d.compression = Compression.METADATA;
+        d.introducer = false;
+        return d;
+    }
 
     @Override
     public boolean equals(Object o) {
