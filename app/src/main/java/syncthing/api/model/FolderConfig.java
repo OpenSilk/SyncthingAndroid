@@ -17,8 +17,6 @@
 
 package syncthing.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -26,18 +24,18 @@ import java.util.List;
  * Created by drew on 3/1/15.
  */
 public class FolderConfig {
-    @SerializedName("ID") public String id;
-    @SerializedName("Path") public String path;
-    @SerializedName("Devices") public List<FolderDeviceConfig> devices = Collections.emptyList();
-    @SerializedName("ReadOnly") public boolean readOnly;
-    @SerializedName("RescanIntervalS")public int rescanIntervalS = 60;
-    @SerializedName("IgnorePerms") public boolean ignorePerms;
-    @SerializedName("Versioning") public VersioningConfig versioning = new VersioningConfig();
-    @SerializedName("LenientMtimes") public boolean lenientMtimes;
-    @SerializedName("Copiers") public int copiers = 1;
-    @SerializedName("Pullers") public int pullers = 16;
-    @SerializedName("Hashers") public int hashers = 0;
-    @SerializedName("Invalid")public String invalid;
+    public String id;
+    public String path;
+    public List<FolderDeviceConfig> devices = Collections.emptyList();
+    public boolean readOnly;
+    public int rescanIntervalS = 60;
+    public boolean ignorePerms;
+    public VersioningConfig versioning = new VersioningConfig();
+    public boolean lenientMtimes;
+    public int copiers = 1;
+    public int pullers = 16;
+    public int hashers = 0;
+    public String invalid;
 
     @Override
     public boolean equals(Object o) {

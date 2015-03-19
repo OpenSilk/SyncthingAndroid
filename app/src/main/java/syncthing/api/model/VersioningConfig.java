@@ -17,12 +17,10 @@
 
 package syncthing.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by drew on 3/1/15.
  */
 public class VersioningConfig {
-    @SerializedName("Type") public VersioningType type = VersioningType.NONE;
-    @SerializedName("Params") public VersioningParams params = new VersioningParams();
+    public VersioningType type = VersioningType.NONE;
+    public VersioningParams params = new VersioningParams();
 }

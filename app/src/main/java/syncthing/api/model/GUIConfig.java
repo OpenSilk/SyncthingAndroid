@@ -17,19 +17,17 @@
 
 package syncthing.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
  * Created by drew on 3/1/15.
  */
 public class GUIConfig implements Serializable {
-    private static final long serialVersionUID = -9130937931611793075L;
-    @SerializedName("Enabled")public boolean enabled = true;
-    @SerializedName("Address")public String address = "127.0.0.1:8080";
-    @SerializedName("User")public String user;
-    @SerializedName("Password")public String password;
-    @SerializedName("UseTLS")public boolean useTLS;
-    @SerializedName("APIKey")public String apiKey;
+    private static final long serialVersionUID = 2361764664373127666L;
+    public boolean enabled = true;
+    public String address = "127.0.0.1:8080";
+    public String user;
+    public String password;
+    public boolean useTLS;
+    public String apiKey;
 }

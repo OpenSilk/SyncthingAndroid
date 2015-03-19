@@ -17,14 +17,12 @@
 
 package syncthing.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.joda.time.DateTime;
 
 /**
 * Created by drew on 3/17/15.
 */
 public class LastFile {
-    @SerializedName("At")public DateTime at;
-    @SerializedName("Filename")public String filename;
+    public DateTime at;
+    public String filename;
 }

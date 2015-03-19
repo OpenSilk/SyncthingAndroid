@@ -17,13 +17,11 @@
 
 package syncthing.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.joda.time.DateTime;
 
 /**
  * Created by drew on 3/4/15.
  */
 public class DeviceStats {
-    @SerializedName("LastSeen") public DateTime lastSeen;
+    public DateTime lastSeen;
 }

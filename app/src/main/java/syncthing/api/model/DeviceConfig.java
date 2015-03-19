@@ -17,8 +17,6 @@
 
 package syncthing.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
@@ -26,12 +24,12 @@ import java.io.Serializable;
  */
 public class DeviceConfig implements Serializable {
     private static final long serialVersionUID = 2383227051854131929L;
-    @SerializedName("DeviceID") public String deviceID;
-    @SerializedName("Name") public String name;
-    @SerializedName("Addresses") public String[] addresses = new String[] {"dynamic"};
-    @SerializedName("Compression") public boolean compression = true;
-    @SerializedName("CertName") public String certName;
-    @SerializedName("Introducer") public boolean introducer = false;
+    public String deviceID;
+    public String name;
+    public String[] addresses = new String[] {"dynamic"};
+    public boolean compression = true;
+    public String certName;
+    public boolean introducer = false;
 
     @Override
     public boolean equals(Object o) {

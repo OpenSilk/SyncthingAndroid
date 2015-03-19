@@ -17,11 +17,9 @@
 
 package syncthing.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by drew on 3/4/15.
  */
 public class FolderStats {
-    @SerializedName("LastFile") public LastFile lastFile;
+    public LastFile lastFile;
 }
