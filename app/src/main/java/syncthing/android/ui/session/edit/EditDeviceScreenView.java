@@ -26,6 +26,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +45,7 @@ import butterknife.OnTextChanged;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
+import syncthing.api.model.Compression;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
@@ -60,7 +63,10 @@ public class EditDeviceScreenView extends ScrollView {
     @InjectView(R.id.error_device_id_invalid) TextView errorDeviceIdInvalid;
     @InjectView(R.id.edit_device_name) TextView editDeviceName;
     @InjectView(R.id.edit_addresses) TextView editAddresses;
-    @InjectView(R.id.check_compression) CheckBox checkCompression;
+    @InjectView(R.id.radio_group_compression) RadioGroup groupCompression;
+    @InjectView(R.id.radio_all_compression) RadioButton rdioAllCompression;
+    @InjectView(R.id.radio_meta_compression) RadioButton rdioMetaCompression;
+    @InjectView(R.id.radio_no_compression) RadioButton rdioNoCompression;
     @InjectView(R.id.check_introducer) CheckBox checkIntroducer;
     @InjectView(R.id.share_folders_container) ViewGroup shareFoldersContainer;
     @InjectView(R.id.btn_delete) Button btnDelete;
@@ -68,6 +74,7 @@ public class EditDeviceScreenView extends ScrollView {
     final EditDevicePresenter presenter;
 
     boolean isAdd;
+    DeviceConfig device;
     AlertDialog errorDialog;
 
     public EditDeviceScreenView(Context context, AttributeSet attrs) {
@@ -83,6 +90,7 @@ public class EditDeviceScreenView extends ScrollView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
+        groupCompression.setOnCheckedChangeListener(compressionChangedListener);
         if(!isInEditMode()) {
             presenter.takeView(this);
         }
@@ -112,7 +120,6 @@ public class EditDeviceScreenView extends ScrollView {
 
     @OnClick(R.id.btn_save)
     void onSave() {
-        DeviceConfig device = new DeviceConfig();
         if (!presenter.validateDeviceId(editDeviceId.getText().toString(), false)) {
             return;
         }
@@ -122,7 +129,18 @@ public class EditDeviceScreenView extends ScrollView {
             return;
         }
         device.addresses = SyncthingUtils.rollArray(editAddresses.getText().toString());
-        device.compression = checkCompression.isChecked();
+        switch (groupCompression.getCheckedRadioButtonId()) {
+            case R.id.radio_all_compression:
+                device.compression = Compression.ALWAYS;
+                break;
+            case R.id.radio_meta_compression:
+                device.compression = Compression.METADATA;
+                break;
+            case R.id.radio_no_compression:
+            default:
+                device.compression = Compression.NEVER;
+                break;
+        }
         device.introducer = checkIntroducer.isChecked();
 
         Map<String, Boolean> folders = new HashMap<>();
@@ -137,8 +155,10 @@ public class EditDeviceScreenView extends ScrollView {
         presenter.saveDevice(device, folders);
     }
 
-    void initialize(boolean isAdd, DeviceConfig device, Collection<FolderConfig> folders) {
+    void initialize(boolean isAdd, DeviceConfig device, Collection<FolderConfig> folders, boolean fromsavedstate) {
         this.isAdd = isAdd;
+        this.device = device;
+        if (fromsavedstate) return;
         if (!isAdd) {
             editDeviceId.setText(device.deviceID);
             editDeviceId.setEnabled(false);
@@ -147,13 +167,13 @@ public class EditDeviceScreenView extends ScrollView {
             descDeviceId2.setVisibility(GONE);
             editDeviceName.setText(device.name);
             editAddresses.setText(SyncthingUtils.unrollArray(device.addresses));
-            checkCompression.setChecked(device.compression);
+            setCompression(device.compression);
             checkIntroducer.setChecked(device.introducer);
         } else {
             //set nice defaults
-            DeviceConfig nd = new DeviceConfig();
+            DeviceConfig nd = DeviceConfig.withDefaults();
             editAddresses.setText(SyncthingUtils.unrollArray(nd.addresses));
-            checkCompression.setChecked(nd.compression);
+            setCompression(nd.compression);
             checkIntroducer.setChecked(nd.introducer);
         }
 
@@ -174,6 +194,22 @@ public class EditDeviceScreenView extends ScrollView {
 
         btnDelete.setVisibility(isAdd ? GONE : VISIBLE);
 
+    }
+
+    void setCompression(Compression compression) {
+        switch (compression) {
+            case ALWAYS:
+                rdioAllCompression.setChecked(true);
+                break;
+            case METADATA:
+                rdioMetaCompression.setChecked(true);
+                break;
+            case NEVER:
+            default:
+                rdioNoCompression.setChecked(true);
+                break;
+
+        }
     }
 
     @OnTextChanged(R.id.edit_device_id)
@@ -224,6 +260,21 @@ public class EditDeviceScreenView extends ScrollView {
     void showConfigSaved() {
         Toast.makeText(getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
     }
+
+    final RadioGroup.OnCheckedChangeListener compressionChangedListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch (checkedId) {
+                case R.id.radio_all_compression:
+                    break;
+                case R.id.radio_meta_compression:
+                    break;
+                case R.id.radio_no_compression:
+                default:
+                    break;
+            }
+        }
+    };
 
     static class FolderCheckBox extends CheckBox {
         final FolderConfig folder;

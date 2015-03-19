@@ -17,13 +17,27 @@
 
 package syncthing.api.model;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
+
+import syncthing.android.R;
 
 /**
  * Created by drew on 3/18/15.
  */
 public enum Compression {
-    @SerializedName("metadata") METADATA,
-    @SerializedName("always") ALWAYS,
-    @SerializedName("never") NEVER,
+    @SerializedName("always") ALWAYS(R.string.all_data),
+    @SerializedName("metadata") METADATA(R.string.metadata_only),
+    @SerializedName("never") NEVER(R.string.off);
+
+    private final int resource;
+
+    private Compression(int resource) {
+        this.resource = resource;
+    }
+
+    public CharSequence localizedString(Context context) {
+        return context.getString(resource);
+    }
 }

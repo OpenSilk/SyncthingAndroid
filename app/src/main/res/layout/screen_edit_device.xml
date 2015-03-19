@@ -59,8 +59,6 @@
 
         </LinearLayout>
 
-
-
         <TextView
             android:id="@+id/desc_device_id"
             android:layout_width="match_parent"
@@ -125,18 +123,39 @@
             android:text="@string/enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address"
             style="@style/session.edit.FieldDescription"/>
 
-        <CheckBox
-            android:id="@+id/check_compression"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/use_compression"
-            style="@style/session.edit.Checkbox"/>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/compression_is_recommended_in_most_setups"
-            style="@style/session.edit.FieldDescription"/>
+            android:text="@string/compression"
+            style="@style/session.edit.FieldHeader"/>
+
+        <RadioGroup
+            android:id="@+id/radio_group_compression"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_meta_compression"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/metadata_only"
+                style="@style/session.edit.RadioButton"/>
+
+            <RadioButton
+                android:id="@+id/radio_all_compression"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/all_data"
+                style="@style/session.edit.RadioButton"/>
+
+            <RadioButton
+                android:id="@+id/radio_no_compression"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/off"
+                style="@style/session.edit.RadioButton"/>
+
+        </RadioGroup>
 
         <CheckBox
             android:id="@+id/check_introducer"

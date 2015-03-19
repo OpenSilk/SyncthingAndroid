@@ -22,6 +22,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.mortar.ActivityResultsController;
 import org.opensilk.common.mortar.ActivityResultsListener;
@@ -91,13 +92,18 @@ public class EditDevicePresenter extends ViewPresenter<EditDeviceScreenView> imp
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        originalDevice = controller.getDevice(deviceId);
-        getView().initialize(isAdd, originalDevice, controller.getFolders());
+        if (savedInstanceState == null) {
+            originalDevice = SerializationUtils.clone(controller.getDevice(deviceId));
+        } else {
+            originalDevice = (DeviceConfig) savedInstanceState.getSerializable("device");
+        }
+        getView().initialize(isAdd, originalDevice, controller.getFolders(), savedInstanceState != null);
     }
 
     @Override
     protected void onSave(Bundle outState) {
         super.onSave(outState);
+        outState.putSerializable("device", originalDevice);
     }
 
     boolean validateDeviceId(CharSequence text, boolean strict) {
@@ -119,6 +125,7 @@ public class EditDevicePresenter extends ViewPresenter<EditDeviceScreenView> imp
         editFragmentPresenter.dismissDialog();
     }
 
+    //todo im pretty sure we dont need to pass the device, the view /should/ be operating on our copy
     void saveDevice(DeviceConfig device, Map<String, Boolean> folders) {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();

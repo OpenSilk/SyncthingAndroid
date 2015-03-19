@@ -159,9 +159,10 @@
                     style="@style/session.RecyclerTextLeftColumn"/>
 
                 <TextView
+                    android:id="@+id/compresion_type"
                     android:layout_toRightOf="@id/use_compression_title"
                     android:layout_alignBaseline="@id/use_compression_title"
-                    android:text="@string/yes"
+                    tools:text="@string/yes"
                     style="@style/session.RecyclerTextRightColumn"/>
 
             </RelativeLayout>

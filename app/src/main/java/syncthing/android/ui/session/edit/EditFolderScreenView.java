@@ -229,7 +229,7 @@ public class EditFolderScreenView extends ScrollView {
 
         } else {
             //Initialize with nice defaults
-            FolderConfig nf = new FolderConfig();
+            FolderConfig nf = FolderConfig.withDefaults();
             editRescanIntrvl.setText(String.valueOf(nf.rescanIntervalS));
             editFolderPath.setText(systemInfo.tilde);
             editFolderPath.setAdapter(editFolderPathAdapter);

@@ -58,6 +58,7 @@ public class DeviceCardView extends CardViewWrapper {
     @InjectView(R.id.address_container) ViewGroup addressHider;
     @InjectView(R.id.address) TextView address;
     @InjectView(R.id.use_compression_container) ViewGroup compressionHider;
+    @InjectView(R.id.compresion_type) TextView compression;
     @InjectView(R.id.introducer_container) ViewGroup introducerHider;
     @InjectView(R.id.version_container) ViewGroup versionHider;
     @InjectView(R.id.version) TextView version;
@@ -127,7 +128,8 @@ public class DeviceCardView extends CardViewWrapper {
 
         name.setText(SyncthingUtils.getDisplayName(device));
 
-        compressionHider.setVisibility(device.compression ? VISIBLE : GONE);
+        compressionHider.setVisibility(VISIBLE);
+        compression.setText(device.compression.localizedString(getContext()));
         introducerHider.setVisibility(device.introducer ? VISIBLE : GONE);
     }
 
@@ -168,6 +170,7 @@ public class DeviceCardView extends CardViewWrapper {
             lastSeen.setText(R.string.unknown);
         } else {
             if (stats.lastSeen.year().equals(epoch.year())) {
+                compressionHider.setVisibility(GONE);
                 lastSeen.setText(R.string.never);
             } else {
                 lastSeen.setText(stats.lastSeen.toString("yyyy-MM-dd HH:mm"));

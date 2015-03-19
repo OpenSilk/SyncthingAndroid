@@ -31,7 +31,7 @@ public class FolderConfig {
     public boolean readOnly;
     public int rescanIntervalS;
     public boolean ignorePerms;
-    public VersioningConfig versioning = new VersioningConfig();
+    public VersioningConfig versioning;
     public boolean lenientMTimes;
     public int copiers;// = 1;
     public int pullers;// = 16;
@@ -43,6 +43,7 @@ public class FolderConfig {
         f.devices = new ArrayList<>();
         f.readOnly = false;
         f.rescanIntervalS = 60;
+        f.versioning = new VersioningConfig();
         f.lenientMTimes = false;
         f.invalid = "";
         return f;
