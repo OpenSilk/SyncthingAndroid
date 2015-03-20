@@ -41,22 +41,27 @@ public class NavigationScreenView extends LinearLayout {
 
     final NavigationPresenter presenter;
 
-    NavigationRecyclerAdapter adapter;
+    final NavigationRecyclerAdapter adapter;
 
     public NavigationScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
         presenter = DaggerService.<NavigationComponent>getDaggerComponent(getContext()).presenter();
+        adapter = new NavigationRecyclerAdapter();
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        adapter = new NavigationRecyclerAdapter();
-        adapter.setExpandListener(list);
-        list.setWobbleOnExpand(false);
+//        adapter.setExpandListener(list);
+//        list.setWobbleOnExpand(false);
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
         presenter.takeView(this);
     }
 

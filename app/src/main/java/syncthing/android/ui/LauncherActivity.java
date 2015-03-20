@@ -92,7 +92,6 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//TODO temporary
 
-        startService(new Intent(this, SyncthingInstance.class));
     }
 
     @Override
@@ -101,7 +100,6 @@ public class LauncherActivity extends MortarFragmentActivity implements
         mActionBarOwner.dropView(this);
         mDrawerOwner.dropView(this);//Noop if no view taken
         mMenuConfig = null;
-        stopService(new Intent(this, SyncthingInstance.class));
     }
 
     @Override

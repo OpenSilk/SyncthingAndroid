@@ -88,12 +88,12 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
         Timber.d("onLoad");
         super.onLoad(savedInstanceState);
         if (savedInstanceState != null) {
+            Timber.d("from saved instance");
             currentDevice = savedInstanceState.getParcelable("current");
-            reload(false);//fragment will still be there
         } else {
             currentDevice = appSettings.getDefaultCredentials();
-            reload(true);
         }
+        reload(savedInstanceState == null);
     }
 
     @Override
@@ -143,6 +143,7 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
     }
 
     void openSessionScreen(Credentials credentials) {
+        Timber.d("opening session for %s", credentials.alias);
         doFragmentReplace(SessionFragment.newInstance(credentials), credentials.alias);
     }
 
