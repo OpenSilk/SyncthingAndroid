@@ -200,19 +200,19 @@ public class FolderCardView extends CardViewWrapper {
 
         globalState.setText(getContext().getString(R.string.num_items_size,
                         model.globalFiles,
-                        SyncthingUtils.readableFileSize(getContext(), model.globalBytes))
+                        SyncthingUtils.humanReadableSize(model.globalBytes))
         );
 
         localState.setText(getContext().getString(R.string.num_items_size,
                         model.localFiles,
-                        SyncthingUtils.readableFileSize(getContext(), model.localBytes))
+                        SyncthingUtils.humanReadableSize(model.localBytes))
         );
 
         if (model.needFiles > 0) {
             needFilesHider.setVisibility(VISIBLE);
             needFiles.setText(getContext().getString(R.string.num_items_size,
                             model.needFiles,
-                            SyncthingUtils.readableFileSize(getContext(), model.needBytes))
+                            SyncthingUtils.humanReadableSize(model.needBytes))
             );
         } else {
             needFilesHider.setVisibility(GONE);

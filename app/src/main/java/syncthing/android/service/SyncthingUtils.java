@@ -31,6 +31,7 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 import java.util.WeakHashMap;
 
 import syncthing.android.R;
@@ -160,7 +161,7 @@ public class SyncthingUtils {
     public static String truncateId(String deviceId) {
         if (!StringUtils.isEmpty(deviceId)) {
             if (deviceId.length() >= 6) {
-                return deviceId.substring(0, 5).toUpperCase();
+                return deviceId.substring(0, 6).toUpperCase();
             } else {
                 return deviceId.toUpperCase();
             }
@@ -169,26 +170,19 @@ public class SyncthingUtils {
         }
     }
 
-    /**
-     * Converts a number of bytes to a human readable file size (eg 3.5 GB).
-     */
-    public static String readableFileSize(Context context, long bytes) {
-        final String[] units = context.getResources().getStringArray(R.array.file_size_units);
-        if (bytes <= 0) return "0 " + units[0];
-        int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
-        return new DecimalFormat("#,##0.#")
-                .format(bytes / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    private static final DecimalFormat READABLE_DECIMAL_FORMAT = new DecimalFormat("#,##0.#");
+    private static final CharSequence UNITS = "KMGTPE";
+
+    //http://stackoverflow.com/a/3758880
+    public static String humanReadableSize(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(1024));
+        return String.format(Locale.US, "%s %siB",
+                READABLE_DECIMAL_FORMAT.format(bytes / Math.pow(1024, exp)), UNITS.charAt(exp - 1));
     }
 
-    /**
-     * Converts a number of bytes to a human readable transfer rate in bits (eg 100 Kb/s).
-     */
-    public static String readableTransferRate(Context context, long bits) {
-        final String[] units = context.getResources().getStringArray(R.array.transfer_rate_units);
-        if (bits <= 0) return "0 " + units[0];
-        int digitGroups = (int) (Math.log10(bits) / Math.log10(1024));
-        return new DecimalFormat("#,##0.#")
-                .format(bits / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    public static String humanReadableTransferRate(long bytes) {
+        return humanReadableSize(bytes) + "/s";
     }
 
     public static String daysToSeconds(String days) {
@@ -217,7 +211,7 @@ public class SyncthingUtils {
         return b.toString();
     }
 
-    static final CharSequence CHARS = "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-";
+    private static final CharSequence CHARS = "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-";
 
     public static String randomString(int len) {
         String res = "";

@@ -143,15 +143,15 @@ public class DeviceCardView extends CardViewWrapper {
         } else {
             download.setText(getContext().getString(
                     R.string.transfer_rate_total,
-                    SyncthingUtils.readableTransferRate(getContext(), conn.inbps),
-                    SyncthingUtils.readableFileSize(getContext(), conn.inBytesTotal)
+                    SyncthingUtils.humanReadableTransferRate(conn.inbps),
+                    SyncthingUtils.humanReadableSize(conn.inBytesTotal)
             ));
             downloadHider.setVisibility(VISIBLE);
 
             upload.setText(getContext().getString(
                     R.string.transfer_rate_total,
-                    SyncthingUtils.readableTransferRate(getContext(), conn.outbps),
-                    SyncthingUtils.readableFileSize(getContext(), conn.outBytesTotal)
+                    SyncthingUtils.humanReadableTransferRate(conn.outbps),
+                    SyncthingUtils.humanReadableSize(conn.outBytesTotal)
             ));
             uploadHider.setVisibility(VISIBLE);
 

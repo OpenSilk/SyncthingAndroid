@@ -138,13 +138,13 @@ public class MyDeviceCardView extends CardViewWrapper {
         }
         download.setText(getContext().getString(
                 R.string.transfer_rate_total,
-                SyncthingUtils.readableTransferRate(getContext(), conn.inbps),
-                SyncthingUtils.readableFileSize(getContext(), conn.inBytesTotal)
+                SyncthingUtils.humanReadableTransferRate(conn.inbps),
+                SyncthingUtils.humanReadableSize(conn.inBytesTotal)
         ));
         upload.setText(getContext().getString(
                 R.string.transfer_rate_total,
-                SyncthingUtils.readableTransferRate(getContext(), conn.outbps),
-                SyncthingUtils.readableFileSize(getContext(), conn.outBytesTotal)
+                SyncthingUtils.humanReadableTransferRate(conn.outbps),
+                SyncthingUtils.humanReadableSize(conn.outBytesTotal)
         ));
     }
 
@@ -152,7 +152,7 @@ public class MyDeviceCardView extends CardViewWrapper {
         if (sys == null) {
             return;
         }
-        memory.setText(SyncthingUtils.readableFileSize(getContext(), sys.sys));
+        memory.setText(SyncthingUtils.humanReadableSize(sys.sys));
         cpu.setText(getResources().getString(R.string.cpu_percent, cpuFormat.format(sys.cpuPercent)));
 
         if (sys.extAnnounceOK != null && sys.announceServersTotal > 0) {
