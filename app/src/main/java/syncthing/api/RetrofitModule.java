@@ -111,14 +111,18 @@ public class RetrofitModule {
     static final int LONGPOLL_CORE_POOL_SIZE = 0;
     static final int LONGPOLL_MAXIMUM_POOL_SIZE = 2;
 
-    @Provides @Singleton @Named("longpoll")
+    //Gross hack, when switching sessions the longpoll will block until it
+    //receives an event or it times out which can be minutes, so just make
+    //a new executor until i figure a better way
+    @Provides /*@Singleton*/ @Named("longpoll")
     public Executor provideLongpollRetrofitHttpExecutor(ThreadFactory factory) {
-        return new ThreadPoolExecutor(
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
                 LONGPOLL_CORE_POOL_SIZE, LONGPOLL_MAXIMUM_POOL_SIZE,
                 60L, TimeUnit.SECONDS,
                 new SynchronousQueue<Runnable>(),
                 factory
         );
+        return executor;
     }
 
     @Provides @Singleton
