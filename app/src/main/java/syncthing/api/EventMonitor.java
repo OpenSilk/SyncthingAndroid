@@ -44,6 +44,7 @@ public class EventMonitor {
     public static enum Error {
         UNAUTHORIZED,
         STOPPING,
+        DISCONNECTED,
         UNKNOWN,
     }
 
@@ -109,6 +110,7 @@ public class EventMonitor {
                                 RetrofitError e = (RetrofitError) t;
                                 switch (e.getKind()) {
                                     case NETWORK: {
+                                        listener.onError(Error.DISCONNECTED);
                                         Throwable cause = t.getCause();
                                         unhandledErrorCount--;
                                         if (cause instanceof SocketTimeoutException) {
@@ -140,6 +142,8 @@ public class EventMonitor {
                                                 e.getResponse().getStatus(), e.getResponse().getReason());
                                         if (e.getResponse().getStatus() == 401) {
                                             listener.onError(Error.UNAUTHORIZED);
+                                        } else {
+                                            //todo
                                         }
                                         return;
                                     }

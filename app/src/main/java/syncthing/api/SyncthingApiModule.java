@@ -46,7 +46,7 @@ public class SyncthingApiModule {
                 .setConverter(converter)
                 .setClient(client)
                 .setExecutors(httpExecutor, null)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .setRequestInterceptor(interceptor)
                 .build();
         return adapter.create(SyncthingApi.class);

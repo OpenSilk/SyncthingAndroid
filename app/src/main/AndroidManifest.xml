@@ -48,6 +48,9 @@
             android:name=".ui.login.LoginActivity"
             android:theme="@style/LoginTheme"/>
 
+        <service android:name=".service.SyncthingInstance"
+                 android:process=":service"/>
+
     </application>
 
 </manifest>

@@ -18,6 +18,7 @@
 package syncthing.android.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -40,6 +41,7 @@ import butterknife.Optional;
 import mortar.MortarScope;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
+import syncthing.android.service.SyncthingInstance;
 import syncthing.android.service.SyncthingUtils;
 
 /**
@@ -90,6 +92,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//TODO temporary
 
+        startService(new Intent(this, SyncthingInstance.class));
     }
 
     @Override
@@ -98,6 +101,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
         mActionBarOwner.dropView(this);
         mDrawerOwner.dropView(this);//Noop if no view taken
         mMenuConfig = null;
+        stopService(new Intent(this, SyncthingInstance.class));
     }
 
     @Override

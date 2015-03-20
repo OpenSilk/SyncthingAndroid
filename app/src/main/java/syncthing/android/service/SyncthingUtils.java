@@ -139,7 +139,7 @@ public class SyncthingUtils {
 
         if (old == 0 || sForegroundActivities == 0) {
             final Intent intent = new Intent(context, SyncthingInstance.class);
-            intent.setAction(SyncthingInstance.ACTION_FOREGROUND_STATE_CHANGED);
+            intent.setAction(SyncthingInstance.FOREGROUND_STATE_CHANGED);
             intent.putExtra(SyncthingInstance.EXTRA_NOW_IN_FOREGROUND, sForegroundActivities != 0);
             context.startService(intent);
         }

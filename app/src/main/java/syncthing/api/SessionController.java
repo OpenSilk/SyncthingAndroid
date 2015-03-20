@@ -228,14 +228,14 @@ public class SessionController implements EventMonitor.EventListener {
     public void onError(EventMonitor.Error e) {
         Timber.w("onError %s", e.toString());
         switch (e) {
-            case UNAUTHORIZED: {
+            case UNAUTHORIZED:
                 updateState(false);
                 postChange(Change.NEED_LOGIN);
                 break;
-            } case STOPPING: {
+            case STOPPING:
+            case DISCONNECTED:
                 updateState(false);
                 break;
-            }
         }
     }
 
@@ -981,14 +981,14 @@ public class SessionController implements EventMonitor.EventListener {
 
     void logException(Throwable e) {
         Timber.e("%s: %s", e.getClass().getSimpleName(), e.getMessage(), e);
-        if (e instanceof RetrofitError) {
-            RetrofitError re = (RetrofitError)e;
-            int status = re.getResponse().getStatus();
-            if (status >= 400 && status <= 599) {
-                updateState(false);
-                //TODO notify offline
-            }
-        }
+//        if (e instanceof RetrofitError) {
+//            RetrofitError re = (RetrofitError)e;
+//            int status = re.getResponse().getStatus();
+//            if (status >= 400 && status <= 599) {
+//                updateState(false);
+//                //TODO notify offline
+//            }
+//        }
     }
 
     public Subscription subscribeChanges(Action1<Change> onNext, Change... changes) {
