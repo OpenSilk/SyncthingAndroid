@@ -4,3 +4,5 @@
 .DS_Store
 /build
 *.iml
+
+/app/src/main/assets/syncthing*
