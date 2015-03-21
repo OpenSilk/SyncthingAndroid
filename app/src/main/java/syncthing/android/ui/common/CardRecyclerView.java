@@ -72,7 +72,7 @@ public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpand
          * @param recyclerView     recyclerView
          */
         public static void animateCollapsing(final View expandingLayout, final CanExpand cardView, final RecyclerView recyclerView, boolean wobble) {
-            int origHeight = expandingLayout.getHeight();
+            final int origHeight = expandingLayout.getHeight();
 
             ValueAnimator animator = createHeightAnimator(expandingLayout, origHeight, 0);
             animator.addListener(new AnimatorListenerAdapter() {
@@ -80,6 +80,11 @@ public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpand
                 @Override
                 public void onAnimationEnd(final Animator animator) {
                     expandingLayout.setVisibility(View.GONE);
+
+                    //reset height else recycled views never show
+                    ViewGroup.LayoutParams layoutParams = expandingLayout.getLayoutParams();
+                    layoutParams.height = origHeight;
+                    expandingLayout.setLayoutParams(layoutParams);
 
                     cardView.setExpanded(false);//card.setExpanded(true);
 
@@ -206,7 +211,6 @@ public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpand
          * @param recyclerView
          */
         public static void notifyAdapter(RecyclerView recyclerView, int position){
-
             if (recyclerView instanceof CardRecyclerView) {
 
                 CardRecyclerView cardRecyclerView = (CardRecyclerView) recyclerView;

@@ -30,11 +30,12 @@ import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardViewWrapper;
+import syncthing.android.ui.common.ExpandableCardViewWrapper;
 
 /**
  * Created by drew on 3/15/15.
  */
-public class NotifCardErrorView extends CardViewWrapper {
+public class NotifCardErrorView extends ExpandableCardViewWrapper<NotifCardError> {
 
     @InjectView(R.id.expand) ViewGroup expand;
     @InjectView(R.id.time) TextView time;
@@ -64,10 +65,9 @@ public class NotifCardErrorView extends CardViewWrapper {
     }
 
     @Override
-    public void bind(Card card) {
-        NotifCardError err = (NotifCardError) card;
-        time.setText(err.guiError.time.toString("H:mm:ss"));
-        message.setText(err.guiError.error);
+    public void onBind(NotifCardError card) {
+        time.setText(card.guiError.time.toString("H:mm:ss"));
+        message.setText(card.guiError.error);
     }
 
     @Override

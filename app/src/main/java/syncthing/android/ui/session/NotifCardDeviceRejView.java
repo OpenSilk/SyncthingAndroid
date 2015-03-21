@@ -36,12 +36,13 @@ import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardViewWrapper;
+import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.DeviceConfig;
 
 /**
  * Created by drew on 3/6/15.
  */
-public class NotifCardDeviceRejView extends CardViewWrapper {
+public class NotifCardDeviceRejView extends ExpandableCardViewWrapper<NotifCardDeviceRej> {
 
     @InjectView(R.id.identicon) ImageView identicon;
     @InjectView(R.id.header) ViewGroup header;
@@ -51,7 +52,6 @@ public class NotifCardDeviceRejView extends CardViewWrapper {
 
     final SessionPresenter presenter;
 
-    NotifCardDeviceRej item;
     Subscription identiconSubscription;
 
     public NotifCardDeviceRejView(Context context, AttributeSet attrs) {
@@ -81,7 +81,7 @@ public class NotifCardDeviceRejView extends CardViewWrapper {
     @OnClick(R.id.btn_add)
     void addDevice() {
         DeviceConfig device = new DeviceConfig();
-        device.deviceID = item.id;
+        device.deviceID = getCard().id;
         presenter.showSavingDialog();
         //TODO fix
         presenter.controller.editDevice(device, Collections.emptyMap(),
@@ -100,7 +100,7 @@ public class NotifCardDeviceRejView extends CardViewWrapper {
     void ignoreDevice() {
         presenter.showSavingDialog();
         //TODO fix
-        presenter.controller.ignoreDevice(item.id,
+        presenter.controller.ignoreDevice(getCard().id,
                 t -> {
                     presenter.showError("Ignore failed", t.getMessage());
                 },
@@ -114,27 +114,35 @@ public class NotifCardDeviceRejView extends CardViewWrapper {
 
     @OnClick(R.id.btn_later)
     void dismissDevice() {
-        presenter.controller.removeDeviceRejection(item.id);
+        presenter.controller.removeDeviceRejection(getCard().id);
     }
 
     @Override
-    public void bind(Card card) {
-        NotifCardDeviceRej newItem = (NotifCardDeviceRej) card;
-        time.setText(newItem.event.time.toString("H:mm:ss"));
+    public void onBind(NotifCardDeviceRej card) {
+        time.setText(card.event.time.toString("H:mm:ss"));
         message.setText(getResources().getString(R.string.device_device_address_wants_to_connect_add_new_device,
-                newItem.id,
-                newItem.event.data.address
+                card.id,
+                card.event.data.address
         ));
-        if (item == null || !StringUtils.equals(newItem.id, item.id)) {
-            identiconSubscription = presenter.identiconGenerator.generateAsync(newItem.id)
-                    .subscribe(identicon::setImageBitmap);
-        }
-        item = newItem;
+        identiconSubscription = presenter.identiconGenerator.generateAsync(card.id)
+                .subscribe(identicon::setImageBitmap);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        unsubscribe();
     }
 
     @Override
     public View getExpandView() {
         return expand;
+    }
+
+    void unsubscribe() {
+        if (identiconSubscription != null) {
+            identiconSubscription.unsubscribe();
+        }
     }
 
 }

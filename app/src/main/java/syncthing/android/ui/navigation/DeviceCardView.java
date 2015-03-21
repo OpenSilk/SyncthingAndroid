@@ -63,9 +63,7 @@ public class DeviceCardView extends LinearLayout implements BindsCard, View.OnCl
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (identiconSubscription != null) {
-            identiconSubscription.unsubscribe();
-        }
+        unsubscribe();
     }
 
     @Override
@@ -76,15 +74,27 @@ public class DeviceCardView extends LinearLayout implements BindsCard, View.OnCl
     }
 
     @Override
-    public void bind(Card card) {
-        DeviceCard newItem = (DeviceCard) card;
-        Credentials creds = newItem.credentials;
-        title.setText(creds.alias);
-        if (item == null || !StringUtils.equals(creds.id, item.credentials.id)) {
-            identiconSubscription = presenter.identiconGenerator.generateAsync(creds.id)
-                    .subscribe(identicon::setImageBitmap);
-        }
-        item = newItem;
+    public DeviceCard getCard() {
+        return item;
     }
 
+    @Override
+    public void bind(Card card) {
+        item = (DeviceCard) card;
+        title.setText(item.credentials.alias);
+        identiconSubscription = presenter.identiconGenerator.generateAsync(item.credentials.id)
+                    .subscribe(identicon::setImageBitmap);
+    }
+
+    @Override
+    public void reset() {
+        item = null;
+        unsubscribe();
+    }
+
+    void unsubscribe() {
+        if (identiconSubscription != null) {
+            identiconSubscription.unsubscribe();
+        }
+    }
 }

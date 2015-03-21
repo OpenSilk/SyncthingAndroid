@@ -41,6 +41,7 @@ import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardViewWrapper;
+import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
@@ -51,7 +52,7 @@ import syncthing.api.model.VersioningType;
 /**
  * Created by drew on 3/1/15.
  */
-public class FolderCardView extends CardViewWrapper {
+public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
     @InjectView(R.id.id) TextView id;
     @InjectView(R.id.state) TextView state;
@@ -75,9 +76,6 @@ public class FolderCardView extends CardViewWrapper {
     @InjectView(R.id.btn_rescan) Button btnRescan;
 
     final SessionPresenter presenter;
-
-    String folderId;
-    String folderPath;
 
     public FolderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -117,14 +115,12 @@ public class FolderCardView extends CardViewWrapper {
 
     @OnClick(R.id.btn_edit)
     void addFolder() {
-        if (folderId == null) return;
-        presenter.openEditFolderScreen(folderId);
+        presenter.openEditFolderScreen(getCard().folder.id);
     }
 
     void openFolder() {
-        if (folderPath == null) return;
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = Uri.parse(folderPath);
+        Uri uri = Uri.parse(getCard().folder.path);
         intent.setDataAndType(uri, "*/*");
         getContext().startActivity(intent);
     }
@@ -135,16 +131,12 @@ public class FolderCardView extends CardViewWrapper {
     }
 
     @Override
-    public void bind(Card card) {
-        FolderCard folderCard = (FolderCard) card;
-        updateFolder(folderCard.folder);
-        updateModel(folderCard.model);
+    public void onBind(FolderCard card) {
+        updateFolder(card.folder);
+        updateModel(card.model);
     }
 
     void updateFolder(FolderConfig folder) {
-
-        this.folderId = folder.id;
-        this.folderPath = folder.path;
 
         id.setText(folder.id);
         directory.setText((folder.path));

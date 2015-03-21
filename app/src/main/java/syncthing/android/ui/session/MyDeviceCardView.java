@@ -39,6 +39,7 @@ import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardViewWrapper;
+import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.SystemInfo;
@@ -47,7 +48,7 @@ import syncthing.api.model.Version;
 /**
  * Created by drew on 3/4/15.
  */
-public class MyDeviceCardView extends CardViewWrapper {
+public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
 
     @InjectView(R.id.identicon) ImageView identicon;
     @InjectView(R.id.name) TextView name;
@@ -63,7 +64,6 @@ public class MyDeviceCardView extends CardViewWrapper {
     final SessionPresenter presenter;
     final DecimalFormat cpuFormat;
 
-    String deviceId;
     Subscription identiconSubscription;
 
     public MyDeviceCardView(Context context, AttributeSet attrs) {
@@ -90,8 +90,7 @@ public class MyDeviceCardView extends CardViewWrapper {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (identiconSubscription != null)
-            identiconSubscription.unsubscribe();
+        unsubscribe();
     }
 
     @OnClick(R.id.header)
@@ -104,29 +103,30 @@ public class MyDeviceCardView extends CardViewWrapper {
         return expand;
     }
 
-    public void bind(Card card) {
-        MyDeviceCard myDeviceCard = (MyDeviceCard) card;
-        updateDevice(myDeviceCard.device);
-        updateConnection(myDeviceCard.connection);
-        updateSystem(myDeviceCard.system);
-        updateVersion(myDeviceCard.version);
+    public void onBind(MyDeviceCard card) {
+        updateDevice(card.device);
+        updateConnection(card.connection);
+        updateSystem(card.system);
+        updateVersion(card.version);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        unsubscribe();
     }
 
     void updateDevice(DeviceConfig device) {
         if (device == null) {
             return;
         }
-        if (!StringUtils.equals(this.deviceId, device.deviceID)) {
-            identiconSubscription = presenter.identiconGenerator.generateAsync(device.deviceID)
-                    .subscribe(new Action1<Bitmap>() {
-                        @Override
-                        public void call(Bitmap bitmap) {
-                            identicon.setImageBitmap(bitmap);
-                        }
-                    });
-        }
-
-        this.deviceId = device.deviceID;
+        identiconSubscription = presenter.identiconGenerator.generateAsync(device.deviceID)
+                .subscribe(new Action1<Bitmap>() {
+                    @Override
+                    public void call(Bitmap bitmap) {
+                        identicon.setImageBitmap(bitmap);
+                    }
+                });
         name.setText(SyncthingUtils.getDisplayName(device));
     }
 
@@ -174,6 +174,12 @@ public class MyDeviceCardView extends CardViewWrapper {
 
     void updateVersion(Version ver) {
         version.setText(ver.version);
+    }
+
+    void unsubscribe() {
+        if (identiconSubscription != null) {
+            identiconSubscription.unsubscribe();
+        }
     }
 
 }

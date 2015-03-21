@@ -32,12 +32,13 @@ import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardViewWrapper;
+import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.DeviceConfig;
 
 /**
  * Created by drew on 3/6/15.
  */
-public class NotifCardFolderRejView extends CardViewWrapper {
+public class NotifCardFolderRejView extends ExpandableCardViewWrapper<NotifCardFolderRej> {
 
     @InjectView(R.id.header) ViewGroup header;
     @InjectView(R.id.expand) ViewGroup expand;
@@ -48,7 +49,6 @@ public class NotifCardFolderRejView extends CardViewWrapper {
 
     final SessionPresenter presenter;
 
-    NotifCardFolderRej item;
     boolean share;
 
     public NotifCardFolderRejView(Context context, AttributeSet attrs) {
@@ -72,7 +72,7 @@ public class NotifCardFolderRejView extends CardViewWrapper {
         if (share) {
             presenter.showSavingDialog();
             //TODO fix
-            presenter.controller.shareFolder(item.event.data.folder, item.event.data.device,
+            presenter.controller.shareFolder(getCard().event.data.folder, getCard().event.data.device,
                     t -> {
                         presenter.showError("Share failed", t.getMessage());
                     },
@@ -84,18 +84,17 @@ public class NotifCardFolderRejView extends CardViewWrapper {
             );
         } else {
             dismissFolder();
-            presenter.openEditFolderScreen(item.event.data.folder, item.event.data.device);
+            presenter.openEditFolderScreen(getCard().event.data.folder, getCard().event.data.device);
         }
     }
 
     @OnClick(R.id.btn_later)
     void dismissFolder() {
-        presenter.controller.removeFolderRejection(item.id);
+        presenter.controller.removeFolderRejection(getCard().id);
     }
 
-    public void bind(Card card) {
-        item = (NotifCardFolderRej) card;
-        share = presenter.controller.getFolder(item.event.data.folder) != null;
+    public void onBind(NotifCardFolderRej card) {
+        share = presenter.controller.getFolder(card.event.data.folder) != null;
         if (share) {
             title.setText(R.string.share_this_folder);
             btnAdd.setText(R.string.share);
@@ -103,17 +102,17 @@ public class NotifCardFolderRejView extends CardViewWrapper {
             title.setText(R.string.add_new_folder);
             btnAdd.setText(R.string.add);
         }
-        time.setText(item.event.time.toString("H:mm:ss"));
-        DeviceConfig device = presenter.controller.getDevice(item.event.data.device);
+        time.setText(card.event.time.toString("H:mm:ss"));
+        DeviceConfig device = presenter.controller.getDevice(card.event.data.device);
         if (device == null) {
             device = new DeviceConfig();
-            device.deviceID = item.event.data.device;
+            device.deviceID = card.event.data.device;
         }
         String name = SyncthingUtils.getDisplayName(device);
         message.setText(getResources().getString(
                 R.string.device_wants_to_share_folder_folder,
                 name,
-                item.event.data.folder
+                card.event.data.folder
         ));
     }
 

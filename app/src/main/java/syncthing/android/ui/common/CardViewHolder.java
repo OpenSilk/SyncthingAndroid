@@ -30,17 +30,23 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Card card, CanExpand.OnExpandListener listener) {
-        if (itemView instanceof CanExpand) {
-            ((CanExpand) itemView).setExpandListener(listener);
-        }
         if (itemView instanceof BindsCard) {
             ((BindsCard) itemView).bind(card);
+        }
+        if (itemView instanceof CanExpand) {
+            CanExpand ce = (CanExpand) itemView;
+            ce.setExpandListener(listener);
         }
     }
 
     public void recycle() {
-        if (itemView instanceof CanExpand) {
-            ((CanExpand) itemView).setExpandListener(null);
+        if (itemView instanceof BindsCard) {
+            ((BindsCard) itemView).reset();
         }
+        if (itemView instanceof CanExpand) {
+            CanExpand ce = (CanExpand) itemView;
+            ce.setExpandListener(null);
+        }
+
     }
 }

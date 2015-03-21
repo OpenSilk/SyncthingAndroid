@@ -19,6 +19,7 @@ package syncthing.android.ui.session;
 
 import syncthing.android.R;
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.SystemInfo;
@@ -27,7 +28,7 @@ import syncthing.api.model.Version;
 /**
  * Created by drew on 3/10/15.
  */
-public class MyDeviceCard extends Card {
+public class MyDeviceCard extends ExpandableCard {
 
     protected final DeviceConfig device;
     protected final ConnectionInfo connection;

@@ -56,6 +56,12 @@ public class HeaderCardView extends TextView implements BindsCard, NoDecorate {
         }
     }
 
+    @Override
+    public Card getCard() {
+        return item;
+    }
+
+    @Override
     public void bind(Card card) {
         item = ((HeaderCard) card);
         setText(item.title);
@@ -63,4 +69,8 @@ public class HeaderCardView extends TextView implements BindsCard, NoDecorate {
         //btnAdd.setText(item.buttonText);
     }
 
+    @Override
+    public void reset() {
+        item = null;
+    }
 }

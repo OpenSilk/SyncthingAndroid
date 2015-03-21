@@ -19,13 +19,14 @@ package syncthing.android.ui.session;
 
 import syncthing.android.R;
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.Model;
 
 /**
  * Created by drew on 3/10/15.
  */
-public class FolderCard extends Card {
+public class FolderCard extends ExpandableCard {
 
     final FolderConfig folder;
     final Model model;

@@ -19,12 +19,13 @@ package syncthing.android.ui.session;
 
 import syncthing.android.R;
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.GuiError;
 
 /**
  * Created by drew on 3/15/15.
  */
-public class NotifCardError extends Card {
+public class NotifCardError extends ExpandableCard {
 
     final GuiError guiError;
 

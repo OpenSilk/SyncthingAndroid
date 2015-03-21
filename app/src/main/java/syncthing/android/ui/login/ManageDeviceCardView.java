@@ -47,6 +47,7 @@ public class ManageDeviceCardView extends LinearLayout implements BindsCard {
 
     Credentials credentials;
     Subscription identiconSubscription;
+    ManageDeviceCard item;
 
     final ManagePresenter presenter;
 
@@ -64,9 +65,7 @@ public class ManageDeviceCardView extends LinearLayout implements BindsCard {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (identiconSubscription != null) {
-            identiconSubscription.unsubscribe();
-        }
+        unsubscribe();
     }
 
     @OnClick(R.id.overflow)
@@ -100,12 +99,29 @@ public class ManageDeviceCardView extends LinearLayout implements BindsCard {
     }
 
     @Override
+    public Card getCard() {
+        return item;
+    }
+
+    @Override
     public void bind(Card card) {
-        ManageDeviceCard mdc = (ManageDeviceCard) card;
-        credentials = mdc.credentials;
+        item = (ManageDeviceCard) card;
+        credentials = item.credentials;
         name.setText(credentials.alias);
         identiconSubscription = presenter.identiconGenerator.generateAsync(credentials.id)
                 .subscribe(identicon::setImageBitmap);
-        check.setVisibility(mdc.isChecked() ? VISIBLE : GONE);
+        check.setVisibility(item.isChecked() ? VISIBLE : GONE);
+    }
+
+    @Override
+    public void reset() {
+        item = null;
+        unsubscribe();
+    }
+
+    void unsubscribe() {
+        if (identiconSubscription != null) {
+            identiconSubscription.unsubscribe();
+        }
     }
 }

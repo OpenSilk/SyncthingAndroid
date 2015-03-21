@@ -30,12 +30,25 @@ import syncthing.android.ui.common.NoDecorate;
  */
 public class HeaderCardView extends TextView implements BindsCard, NoDecorate {
 
+    HeaderCard item;
+
     public HeaderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
+    public Card getCard() {
+        return item;
+    }
+
+    @Override
     public void bind(Card card) {
-        setText(((HeaderCard) card).title);
+        item = (HeaderCard) card;
+        setText(item.title);
+    }
+
+    @Override
+    public void reset() {
+        item = null;
     }
 }

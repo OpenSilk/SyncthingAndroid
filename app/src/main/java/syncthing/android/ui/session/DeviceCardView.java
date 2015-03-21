@@ -37,6 +37,7 @@ import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardViewWrapper;
+import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
@@ -44,7 +45,7 @@ import syncthing.api.model.DeviceStats;
 /**
  * Created by drew on 3/1/15.
  */
-public class DeviceCardView extends CardViewWrapper {
+public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
 
     @InjectView(R.id.identicon) ImageView identicon;
     @InjectView(R.id.name) TextView name;
@@ -68,7 +69,6 @@ public class DeviceCardView extends CardViewWrapper {
     final SessionPresenter presenter;
     final DateTime epoch;
 
-    String deviceId;
     Subscription identiconSubscription;
 
     public DeviceCardView(Context context, AttributeSet attrs) {
@@ -91,9 +91,7 @@ public class DeviceCardView extends CardViewWrapper {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (identiconSubscription != null) {
-            identiconSubscription.unsubscribe();
-        }
+        unsubscribe();
     }
 
     @OnClick(R.id.header)
@@ -103,28 +101,29 @@ public class DeviceCardView extends CardViewWrapper {
 
     @OnClick(R.id.btn_edit)
     void editDevice() {
-        if (deviceId == null) return;
-        presenter.openEditDeviceScreen(deviceId);
+        presenter.openEditDeviceScreen(getCard().device.deviceID);
     }
 
     public ViewGroup getExpandView() {
         return expand;
     }
 
-    public void bind(Card card) {
-        DeviceCard deviceCard = (DeviceCard) card;
-        updateDevice(deviceCard.device);
-        updateConnection(deviceCard.connection);
-        updateStats(deviceCard.stats);
-        updateCompletion(deviceCard.completion);
+    public void onBind(DeviceCard card) {
+        updateDevice(card.device);
+        updateConnection(card.connection);
+        updateStats(card.stats);
+        updateCompletion(card.completion);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        unsubscribe();
     }
 
     void updateDevice(DeviceConfig device) {
-        if (!StringUtils.equals(this.deviceId, device.deviceID)) {
-            identiconSubscription = presenter.identiconGenerator.generateAsync(device.deviceID)
-                    .subscribe(identicon::setImageBitmap);
-        }
-        this.deviceId = device.deviceID;
+        identiconSubscription = presenter.identiconGenerator.generateAsync(device.deviceID)
+                .subscribe(identicon::setImageBitmap);
 
         name.setText(SyncthingUtils.getDisplayName(device));
 
@@ -193,6 +192,12 @@ public class DeviceCardView extends CardViewWrapper {
             status.setTextColor(r.getColor(R.color.device_syncing));
             progress.setVisibility(VISIBLE);
             progress.setProgress(completion);
+        }
+    }
+
+    void unsubscribe() {
+        if (identiconSubscription != null) {
+            identiconSubscription.unsubscribe();
         }
     }
 

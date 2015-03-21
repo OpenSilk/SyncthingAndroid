@@ -24,70 +24,30 @@ import android.widget.FrameLayout;
 /**
  * Created by drew on 3/10/15.
  */
-public abstract class CardViewWrapper extends FrameLayout implements BindsCard, CanExpand {
+public abstract class CardViewWrapper<T extends Card> extends FrameLayout implements BindsCard {
 
     Card card;
-    CanExpand.OnExpandListener expandListener;
-    boolean expanded = false;
 
     public CardViewWrapper(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public abstract void bind(Card card);
+    protected abstract void onBind(T card);
 
-    public Card getCard() {
-        return card;
+    @Override
+    public T getCard() {
+        return (T) card;
     }
 
-    public void setCard(Card card) {
+    @Override
+    public final void bind(Card card) {
         this.card = card;
+        onBind((T) card);
     }
 
-    public CanExpand.OnExpandListener getExpandListener() {
-        return expandListener;
-    }
-
-    public void setExpandListener(CanExpand.OnExpandListener expandListener) {
-        this.expandListener = expandListener;
-    }
-
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
-    }
-
-    public void expand() {
-        if (getExpandView() != null) {
-            if (expandListener != null) {
-                expandListener.onExpandStart(this, getExpandView());
-            } else {
-                getExpandView().setVisibility(VISIBLE);
-                setExpanded(true);
-            }
-        }
-    }
-
-    public void collapse() {
-        if (getExpandView() != null) {
-            if (expandListener != null) {
-                expandListener.onCollapseStart(this, getExpandView());
-            } else {
-                getExpandView().setVisibility(GONE);
-                setExpanded(false);
-            }
-        }
-    }
-
-    public void toggleExpanded() {
-        if (isExpanded()) {
-            collapse();
-        } else {
-            expand();
-        }
+    @Override
+    public void reset() {
+        card = null;
     }
 
 }

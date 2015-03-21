@@ -30,12 +30,13 @@ import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardViewWrapper;
+import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.SessionController;
 
 /**
  * Created by drew on 3/7/15.
  */
-public class NotifCardRestartView extends CardViewWrapper {
+public class NotifCardRestartView extends ExpandableCardViewWrapper<NotifCardRestart> {
 
     @InjectView(R.id.header) ViewGroup header;
     @InjectView(R.id.expand) ViewGroup expand;
@@ -65,7 +66,7 @@ public class NotifCardRestartView extends CardViewWrapper {
     }
 
     @Override
-    public void bind(Card card) {}
+    public void onBind(NotifCardRestart card) {}
 
     @Override
     public View getExpandView() {

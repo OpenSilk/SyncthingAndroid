@@ -18,12 +18,13 @@
 package syncthing.android.ui.session;
 
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.Event;
 
 /**
  * Created by drew on 3/10/15.
  */
-public abstract class NotifCard extends Card {
+public abstract class NotifCard extends ExpandableCard {
 
     final String id;
     final Event event;

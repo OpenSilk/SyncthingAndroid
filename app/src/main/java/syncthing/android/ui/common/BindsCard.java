@@ -21,5 +21,7 @@ package syncthing.android.ui.common;
  * Created by drew on 3/10/15.
  */
 public interface BindsCard {
+    Card getCard();
     void bind(Card card);
+    void reset();
 }

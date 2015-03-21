@@ -15,25 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session;
-
-import syncthing.android.R;
-import syncthing.android.ui.common.Card;
-import syncthing.android.ui.common.ExpandableCard;
+package syncthing.android.ui.common;
 
 /**
- * Created by drew on 3/6/15.
+ * Created by drew on 3/20/15.
  */
-public class NotifCardRestart extends ExpandableCard {
-    public static final NotifCardRestart INSTANCE = new NotifCardRestart();
+public abstract class ExpandableCard extends Card implements Expandable {
+
+    boolean expanded = false;
 
     @Override
-    public int getLayout() {
-        return R.layout.session_notif_restart;
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 
     @Override
-    public int hashCode() {
-        return 31 * getLayout();
+    public boolean isExpanded() {
+        return expanded;
     }
 }
