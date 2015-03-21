@@ -21,7 +21,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.widget.Toast;
 
@@ -57,10 +56,7 @@ public class SessionScreenView extends RecyclerListFrame {
         mListAdapter = new SessionRecyclerAdapter();
         mListAdapter.setExpandListener((CanExpand.OnExpandListener) mList);
         mList.setAdapter(mListAdapter);
-//        mList.setLayoutManager(new LinearLayoutManager(getContext()));
-        StaggeredGridLayoutManager lm = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        lm.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
-        mList.setLayoutManager(lm);
+        mList.setLayoutManager(new LinearLayoutManager(getContext()));
         mPresenter.takeView(this);
     }
 
