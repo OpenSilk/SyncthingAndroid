@@ -46,9 +46,9 @@ public class DeviceCard extends ExpandableCard {
         return R.layout.session_device;
     }
 
-
     @Override
-    public int hashCode() {
-        return device.deviceID.hashCode();
+    public int adapterId() {
+        return super.adapterId() ^ device.deviceID.hashCode();
     }
+
 }

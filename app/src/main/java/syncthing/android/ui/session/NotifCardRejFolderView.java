@@ -30,15 +30,13 @@ import butterknife.OnClick;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
-import syncthing.android.ui.common.Card;
-import syncthing.android.ui.common.CardViewWrapper;
 import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.DeviceConfig;
 
 /**
  * Created by drew on 3/6/15.
  */
-public class NotifCardFolderRejView extends ExpandableCardViewWrapper<NotifCardFolderRej> {
+public class NotifCardRejFolderView extends ExpandableCardViewWrapper<NotifCardRejFolder> {
 
     @InjectView(R.id.header) ViewGroup header;
     @InjectView(R.id.expand) ViewGroup expand;
@@ -51,7 +49,7 @@ public class NotifCardFolderRejView extends ExpandableCardViewWrapper<NotifCardF
 
     boolean share;
 
-    public NotifCardFolderRejView(Context context, AttributeSet attrs) {
+    public NotifCardRejFolderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
     }
@@ -93,7 +91,7 @@ public class NotifCardFolderRejView extends ExpandableCardViewWrapper<NotifCardF
         presenter.controller.removeFolderRejection(getCard().id);
     }
 
-    public void onBind(NotifCardFolderRej card) {
+    public void onBind(NotifCardRejFolder card) {
         share = presenter.controller.getFolder(card.event.data.folder) != null;
         if (share) {
             title.setText(R.string.share_this_folder);

@@ -42,7 +42,7 @@ public class FolderCard extends ExpandableCard {
     }
 
     @Override
-    public int hashCode() {
-        return folder.path.hashCode() + folder.id.hashCode();
+    public int adapterId() {
+        return super.adapterId() ^ folder.id.hashCode();
     }
 }

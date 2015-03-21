@@ -32,6 +32,7 @@ import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.ExpandableCard;
 
 /**
  * Created by drew on 3/6/15.
@@ -74,7 +75,7 @@ public class SessionScreenView extends RecyclerListFrame {
         dismissProgressDialog();
     }
 
-    void initialize(List<Card> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices) {
+    void initialize(List<ExpandableCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices) {
         mListAdapter.setNotifications(notifs, false);
         mListAdapter.setFolders(folders, false);
         mListAdapter.setThisDevice(myDevice, false);
@@ -82,7 +83,7 @@ public class SessionScreenView extends RecyclerListFrame {
         mListAdapter.notifyDataSetChanged();
     }
 
-    void refreshNotifications(List<Card> notifs) {
+    void refreshNotifications(List<ExpandableCard> notifs) {
         mListAdapter.setNotifications(notifs, true);
     }
 

@@ -41,6 +41,7 @@ import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.ExpandableCard;
 import syncthing.android.ui.login.LoginActivity;
 import syncthing.android.ui.session.edit.EditFragment;
 import syncthing.api.SessionController;
@@ -197,8 +198,8 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         );
     }
 
-    List<Card> getNotifications() {
-        List<Card> notifs = new ArrayList<>();
+    List<ExpandableCard> getNotifications() {
+        List<ExpandableCard> notifs = new ArrayList<>();
         if (!controller.isConfigInSync()) {
             notifs.add(NotifCardRestart.INSTANCE);
         }
@@ -207,10 +208,10 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             notifs.add(new NotifCardError(guiError));
         }
         for (Map.Entry<String, Event> e : controller.getDeviceRejections()) {
-            notifs.add(new NotifCardDeviceRej(e.getKey(), e.getValue()));
+            notifs.add(new NotifCardRejDevice(e.getKey(), e.getValue()));
         }
         for (Map.Entry<String, Event> e : controller.getFolderRejections()) {
-            notifs.add(new NotifCardFolderRej(e.getKey(), e.getValue()));
+            notifs.add(new NotifCardRejFolder(e.getKey(), e.getValue()));
         }
         return notifs;
     }

@@ -24,8 +24,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collections;
 
 import butterknife.ButterKnife;
@@ -34,15 +32,13 @@ import butterknife.OnClick;
 import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import syncthing.android.R;
-import syncthing.android.ui.common.Card;
-import syncthing.android.ui.common.CardViewWrapper;
 import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.DeviceConfig;
 
 /**
  * Created by drew on 3/6/15.
  */
-public class NotifCardDeviceRejView extends ExpandableCardViewWrapper<NotifCardDeviceRej> {
+public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardRejDevice> {
 
     @InjectView(R.id.identicon) ImageView identicon;
     @InjectView(R.id.header) ViewGroup header;
@@ -54,7 +50,7 @@ public class NotifCardDeviceRejView extends ExpandableCardViewWrapper<NotifCardD
 
     Subscription identiconSubscription;
 
-    public NotifCardDeviceRejView(Context context, AttributeSet attrs) {
+    public NotifCardRejDeviceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
     }
@@ -68,9 +64,7 @@ public class NotifCardDeviceRejView extends ExpandableCardViewWrapper<NotifCardD
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (identiconSubscription != null) {
-            identiconSubscription.unsubscribe();
-        }
+        unsubscribe();
     }
 
     @OnClick(R.id.header)
@@ -118,7 +112,7 @@ public class NotifCardDeviceRejView extends ExpandableCardViewWrapper<NotifCardD
     }
 
     @Override
-    public void onBind(NotifCardDeviceRej card) {
+    public void onBind(NotifCardRejDevice card) {
         time.setText(card.event.time.toString("H:mm:ss"));
         message.setText(getResources().getString(R.string.device_device_address_wants_to_connect_add_new_device,
                 card.id,

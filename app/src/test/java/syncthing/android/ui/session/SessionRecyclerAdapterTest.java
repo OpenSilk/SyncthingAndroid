@@ -14,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.ExpandableCard;
+import syncthing.api.model.DeviceConfig;
+import syncthing.api.model.FolderConfig;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -34,7 +37,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testNotificationAdd() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, true);
@@ -43,11 +46,11 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testNotificationReplaceMore() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
-        List<Card> notifs2 = new LinkedList<>();
+        List<ExpandableCard> notifs2 = new LinkedList<>();
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
@@ -59,7 +62,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testNotificationReplaceLess() {
-        List<Card> notifs2 = new LinkedList<>();
+        List<ExpandableCard> notifs2 = new LinkedList<>();
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
@@ -68,7 +71,7 @@ public class SessionRecyclerAdapterTest {
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs2, false);
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
@@ -79,7 +82,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFolderAdd() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
@@ -94,20 +97,40 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFolderReplaceMore() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
         List<FolderCard> folders = new LinkedList<>();
-        folders.add(new FolderCard(null, null));
-        folders.add(new FolderCard(null, null));
+
+        FolderConfig f1 = new FolderConfig();
+        f1.id = "id1";
+        folders.add(new FolderCard(f1, null));
+
+        FolderConfig f2 = new FolderConfig();
+        f2.id = "id2";
+        folders.add(new FolderCard(f2, null));
+
         adapter.setFolders(folders, false);
         List<FolderCard> folders2 = new LinkedList<>();
-        folders2.add(new FolderCard(null, null));
-        folders2.add(new FolderCard(null, null));
-        folders2.add(new FolderCard(null, null));
-        folders2.add(new FolderCard(null, null));
+
+        FolderConfig f3 = new FolderConfig();
+        f3.id = "id1";
+        folders2.add(new FolderCard(f3, null));
+
+        FolderConfig f4 = new FolderConfig();
+        f4.id = "id2";
+        folders2.add(new FolderCard(f4, null));
+
+        FolderConfig f5 = new FolderConfig();
+        f5.id = "id3";
+        folders2.add(new FolderCard(f5, null));
+
+        FolderConfig f6 = new FolderConfig();
+        f6.id = "id4";
+        folders2.add(new FolderCard(f6, null));
+
         adapter.setFolders(folders2, true);
         verify(adapter).notifyItemRangeChanged(4,2);
         verify(adapter).notifyItemRangeInserted(6,2);
@@ -116,14 +139,33 @@ public class SessionRecyclerAdapterTest {
     @Test
     public void testFolderReplaceLess() {
         List<FolderCard> folders2 = new LinkedList<>();
-        folders2.add(new FolderCard(null, null));
-        folders2.add(new FolderCard(null, null));
-        folders2.add(new FolderCard(null, null));
-        folders2.add(new FolderCard(null, null));
+        FolderConfig f3 = new FolderConfig();
+        f3.id = "id1";
+        folders2.add(new FolderCard(f3, null));
+
+        FolderConfig f4 = new FolderConfig();
+        f4.id = "id2";
+        folders2.add(new FolderCard(f4, null));
+
+        FolderConfig f5 = new FolderConfig();
+        f5.id = "id3";
+        folders2.add(new FolderCard(f5, null));
+
+        FolderConfig f6 = new FolderConfig();
+        f6.id = "id4";
+        folders2.add(new FolderCard(f6, null));
+
         adapter.setFolders(folders2, false);
         List<FolderCard> folders = new LinkedList<>();
-        folders.add(new FolderCard(null, null));
-        folders.add(new FolderCard(null, null));
+
+        FolderConfig f1 = new FolderConfig();
+        f1.id = "id1";
+        folders.add(new FolderCard(f1, null));
+
+        FolderConfig f2 = new FolderConfig();
+        f2.id = "id2";
+        folders.add(new FolderCard(f2, null));
+
         adapter.setFolders(folders, true);
         verify(adapter).notifyItemRangeChanged(1,2);
         verify(adapter).notifyItemRangeRemoved(3, 2);
@@ -158,16 +200,41 @@ public class SessionRecyclerAdapterTest {
     @Test
     public void testSetDevicesMore() {
         List<DeviceCard> devices = new LinkedList<>();
-        devices.add(new DeviceCard(null, null, null, 0));
-        devices.add(new DeviceCard(null, null, null, 0));
-        devices.add(new DeviceCard(null, null, null, 0));
+        DeviceConfig d1 = new DeviceConfig();
+        d1.deviceID = "id1";
+        devices.add(new DeviceCard(d1, null, null, 0));
+
+        DeviceConfig d2 = new DeviceConfig();
+        d2.deviceID = "id2";
+        devices.add(new DeviceCard(d2, null, null, 0));
+
+        DeviceConfig d3 = new DeviceConfig();
+        d3.deviceID = "id3";
+        devices.add(new DeviceCard(d3, null, null, 0));
+
         adapter.setDevices(devices, false);
         List<DeviceCard> devices2 = new LinkedList<>();
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
+
+        DeviceConfig d4 = new DeviceConfig();
+        d4.deviceID = "id1";
+        devices2.add(new DeviceCard(d4, null, null, 0));
+
+        DeviceConfig d5 = new DeviceConfig();
+        d5.deviceID = "id2";
+        devices2.add(new DeviceCard(d5, null, null, 0));
+
+        DeviceConfig d6 = new DeviceConfig();
+        d6.deviceID = "id3";
+        devices2.add(new DeviceCard(d6, null, null, 0));
+
+        DeviceConfig d7 = new DeviceConfig();
+        d7.deviceID = "id4";
+        devices2.add(new DeviceCard(d7, null, null, 0));
+
+        DeviceConfig d8 = new DeviceConfig();
+        d8.deviceID = "id5";
+        devices2.add(new DeviceCard(d8, null, null, 0));
+
         adapter.setDevices(devices2, true);
         verify(adapter).notifyItemRangeChanged(2, 3);
         verify(adapter).notifyItemRangeInserted(5, 2);
@@ -176,16 +243,41 @@ public class SessionRecyclerAdapterTest {
     @Test
     public void testSetDevicesLess() {
         List<DeviceCard> devices2 = new LinkedList<>();
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
-        devices2.add(new DeviceCard(null, null, null, 0));
+        DeviceConfig d4 = new DeviceConfig();
+        d4.deviceID = "id1";
+        devices2.add(new DeviceCard(d4, null, null, 0));
+
+        DeviceConfig d5 = new DeviceConfig();
+        d5.deviceID = "id2";
+        devices2.add(new DeviceCard(d5, null, null, 0));
+
+        DeviceConfig d6 = new DeviceConfig();
+        d6.deviceID = "id3";
+        devices2.add(new DeviceCard(d6, null, null, 0));
+
+        DeviceConfig d7 = new DeviceConfig();
+        d7.deviceID = "id4";
+        devices2.add(new DeviceCard(d7, null, null, 0));
+
+        DeviceConfig d8 = new DeviceConfig();
+        d8.deviceID = "id5";
+        devices2.add(new DeviceCard(d8, null, null, 0));
+
         adapter.setDevices(devices2, false);
         List<DeviceCard> devices = new LinkedList<>();
-        devices.add(new DeviceCard(null, null, null, 0));
-        devices.add(new DeviceCard(null, null, null, 0));
-        devices.add(new DeviceCard(null, null, null, 0));
+
+        DeviceConfig d1 = new DeviceConfig();
+        d1.deviceID = "id1";
+        devices.add(new DeviceCard(d1, null, null, 0));
+
+        DeviceConfig d2 = new DeviceConfig();
+        d2.deviceID = "id2";
+        devices.add(new DeviceCard(d2, null, null, 0));
+
+        DeviceConfig d3 = new DeviceConfig();
+        d3.deviceID = "id3";
+        devices.add(new DeviceCard(d3, null, null, 0));
+
         adapter.setDevices(devices, true);
         verify(adapter).notifyItemRangeChanged(2, 3);
         verify(adapter).notifyItemRangeRemoved(5, 2);
@@ -193,7 +285,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFindFolderOffset() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
@@ -203,7 +295,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testfindThisDevicePos() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
@@ -218,7 +310,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFindDeviceOffset() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
@@ -233,7 +325,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testgetItem() {
-        List<Card> notifs = new LinkedList<>();
+        List<ExpandableCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);//0
         notifs.add(NotifCardRestart.INSTANCE);//1
         adapter.setNotifications(notifs, false);

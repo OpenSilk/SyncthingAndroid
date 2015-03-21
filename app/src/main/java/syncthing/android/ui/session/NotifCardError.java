@@ -39,7 +39,7 @@ public class NotifCardError extends ExpandableCard {
     }
 
     @Override
-    public int hashCode() {
-        return 31 * guiError.error.hashCode() + guiError.time.toString().hashCode();
+    public int adapterId() {
+        return super.adapterId();
     }
 }

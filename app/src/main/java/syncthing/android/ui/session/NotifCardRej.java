@@ -17,39 +17,24 @@
 
 package syncthing.android.ui.session;
 
-import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.Event;
 
 /**
  * Created by drew on 3/10/15.
  */
-public abstract class NotifCard extends ExpandableCard {
+public abstract class NotifCardRej extends ExpandableCard {
 
     final String id;
     final Event event;
 
-    public NotifCard(String id, Event event) {
+    public NotifCardRej(String id, Event event) {
         this.id = id;
         this.event = event;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        NotifCard that = (NotifCard) o;
-
-        if (!id.equals(that.id))
-            return false;
-
-        return true;
+    public int adapterId() {
+        return super.adapterId() ^ id.hashCode();
     }
-
-    @Override
-    public int hashCode() {
-        return 31 * event.time.toString().hashCode() + id.hashCode();
-    }
-
 }

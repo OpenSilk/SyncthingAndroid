@@ -48,7 +48,7 @@ public class MyDeviceCard extends ExpandableCard {
     }
 
     @Override
-    public int hashCode() {
-        return device.deviceID.hashCode();
+    public int adapterId() {
+        return super.adapterId() ^ device.deviceID.hashCode();
     }
 }

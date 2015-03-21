@@ -24,8 +24,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import rx.functions.Func1;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardRecyclerAdapter;
+import syncthing.android.ui.common.Expandable;
+import syncthing.android.ui.common.ExpandableCard;
 
 /**
  * Created by drew on 3/1/15.
@@ -33,7 +36,7 @@ import syncthing.android.ui.common.CardRecyclerAdapter;
 public class SessionRecyclerAdapter extends CardRecyclerAdapter {
 
     //order here is display order
-    List<Card> notifications = new LinkedList<>();
+    List<ExpandableCard> notifications = new LinkedList<>();
     HeaderCard folderHeader = HeaderCard.FOLDER;
     List<FolderCard> folderItems = new LinkedList<>();
     HeaderCard deviceHeader = HeaderCard.DEVICE;
@@ -41,49 +44,15 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     List<DeviceCard> deviceItems = new LinkedList<>();
 
     public SessionRecyclerAdapter() {
-        setHasStableIds(true);
+        //setHasStableIds(true);
     }
 
-    public void setNotifications(Collection<Card> notifs, boolean notify) {
-        if (notifications.isEmpty() && !notifs.isEmpty()) {
-            notifications.addAll(notifs);
-            if (notify) notifyItemRangeInserted(0, notifs.size());
-        } else {
-            int oldsize = notifications.size();
-            int newsize = notifs.size();
-            notifications.clear();
-            notifications.addAll(notifs);
-            if (notify) {
-                if (oldsize < newsize) {
-                    notifyItemRangeChanged(findNotificationOffset(0), oldsize);
-                    notifyItemRangeInserted(oldsize, newsize - oldsize);
-                } else {
-                    notifyItemRangeChanged(findNotificationOffset(0), newsize);
-                    notifyItemRangeRemoved(newsize, oldsize - newsize);
-                }
-            }
-        }
+    public void setNotifications(Collection<ExpandableCard> notifs, boolean notify) {
+        updateList(notifications, notifs, this::findNotificationOffset, notify);
     }
 
     public void setFolders(Collection<FolderCard> folders, boolean notify) {
-        if (folderItems.isEmpty() && !folders.isEmpty()) {
-            folderItems.addAll(folders);
-            if (notify) notifyItemRangeInserted(findFolderOffset(0), folders.size());
-        } else {
-            int oldsize = folderItems.size();
-            int newsize = folders.size();
-            folderItems.clear();
-            folderItems.addAll(folders);
-            if (notify) {
-                if (oldsize < newsize) {
-                    notifyItemRangeChanged(findFolderOffset(0), oldsize);
-                    notifyItemRangeInserted(findFolderOffset(oldsize), newsize - oldsize);
-                } else {
-                    notifyItemRangeChanged(findFolderOffset(0), newsize);
-                    notifyItemRangeRemoved(findFolderOffset(newsize), oldsize - newsize);
-                }
-            }
-        }
+        updateList(folderItems, folders, this::findFolderOffset, notify);
     }
 
     public void setThisDevice(MyDeviceCard myDevice, boolean notify) {
@@ -99,21 +68,36 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     }
 
     public void setDevices(Collection<DeviceCard> devices, boolean notify) {
-        if (deviceItems.isEmpty() && !devices.isEmpty()) {
-            deviceItems.addAll(devices);
-            if (notify) notifyItemRangeInserted(findDeviceOffset(0), devices.size());
+        updateList(deviceItems, devices, this::findDeviceOffset, notify);
+    }
+
+    <T extends ExpandableCard> void  updateList(Collection<T> lst1, Collection<T> lst2, Func1<Integer, Integer> findFunc, boolean notify) {
+        if (lst1.isEmpty() && !lst2.isEmpty()) {
+            lst1.addAll(lst2);
+            if (notify) notifyItemRangeInserted(findFunc.call(0), lst2.size());
         } else {
-            int oldsize = deviceItems.size();
-            int newsize = devices.size();
-            deviceItems.clear();
-            deviceItems.addAll(devices);
+            int oldsize = lst1.size();
+            int newsize = lst2.size();
+            //TODO be smarter here
+            for (T nc : lst2) {
+                for (T oc : lst1) {
+                    if (oc.isSame(nc)) {
+                        nc.setExpanded(oc.isExpanded());
+                        break;
+                    }
+                }
+            }
+            lst1.clear();
+            lst1.addAll(lst2);
             if (notify) {
-                if (oldsize < newsize) {
-                    notifyItemRangeChanged(findDeviceOffset(0), oldsize);
-                    notifyItemRangeInserted(findDeviceOffset(oldsize), newsize - oldsize);
+                if (oldsize == newsize) {
+                    notifyItemRangeChanged(findFunc.call(0), oldsize);
+                } else if (oldsize < newsize) {
+                    notifyItemRangeChanged(findFunc.call(0), oldsize);
+                    notifyItemRangeInserted(findFunc.call(oldsize), newsize - oldsize);
                 } else {
-                    notifyItemRangeChanged(findDeviceOffset(0), newsize);
-                    notifyItemRangeRemoved(findDeviceOffset(newsize), oldsize - newsize);
+                    notifyItemRangeChanged(findFunc.call(0), newsize);
+                    notifyItemRangeRemoved(findFunc.call(newsize), oldsize - newsize);
                 }
             }
         }
@@ -207,7 +191,8 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).hashCode();
+        return super.getItemId(position);
+        //return getItem(position).adapterId();
     }
 
     String dump() {

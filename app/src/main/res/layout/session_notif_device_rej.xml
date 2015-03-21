@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<syncthing.android.ui.session.NotifCardDeviceRejView
+<syncthing.android.ui.session.NotifCardRejDeviceView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -99,4 +99,4 @@
 
     </RelativeLayout>
 
-</syncthing.android.ui.session.NotifCardDeviceRejView>
+</syncthing.android.ui.session.NotifCardRejDeviceView>

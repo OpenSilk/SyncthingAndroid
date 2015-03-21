@@ -23,15 +23,15 @@ import syncthing.api.model.Event;
 /**
  * Created by drew on 3/6/15.
  */
-public class NotifCardFolderRej extends NotifCard {
+public class NotifCardRejDevice extends NotifCardRej {
 
-    public NotifCardFolderRej(String id, Event event) {
+    public NotifCardRejDevice(String id, Event event) {
         super(id, event);
     }
 
     @Override
     public int getLayout() {
-        return R.layout.session_notif_folder_rej;
+        return R.layout.session_notif_device_rej;
     }
 
 }

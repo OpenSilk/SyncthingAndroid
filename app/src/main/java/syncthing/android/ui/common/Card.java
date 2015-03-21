@@ -26,4 +26,14 @@ public abstract class Card {
 
     public abstract int getLayout();
 
+    public int adapterId() {
+        return getLayout();
+    }
+
+    public boolean isSame(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (adapterId() != ((Card)o).adapterId()) return false;
+        return true;
+    }
 }

@@ -33,7 +33,7 @@ public class NotifCardRestart extends ExpandableCard {
     }
 
     @Override
-    public int hashCode() {
-        return 31 * getLayout();
+    public int adapterId() {
+        return super.adapterId();
     }
 }

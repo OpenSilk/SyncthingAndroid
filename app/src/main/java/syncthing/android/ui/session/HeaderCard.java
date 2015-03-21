@@ -54,8 +54,7 @@ public class HeaderCard extends Card {
     }
 
     @Override
-    public int hashCode() {
-        return 31 * title + getLayout();
+    public int adapterId() {
+        return super.adapterId() ^ title;
     }
-
 }
