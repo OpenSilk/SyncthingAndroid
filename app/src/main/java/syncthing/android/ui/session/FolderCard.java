@@ -29,10 +29,14 @@ import syncthing.api.model.Model;
 public class FolderCard extends ExpandableCard {
 
     final FolderConfig folder;
-    final Model model;
+    Model model;
 
     public FolderCard(FolderConfig folder, Model model) {
         this.folder = folder;
+        this.model = model;
+    }
+
+    public void setModel(Model model) {
         this.model = model;
     }
 

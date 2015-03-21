@@ -82,6 +82,7 @@ public class SessionController implements EventMonitor.EventListener {
         ONLINE,
         OFFLINE,
         MODEL,
+        MODEL_STATE,
         COMPLETION,
         FOLDER_STATS,
         DEVICE_STATS,
@@ -183,7 +184,7 @@ public class SessionController implements EventMonitor.EventListener {
             } case STATE_CHANGED: {
                 if (models.containsKey(e.data.folder)) {
                     models.get(e.data.folder).state = e.data.to;
-                    postChange(Change.MODEL);
+                    postChange(Change.MODEL_STATE);
                 } else {
                     refreshFolder(e.data.folder);
                 }

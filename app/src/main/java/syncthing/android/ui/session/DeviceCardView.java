@@ -70,6 +70,9 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     final DateTime epoch;
 
     Subscription identiconSubscription;
+    Subscription connectionSubscription;
+    Subscription statsSubscription;
+    Subscription completionSubscription;
 
     public DeviceCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -113,6 +116,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
         updateConnection(card.connection);
         updateStats(card.stats);
         updateCompletion(card.completion);
+        subscribeUpdates();
     }
 
     @Override
@@ -195,9 +199,56 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
         }
     }
 
+    void subscribeUpdates() {
+        unsubscribeUpdates();
+        connectionSubscription = presenter.bus.subscribe(
+                conn -> {
+                    if (!StringUtils.equals(conn.id, getCard().device.deviceID)) {
+                        return;
+                    }
+                    getCard().setConnectionInfo(conn.conn);
+                    updateConnection(conn.conn);
+                },
+                Update.ConnectionInfo.class
+        );
+        statsSubscription = presenter.bus.subscribe(
+                stats -> {
+                    if (!StringUtils.equals(stats.id, getCard().device.deviceID)) {
+                        return;
+                    }
+                    getCard().setDeviceStats(stats.stats);
+                    updateStats(stats.stats);
+                },
+                Update.DeviceStats.class
+        );
+        completionSubscription = presenter.bus.subscribe(
+                comp -> {
+                    if (!StringUtils.equals(comp.id, getCard().device.deviceID)) {
+                        return;
+                    }
+                    getCard().setCompletion(comp.comp);
+                    updateCompletion(comp.comp);
+                },
+                Update.Completion.class
+        );
+    }
+
     void unsubscribe() {
         if (identiconSubscription != null) {
             identiconSubscription.unsubscribe();
+        }
+        unsubscribeUpdates();
+    }
+
+    void unsubscribeUpdates() {
+        if (connectionSubscription != null) {
+            connectionSubscription.unsubscribe();
+        }
+        if (statsSubscription != null) {
+            statsSubscription.unsubscribe();
+        }
+        if (completionSubscription != null) {
+            completionSubscription.unsubscribe();
         }
     }
 

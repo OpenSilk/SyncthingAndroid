@@ -65,6 +65,8 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     final DecimalFormat cpuFormat;
 
     Subscription identiconSubscription;
+    Subscription connectionSubscription;
+    Subscription systemInfoSubscription;
 
     public MyDeviceCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -108,6 +110,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
         updateConnection(card.connection);
         updateSystem(card.system);
         updateVersion(card.version);
+        subscribeUpdates();
     }
 
     @Override
@@ -176,9 +179,40 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
         version.setText(ver.version);
     }
 
+    void subscribeUpdates() {
+        unsubscribeUpdates();
+        connectionSubscription = presenter.bus.subscribe(
+                conn -> {
+                    if (!StringUtils.equals(conn.id, getCard().device.deviceID)) {
+                        return;
+                    }
+                    getCard().setConnectionInfo(conn.conn);
+                    updateConnection(conn.conn);
+                },
+                Update.ConnectionInfo.class
+        );
+        systemInfoSubscription = presenter.bus.subscribe(
+                sys -> {
+                    getCard().setSystemInfo(sys);
+                    updateSystem(sys);
+                },
+                SystemInfo.class
+        );
+    }
+
     void unsubscribe() {
         if (identiconSubscription != null) {
             identiconSubscription.unsubscribe();
+        }
+        unsubscribeUpdates();
+    }
+
+    void unsubscribeUpdates() {
+        if (connectionSubscription != null) {
+            connectionSubscription.unsubscribe();
+        }
+        if (systemInfoSubscription != null) {
+            systemInfoSubscription.unsubscribe();
         }
     }
 

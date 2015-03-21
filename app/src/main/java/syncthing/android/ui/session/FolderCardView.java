@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import mortar.dagger2support.DaggerService;
+import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.Card;
@@ -77,6 +78,9 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
     final SessionPresenter presenter;
 
+    Subscription modelSubscription;
+    Subscription modelStateSubscription;
+
     public FolderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
@@ -96,6 +100,7 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        unsubscribe();
     }
 
     @OnClick(R.id.header)
@@ -134,6 +139,13 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
     public void onBind(FolderCard card) {
         updateFolder(card.folder);
         updateModel(card.model);
+        subscribe();
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        unsubscribe();
     }
 
     void updateFolder(FolderConfig folder) {
@@ -185,10 +197,7 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
             return;
         }
 
-        int percentage = (model.globalBytes != 0)
-                ? Math.min(100, Math.round(100f * model.inSyncBytes / model.globalBytes))
-                : 100;
-        updateFolderStatus(model.state, percentage);
+        updateFolderStatus(model.state, calculateCompletion(model));
 
         globalState.setText(getContext().getString(R.string.num_items_size,
                         model.globalFiles,
@@ -244,6 +253,45 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
             default:
                 state.setTextColor(res.getColor(R.color.folder_default));
         }
+    }
+
+    void subscribe() {
+        unsubscribe();
+        modelSubscription = presenter.bus.subscribe(
+                m -> {
+                    if (!StringUtils.equals(m.id, getCard().folder.id)) {
+                        return;
+                    }
+                    getCard().setModel(m.model);
+                    updateModel(m.model);
+                },
+                Update.Model.class
+        );
+        modelStateSubscription = presenter.bus.subscribe(
+                m -> {
+                    if (!StringUtils.equals(m.id, getCard().folder.id)) {
+                        return;
+                    }
+                    getCard().setModel(m.model);
+                    updateFolderStatus(m.model.state, calculateCompletion(m.model));
+                },
+                Update.ModelState.class
+        );
+    }
+
+    void unsubscribe() {
+        if (modelSubscription != null) {
+            modelSubscription.unsubscribe();
+        }
+        if (modelStateSubscription != null) {
+            modelStateSubscription.unsubscribe();
+        }
+    }
+
+    static int calculateCompletion(Model model) {
+        return (model.globalBytes != 0)
+                ? Math.min(100, Math.round(100f * model.inSyncBytes / model.globalBytes))
+                : 100;
     }
 
 }

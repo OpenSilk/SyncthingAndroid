@@ -31,8 +31,8 @@ import syncthing.api.model.Version;
 public class MyDeviceCard extends ExpandableCard {
 
     protected final DeviceConfig device;
-    protected final ConnectionInfo connection;
-    protected final SystemInfo system;
+    protected ConnectionInfo connection;
+    protected SystemInfo system;
     protected final Version version;
 
     public MyDeviceCard(DeviceConfig device, ConnectionInfo connection, SystemInfo system, Version version) {
@@ -40,6 +40,14 @@ public class MyDeviceCard extends ExpandableCard {
         this.connection = connection;
         this.system = system;
         this.version = version;
+    }
+
+    public void setConnectionInfo(ConnectionInfo connection) {
+        this.connection = connection;
+    }
+
+    void setSystemInfo(SystemInfo system) {
+        this.system = system;
     }
 
     @Override

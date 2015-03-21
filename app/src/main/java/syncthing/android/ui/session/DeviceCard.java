@@ -30,14 +30,26 @@ import syncthing.api.model.DeviceStats;
 public class DeviceCard extends ExpandableCard {
 
     protected final DeviceConfig device;
-    protected final ConnectionInfo connection;
-    protected final DeviceStats stats;
-    protected final int completion;
+    protected ConnectionInfo connection;
+    protected DeviceStats stats;
+    protected int completion;
 
     public DeviceCard(DeviceConfig device, ConnectionInfo connection, DeviceStats stats, int completion) {
         this.device = device;
         this.connection = connection;
         this.stats = stats;
+        this.completion = completion;
+    }
+
+    public void setConnectionInfo(ConnectionInfo connection) {
+        this.connection = connection;
+    }
+
+    public void setDeviceStats(DeviceStats stats) {
+        this.stats = stats;
+    }
+
+    public void setCompletion(int completion) {
         this.completion = completion;
     }
 

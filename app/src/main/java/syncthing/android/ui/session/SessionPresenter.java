@@ -27,6 +27,7 @@ import android.support.v4.app.FragmentTransaction;
 import org.opensilk.common.dagger2.ForApplication;
 import org.opensilk.common.mortar.ActivityResultsController;
 import org.opensilk.common.mortarfragment.FragmentManagerOwner;
+import org.opensilk.common.rx.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,8 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     final IdenticonGenerator identiconGenerator;
     final ActivityResultsController activityResultsController;
     final SessionFragmentPresenter fragmentPresenter;
+
+    final RxBus bus = new RxBus();
 
     Subscription changeSubscription;
 
@@ -158,31 +161,33 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
                 }
                 break;
             case NEED_LOGIN:
-                activityResultsController.startActivityForResult(
-                        new Intent(appContext, LoginActivity.class)
-                                .putExtra(LoginActivity.EXTRA_CREDENTIALS, (Parcelable) credentials),
-                        ActivityRequestCodes.LOGIN_ACTIVITY,
-                        null
-                );
+                openLoginScreen();
                 break;
             case COMPLETION:
+                postCompletionUpdate();
+                break;
             case CONNECTIONS:
+                postConnectiosUpdate();
+                break;
             case DEVICE_STATS:
-                if (hasView()) {
-                    getView().refreshThisDevice(getThisDevice());
-                    getView().refreshDevices(getDevices());
-                }
+                postDeviceStatsUpdate();
                 break;
             case SYSTEM:
-                if (hasView()) {
-                    getView().refreshThisDevice(getThisDevice());
-                }
+                postSystemInfoUpdate();
                 break;
             case MODEL:
+                postModelUpdate();
+                break;
+            case MODEL_STATE:
+                postModelStateUpdate();
+                break;
             case FOLDER_STATS:
-                if (hasView()) {
-                    getView().refreshFolders(getFolders());
-                }
+                Timber.w("Ignoring FOLDER_STATS update");
+                //TODO pretty sure not needed
+//                if (hasView()) {
+//                    getView().refreshFolders(getFolders());
+//                }
+                break;
             default:
                 break;
         }
@@ -252,6 +257,56 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         return deviceCards;
     }
 
+    void postCompletionUpdate() {
+        for (DeviceConfig d : controller.getRemoteDevices()) {
+            bus.post(new Update.Completion(d.deviceID, controller.getCompletionTotal(d.deviceID)));
+        }
+    }
+
+    void postConnectiosUpdate() {
+        for (DeviceConfig d : controller.getRemoteDevices()) {
+            ConnectionInfo conn = controller.getConnection(d.deviceID);
+            if (conn != null) {
+                bus.post(new Update.ConnectionInfo(d.deviceID, conn));
+            }
+        }
+        ConnectionInfo tConn = controller.getConnection("total");
+        if (tConn != null) {
+            bus.post(new Update.ConnectionInfo(getMyDeviceId(), tConn));
+        }
+    }
+
+    void postDeviceStatsUpdate() {
+        for (DeviceConfig d : controller.getRemoteDevices()) {
+            DeviceStats s = controller.getDeviceStats(d.deviceID);
+            if (s != null) {
+                bus.post(new Update.DeviceStats(d.deviceID, s));
+            }
+        }
+    }
+
+    void postSystemInfoUpdate() {
+        bus.post(controller.getSystemInfo());
+    }
+
+    void postModelUpdate() {
+        for (FolderConfig f : controller.getFolders()) {
+            Model m = controller.getModel(f.id);
+            if (m != null) {
+                bus.post(new Update.Model(f.id, m));
+            }
+        }
+    }
+
+    void postModelStateUpdate() {
+        for (FolderConfig f : controller.getFolders()) {
+            Model m = controller.getModel(f.id);
+            if (m != null) {
+                bus.post(new Update.ModelState(f.id, m));
+            }
+        }
+    }
+
     void showSavingDialog() {
         if (hasView()) getView().showSavingDialog();
     }
@@ -282,6 +337,15 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
 
     public String getMyDeviceId() {
         return controller.getMyID();
+    }
+
+    void openLoginScreen() {
+        activityResultsController.startActivityForResult(
+                new Intent(appContext, LoginActivity.class)
+                        .putExtra(LoginActivity.EXTRA_CREDENTIALS, (Parcelable) credentials),
+                ActivityRequestCodes.LOGIN_ACTIVITY,
+                null
+        );
     }
 
     void openAddDeviceScreen() {
