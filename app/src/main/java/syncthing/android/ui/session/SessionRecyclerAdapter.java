@@ -17,6 +17,12 @@
 
 package syncthing.android.ui.session;
 
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
@@ -24,8 +30,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import syncthing.android.R;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardRecyclerAdapter;
+import syncthing.android.ui.common.CardViewHolder;
 
 /**
  * Created by drew on 3/1/15.
@@ -208,6 +216,16 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     @Override
     public long getItemId(int position) {
         return getItem(position).hashCode();
+    }
+
+    @Override
+    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View v = inflater.inflate(viewType, parent, false);
+        if (viewType == R.layout.session_header) {
+            ((StaggeredGridLayoutManager.LayoutParams) v.getLayoutParams()).setFullSpan(true);
+        }
+        return new CardViewHolder(v);
     }
 
     String dump() {

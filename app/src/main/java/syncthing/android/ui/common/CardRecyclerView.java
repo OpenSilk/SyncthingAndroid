@@ -38,7 +38,7 @@ public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpand
 
     public CardRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        addItemDecoration(new DividerItemDecoration(context, attrs));
+        //addItemDecoration(new DividerItemDecoration(context, attrs));
     }
 
     public void setWobbleOnExpand(boolean wobbleOnExpand) {
