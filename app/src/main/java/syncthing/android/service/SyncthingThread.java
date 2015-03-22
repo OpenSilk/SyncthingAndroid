@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import timber.log.Timber;
@@ -46,11 +47,29 @@ public class SyncthingThread extends Thread {
     @Override
     public void run() {
         android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
+        ConfigXml configXml = ConfigXml.get(mService);
+        if (configXml == null) {
+            Timber.d("first run: generating keys...");
+            //we dont actually need to do this, its more of a hack
+            //to sneak the config changes in.
+            realRun(true);
+            configXml = ConfigXml.get(mService);
+            configXml.changeDefaultFolder();
+        }
+        configXml.updateIfNeeded();
+        realRun(false);
+    }
+
+    void realRun(boolean generate) {
         Timber.d("Running");
         int ret = 0;
         try {
             ProcessBuilder b = new ProcessBuilder();
-            b.command(findBinary(), "-home", mService.getFilesDir().getAbsolutePath());
+            if (generate) {
+                b.command(findBinary(), "-home", mService.getFilesDir().getAbsolutePath(), "-generate", mService.getFilesDir().getAbsolutePath());
+            } else {
+                b.command(findBinary(), "-home", mService.getFilesDir().getAbsolutePath());
+            }
             b.environment().put("HOME", Environment.getExternalStorageDirectory().getAbsolutePath());
             b.environment().put("STNORESTART", "1");
             Process p = b.start();
@@ -60,12 +79,14 @@ public class SyncthingThread extends Thread {
             ret = p.waitFor();
             Timber.d("syncthing exited with status %d", ret);
             goProcess.set(null);
-            if (ret == 3) { //restart requested
-                mService.startService(new Intent(mService, SyncthingInstance.class)
-                        .setAction(SyncthingInstance.BINARY_NEED_RESTART));
-            } else if (ret == 0) { //shutdown
-                mService.startService(new Intent(mService, SyncthingInstance.class)
-                        .setAction(SyncthingInstance.BINARY_WAS_SHUTDOWN));
+            if (!generate) {
+                if (ret == 3) { //restart requested
+                    mService.startService(new Intent(mService, SyncthingInstance.class)
+                            .setAction(SyncthingInstance.BINARY_NEED_RESTART));
+                } else if (ret == 0) { //shutdown
+                    mService.startService(new Intent(mService, SyncthingInstance.class)
+                            .setAction(SyncthingInstance.BINARY_WAS_SHUTDOWN));
+                }
             }
         } catch (IOException e) {
             kill();
