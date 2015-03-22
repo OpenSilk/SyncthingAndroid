@@ -29,6 +29,8 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -36,6 +38,7 @@ import java.util.WeakHashMap;
 
 import syncthing.android.R;
 import syncthing.api.model.DeviceConfig;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/8/15.
@@ -219,6 +222,47 @@ public class SyncthingUtils {
             res += CHARS.charAt(Math.round((float)(Math.random() * (CHARS.length() - 1))));
         }
         return res;
+    }
+
+    public static Interval getIntervalForRange(DateTime now, long start, long end) {
+        DateTime daybreak = now.withTimeAtStartOfDay();
+        Interval interval;
+        if (start == end) {
+            Timber.w("start and end ranges are the same!");
+            interval = new Interval(daybreak.plus(start), daybreak.plus(end));
+        } else if (start < end) {
+            //same day
+            interval = new Interval(daybreak.plus(start), daybreak.plus(end));
+        } else /*start > end*/ {
+            if (now.isAfter(daybreak.plus(start))) {
+                //rolls next day
+                interval = new Interval(daybreak.plus(start), daybreak.plusDays(1).plus(end));
+            } else {
+                //rolls previous day
+                interval = new Interval(daybreak.minusDays(1).plus(start), daybreak.plus(end));
+            }
+        }
+        return interval;
+    }
+
+    public static boolean isNowBetweenRange(long start, long end) {
+        DateTime now = DateTime.now();
+        return getIntervalForRange(now, start, end).contains(now);
+    }
+
+    public static long parseTime(String str) {
+        String[] split = StringUtils.split(str, ":");
+        int hour = Integer.decode(split[0]);
+        int min = Integer.decode(split[1]);
+        return hoursToMillis(hour) + minutesToMillis(min);
+    }
+
+    public static long hoursToMillis(int hours) {
+        return (long) hours * 3600000L;
+    }
+
+    public static long minutesToMillis(int minutes) {
+        return (long) minutes * 60000L;
     }
 
     public static void copyDeviceId(Context context, String id) {

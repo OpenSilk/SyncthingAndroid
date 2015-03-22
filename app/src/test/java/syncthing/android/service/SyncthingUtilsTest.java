@@ -1,5 +1,7 @@
 package syncthing.android.service;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,4 +72,32 @@ public class SyncthingUtilsTest {
         assertEquals(23, randomString(23).length());
     }
 
+
+    @Test
+    public void testisNowBetweenRange() {
+        long now = DateTime.parse("2015-03-21T14:12:00").getMillis();//2:12pm
+        DateTimeUtils.setCurrentMillisFixed(now);
+        // same time is true
+        long start = parseTime("00:00");
+        long end = parseTime("00:00");
+        assertEquals(isNowBetweenRange(start, end), true);
+        // start < end
+        start = parseTime("12:00");//noon
+        end = parseTime("18:00");//6pm
+        // 12pm < 2pm < 6pm so true
+        assertEquals(isNowBetweenRange(start, end), true);
+        // start > end
+        start = parseTime("23:00");//11pm;
+        end = parseTime("06:00");//6am;
+        // 2pm > 6am so false
+        assertEquals(isNowBetweenRange(start, end), false);
+        now = DateTime.parse("2015-03-21T03:12:00").getMillis();//3:12am
+        DateTimeUtils.setCurrentMillisFixed(now);
+        // 3am > 11pm so true
+        assertEquals(isNowBetweenRange(start, end), true);
+        now = DateTime.parse("2015-03-21T08:12:00").getMillis();//8:12am
+        DateTimeUtils.setCurrentMillisFixed(now);
+        // 8am > 6am so false
+        assertEquals(isNowBetweenRange(start, end), false);
+    }
 }

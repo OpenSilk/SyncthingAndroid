@@ -43,6 +43,7 @@ import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.login.LoginActivity;
 import syncthing.android.ui.session.SessionFragment;
+import syncthing.android.ui.settings.SettingsActivity;
 import timber.log.Timber;
 
 /**
@@ -160,7 +161,8 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
 
     void startSettingsActivity() {
         drawerOwner.closeDrawer();
-        //TODO
+        Intent intent = new Intent(appContext, SettingsActivity.class);
+        activityResultsController.startActivityForResult(intent, 0, null);
     }
 
     void startLoginActivity() {

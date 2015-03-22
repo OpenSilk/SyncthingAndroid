@@ -59,12 +59,13 @@ public class SyncthingThread extends Thread {
             new LogWriterThread(Log.ERROR, p.getErrorStream()).start();
             ret = p.waitFor();
             Timber.d("syncthing exited with status %d", ret);
+            goProcess.set(null);
             if (ret == 3) { //restart requested
                 mService.startService(new Intent(mService, SyncthingInstance.class)
-                        .setAction(SyncthingInstance.NEED_RESTART));
+                        .setAction(SyncthingInstance.BINARY_NEED_RESTART));
             } else if (ret == 0) { //shutdown
                 mService.startService(new Intent(mService, SyncthingInstance.class)
-                        .setAction(SyncthingInstance.WAS_SHUTDOWN));
+                        .setAction(SyncthingInstance.BINARY_WAS_SHUTDOWN));
             }
         } catch (IOException e) {
             kill();

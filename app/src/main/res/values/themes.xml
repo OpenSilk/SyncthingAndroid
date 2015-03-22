@@ -29,7 +29,13 @@
         <!--<item name="android:listDivider">@drawable/abc_list_divider_mtrl_alpha</item>-->
     </style>
 
-    <color name="background">@android:color/white</color>
+    <style name="SettingsTheme" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
+        <!--<item name="android:actionBarStyle">@style/SettingsActionBarStyle</item>-->
+    </style>
+
+    <style name="SettingsActionBarStyle" parent="android:Widget.DeviceDefault.ActionBar.Solid">
+        <item name="android:background">@color/syncthing_brand</item>
+    </style>
 
     <style name="LoginTheme" parent="Theme.Dialog.LightBase">
         <item name="colorPrimaryDark">@color/light_blue_700</item>

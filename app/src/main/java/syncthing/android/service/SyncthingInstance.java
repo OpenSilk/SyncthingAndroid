@@ -17,37 +17,49 @@
 
 package syncthing.android.service;
 
-import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
 
 import org.apache.commons.io.IOUtils;
+import org.opensilk.common.mortar.MortarService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.inject.Inject;
+
+import mortar.MortarScope;
+import mortar.dagger2support.DaggerService;
 import syncthing.android.BuildConfig;
 import timber.log.Timber;
 
 /**
  * Created by drew on 3/8/15.
  */
-public class SyncthingInstance extends Service {
+public class SyncthingInstance extends MortarService {
 
     static final String PACKAGE = BuildConfig.APPLICATION_ID;
 
-    static final String NEED_RESTART = PACKAGE + ".action.needrestart";
-    static final String WAS_SHUTDOWN = PACKAGE + ".action.wasshutdown";
-    public static final String ACTION_RESTART = PACKAGE + ".action.restart";
-    public static final String ACTION_SHUTDOWN = PACKAGE + ".action.shutdown";
-    public static final String ACTION_STATE_CHANGE = PACKAGE + ".action.statechange";
+    //activity is informing us it was opened or closed
     public static final String FOREGROUND_STATE_CHANGED = PACKAGE + ".action.fgstatechanged";
-
-    public static final String EXTRA_STATE = PACKAGE + ".extra.state";
     public static final String EXTRA_NOW_IN_FOREGROUND = PACKAGE + ".extra.nowinforeground";
+    //binary exited with restart status
+    static final String BINARY_NEED_RESTART = PACKAGE + ".action.binaryneedrestart";
+    //binary exited with clean shutdown status
+    static final String BINARY_WAS_SHUTDOWN = PACKAGE + ".action.binarywasshutdown";
+    //Reload settings
+    public static final String REEVALUATE = PACKAGE + ".action.reevaluate";
+    //shutdown service
+    public static final String SHUTDOWN = PACKAGE + ".action.shutdown";
+    //received be alarmmanager
+    public static final String WAKEUP = PACKAGE + "action.wakeup";
+
+    @Inject ServiceSettings mSettings;
+    @Inject NotificationHelper mNotificationHelper;
+    @Inject AlarmManagerHelper mAlarmManagerHelper;
 
     ISyncthingInstance mBinder;
     SyncthingThread mSyncthingThread;
@@ -56,10 +68,22 @@ public class SyncthingInstance extends Service {
     boolean mAnyActivityInForeground;
 
     @Override
+    protected void onBuildScope(MortarScope.Builder builder) {
+        builder.withService(DaggerService.SERVICE_NAME,
+                DaggerService.createComponent(
+                        SyncthingInstanceComponent.class,
+                        DaggerService.getDaggerComponent(getApplicationContext()),
+                        new SyncthingInstanceModule(this)
+                )
+        );
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         Timber.d("onCreate");
         ensureBinary();
+        DaggerService.<SyncthingInstanceComponent>getDaggerComponent(this).inject(this);
         mBinder = new SyncthingInstanceBinder(this);
     }
 
@@ -68,6 +92,8 @@ public class SyncthingInstance extends Service {
         super.onDestroy();
         Timber.d("onDestroy");
         ensureSyncthingKilled();
+        mAlarmManagerHelper.cancelDelayedShutdown();
+        mAlarmManagerHelper.scheduleWakeup();
     }
 
     @Override
@@ -85,7 +111,6 @@ public class SyncthingInstance extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.d("onStartCommand %s", intent);
-        boolean handled = false;
         if (intent != null) {
             String action = intent.getAction();
 
@@ -94,20 +119,30 @@ public class SyncthingInstance extends Service {
                 updateForegroundState();
             }
 
-            if (WAS_SHUTDOWN.equals(action)) {
+            if (SHUTDOWN.equals(action)) {
+                mAlarmManagerHelper.onReceivedDelayedShutdown();
                 doOrderlyShutdown();
                 return START_NOT_STICKY;
             }
 
-            if (NEED_RESTART.equals(action)) {
-                ensureSyncthingKilled();
-                startSyncthing();
-                handled = true;
+            switch (action) {
+                case BINARY_WAS_SHUTDOWN:
+                    ensureSyncthingKilled();
+                    mAlarmManagerHelper.scheduleDelayedShutdown();
+                    break;
+                case BINARY_NEED_RESTART:
+                    safeStartSyncthing();
+                    break;
+                case REEVALUATE:
+                case WAKEUP:
+                default:
+                    reevaluate();
+                    break;
             }
 
-        }
-        if (!handled) {
-            maybeStartSyncthing();
+        } else {
+            //System restarted us
+            reevaluate();
         }
         return START_STICKY;
     }
@@ -124,8 +159,36 @@ public class SyncthingInstance extends Service {
         return null;
     }
 
+    void reevaluate() {
+        if (mAnyActivityInForeground) {
+            if (mSettings.isDisabled()) {
+                ensureSyncthingKilled();
+                doOrderlyShutdown();
+            } else if (mSettings.hasSuitableConnection()) {
+                maybeStartSyncthing();
+            } else {
+                mAlarmManagerHelper.scheduleDelayedShutdown();
+            }
+        } else {
+            //in background
+            if (mSettings.isAllowedToRun()) {
+                //as you were
+                maybeStartSyncthing();
+                if (mSettings.isOnSchedule()) {
+                    //TODO always set this and dont cancel when
+                    //receive updates from binary
+                    mAlarmManagerHelper.scheduleDelayedShutdown();
+                }
+            } else {
+                //no foreground and not allowed to run
+                ensureSyncthingKilled();
+                mAlarmManagerHelper.scheduleDelayedShutdown();
+            }
+        }
+    }
+
     void doOrderlyShutdown() {
-        //TODO kill notification
+        mNotificationHelper.killNotification();
         if (mConnectedClients == 0) {
             stopSelf();
         }
@@ -136,12 +199,25 @@ public class SyncthingInstance extends Service {
      */
 
     void updateForegroundState() {
-        //TODO
+        if (mAnyActivityInForeground) {
+            mNotificationHelper.killNotification();
+        } else {
+            mNotificationHelper.buildNotification();
+        }
     }
 
     /*
      * Syncthing Helpers
      */
+
+    boolean isSyncthingRunning() {
+        return mSyncthingThread != null && mSyncthingThread.isAlive();
+    }
+
+    void safeStartSyncthing() {
+        ensureSyncthingKilled();
+        startSyncthing();
+    }
 
     void startSyncthing() {
         mSyncthingThread = new SyncthingThread(this);
@@ -149,8 +225,8 @@ public class SyncthingInstance extends Service {
     }
 
     void maybeStartSyncthing() {
-        if (mSyncthingThread == null || !mSyncthingThread.isAlive()) {
-            startSyncthing();
+        if (!isSyncthingRunning()) {
+            safeStartSyncthing();
         }
     }
 

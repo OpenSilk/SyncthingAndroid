@@ -182,19 +182,25 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     void subscribeUpdates() {
         unsubscribeUpdates();
         connectionSubscription = presenter.bus.subscribe(
-                conn -> {
-                    if (!StringUtils.equals(conn.id, getCard().device.deviceID)) {
-                        return;
+                new Action1<Update.ConnectionInfo>() {
+                    @Override
+                    public void call(Update.ConnectionInfo conn) {
+                        if (!StringUtils.equals(conn.id, getCard().device.deviceID)) {
+                            return;
+                        }
+                        getCard().setConnectionInfo(conn.conn);
+                        updateConnection(conn.conn);
                     }
-                    getCard().setConnectionInfo(conn.conn);
-                    updateConnection(conn.conn);
                 },
                 Update.ConnectionInfo.class
         );
         systemInfoSubscription = presenter.bus.subscribe(
-                sys -> {
-                    getCard().setSystemInfo(sys);
-                    updateSystem(sys);
+                new Action1<SystemInfo>() {
+                    @Override
+                    public void call(SystemInfo sys) {
+                        getCard().setSystemInfo(sys);
+                        updateSystem(sys);
+                    }
                 },
                 SystemInfo.class
         );

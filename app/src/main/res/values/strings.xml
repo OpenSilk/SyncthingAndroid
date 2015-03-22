@@ -34,4 +34,29 @@
     <string name="send_device_id_to">Send Device ID to</string>
     <string name="device_id_copied_to_clipboard">Device ID copied to clipboard</string>
     <string name="no_qr_scanner_installed">You have no QR scanner installed or your scanner is not supported. Please install a scanner or enter the device ID manually.</string>
+
+    <!--Notification-->
+    <string name="syncthing_is_running">Syncthing is running.</string>
+
+    <!--Settings-->
+    <string name="service_settings">Service settings</string>
+    <string name="local_instance_disabled">Local Syncthing instance disabled</string>
+    <string name="local_instance_enabled">Local Syncthing instance enabled</string>
+
+    <string name="when_to_run">When to run</string>
+    <string name="run_when_app_is_open">When app is open</string>
+    <string name="run_always">Always run</string>
+
+    <string name="run_periodically">At periodic intervals</string>
+    <string name="interval_hours">Interval (hours)</string>
+
+    <string name="run_between_times">Between scheduled times</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
+
+    <string name="overrides">Overrides</string>
+    <string name="only_when_charging">Only when charging</string>
+    <string name="only_on_wifi">Only on wifi</string>
+    <string name="when_connected_to">Only when connected to…</string>
+
 </resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="run_when"
+        android:title="@string/when_to_run"
+        android:entries="@array/when_to_run"
+        android:entryValues="@array/when_to_run_values"
+        android:defaultValue="when_open"/>
+
+    <PreferenceCategory
+        android:title="@string/overrides">
+
+        <CheckBoxPreference
+            android:key="only_on_wifi"
+            android:title="@string/only_on_wifi"
+            android:defaultValue="true"/>
+
+        <MultiSelectListPreference
+            android:key="TRANSIENT_wifi_networks"
+            android:title="@string/when_connected_to"
+            android:dependency="only_on_wifi"/>
+
+        <CheckBoxPreference
+            android:key="only_when_charging"
+            android:title="@string/only_when_charging"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="cat_interval"
+        android:title="@string/run_periodically">
+
+        <EditTextPreference
+            android:key="periodic_interval_hours"
+            android:title="@string/interval_hours"
+            android:inputType="number"
+            android:defaultValue="12"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="cat_between"
+        android:title="@string/run_between_times">
+
+        <syncthing.android.ui.settings.TimePreference
+            android:key="scheduled_start"
+            android:title="@string/start_time"/>
+
+        <syncthing.android.ui.settings.TimePreference
+            android:key="scheduled_end"
+            android:title="@string/end_time"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

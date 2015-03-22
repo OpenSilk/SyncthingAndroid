@@ -20,8 +20,15 @@ package syncthing.android;
 import android.app.Application;
 import android.os.StrictMode;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import mortar.MortarScope;
 import mortar.dagger2support.DaggerService;
+import syncthing.android.service.ServiceComponent;
 import timber.log.Timber;
 
 /**
@@ -33,6 +40,7 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
+        Timber.d("onCreate()");
         super.onCreate();
         Timber.plant(new Timber.DebugTree());
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
@@ -41,10 +49,10 @@ public class App extends Application {
 
     @Override
     public Object getSystemService(String name) {
+        Timber.d("getSystemService(%s)", name);
         if (rootScope == null) {
             rootScope = MortarScope.buildRootScope()
-                    .withService(DaggerService.SERVICE_NAME,
-                            DaggerService.createComponent(AppComponent.class, new AppModule(this)))
+                    .withService(DaggerService.SERVICE_NAME, makeComponent())
                     .build("ROOT");
         }
         if (rootScope.hasService(name)) {
@@ -52,5 +60,28 @@ public class App extends Application {
         }
         return super.getSystemService(name);
 
+    }
+
+    Object makeComponent() {
+        if (isServiceProcess()) {
+            return DaggerService.createComponent(ServiceComponent.class, new AppModule(this));
+        } else {
+            return DaggerService.createComponent(AppComponent.class, new AppModule(this));
+        }
+    }
+
+    boolean isServiceProcess() {
+        try {
+            final File comm = new File("/proc/self/comm");
+            if (comm.exists() && comm.canRead()) {
+                final List<String> commLines = FileUtils.readLines(comm);
+                if (commLines.size() > 0) {
+                    final String procName = commLines.get(0).trim();
+                    Timber.i("%s >> %s ", comm.getAbsolutePath(), procName);
+                    return procName.endsWith(":service");
+                }
+            }
+        } catch (IOException ignored) { }
+        return false;
     }
 }

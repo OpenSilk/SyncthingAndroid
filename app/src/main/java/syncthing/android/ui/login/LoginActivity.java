@@ -28,6 +28,7 @@ import butterknife.InjectView;
 import mortar.MortarScope;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
+import syncthing.android.service.SyncthingUtils;
 
 /**
  * Created by drew on 3/10/15.
@@ -68,6 +69,22 @@ public class LoginActivity extends MortarFragmentActivity {
             mFragmentManagerOwner.replaceMainContent(f, f.getClass().getName(), false);
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SyncthingUtils.notifyForegroundStateChanged(this, true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SyncthingUtils.notifyForegroundStateChanged(this, false);
+    }
+
+    /*
+     * FragmentManagerOwner Activity
+     */
 
     @Override
     public int getContainerViewId() {

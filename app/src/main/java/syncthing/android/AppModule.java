@@ -17,7 +17,11 @@
 
 package syncthing.android;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 
 import org.opensilk.common.dagger2.ForApplication;
 
@@ -42,4 +46,24 @@ public class AppModule {
         return app;
     }
 
+
+    @Provides @Singleton
+    public ConnectivityManager provideConnectivityManager() {
+        return (ConnectivityManager) app.getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    @Provides @Singleton
+    public WifiManager provideWifiManager() {
+        return (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
+    }
+
+    @Provides @Singleton
+    public NotificationManager provideNotificationManager() {
+        return (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
+    }
+
+    @Provides @Singleton
+    public AlarmManager provideAlarmManager() {
+        return (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
+    }
 }
