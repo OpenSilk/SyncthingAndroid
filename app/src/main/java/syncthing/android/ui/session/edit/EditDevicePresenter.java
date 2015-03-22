@@ -93,7 +93,11 @@ public class EditDevicePresenter extends ViewPresenter<EditDeviceScreenView> imp
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
         if (savedInstanceState == null) {
-            originalDevice = SerializationUtils.clone(controller.getDevice(deviceId));
+            if (isAdd) {
+                originalDevice = DeviceConfig.withDefaults();
+            } else {
+                originalDevice = SerializationUtils.clone(controller.getDevice(deviceId));
+            }
         } else {
             originalDevice = (DeviceConfig) savedInstanceState.getSerializable("device");
         }
@@ -125,12 +129,11 @@ public class EditDevicePresenter extends ViewPresenter<EditDeviceScreenView> imp
         editFragmentPresenter.dismissDialog();
     }
 
-    //todo im pretty sure we dont need to pass the device, the view /should/ be operating on our copy
-    void saveDevice(DeviceConfig device, Map<String, Boolean> folders) {
+    void saveDevice(Map<String, Boolean> folders) {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
         }
-        saveSubscription = controller.editDevice(device, folders,
+        saveSubscription = controller.editDevice(originalDevice, folders,
                 (t) -> {
                     if (hasView()) {
                         getView().showError(t.getMessage());

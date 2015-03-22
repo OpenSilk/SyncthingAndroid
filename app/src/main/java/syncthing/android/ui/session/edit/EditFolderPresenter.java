@@ -19,9 +19,13 @@ package syncthing.android.ui.session.edit;
 
 import android.os.Bundle;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,8 +33,10 @@ import javax.inject.Named;
 import mortar.ViewPresenter;
 import rx.Subscription;
 import syncthing.api.SessionController;
-import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.FolderConfig;
+import syncthing.api.model.FolderDeviceConfig;
+
+import static syncthing.android.ui.session.edit.EditModule.INVALID_ID;
 
 /**
  * Created by drew on 3/16/15.
@@ -45,7 +51,6 @@ public class EditFolderPresenter extends ViewPresenter<EditFolderScreenView> {
     final EditFragmentPresenter editFragmentPresenter;
 
     FolderConfig origFolder;
-    FolderConfig newFolder;
 
     Subscription saveSubscription;
     Subscription deleteSubscription;
@@ -66,17 +71,6 @@ public class EditFolderPresenter extends ViewPresenter<EditFolderScreenView> {
     }
 
     @Override
-    protected void onLoad(Bundle savedInstanceState) {
-        super.onLoad(savedInstanceState);
-        origFolder = controller.getFolder(folderId);
-        DeviceConfig shareDevice = controller.getDevice(deviceId);
-        getView().initialize(isAdd, origFolder, shareDevice,
-                controller.getRemoteDevices(),
-                controller.getSystemInfo()
-        );
-    }
-
-    @Override
     protected void onExitScope() {
         super.onExitScope();
         if (saveSubscription != null) {
@@ -85,6 +79,33 @@ public class EditFolderPresenter extends ViewPresenter<EditFolderScreenView> {
         if (deleteSubscription != null) {
             deleteSubscription.unsubscribe();
         }
+    }
+
+    @Override
+    protected void onLoad(Bundle savedInstanceState) {
+        super.onLoad(savedInstanceState);
+        if (savedInstanceState == null) {
+            if (isAdd) {
+                origFolder = FolderConfig.withDefaults();
+                if (!INVALID_ID.equals(folderId)) {
+                    origFolder.id = folderId;
+                }
+                if (!INVALID_ID.equals(deviceId)) {
+                    origFolder.devices = Collections.singletonList(new FolderDeviceConfig(deviceId));
+                }
+            } else {
+                origFolder = SerializationUtils.clone(controller.getFolder(folderId));
+            }
+        } else {
+            origFolder = (FolderConfig) savedInstanceState.getSerializable("folder");
+        }
+        getView().initialize(isAdd, origFolder, controller.getRemoteDevices(), controller.getSystemInfo(), savedInstanceState != null);
+    }
+
+    @Override
+    protected void onSave(Bundle outState) {
+        super.onSave(outState);
+        outState.putSerializable("folder", origFolder);
     }
 
     boolean validateFolderId(CharSequence text) {
@@ -152,12 +173,11 @@ public class EditFolderPresenter extends ViewPresenter<EditFolderScreenView> {
         editFragmentPresenter.dismissDialog();
     }
 
-    void saveFolder(FolderConfig folder) {
-        newFolder = folder;
+    void saveFolder() {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
         }
-        saveSubscription = controller.editFolder(folder,
+        saveSubscription = controller.editFolder(origFolder,
                 (t) -> {
                     if (hasView()) {
                         getView().showError(t.getMessage());

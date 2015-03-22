@@ -17,10 +17,13 @@
 
 package syncthing.api.model;
 
+import java.io.Serializable;
+
 /**
  * Created by drew on 3/17/15.
  */
-public class FolderDeviceConfig {
+public class FolderDeviceConfig implements Serializable {
+    private static final long serialVersionUID = 6021159249890537441L;
     public String deviceID;
 
     public FolderDeviceConfig(String deviceID) {

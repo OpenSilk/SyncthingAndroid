@@ -152,7 +152,7 @@ public class EditDeviceScreenView extends ScrollView {
             }
         }
 
-        presenter.saveDevice(device, folders);
+        presenter.saveDevice(folders);
     }
 
     void initialize(boolean isAdd, DeviceConfig device, Collection<FolderConfig> folders, boolean fromsavedstate) {
@@ -171,10 +171,9 @@ public class EditDeviceScreenView extends ScrollView {
             checkIntroducer.setChecked(device.introducer);
         } else {
             //set nice defaults
-            DeviceConfig nd = DeviceConfig.withDefaults();
-            editAddresses.setText(SyncthingUtils.unrollArray(nd.addresses));
-            setCompression(nd.compression);
-            checkIntroducer.setChecked(nd.introducer);
+            editAddresses.setText(SyncthingUtils.unrollArray(device.addresses));
+            setCompression(device.compression);
+            checkIntroducer.setChecked(device.introducer);
         }
 
         shareFoldersContainer.removeAllViews();

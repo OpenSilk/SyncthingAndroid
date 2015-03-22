@@ -57,7 +57,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         EditFragment f = new EditFragment();
         Bundle b = new Bundle();
         b.putBoolean("isFolder", true);
-        b.putInt("title", R.string.edit_folder);
+        b.putInt("title", R.string.share_folder);
         b.putString("folder", folderId);
         b.putString("device", deviceId);
         f.setArguments(b);

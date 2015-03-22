@@ -44,7 +44,7 @@ public class EditFolderScreen {
     }
 
     public EditFolderScreen(String folderId, String deviceId) {
-        this(folderId, deviceId, false);
+        this(folderId, deviceId, true);
     }
 
     public EditFolderScreen(String folderId, String deviceId, boolean isAdd) {

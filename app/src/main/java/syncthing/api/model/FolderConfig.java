@@ -17,6 +17,7 @@
 
 package syncthing.api.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +25,8 @@ import java.util.List;
 /**
  * Created by drew on 3/1/15.
  */
-public class FolderConfig {
+public class FolderConfig implements Serializable {
+    private static final long serialVersionUID = -8186446116464535246L;
     public String id;
     public String path;
     public List<FolderDeviceConfig> devices = Collections.emptyList();

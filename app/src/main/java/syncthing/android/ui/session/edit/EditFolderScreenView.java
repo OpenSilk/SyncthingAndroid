@@ -93,6 +93,7 @@ public class EditFolderScreenView extends ScrollView {
     final DirectoryAutoCompleteAdapter editFolderPathAdapter;
 
     boolean isAdd = false;
+    FolderConfig folder;
     AlertDialog errorDialog;
 
 
@@ -140,7 +141,6 @@ public class EditFolderScreenView extends ScrollView {
 
     @OnClick(R.id.btn_save)
     void doSave() {
-        FolderConfig folder = new FolderConfig();
         if (isAdd && !presenter.validateFolderId(editFolderId.getText().toString())) {
             return;
         }
@@ -194,12 +194,14 @@ public class EditFolderScreenView extends ScrollView {
         }
         folder.devices = devices;
 
-        presenter.saveFolder(folder);
+        presenter.saveFolder();
 
     }
 
-    void initialize(boolean isAdd, FolderConfig folder, DeviceConfig shareDevice, List<DeviceConfig> devices, SystemInfo systemInfo) {
+    void initialize(boolean isAdd, FolderConfig folder, List<DeviceConfig> devices, SystemInfo systemInfo, boolean fromsavedstate) {
         this.isAdd = isAdd;
+        this.folder = folder;
+        if (fromsavedstate) return;
 
         if (!isAdd) {
             editFolderId.setText(folder.id);
@@ -227,16 +229,25 @@ public class EditFolderScreenView extends ScrollView {
                     break;
             }
 
+            addingWarning.setVisibility(GONE);
         } else {
             //Initialize with nice defaults
-            FolderConfig nf = FolderConfig.withDefaults();
-            editRescanIntrvl.setText(String.valueOf(nf.rescanIntervalS));
+            if (!StringUtils.isEmpty(folder.id)) {
+                //when adding new share folder id will already be set
+                editFolderId.setText(folder.id);
+                editFolderId.setEnabled(false);
+                descFolderId.setVisibility(GONE);
+                addingWarning.setVisibility(GONE);
+            } else {
+                addingWarning.setVisibility(VISIBLE);
+            }
+            editRescanIntrvl.setText(String.valueOf(folder.rescanIntervalS));
             editFolderPath.setText(systemInfo.tilde);
             editFolderPath.setAdapter(editFolderPathAdapter);
             //TODO set ignore perms if running on android
             rdioNoVer.setChecked(true);
-            editSimpleVerKeep.setText(nf.versioning.params.keep);
-            editStaggeredVerMaxAge.setText(SyncthingUtils.secondsToDays(nf.versioning.params.maxAge));
+            editSimpleVerKeep.setText(folder.versioning.params.keep);
+            editStaggeredVerMaxAge.setText(SyncthingUtils.secondsToDays(folder.versioning.params.maxAge));
         }
 
         descFolderPath.setText(descFolderPath.getText() + " " + systemInfo.tilde);//Hacky
@@ -245,23 +256,15 @@ public class EditFolderScreenView extends ScrollView {
         for (DeviceConfig device : devices) {
             CheckBox checkBox = new DeviceCheckBox(getContext(), device);
             checkBox.setText(SyncthingUtils.getDisplayName(device));
-            if (!isAdd) {
-                for (FolderDeviceConfig d : folder.devices) {
-                    if (StringUtils.equals(d.deviceID, device.deviceID)) {
-                        checkBox.setChecked(true);
-                        break;
-                    }
-                }
-                if (shareDevice != null) {
-                    if (StringUtils.equals(shareDevice.deviceID, device.deviceID)) {
-                        checkBox.setChecked(true);
-                    }
+            for (FolderDeviceConfig d : folder.devices) {
+                if (StringUtils.equals(d.deviceID, device.deviceID)) {
+                    checkBox.setChecked(true);
+                    break;
                 }
             }
             sharedDevicesContainer.addView(checkBox);
         }
 
-        addingWarning.setVisibility(isAdd ? VISIBLE : GONE);
         deleteBtn.setVisibility(isAdd ? GONE : VISIBLE);
         ignoresPattrnBtn.setVisibility(isAdd ? GONE : VISIBLE);
 

@@ -17,10 +17,13 @@
 
 package syncthing.api.model;
 
+import java.io.Serializable;
+
 /**
  * Created by drew on 3/1/15.
  */
-public class VersioningConfig {
+public class VersioningConfig implements Serializable {
+    private static final long serialVersionUID = -6095511925370580788L;
     public VersioningType type = VersioningType.NONE;
     public VersioningParams params = new VersioningParams();
 }
