@@ -47,8 +47,8 @@ import timber.log.Timber;
 @Singleton
 public class AppSettings {
 
-    public static final String DEFAULT_CREDENTIALS = "default_credentials";
-    public static final String SAVED_CREDENTIALS = "saved_credentials";
+    public static final String DEFAULT_CREDENTIALS = "TRANSIENT_default_credentials";
+    public static final String SAVED_CREDENTIALS = "TRANSIENT_saved_credentials";
 
     final Gson gson;
     final Context appContext;
