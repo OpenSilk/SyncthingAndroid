@@ -97,7 +97,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
         enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, isChecked).apply();
+                getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, isChecked).commit();
                 getPreferenceScreen().setEnabled(isChecked);
             }
         });

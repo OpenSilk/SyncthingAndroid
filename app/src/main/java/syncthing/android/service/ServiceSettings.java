@@ -66,7 +66,6 @@ public class ServiceSettings {
     final Context appContext;
     final ConnectivityManager cm;
     final WifiManager wm;
-    final SharedPreferences prefs;
 
     @Inject
     public ServiceSettings(
@@ -77,11 +76,15 @@ public class ServiceSettings {
         this.appContext = appContext;
         this.cm = cm;
         this.wm = wm;
-        this.prefs = appContext.getSharedPreferences(FILE_NAME, Context.MODE_MULTI_PROCESS);
+    }
+
+    SharedPreferences getPrefs() {
+        //must reaquire everytime since prefs are modified in another process
+        return appContext.getSharedPreferences(FILE_NAME, Context.MODE_MULTI_PROCESS);
     }
 
     boolean isDisabled() {
-        return !prefs.getBoolean(ENABLED, false);
+        return !getPrefs().getBoolean(ENABLED, false);
     }
 
     boolean isAllowedToRun() {
@@ -89,7 +92,7 @@ public class ServiceSettings {
             Timber.d("isAllowedToRun(): SyncthingInstance disabled");
             return false;
         }
-        boolean chargingOnly = prefs.getBoolean(ONLY_CHARGING, false);
+        boolean chargingOnly = getPrefs().getBoolean(ONLY_CHARGING, false);
         if (chargingOnly && !isCharging()) {
             Timber.d("isAllowedToRun(): chargingOnly=true and not charging... rejecting");
             return false;
@@ -98,13 +101,13 @@ public class ServiceSettings {
             Timber.d("isAllowedToRun(): No suitable network... rejecting");
             return false;
         }
-        String runWhen = prefs.getString(RUN_WHEN, WHEN_OPEN);
+        String runWhen = getPrefs().getString(RUN_WHEN, WHEN_OPEN);
         if (ALWAYS.equals(runWhen)) {
             Timber.d("isAllowedToRun(): Always mate!");
             return true;
         } else if (SCHEDULED.equals(runWhen)) {
-            long start = SyncthingUtils.parseTime(prefs.getString(RANGE_START, "00:00"));
-            long end = SyncthingUtils.parseTime(prefs.getString(RANGE_END, "00:00"));
+            long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
+            long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
             boolean can = SyncthingUtils.isNowBetweenRange(start, end);
             Timber.d("isAllowedToRun(): is now a good time? %s", can);
             return can;
@@ -127,7 +130,7 @@ public class ServiceSettings {
             Timber.d("Not connected to any networks");
             return false;
         }
-        boolean wifiOnly = prefs.getBoolean(ONLY_WIFI, true);
+        boolean wifiOnly = getPrefs().getBoolean(ONLY_WIFI, true);
         if (wifiOnly && !isWifiOrEthernet(info.getType())) {
             Timber.d("Connection is not wifi network and wifiOnly=true");
             return false;
@@ -145,7 +148,7 @@ public class ServiceSettings {
     }
 
     boolean isConnectedToWhitelistedNetwork() {
-        Set<String> whitelist = prefs.getStringSet(WIFI_NETWORKS, null);
+        Set<String> whitelist = getPrefs().getStringSet(WIFI_NETWORKS, null);
         if (whitelist == null) {
             Timber.d("No whitelist found");
             return true;
@@ -169,16 +172,16 @@ public class ServiceSettings {
     }
 
     boolean isPeriodic() {
-        return PERIODIC.equals(prefs.getString(RUN_WHEN, WHEN_OPEN));
+        return PERIODIC.equals(getPrefs().getString(RUN_WHEN, WHEN_OPEN));
     }
 
     boolean isOnSchedule() {
-        return SCHEDULED.equals(prefs.getString(RUN_WHEN, WHEN_OPEN));
+        return SCHEDULED.equals(getPrefs().getString(RUN_WHEN, WHEN_OPEN));
     }
 
     long getNextScheduledEndTime() {
-        long start = SyncthingUtils.parseTime(prefs.getString(RANGE_START, "00:00"));
-        long end = SyncthingUtils.parseTime(prefs.getString(RANGE_END, "00:00"));
+        long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
+        long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
         DateTime now = DateTime.now();
         Interval interval = SyncthingUtils.getIntervalForRange(now, start, end);
         if (interval.contains(now)) {
@@ -191,8 +194,8 @@ public class ServiceSettings {
     }
 
     long getNextScheduledStartTime() {
-        long start = SyncthingUtils.parseTime(prefs.getString(RANGE_START, "00:00"));
-        long end = SyncthingUtils.parseTime(prefs.getString(RANGE_END, "00:00"));
+        long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
+        long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
         DateTime now = DateTime.now();
         Interval interval = SyncthingUtils.getIntervalForRange(now, start, end);
         if (interval.isBefore(now)) {
