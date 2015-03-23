@@ -47,7 +47,6 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
     ListPreference runWhen;
     MultiSelectListPreference wifiNetwork;
 
-    PreferenceCategory catInterval;
     PreferenceCategory catBetween;
 
     @Override
@@ -66,7 +65,6 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
         wifiNetwork.setEntries(ssids);
         wifiNetwork.setEntryValues(ssids);
 
-        catInterval = (PreferenceCategory) findPreference("cat_interval");
         catBetween = (PreferenceCategory) findPreference("cat_between");
         hideShowRunWhenCategories(getPreferenceManager().getSharedPreferences()
                 .getString(ServiceSettings.RUN_WHEN, ServiceSettings.WHEN_OPEN));
@@ -114,16 +112,10 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
 
     void hideShowRunWhenCategories(String runwhen) {
         switch (runwhen) {
-            case ServiceSettings.PERIODIC:
-                catInterval.setEnabled(true);
-                catBetween.setEnabled(false);
-                break;
             case ServiceSettings.SCHEDULED:
-                catInterval.setEnabled(false);
                 catBetween.setEnabled(true);
                 break;
             default:
-                catInterval.setEnabled(false);
                 catBetween.setEnabled(false);
                 break;
         }

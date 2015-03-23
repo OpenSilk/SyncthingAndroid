@@ -46,18 +46,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="cat_interval"
-        android:title="@string/run_periodically">
-
-        <EditTextPreference
-            android:key="periodic_interval_hours"
-            android:title="@string/interval_hours"
-            android:inputType="number"
-            android:defaultValue="12"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:key="cat_between"
         android:title="@string/run_between_times">
 

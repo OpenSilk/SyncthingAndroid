@@ -52,9 +52,6 @@ public class ServiceSettings {
     public static final String WHEN_OPEN = "when_open";
     public static final String ALWAYS = "always";
 
-    public static final String PERIODIC = "periodic";
-    public static final String INTERVAL_HOURS = "periodic_interval_hours";
-
     public static final String SCHEDULED = "scheduled";
     public static final String RANGE_START = "scheduled_start";
     public static final String RANGE_END = "scheduled_end";
@@ -169,10 +166,6 @@ public class ServiceSettings {
         } else {
             return false;
         }
-    }
-
-    boolean isPeriodic() {
-        return PERIODIC.equals(getPrefs().getString(RUN_WHEN, WHEN_OPEN));
     }
 
     boolean isOnSchedule() {

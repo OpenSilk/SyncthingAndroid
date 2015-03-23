@@ -50,9 +50,6 @@
     <string name="run_when_app_is_open">When app is open</string>
     <string name="run_always">Always run</string>
 
-    <string name="run_periodically">At periodic intervals</string>
-    <string name="interval_hours">Interval (hours)</string>
-
     <string name="run_between_times">Between scheduled times</string>
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>

@@ -93,8 +93,6 @@ public class AlarmManagerHelper {
             long nextWakeup = settings.getNextScheduledStartTime();
             Timber.d("Scheduling wakeup at %s", new DateTime(nextWakeup).toString());
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextWakeup, wakeupIntent);
-        } else if (settings.isPeriodic()) {
-            //TODO
         }
     }
 

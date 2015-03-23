@@ -21,14 +21,12 @@
     <string-array name="when_to_run">
         <item>@string/run_when_app_is_open</item>
         <item>@string/run_always</item>
-        <item>@string/run_periodically</item>
         <item>@string/run_between_times</item>
     </string-array>
 
     <string-array name="when_to_run_values">
         <item>when_open</item>
         <item>always</item>
-        <item>periodic</item>
         <item>scheduled</item>
     </string-array>
 
