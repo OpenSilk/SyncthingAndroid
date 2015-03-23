@@ -271,7 +271,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             }
         }
         ConnectionInfo tConn = controller.getConnection("total");
-        if (tConn != null) {
+        if (tConn != null && getMyDeviceId() != null) {
             bus.post(new Update.ConnectionInfo(getMyDeviceId(), tConn));
         }
     }
