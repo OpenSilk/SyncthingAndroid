@@ -34,6 +34,7 @@
     <string name="send_device_id_to">Send Device ID to</string>
     <string name="device_id_copied_to_clipboard">Device ID copied to clipboard</string>
     <string name="no_qr_scanner_installed">You have no QR scanner installed or your scanner is not supported. Please install a scanner or enter the device ID manually.</string>
+    <string name="external">External</string>
 
     <!--Notification-->
     <string name="syncthing_is_running">Syncthing is running.</string>

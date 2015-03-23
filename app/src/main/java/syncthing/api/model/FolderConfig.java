@@ -26,13 +26,14 @@ import java.util.List;
  * Created by drew on 3/1/15.
  */
 public class FolderConfig implements Serializable {
-    private static final long serialVersionUID = -8186446116464535246L;
+    private static final long serialVersionUID = -1620434875319958462L;
     public String id;
     public String path;
     public List<FolderDeviceConfig> devices = Collections.emptyList();
     public boolean readOnly;
     public int rescanIntervalS;
     public boolean ignorePerms;
+    public boolean autoNormalize;
     public VersioningConfig versioning;
     public boolean lenientMTimes;
     public int copiers;// = 1;
@@ -45,6 +46,7 @@ public class FolderConfig implements Serializable {
         f.devices = new ArrayList<>();
         f.readOnly = false;
         f.rescanIntervalS = 60;
+        f.autoNormalize = true;
         f.versioning = new VersioningConfig();
         f.lenientMTimes = false;
         f.invalid = "";

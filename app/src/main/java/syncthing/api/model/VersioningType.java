@@ -29,6 +29,7 @@ import syncthing.android.R;
 public enum VersioningType {
     @SerializedName("simple") SIMPLE(R.string.simple_file_versioning),
     @SerializedName("staggered") STAGGERED(R.string.staggered_file_versioning),
+    @SerializedName("external") EXTERNAL(R.string.external),
     @SerializedName("") NONE(R.string.no);
 
     private int resource;
