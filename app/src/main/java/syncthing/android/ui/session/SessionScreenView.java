@@ -28,6 +28,8 @@ import org.opensilk.common.widget.RecyclerListFrame;
 
 import java.util.List;
 
+import butterknife.InjectView;
+import butterknife.OnClick;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
@@ -73,6 +75,11 @@ public class SessionScreenView extends RecyclerListFrame {
         mPresenter.dropView(this);
         dismissErrorDialog();
         dismissProgressDialog();
+    }
+
+    @OnClick(R.id.btn_retry)
+    void doRetry() {
+        mPresenter.retryConnection();
     }
 
     void initialize(List<ExpandableCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices) {

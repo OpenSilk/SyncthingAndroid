@@ -20,11 +20,13 @@ package syncthing.api;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -66,6 +68,7 @@ public class EventMonitor {
     }
 
     public void start(long delay) {
+        //TODO check connectivity and fail fast
         eventSubscription = Observable.timer(delay, TimeUnit.MILLISECONDS)
                 .flatMap(ii -> restApi.events(lastEvent))
                 .flatMap(events -> {
@@ -95,7 +98,8 @@ public class EventMonitor {
                         return Observable.from(events);
                     }
                 })
-                        //TODO filter or debounce some events like LocalIndexUpdated can flood
+                //drop duplicate events some events like INDEX_UPDATED or STATE_CHANGED will flood
+                .distinctUntilChanged(event -> event.type)
                 //.debounce(50, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -110,25 +114,31 @@ public class EventMonitor {
                                 RetrofitError e = (RetrofitError) t;
                                 switch (e.getKind()) {
                                     case NETWORK: {
-                                        listener.onError(Error.DISCONNECTED);
                                         Throwable cause = t.getCause();
-                                        unhandledErrorCount--;
+                                        unhandledErrorCount--;//network errors handle themselves
                                         if (cause instanceof SocketTimeoutException) {
+                                            //just means no events for long time, can safely ignore
                                             Timber.w("SocketTimeout: %s", cause.getMessage());
                                         } else if (cause instanceof ConnectException) {
+                                            //We could either be offline or the server could be
+                                            //offline, or the server could still be booting
+                                            //or other stuff idk, so we retry for a while
+                                            //before giving up.
                                             Timber.w("ConnectException: %s", cause.getMessage());
                                             if (++connectExceptionCount > 20) {
                                                 connectExceptionCount = 0;
                                                 Timber.w("Too many ConnectExceptions... server likely offline");
                                                 listener.onError(Error.STOPPING);
                                             } else {
+                                                listener.onError(Error.DISCONNECTED);
                                                 resetCounter();//someone else could have restarted it
-                                                start(1000);
+                                                start(1200);
                                             }
                                             return;
                                         } else {
-                                            Timber.e("Unhandled network error ", cause);
-                                            unhandledErrorCount++;
+                                            Timber.e(cause, "Unhandled network error");
+                                            listener.onError(Error.DISCONNECTED);
+                                            unhandledErrorCount++;//undo decrement above
                                         }
                                         break;
                                     }
@@ -138,31 +148,32 @@ public class EventMonitor {
                                     }
                                     case HTTP: {
                                         //NOTE cause is null here
-                                        Timber.w("HTTP Error: code=%d, reason=%s",
-                                                e.getResponse().getStatus(), e.getResponse().getReason());
-                                        if (e.getResponse().getStatus() == 401) {
+                                        Response r = e.getResponse();
+                                        Timber.w("HTTP Error: code=%d, reason=%s", r.getStatus(), r.getReason());
+                                        if (r.getStatus() == 401) {
                                             listener.onError(Error.UNAUTHORIZED);
                                         } else {
-                                            //todo
+                                            //TODO maybe less generic
+                                            listener.onError(Error.STOPPING);
                                         }
                                         return;
                                     }
                                     default: {
-                                        Timber.e("Unknown RetrofitError:", e.getCause());
+                                        Timber.e(e.getCause(), "Unknown RetrofitError:");
                                         unhandledErrorCount++;
                                         break;
                                     }
                                 }
                             } else if (t instanceof RejectedExecutionException) {
-                                unhandledErrorCount--;
+                                //Ideally this wont happen, but were running on a bounded pool
+                                unhandledErrorCount--;//ignore this error
                                 Timber.e("RejectedExecutionException: %s", t.getMessage());
                             } else {
-                                Timber.e("Unforeseen Exception: %s %s",
-                                        t.getClass().getSimpleName(), t.getMessage(), t);
+                                Timber.e(t, "Unforeseen Exception: %s %s",t.getClass().getSimpleName(), t.getMessage());
                             }
                             connectExceptionCount = 0;
                             if (++unhandledErrorCount < 20) {
-                                start(1000);
+                                start(1200);
                             } else {
                                 Timber.w("Too many errors suspending longpoll");
                                 unhandledErrorCount = 0;
@@ -186,6 +197,5 @@ public class EventMonitor {
     public void resetCounter() {
         lastEvent = 0;
     }
-
 
 }

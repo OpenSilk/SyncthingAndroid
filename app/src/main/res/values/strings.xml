@@ -35,9 +35,11 @@
     <string name="device_id_copied_to_clipboard">Device ID copied to clipboard</string>
     <string name="no_qr_scanner_installed">You have no QR scanner installed or your scanner is not supported. Please install a scanner or enter the device ID manually.</string>
     <string name="external">External</string>
+    <string name="retry">Retry</string>
+    <string name="could_not_connect">Could not connect</string>
 
     <!--Notification-->
-    <string name="syncthing_is_running">Syncthing is running.</string>
+    <string name="syncthing_is_running">Syncthing is running</string>
 
     <!--Settings-->
     <string name="service_settings">Service settings</string>

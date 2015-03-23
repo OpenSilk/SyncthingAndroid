@@ -38,10 +38,10 @@ import javax.inject.Inject;
 import mortar.MortarScope;
 import mortar.ViewPresenter;
 import rx.Subscription;
+import syncthing.android.R;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
-import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.ExpandableCard;
 import syncthing.android.ui.login.LoginActivity;
 import syncthing.android.ui.session.edit.EditFragment;
@@ -119,8 +119,12 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             dismissRestartingDialog();
         } else if (controller.isRestarting()) {
             showRestartingDialog();
-        } else {
+        } else if (controller.isRunning()) {
             getView().setLoading(true);
+        } else /*offline*/ {
+            //TODO check network connectivity and set error accordingly
+            getView().setEmptyText(R.string.could_not_connect);
+            getView().setListEmpty(true, false);
         }
     }
 
@@ -142,7 +146,16 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             case OFFLINE:
                 if (controller.isRestarting()) {
                     showRestartingDialog();
-                } //else TODO
+                } else if (hasView()) {
+                    if (controller.isRunning()) {
+                        //In disconnected state but still trying
+                        getView().setLoading(true);
+                    } else {
+                        //controller has given up
+                        getView().setEmptyText(R.string.could_not_connect);
+                        getView().setListEmpty(true, true);
+                    }
+                }
                 break;
             case DEVICE_REJECTED:
             case FOLDER_REJECTED:
@@ -166,9 +179,13 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             case COMPLETION:
                 postCompletionUpdate();
                 break;
-            case CONNECTIONS:
+            case CONNECTIONS_UPDATE:
                 postConnectiosUpdate();
                 break;
+            case CONNECTIONS_CHANGE:
+                if (hasView()) {
+                    getView().refreshDevices(getDevices());
+                }
             case DEVICE_STATS:
                 postDeviceStatsUpdate();
                 break;
@@ -337,6 +354,15 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
 
     public String getMyDeviceId() {
         return controller.getMyID();
+    }
+
+    public void retryConnection() {
+        if (!controller.isRunning()) {
+            controller.init();
+            if (hasView()) {
+                getView().setLoading(true);
+            }
+        }
     }
 
     void openLoginScreen() {

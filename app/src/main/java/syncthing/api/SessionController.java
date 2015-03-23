@@ -42,7 +42,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import retrofit.RetrofitError;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -86,7 +85,8 @@ public class SessionController implements EventMonitor.EventListener {
         COMPLETION,
         FOLDER_STATS,
         DEVICE_STATS,
-        CONNECTIONS,
+        CONNECTIONS_UPDATE,
+        CONNECTIONS_CHANGE,
         DEVICE_REJECTED,
         FOLDER_REJECTED,
         CONFIG_UPDATE,
@@ -119,6 +119,7 @@ public class SessionController implements EventMonitor.EventListener {
     long prevDate;
     boolean online;
     boolean restarting;
+    boolean running;
     Subscription onlineSub;
     Subscription subspendSubscription;
     Subscription periodicRefreshSubscription;
@@ -141,7 +142,10 @@ public class SessionController implements EventMonitor.EventListener {
         } else if (!eventMonitor.isRunning()) {
             eventMonitor.start();
         }
-        setupPeriodicRefresh();
+        if (isOnline()) {
+            setupPeriodicRefresh();
+        }
+        running = true;
     }
 
     public void suspend() {
@@ -156,6 +160,7 @@ public class SessionController implements EventMonitor.EventListener {
                     }
                 });
         cancelPeriodicRefresh();
+        running = false;
     }
 
     public void kill() {
@@ -164,6 +169,11 @@ public class SessionController implements EventMonitor.EventListener {
         }
         eventMonitor.stop();
         cancelPeriodicRefresh();
+        running = false;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     public void handleEvent(Event e) {
@@ -233,8 +243,11 @@ public class SessionController implements EventMonitor.EventListener {
                 updateState(false);
                 postChange(Change.NEED_LOGIN);
                 break;
-            case STOPPING:
             case DISCONNECTED:
+                updateState(false);
+                break;
+            case STOPPING:
+                running = false;
                 updateState(false);
                 break;
         }
@@ -279,12 +292,14 @@ public class SessionController implements EventMonitor.EventListener {
                     },
                     this::logException,
                     () -> {
+                        setupPeriodicRefresh();
                         postChange(Change.ONLINE);
                     }
             );
         } else {
             this.online = false;
             if (onlineSub != null) onlineSub.unsubscribe();
+            cancelPeriodicRefresh();
             postChange(Change.OFFLINE);
         }
         return true;
@@ -334,12 +349,16 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     public void refreshConnections() {
+        refreshConnections(false);
+    }
+
+    public void refreshConnections(boolean update) {
         Subscription s = restApi.connections()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::updateConnections,
                         this::logException,
-                        () -> postChange(Change.CONNECTIONS));
+                        () -> postChange(update ? Change.CONNECTIONS_UPDATE : Change.CONNECTIONS_CHANGE));
     }
 
     public void refreshDeviceStats() {
@@ -969,7 +988,7 @@ public class SessionController implements EventMonitor.EventListener {
         periodicRefreshSubscription = Observable.interval(30, TimeUnit.SECONDS)
                 .subscribe(ii -> {
                     refreshSystem();
-                    refreshConnections();
+                    refreshConnections(true);
                     refreshErrors();
                 });
     }
