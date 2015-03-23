@@ -46,7 +46,7 @@ import timber.log.Timber;
  */
 public class SyncthingUtils {
 
-    private static ISyncthingInstance sService;
+    //private static ISyncthingInstance sService;
     private static int sForegroundActivities;
     private static final WeakHashMap<Context, ServiceBinder> sConnectionMap;
 
@@ -93,7 +93,7 @@ public class SyncthingUtils {
         }
         contextWrapper.unbindService(binder);
         if (sConnectionMap.isEmpty()) {
-            sService = null;
+            //sService = null;
         }
     }
 
@@ -106,7 +106,7 @@ public class SyncthingUtils {
 
         @Override
         public void onServiceConnected(final ComponentName className, final IBinder service) {
-            sService = SyncthingInstanceBinder.asInterface (service);
+            //sService = SyncthingInstanceBinder.asInterface (service);
             if (mCallback != null) {
                 mCallback.onServiceConnected(className, service);
             }
@@ -117,7 +117,7 @@ public class SyncthingUtils {
             if (mCallback != null) {
                 mCallback.onServiceDisconnected(className);
             }
-            sService = null;
+            //sService = null;
         }
     }
 

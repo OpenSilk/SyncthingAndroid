@@ -61,7 +61,6 @@ public class SyncthingInstance extends MortarService {
     @Inject NotificationHelper mNotificationHelper;
     @Inject AlarmManagerHelper mAlarmManagerHelper;
 
-    ISyncthingInstance mBinder;
     SyncthingThread mSyncthingThread;
 
     int mConnectedClients = 0;
@@ -84,7 +83,6 @@ public class SyncthingInstance extends MortarService {
         Timber.d("onCreate");
         ensureBinary();
         DaggerService.<SyncthingInstanceComponent>getDaggerComponent(this).inject(this);
-        mBinder = new SyncthingInstanceBinder(this);
     }
 
     @Override
@@ -99,7 +97,7 @@ public class SyncthingInstance extends MortarService {
     @Override
     public IBinder onBind(Intent intent) {
         mConnectedClients++;
-        return mBinder.asBinder();
+        return null; //unused for now
     }
 
     @Override
@@ -116,7 +114,6 @@ public class SyncthingInstance extends MortarService {
 
             if (intent.hasExtra(EXTRA_NOW_IN_FOREGROUND)) {
                 mAnyActivityInForeground = intent.getBooleanExtra(EXTRA_NOW_IN_FOREGROUND, false);
-                updateForegroundState();
             }
 
             if (SHUTDOWN.equals(action)) {
@@ -127,11 +124,11 @@ public class SyncthingInstance extends MortarService {
 
             switch (action) {
                 case BINARY_WAS_SHUTDOWN:
-                    ensureSyncthingKilled();
-                    mAlarmManagerHelper.scheduleDelayedShutdown();
+                    doOrderlyShutdown();
                     break;
                 case BINARY_NEED_RESTART:
                     safeStartSyncthing();
+                    updateForegroundState();
                     break;
                 case REEVALUATE:
                 case WAKEUP:
@@ -140,56 +137,47 @@ public class SyncthingInstance extends MortarService {
                     break;
             }
 
-        } else {
-            //System restarted us
+        } else { //System restarted us
             reevaluate();
         }
+
         return START_STICKY;
-    }
-
-    /*
-     * AIDL
-     */
-
-    public String getGuiAddress() {
-        return null;
-    }
-
-    public String getApiKey() {
-        return null;
     }
 
     void reevaluate() {
         if (mAnyActivityInForeground) {
-            if (mSettings.isDisabled()) {
+            //when in foreground we only care about disabled status and
+            //connection override, we will assume that since the user
+            //opened the app they wish for the server to start
+            if (mSettings.isDisabled() || !mSettings.hasSuitableConnection()) {
                 ensureSyncthingKilled();
-                doOrderlyShutdown();
-            } else if (mSettings.hasSuitableConnection()) {
-                maybeStartSyncthing();
             } else {
-                mAlarmManagerHelper.scheduleDelayedShutdown();
+                maybeStartSyncthing();
+                mAlarmManagerHelper.cancelDelayedShutdown();
             }
         } else {
             //in background
             if (mSettings.isAllowedToRun()) {
-                //as you were
-                maybeStartSyncthing();
+                maybeStartSyncthing(); //as you were
                 if (mSettings.isOnSchedule()) {
-                    //TODO always set this and dont cancel when
-                    //receive updates from binary
                     mAlarmManagerHelper.scheduleDelayedShutdown();
+                } else /*always run*/ {
+                    mAlarmManagerHelper.cancelDelayedShutdown();
                 }
             } else {
-                //no foreground and not allowed to run
                 ensureSyncthingKilled();
+                //dont shutdown right away in case circumstances change
                 mAlarmManagerHelper.scheduleDelayedShutdown();
             }
         }
+        updateForegroundState();
     }
 
     void doOrderlyShutdown() {
+        ensureSyncthingKilled();
         mNotificationHelper.killNotification();
-        if (mConnectedClients == 0) {
+        //always stick around while activity is running
+        if (mConnectedClients == 0 && !mAnyActivityInForeground) {
             stopSelf();
         }
     }
@@ -199,10 +187,12 @@ public class SyncthingInstance extends MortarService {
      */
 
     void updateForegroundState() {
-        if (mAnyActivityInForeground) {
-            mNotificationHelper.killNotification();
-        } else {
+        if (isSyncthingRunning()) {
+            //show if server running
             mNotificationHelper.buildNotification();
+        } else {
+            //server not running dont show
+            mNotificationHelper.killNotification();
         }
     }
 
