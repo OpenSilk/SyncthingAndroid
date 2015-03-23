@@ -311,6 +311,7 @@ public class SessionController implements EventMonitor.EventListener {
         switch (change) {
             case OFFLINE:
             case NEED_LOGIN:
+            case FAILURE:
                 changeBus.onNext(change);
                 return;
             default:
