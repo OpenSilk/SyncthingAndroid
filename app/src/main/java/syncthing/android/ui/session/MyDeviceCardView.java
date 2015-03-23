@@ -164,11 +164,15 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
                 globalDiscovery.setText(android.R.string.ok);
                 globalDiscovery.setTextColor(getResources().getColor(R.color.announce_ok));
             } else {
+                int failures = (sys.announceServersTotal - sys.announceServersFailed.size());
                 globalDiscovery.setText(getResources().getString(R.string.announce_failures,
-                        (sys.announceServersTotal - sys.announceServersFailed.size()),
-                        sys.announceServersTotal
+                        failures, sys.announceServersTotal
                 ));
-                globalDiscovery.setTextColor(getResources().getColor(R.color.announce_fail));
+                globalDiscovery.setTextColor(getResources().getColor(
+                                failures == sys.announceServersTotal
+                                        ? R.color.announce_fail
+                                        : R.color.announce_ok
+                ));
             }
         } else {
             globalDiscoveryHider.setVisibility(GONE);
