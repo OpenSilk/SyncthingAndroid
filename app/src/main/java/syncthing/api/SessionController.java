@@ -80,6 +80,7 @@ public class SessionController implements EventMonitor.EventListener {
     public enum Change {
         ONLINE,
         OFFLINE,
+        FAILURE,
         MODEL,
         MODEL_STATE,
         COMPLETION,
@@ -249,6 +250,7 @@ public class SessionController implements EventMonitor.EventListener {
             case STOPPING:
                 running = false;
                 updateState(false);
+                postChange(Change.FAILURE);
                 break;
         }
     }

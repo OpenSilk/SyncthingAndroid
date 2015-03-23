@@ -115,16 +115,13 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         super.onLoad(savedInstanceState);
         if (controller.isOnline()) {
             initializeView();
+            getView().setListEmpty(false, false);
             getView().setListShown(true, false);
             dismissRestartingDialog();
         } else if (controller.isRestarting()) {
             showRestartingDialog();
-        } else if (controller.isRunning()) {
-            getView().setLoading(true);
         } else /*offline*/ {
-            //TODO check network connectivity and set error accordingly
-            getView().setEmptyText(R.string.could_not_connect);
-            getView().setListEmpty(true, false);
+            getView().setLoading(true);
         }
     }
 
@@ -139,6 +136,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             case ONLINE:
                 if (hasView()) {
                     initializeView();
+                    getView().setListEmpty(false, true);
                     getView().setListShown(true, true);
                     dismissRestartingDialog();
                 }
@@ -147,14 +145,14 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
                 if (controller.isRestarting()) {
                     showRestartingDialog();
                 } else if (hasView()) {
-                    if (controller.isRunning()) {
-                        //In disconnected state but still trying
-                        getView().setLoading(true);
-                    } else {
-                        //controller has given up
-                        getView().setEmptyText(R.string.could_not_connect);
-                        getView().setListEmpty(true, true);
-                    }
+                    getView().setLoading(true);
+                }
+                break;
+            case FAILURE:
+                if (hasView()) {
+                    //controller has given up
+                    getView().setEmptyText(R.string.could_not_connect);
+                    getView().setListEmpty(true, true);
                 }
                 break;
             case DEVICE_REJECTED:
