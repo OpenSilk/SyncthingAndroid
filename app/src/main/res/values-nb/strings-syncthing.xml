@@ -8,7 +8,7 @@
     <string name="add_new_folder">Legg til ny mappe?</string>
     <string name="address">Adresse</string>
     <string name="addresses">Adresser</string>
-    <string name="all_data">All Data</string>
+    <string name="all_data">Alle data</string>
     <string name="allow_anonymous_usage_reporting">Tillat Anonym Innsamling Av Brukerdata?</string>
     <string name="anonymous_usage_reporting">Anonym Innsamling Av Brukerdata</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Enheter konfigurert på en introduksjonsenhet vil også bli lagt til denne enheten.</string>
@@ -18,7 +18,7 @@
     <string name="changelog">Endringslog</string>
     <string name="close">Lukk</string>
     <string name="comment_when_used_at_the_start_of_a_line">Kommentar, når det blir brukt i starten av en linje.</string>
-    <string name="compression">Compression</string>
+    <string name="compression">Komprimering</string>
     <string name="compression_is_recommended_in_most_setups">Komprimering er anbefalt i de fleste tilfeller.</string>
     <string name="connection_error">Tilkoblingsfeil</string>
     <string name="copied_from_elsewhere">Kopiert fra et annet sted</string>
@@ -78,8 +78,8 @@
     <string name="local_discovery">Lokal Søking</string>
     <string name="local_state">Lokal Tilstand</string>
     <string name="maximum_age">Maksimal Levetid</string>
-    <string name="metadata_only">Metadata Only</string>
-    <string name="move_to_top_of_queue">Move to top of queue</string>
+    <string name="metadata_only">Kun metadata</string>
+    <string name="move_to_top_of_queue">Flytt til topp av kø</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Multinivåsøk (søker på flere mappenivå)</string>
     <string name="never">Aldri</string>
     <string name="new_device">Ny Enhet</string>
@@ -87,7 +87,7 @@
     <string name="no">Nei</string>
     <string name="no_file_versioning">Ingen Versjonskontroll</string>
     <string name="notice">Merknad</string>
-    <string name="off">Off</string>
+    <string name="off">Av</string>
     <string name="offline">Frakobla</string>
     <string name="ok">OK</string>
     <string name="online">Tilkobla</string>
@@ -102,8 +102,8 @@
     <string name="preview_usage_report">Forhåndsvisning Av Datainnsamling</string>
     <string name="quick_guide_to_supported_patterns">Kjapp innføring i godkjente mønster</string>
     <string name="ram_utilization">RAM-utnyttelse</string>
-    <string name="rescan">Skann På Ny</string>
-    <string name="rescan_all">Rescan All</string>
+    <string name="rescan">Skann på nytt</string>
+    <string name="rescan_all">Skann alt på nytt</string>
     <string name="rescan_interval">Skanneintervall</string>
     <string name="restart">Omstart</string>
     <string name="restart_needed">Omstart Kreves</string>
@@ -125,7 +125,7 @@
     <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_advertised_to_other_devices_as_an_optional_default_name">Vis i stedet for Eining ID i gruppestatus. Vil bli kringkastet til andre enheter som et valgfritt standardnavn.</string>
     <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty">Vist i stedet for Mappe-ID i gruppestatus. Vil bli oppdatert til navnet enheten kringkaster dersom tomt.</string>
     <string name="shutdown">Slå Av</string>
-    <string name="shutdown_complete">Shutdown Complete</string>
+    <string name="shutdown_complete">Avslutning fullført</string>
     <string name="simple_file_versioning">Enkel Versjonskontroll</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Enkeltnivåsøk (søker kun i en mappe)</string>
     <string name="source_code">Kildekode</string>
@@ -142,7 +142,7 @@
     <string name="syncthing_is_restarting">Syncthing starter på ny.</string>
     <string name="syncthing_is_upgrading">Syncthing oppgraderer.</string>
     <string name="syncthing_seems_to_be_down_or_there_is_a_problem_with_your_internet_connection_retrying">Syncthing ser ut til å være nede, eller så er det et problem med nettforbindelsen din. Prøver på ny …</string>
-    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing seems to be experiencing a problem processing your request. Please reload your browser or restart Syncthing if the problem persists.</string>
+    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing ser ut til å ha støtt på et problem under behandling av din forespørsel. Vennligst oppfrisk nettleseren eller start Syncthing på nytt dersom problemet vedvarer.</string>
     <string name="the_aggregated_statistics_are_publicly_available_at_url">Samlet statistikk er åpent tilgjengelig på %1$s.</string>
     <string name="the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration">Innstillingene har blitt lagret men ikke aktivert. Syncthing må starte på ny for å aktivere de nye innstillingene.</string>
     <string name="the_device_id_cannot_be_blank">Enhets-ID kan ikke være tom.</string>

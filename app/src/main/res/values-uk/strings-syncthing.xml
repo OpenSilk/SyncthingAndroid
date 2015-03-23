@@ -11,7 +11,7 @@
     <string name="all_data">Усі дані</string>
     <string name="allow_anonymous_usage_reporting">Дозволити програмі збирати анонімну статистику використання?</string>
     <string name="anonymous_usage_reporting">Анонімна статистика використання</string>
-    <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Усі пристрої, налаштовані на пристрої-інтродукторі, будуть додані до поточного пристрою.</string>
+    <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Усі пристрої, налаштовані на пристрої-рекомендувачі, будуть додані до поточного пристрою.</string>
     <string name="api_key">API ключ</string>
     <string name="automatic_upgrades">Автоматичні оновлення</string>
     <string name="bugs">Помилки</string>
@@ -66,7 +66,7 @@
     <string name="ignore_patterns">Ігнорувати шаблони</string>
     <string name="ignore_permissions">Ігнорувати права доступу до файлів</string>
     <string name="incoming_rate_limit_kibs">Ліміт швидкості завантаження (КіБ/с)</string>
-    <string name="introducer">Інтродуктор</string>
+    <string name="introducer">Рекомендувач</string>
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Інверсія поточної умови (тобто не виключає)</string>
     <string name="items">елементи</string>
     <string name="keep_versions">Зберігати версії</string>
