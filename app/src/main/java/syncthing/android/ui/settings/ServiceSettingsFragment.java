@@ -89,13 +89,15 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.service_settings, menu);
+        boolean enabled = getPreferenceManager().getSharedPreferences().getBoolean(ServiceSettings.ENABLED, false);
+        getPreferenceScreen().setEnabled(enabled);
         Switch enableSwitch = ButterKnife.findById(
                 menu.findItem(R.id.menu_enable_switch).getActionView(), R.id.action_widget_switch);
-        enableSwitch.setChecked(getPreferenceManager().getSharedPreferences().getBoolean(ServiceSettings.ENABLED, true));
+        enableSwitch.setChecked(enabled);
         enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, isChecked);
+                getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, isChecked).apply();
                 getPreferenceScreen().setEnabled(isChecked);
             }
         });

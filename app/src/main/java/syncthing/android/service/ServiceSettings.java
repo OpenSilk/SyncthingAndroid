@@ -81,7 +81,7 @@ public class ServiceSettings {
     }
 
     boolean isDisabled() {
-        return !prefs.getBoolean(ENABLED, true);
+        return !prefs.getBoolean(ENABLED, false);
     }
 
     boolean isAllowedToRun() {
