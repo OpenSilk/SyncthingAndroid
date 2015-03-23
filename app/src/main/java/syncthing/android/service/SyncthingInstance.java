@@ -244,7 +244,7 @@ public class SyncthingInstance extends MortarService {
     // From camlistore
     void ensureBinary() {
         long myTime = getAPKModTime();
-        String dstFile = getBaseContext().getFilesDir().getAbsolutePath() + "/syncthing.bin";
+        String dstFile = SyncthingUtils.getGoBinaryPath(this);
         File f = new File(dstFile);
         Timber.d("My Time: %d", myTime);
         Timber.d("Bin Time: " + f.lastModified());
@@ -257,7 +257,7 @@ public class SyncthingInstance extends MortarService {
         FileOutputStream fos = null;
         try {
             is = getAssets().open("syncthing.arm");
-            fos = getBaseContext().openFileOutput("syncthing.bin.writing", MODE_PRIVATE);
+            fos = getApplicationContext().openFileOutput("syncthing.bin.writing", MODE_PRIVATE);
             IOUtils.copy(is, fos);
             fos.flush();
 

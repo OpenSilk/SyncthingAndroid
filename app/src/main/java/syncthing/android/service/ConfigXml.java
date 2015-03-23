@@ -56,7 +56,7 @@ public class ConfigXml {
     }
 
     public static File getConfigFile(Context context) {
-        return new File(context.getFilesDir(), CONFIG_FILE);
+        return new File(SyncthingUtils.getConfigDirectory(context), CONFIG_FILE);
     }
 
     /**

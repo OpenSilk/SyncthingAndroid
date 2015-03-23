@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.WeakHashMap;
@@ -147,6 +148,14 @@ public class SyncthingUtils {
             intent.putExtra(SyncthingInstance.EXTRA_NOW_IN_FOREGROUND, sForegroundActivities != 0);
             context.startService(intent);
         }
+    }
+
+    public static File getConfigDirectory(Context context) {
+        return new File(context.getApplicationContext().getFilesDir(), "st-config");
+    }
+
+    public static String getGoBinaryPath(Context context) {
+        return new File(context.getApplicationContext().getFilesDir(), "syncthing.bin").getAbsolutePath();
     }
 
     /*

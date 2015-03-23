@@ -67,15 +67,15 @@ public class SyncthingThread extends Thread {
             ProcessBuilder b = new ProcessBuilder();
             b.environment().put("HOME", Environment.getExternalStorageDirectory().getAbsolutePath());
             if (generate) {
-                b.command(findBinary(),
-                        "-home", mService.getFilesDir().getAbsolutePath(),
-                        "-generate", mService.getFilesDir().getAbsolutePath(),
+                b.command(SyncthingUtils.getGoBinaryPath(mService),
+                        "-home", SyncthingUtils.getConfigDirectory(mService).getAbsolutePath(),
+                        "-generate", SyncthingUtils.getConfigDirectory(mService).getAbsolutePath(),
                         "-no-restart",
                         "-no-browser"
                 );
             } else {
-                b.command(findBinary(),
-                        "-home", mService.getFilesDir().getAbsolutePath(),
+                b.command(SyncthingUtils.getGoBinaryPath(mService),
+                        "-home", SyncthingUtils.getConfigDirectory(mService).getAbsolutePath(),
                         "-no-restart",
                         "-no-browser"
                 );
@@ -115,10 +115,6 @@ public class SyncthingThread extends Thread {
         p.destroy();
         goProcess.set(null);
         Timber.d("Sycnthing killed ret=%d", p.exitValue());
-    }
-
-    String findBinary() {
-        return mService.getFilesDir().getAbsolutePath() + "/syncthing.bin";
     }
 
     static class LogWriterThread extends Thread {
