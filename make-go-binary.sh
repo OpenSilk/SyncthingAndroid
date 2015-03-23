@@ -13,7 +13,10 @@ export ENVIRONMENT=android
 go run build.go clean
 go run build.go -goos linux -goarch arm -no-upgrade build
 
-mv syncthing ${MYDIR}/app/src/main/assets/syncthing.arm
+ASSETSDIR=${MYDIR}/app/src/main/assets/
+
+mv syncthing ${ASSETSDIR}/syncthing.arm
+chmod 644 ${ASSETSDIR}/syncthing.arm
 #git clean -f
 
 popd
