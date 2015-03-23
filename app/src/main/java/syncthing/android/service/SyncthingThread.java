@@ -65,13 +65,21 @@ public class SyncthingThread extends Thread {
         int ret = 0;
         try {
             ProcessBuilder b = new ProcessBuilder();
-            if (generate) {
-                b.command(findBinary(), "-home", mService.getFilesDir().getAbsolutePath(), "-generate", mService.getFilesDir().getAbsolutePath());
-            } else {
-                b.command(findBinary(), "-home", mService.getFilesDir().getAbsolutePath());
-            }
             b.environment().put("HOME", Environment.getExternalStorageDirectory().getAbsolutePath());
-            b.environment().put("STNORESTART", "1");
+            if (generate) {
+                b.command(findBinary(),
+                        "-home", mService.getFilesDir().getAbsolutePath(),
+                        "-generate", mService.getFilesDir().getAbsolutePath(),
+                        "-no-restart",
+                        "-no-browser"
+                );
+            } else {
+                b.command(findBinary(),
+                        "-home", mService.getFilesDir().getAbsolutePath(),
+                        "-no-restart",
+                        "-no-browser"
+                );
+            }
             Process p = b.start();
             goProcess.set(p);
             new LogWriterThread(Log.INFO, p.getInputStream()).start();
