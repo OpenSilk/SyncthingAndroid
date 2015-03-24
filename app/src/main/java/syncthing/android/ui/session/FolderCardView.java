@@ -110,16 +110,19 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
     @OnClick(R.id.btn_override)
     void overrideChanges() {
-
+        if (getCard() == null) return;
+        presenter.overrideChanges(getCard().folder.id);
     }
 
     @OnClick(R.id.btn_rescan)
     void rescanFolder() {
-
+        if (getCard() == null) return;
+        presenter.scanFolder(getCard().folder.id);
     }
 
     @OnClick(R.id.btn_edit)
     void addFolder() {
+        if (getCard() == null) return;
         presenter.openEditFolderScreen(getCard().folder.id);
     }
 

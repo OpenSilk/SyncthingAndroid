@@ -986,6 +986,20 @@ public class SessionController implements EventMonitor.EventListener {
                 });
     }
 
+    public Subscription overrideChanges(String id, Action1<Throwable> onError) {
+        return restApi.override(id).subscribe(
+                (v) -> {},
+                onError
+        );
+    }
+
+    public Subscription scanFolder(String id, Action1<Throwable> onError) {
+        return restApi.scan(id).subscribe(
+                (v) -> {},
+                onError
+        );
+    }
+
     void setupPeriodicRefresh() {
         cancelPeriodicRefresh();
         periodicRefreshSubscription = Observable.interval(30, TimeUnit.SECONDS)

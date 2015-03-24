@@ -343,6 +343,10 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         if (hasView()) getView().showErrorDialog(title, msg);
     }
 
+    public void showError(int res, String msg) {
+        if (hasView()) getView().showErrorDialog(getView().getContext().getString(res), msg);
+    }
+
     void dismissError() {
         if (hasView()) getView().dismissErrorDialog();
     }
@@ -362,6 +366,14 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
                 getView().setLoading(true);
             }
         }
+    }
+
+    void overrideChanges(String id) {
+        controller.overrideChanges(id, t -> showError(R.string.connection_error, t.getMessage()));
+    }
+
+    void scanFolder(String id) {
+        controller.scanFolder(id, t -> showError(R.string.connection_error, t.getMessage()));
     }
 
     void openLoginScreen() {
