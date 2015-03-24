@@ -24,7 +24,6 @@ import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
@@ -38,10 +37,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.ISODateTimeFormat;
+import org.opensilk.common.util.VersionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -358,19 +357,11 @@ public class SyncthingUtils {
         }
     }
 
-    public static void copyDeviceId(Context context, String id) {
-        int sdk = android.os.Build.VERSION.SDK_INT;
-        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            android.text.ClipboardManager clipboard = (android.text.ClipboardManager)
-                    context.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setText(id);
-        } else {
-            ClipboardManager clipboard = (ClipboardManager)
-                    context.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText(context.getString(R.string.device_id), id);
-            clipboard.setPrimaryClip(clip);
-        }
-        Toast.makeText(context, R.string.device_id_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+    public static void copyToClipboard(Context context, CharSequence label, String id) {
+        ClipboardManager clipboard = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(label, id);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
     }
 
     public static void shareDeviceId(Context context, String id) {

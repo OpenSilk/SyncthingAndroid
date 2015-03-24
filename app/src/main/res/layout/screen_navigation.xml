@@ -50,6 +50,7 @@
             android:id="@+id/manage_devices"
             android:text="@string/manage_devices"
             android:drawableLeft="@drawable/ic_computer_grey600_36dp"
+            android:drawableStart="@drawable/ic_computer_grey600_36dp"
             style="@style/mtrl.SingleLineListItemTextView.Icon"/>
 
 
@@ -57,6 +58,7 @@
             android:id="@+id/app_settings"
             android:text="@string/settings"
             android:drawableLeft="@drawable/ic_settings_grey600_36dp"
+            android:drawableStart="@drawable/ic_settings_grey600_36dp"
             style="@style/mtrl.SingleLineListItemTextView.Icon"/>
 
     </LinearLayout>

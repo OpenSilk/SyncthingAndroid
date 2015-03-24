@@ -46,7 +46,8 @@
             android:layout_below="@+id/alias"
             android:layout_alignParentRight="true"
             android:inputType="number"
-            android:text="@string/default_port"/>
+            android:text="@string/default_port"
+            tools:ignore="RtlHardcoded"/>
 
         <EditText
             android:id="@+id/server_url"
@@ -59,7 +60,7 @@
             android:imeOptions="actionNext"
             android:nextFocusDown="@+id/user"
             android:hint="@string/ip_or_domain"
-            />
+            tools:ignore="RtlHardcoded"/>
 
         <EditText
             android:id="@+id/user"
@@ -87,6 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/password"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
@@ -97,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/use_tls"
             android:layout_marginTop="16dp"
-            android:gravity="right"
+            android:gravity="end"
             style="?android:buttonBarStyle">
 
             <Button

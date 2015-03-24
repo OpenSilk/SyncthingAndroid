@@ -28,8 +28,6 @@
     <string name="na">N/a</string>
     <string name="cleaning">Cleaning</string>
     <string name="are_you_sure_you_want_to_shutdown_syncthing">Are you sure you want to shutdown Syncthing?</string>
-    <string name="send_device_id_to">Send Device ID to</string>
-    <string name="device_id_copied_to_clipboard">Device ID copied to clipboard</string>
     <string name="no_qr_scanner_installed">You have no QR scanner installed or your scanner is not supported. Please install a scanner or enter the device ID manually.</string>
     <string name="external">External</string>
     <string name="retry">Retry</string>
@@ -37,6 +35,10 @@
     <string name="operation_failed">Operation failed</string>
     <string name="copy">Copy</string>
     <string name="help">Help</string>
+
+    <!-- Util -->
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="send_device_id_to">Send Device ID to</string>
 
     <!--Login-->
     <string name="display_name">Display name</string>

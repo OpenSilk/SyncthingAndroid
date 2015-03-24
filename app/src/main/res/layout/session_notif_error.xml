@@ -51,7 +51,7 @@
                 android:id="@+id/time"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="end"
                 style="@style/session.RecyclerNotifHeaderText.Time"
                 tools:text="1:22"/>
 
@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/message"
-                android:gravity="right"
+                android:gravity="end"
                 style="?android:buttonBarStyle">
 
                 <Button

@@ -19,7 +19,6 @@ package syncthing.android.ui.session;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -91,7 +90,8 @@ public class ShowIdDialogView extends RelativeLayout {
     @OnClick(R.id.btn_copy)
     void copyDeviceId() {
         if (id == null) return;
-        SyncthingUtils.copyDeviceId(getContext(), id);
+        SyncthingUtils.copyToClipboard(getContext(),
+                getContext().getString(R.string.device_id), id);
     }
 
     @OnClick(R.id.btn_share)

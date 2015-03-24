@@ -80,6 +80,12 @@ public class SettingsScreenView extends ScrollView {
         presenter.dropView(this);
     }
 
+    @OnClick(R.id.btn_copy_apikey)
+    void copyApiKey() {
+        SyncthingUtils.copyToClipboard(getContext(),
+                getContext().getString(R.string.api_key), editApiKey.getText().toString());
+    }
+
     @OnClick(R.id.btn_generate_apikey)
     void regenApiKey() {
         String key = SyncthingUtils.randomString(32);

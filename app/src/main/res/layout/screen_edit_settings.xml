@@ -188,19 +188,33 @@
             android:text="@string/api_key"
             style="@style/session.edit.FieldHeader"/>
 
-        <EditText
-            android:id="@+id/edit_apikey"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            style="@style/session.edit.EditText"/>
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btn_generate_apikey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/generate"/>
+            <EditText
+                android:id="@+id/edit_apikey"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                style="@style/session.edit.EditText"/>
+
+            <Button
+                android:id="@+id/btn_copy_apikey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/copy"
+                style="?android:buttonBarButtonStyle"/>
+
+            <Button
+                android:id="@+id/btn_generate_apikey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/generate"
+                style="?android:buttonBarButtonStyle"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -208,7 +222,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:orientation="horizontal"
-            android:gravity="right"
+            android:gravity="end"
             style="?android:buttonBarStyle">
 
             <Button

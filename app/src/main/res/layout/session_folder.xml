@@ -48,7 +48,7 @@
                 android:id="@+id/state"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="end"
                 style="@style/session.RecyclerHeaderText"
                 tools:text="status (100%)"/>
 
@@ -65,7 +65,7 @@
             style="@style/session.RecyclerExpand"
             >
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/session.RecyclerCardRow">
@@ -77,15 +77,13 @@
 
                 <TextView
                     android:id="@+id/directory"
-                    android:layout_toRightOf="@id/directory_title"
-                    android:layout_alignBaseline="@id/directory_title"
                     android:ellipsize="end"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="/folder/path"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/error_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,16 +96,14 @@
 
                 <TextView
                     android:id="@+id/error"
-                    android:layout_toRightOf="@id/error_title"
-                    android:layout_alignBaseline="@id/error_title"
                     android:ellipsize="end"
                     android:textColor="@color/error_text"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="error msng"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/session.RecyclerCardRow">
@@ -119,14 +115,12 @@
 
                 <TextView
                     android:id="@+id/global_state"
-                    android:layout_toRightOf="@id/global_state_title"
-                    android:layout_alignBaseline="@id/global_state_title"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="0 items, ~0B"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/session.RecyclerCardRow">
@@ -138,14 +132,12 @@
 
                 <TextView
                     android:id="@+id/local_state"
-                    android:layout_toRightOf="@id/local_state_title"
-                    android:layout_alignBaseline="@id/local_state_title"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="0 items, ~0B"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/need_files_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -158,14 +150,12 @@
 
                 <TextView
                     android:id="@+id/need_files"
-                    android:layout_toRightOf="@id/need_files_title"
-                    android:layout_alignBaseline="@id/need_files_title"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="0 items, ~0B"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/folder_master"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,14 +167,12 @@
                     style="@style/session.RecyclerTextLeftColumn"/>
 
                 <TextView
-                    android:layout_toRightOf="@id/folder_master_title"
-                    android:layout_alignBaseline="@id/folder_master_title"
                     android:text="@string/yes"
                     style="@style/session.RecyclerTextRightColumn"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/ignore_patterns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -196,14 +184,12 @@
                     style="@style/session.RecyclerTextLeftColumn"/>
 
                 <TextView
-                    android:layout_toRightOf="@id/ignore_patterns_title"
-                    android:layout_alignBaseline="@id/ignore_patterns_title"
                     android:text="@string/yes"
                     style="@style/session.RecyclerTextRightColumn"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/ignore_perms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -215,14 +201,12 @@
                     style="@style/session.RecyclerTextLeftColumn"/>
 
                 <TextView
-                    android:layout_toRightOf="@id/ignore_perms_title"
-                    android:layout_alignBaseline="@id/ignore_perms_title"
                     android:text="@string/yes"
                     style="@style/session.RecyclerTextRightColumn"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/session.RecyclerCardRow">
@@ -234,14 +218,12 @@
 
                 <TextView
                     android:id="@+id/rescan_interval"
-                    android:layout_toRightOf="@id/rescan_interval_title"
-                    android:layout_alignBaseline="@id/rescan_interval_title"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="60"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/versioning_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -254,14 +236,12 @@
 
                 <TextView
                     android:id="@+id/versioning"
-                    android:layout_toRightOf="@id/versioning_title"
-                    android:layout_alignBaseline="@id/versioning_title"
                     android:text="@string/simple_file_versioning"
                     style="@style/session.RecyclerTextRightColumn"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/session.RecyclerCardRow">
@@ -273,17 +253,15 @@
 
                 <TextView
                     android:id="@+id/shared_with"
-                    android:layout_toRightOf="@id/shared_with_title"
-                    android:layout_alignBaseline="@id/shared_with_title"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="master, slave"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
+                android:gravity="end"
                 android:animateLayoutChanges="true"
                 style="?android:buttonBarStyle">
 
