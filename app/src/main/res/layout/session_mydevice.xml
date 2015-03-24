@@ -139,8 +139,7 @@
             <RelativeLayout
                 android:id="@+id/global_discovery_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/cpu_usage_title">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/global_discovery_title"

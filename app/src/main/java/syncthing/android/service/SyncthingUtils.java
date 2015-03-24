@@ -184,9 +184,9 @@ public class SyncthingUtils {
     public static String truncateId(String deviceId) {
         if (!StringUtils.isEmpty(deviceId)) {
             if (deviceId.length() >= 6) {
-                return deviceId.substring(0, 6).toUpperCase();
+                return deviceId.substring(0, 6).toUpperCase(Locale.US);
             } else {
-                return deviceId.toUpperCase();
+                return deviceId.toUpperCase(Locale.US);
             }
         } else {
             return "[unknown]";

@@ -37,7 +37,7 @@
             android:singleLine="true"
             android:imeOptions="actionNext"
             android:nextFocusDown="@+id/server_url"
-            android:hint="Display name"/>
+            android:hint="@string/display_name"/>
 
         <EditText
             android:id="@+id/server_port"
@@ -46,7 +46,7 @@
             android:layout_below="@+id/alias"
             android:layout_alignParentRight="true"
             android:inputType="number"
-            android:text="8080"/>
+            android:text="@string/default_port"/>
 
         <EditText
             android:id="@+id/server_url"
@@ -58,7 +58,7 @@
             android:singleLine="true"
             android:imeOptions="actionNext"
             android:nextFocusDown="@+id/user"
-            android:hint="IP or Domain"
+            android:hint="@string/ip_or_domain"
             />
 
         <EditText
@@ -69,7 +69,7 @@
             android:inputType="textUri"
             android:imeOptions="actionNext"
             android:nextFocusDown="@+id/password"
-            android:hint="Username"/>
+            android:hint="@string/username"/>
 
         <EditText
             android:id="@+id/password"
@@ -79,7 +79,7 @@
             android:inputType="textPassword"
             android:singleLine="true"
             android:imeOptions="actionGo"
-            android:hint="Password"
+            android:hint="@string/password"
             />
 
         <CheckBox
@@ -97,50 +97,25 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/use_tls"
             android:layout_marginTop="16dp"
-            android:gravity="right">
+            android:gravity="right"
+            style="?android:buttonBarStyle">
 
             <Button
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@android:string/cancel"/>
+                android:text="@android:string/cancel"
+                style="?android:buttonBarButtonStyle"/>
 
             <Button
                 android:id="@+id/submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Submit"/>
+                android:text="@string/login"
+                style="?android:buttonBarButtonStyle"/>
 
         </LinearLayout>
 
     </RelativeLayout>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:gravity="center_vertical">
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:text="Fetching api key"/>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
 
 </syncthing.android.ui.login.LoginScreenView>

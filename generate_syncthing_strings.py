@@ -78,6 +78,7 @@ for f in os.listdir(realpath):
         j = json.load(jf);
     if f.endswith("en.json"):
         f = "lang"
+    f = re.sub(r'(lang-..)-(..)\.json',r'\1-r\2.json',f)
     xmldir=os.path.join(resdir,f.replace("lang","values").replace(".json", ""))
     print(xmldir)
     if not os.path.exists(xmldir):

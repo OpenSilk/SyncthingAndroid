@@ -31,19 +31,22 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp">
-
-        <Button
-            android:id="@+id/btn_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/abc_action_mode_done"/>
+        android:layout_marginBottom="8dp"
+        style="?android:buttonBarStyle">
 
         <Button
             android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_device"/>
+            android:text="@string/add_device"
+            style="?android:buttonBarButtonStyle"/>
+
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/abc_action_mode_done"
+            style="?android:buttonBarButtonStyle"/>
 
     </LinearLayout>
 

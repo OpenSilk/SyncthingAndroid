@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.session;
 
+import android.annotation.SuppressLint;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.internal.VersionUtils;
@@ -54,6 +55,7 @@ public class SessionFragmentPresenter extends Presenter<SessionFragmentPresenter
         return getView().getChildFragmentManager();
     }
 
+    @SuppressLint("CommitTransaction")
     public FragmentTransaction newTransaction() {
         return getFragmentManager().beginTransaction();
     }

@@ -49,25 +49,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/qr_image"
-        android:gravity="right">
+        android:gravity="right"
+        style="?android:buttonBarStyle">
 
         <Button
             android:id="@+id/btn_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/share"/>
+            android:text="@string/share"
+            style="?android:buttonBarButtonStyle"/>
 
         <Button
             android:id="@+id/btn_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/copy"/>
+            android:text="@string/copy"
+            style="?android:buttonBarButtonStyle"/>
 
         <Button
             android:id="@+id/btn_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/close"/>
+            android:text="@string/close"
+            style="?android:buttonBarButtonStyle"/>
 
     </LinearLayout>
 

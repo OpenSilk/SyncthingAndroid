@@ -285,28 +285,28 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:animateLayoutChanges="true"
-                >
+                style="?android:buttonBarStyle">
 
                 <Button
                     android:id="@+id/btn_override"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/override_changes"
-                    />
+                    style="?android:buttonBarButtonStyle"/>
 
                 <Button
                     android:id="@+id/btn_rescan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rescan"
-                    />
+                    style="?android:buttonBarButtonStyle"/>
 
                 <Button
                     android:id="@+id/btn_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/edit"
-                    />
+                    style="?android:buttonBarButtonStyle"/>
 
             </LinearLayout>
 

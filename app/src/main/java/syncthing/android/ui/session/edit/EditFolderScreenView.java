@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.session.edit;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -408,6 +409,7 @@ public class EditFolderScreenView extends ScrollView {
         }
     }
 
+    @SuppressLint("ViewConstructor")
     static class DeviceCheckBox extends CheckBox {
         final DeviceConfig device;
         DeviceCheckBox(Context context, DeviceConfig device) {

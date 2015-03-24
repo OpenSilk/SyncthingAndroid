@@ -28,4 +28,5 @@
     <string name="double_star">**</string>
     <string name="double_slash">//</string>
     <string name="ignore_files_help">https://github.com/syncthing/syncthing/wiki/Ignoring-Files</string>
+    <string name="default_port">8080</string>
 </resources>

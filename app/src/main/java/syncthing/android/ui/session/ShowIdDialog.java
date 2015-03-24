@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.session;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class ShowIdDialog extends Dialog {
     public ShowIdDialog(Context context) {
         super(context);
         setTitle(R.string.device_id);
+        @SuppressLint("InflateParams")
         ShowIdDialogView v = (ShowIdDialogView) LayoutInflater.from(
                 getContext()).inflate(R.layout.dialog_show_id, null);
         v.setDialog(this);

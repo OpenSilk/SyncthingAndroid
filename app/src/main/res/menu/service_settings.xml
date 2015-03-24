@@ -16,12 +16,14 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+      xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/menu_enable_switch"
         android:title=""
         android:showAsAction="always"
-        android:actionLayout="@layout/widget_switch"/>
+        android:actionLayout="@layout/widget_switch"
+        tools:ignore="AppCompatResource"/>
 
 </menu>

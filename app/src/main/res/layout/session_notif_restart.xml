@@ -69,13 +69,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/message"
-                android:gravity="right">
+                android:gravity="right"
+                style="?android:buttonBarStyle">
 
                 <Button
                     android:id="@+id/btn_restart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/restart"/>
+                    android:text="@string/restart"
+                    style="?android:buttonBarButtonStyle"/>
 
             </LinearLayout>
 

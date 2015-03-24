@@ -21,7 +21,7 @@
     <ListPreference
         android:key="run_when"
         android:title="@string/when_to_run"
-        android:entries="@array/when_to_run"
+        android:entries="@array/when_to_run_entries"
         android:entryValues="@array/when_to_run_values"
         android:defaultValue="when_open"/>
 
