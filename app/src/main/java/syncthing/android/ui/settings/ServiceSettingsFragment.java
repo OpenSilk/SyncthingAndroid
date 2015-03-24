@@ -128,13 +128,14 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
             return true;
         } else if (preference == importConfig) {
             Intent intent = new Intent();
+            intent.setType("application/zip");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
             if (VersionUtils.hasKitkat()) {
                 intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             } else {
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent = Intent.createChooser(
+                        intent.setAction(Intent.ACTION_GET_CONTENT), "");
             }
-            intent.setType("application/zip");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
             try {
                 startActivityForResult(intent, ActivityRequestCodes.IMPORT_CONFIG);
             } catch (ActivityNotFoundException e) {
