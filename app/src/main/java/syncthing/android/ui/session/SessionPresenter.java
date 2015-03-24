@@ -153,6 +153,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
                     //controller has given up
                     getView().setEmptyText(R.string.could_not_connect);
                     getView().setListEmpty(true, true);
+                    dismissRestartingDialog();
                 }
                 break;
             case DEVICE_REJECTED:

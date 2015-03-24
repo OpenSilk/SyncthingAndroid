@@ -117,12 +117,7 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
                 return true;
             case R.id.show_id: {
                 Context context = mScope.createContext(getActivity());
-                View v = LayoutInflater.from(context).inflate(R.layout.dialog_show_id, null);
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.device_id)
-                        .setView(v)
-                        .setPositiveButton(R.string.close, null)
-                        .show();
+                new ShowIdDialog(context).show();
                 return true;
             } case R.id.shutdown: {
                 Context context = mScope.createContext(getActivity());

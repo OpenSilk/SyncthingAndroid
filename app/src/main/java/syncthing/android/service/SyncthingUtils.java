@@ -367,4 +367,12 @@ public class SyncthingUtils {
         Toast.makeText(context, R.string.device_id_copied_to_clipboard, Toast.LENGTH_SHORT).show();
     }
 
+    public static void shareDeviceId(Context context, String id) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, id);
+        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.send_device_id_to)));
+    }
+
 }

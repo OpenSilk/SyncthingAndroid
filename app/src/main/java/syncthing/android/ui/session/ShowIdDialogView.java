@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.session;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
@@ -35,6 +36,7 @@ import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import syncthing.android.R;
+import syncthing.android.service.SyncthingUtils;
 import syncthing.api.model.DeviceConfig;
 
 /**
@@ -50,6 +52,7 @@ public class ShowIdDialogView extends RelativeLayout {
 
     String id;
     Subscription qrImageSubscription;
+    Dialog dialog;
 
     public ShowIdDialogView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -85,13 +88,24 @@ public class ShowIdDialogView extends RelativeLayout {
             qrImageSubscription.unsubscribe();
     }
 
-    @OnClick(R.id.id)
+    @OnClick(R.id.btn_copy)
     void copyDeviceId() {
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, id);
-        getContext().startActivity(Intent.createChooser(
-                shareIntent, getContext().getString(R.string.send_device_id_to)));
+        if (id == null) return;
+        SyncthingUtils.copyDeviceId(getContext(), id);
+    }
+
+    @OnClick(R.id.btn_share)
+    void shareDeviceId() {
+        if (id == null) return;
+        SyncthingUtils.shareDeviceId(getContext(), id);
+    }
+
+    @OnClick(R.id.btn_close)
+    void doClose() {
+        if (dialog != null) dialog.dismiss();
+    }
+
+    void setDialog(Dialog d) {
+        this.dialog = d;
     }
 }
