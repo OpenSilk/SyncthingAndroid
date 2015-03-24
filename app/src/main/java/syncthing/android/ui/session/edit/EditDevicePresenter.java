@@ -119,38 +119,22 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
         }
+        onSaveStart();
         saveSubscription = controller.editDevice(originalDevice, folders,
-                (t) -> {
-                    if (hasView()) {
-                        getView().showError(t.getMessage());
-                    }
-                },
-                () -> {
-                    if (hasView()) {
-                        getView().showConfigSaved();
-                    }
-                    dismissDialog();
-                }
-                );
+                this::onSavefailed,
+                this::onSaveSuccessfull
+        );
     }
 
     void deleteDevice() {
         if (deleteSubscription != null) {
             deleteSubscription.unsubscribe();
         }
+        onSaveStart();
         deleteSubscription = controller.deleteDevice(originalDevice,
-                t -> {
-                    if (hasView()) {
-                        getView().showError(t.getMessage());
-                    }
-                },
-                () -> {
-                    if (hasView()) {
-                        getView().showConfigSaved();
-                    }
-                    dismissDialog();
-                }
-                );
+                this::onSavefailed,
+                this::onSaveSuccessfull
+        );
     }
 
     void startQRScannerActivity() {
@@ -162,7 +146,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
             activityResultsController.startActivityForResult(intentScan, ActivityRequestCodes.SCAN_QR, null);
         } catch (ActivityNotFoundException e) {
             if (hasView()) {
-                getView().showError(getView().getResources().getString(R.string.no_qr_scanner_installed));
+                sessionPresenter.showError("",getView().getResources().getString(R.string.no_qr_scanner_installed));
             }
         }
     }

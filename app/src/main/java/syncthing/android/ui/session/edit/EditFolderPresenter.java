@@ -18,7 +18,6 @@
 package syncthing.android.ui.session.edit;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -159,18 +158,10 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
         }
+        onSaveStart();
         saveSubscription = controller.editFolder(origFolder,
-                (t) -> {
-                    if (hasView()) {
-                        getView().showError(t.getMessage());
-                    }//else todo
-                },
-                () -> {
-                    if (hasView()) {
-                        getView().showConfigSaved();
-                    }
-                    dismissDialog();
-                }
+                this::onSavefailed,
+                this::onSaveSuccessfull
         );
     }
 
@@ -178,18 +169,10 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
         if (deleteSubscription != null) {
             deleteSubscription.unsubscribe();
         }
+        onSaveStart();
         deleteSubscription = controller.deleteFolder(origFolder,
-                t -> {
-                    if (hasView()) {
-                        getView().showError(t.getMessage());
-                    }//else todo
-                },
-                () -> {
-                    if (hasView()) {
-                        getView().showConfigSaved();
-                    }
-                    dismissDialog();
-                }
+                this::onSavefailed,
+                this::onSaveSuccessfull
         );
     }
 

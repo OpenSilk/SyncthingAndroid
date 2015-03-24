@@ -120,14 +120,11 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
     void saveIgnores(CharSequence raw) {
         Ignores i = new Ignores();
         i.ignore = StringUtils.split(raw.toString(), "\n");
+        onSaveStart();
         saveSubscription = controller.editIgnores(folderId, i,
                 ignrs -> {},
-                t -> {
-                    if (hasView()) {
-                        //TODO
-                    }
-                },
-                this::dismissDialog
+                this::onSavefailed,
+                this::onSaveSuccessfull
         );
     }
 

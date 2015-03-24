@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.session.edit;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -32,7 +31,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -94,16 +92,10 @@ public class EditFolderScreenView extends ScrollView {
 
     boolean isAdd = false;
     FolderConfig folder;
-    AlertDialog errorDialog;
-
 
     public EditFolderScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (isInEditMode()) {
-            presenter = null;
-        } else {
-            presenter = DaggerService.<EditFolderComponent>getDaggerComponent(getContext()).presenter();
-        }
+        presenter = DaggerService.<EditFolderComponent>getDaggerComponent(getContext()).presenter();
         editFolderPathAdapter = new DirectoryAutoCompleteAdapter(getContext());
     }
 
@@ -112,16 +104,13 @@ public class EditFolderScreenView extends ScrollView {
         super.onFinishInflate();
         ButterKnife.inject(this);
         rdioVerGroup.setOnCheckedChangeListener(versioningChangeListener);
-        if(!isInEditMode()){
-            presenter.takeView(this);
-        }
+        presenter.takeView(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         presenter.dropView(this);
-        dismissErrorDialog();
     }
 
     @OnClick(R.id.btn_delete)
@@ -354,25 +343,6 @@ public class EditFolderScreenView extends ScrollView {
     void notifyStaggeredMaxAgeInvalid() {
         descStaggeredVerMaxAge.setVisibility(GONE);
         errorStaggeredMaxAgeInvalid.setVisibility(GONE);
-    }
-
-    void showError(String msg) {
-        dismissErrorDialog();
-        errorDialog = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.error)
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    void dismissErrorDialog() {
-        if (errorDialog != null && errorDialog.isShowing()) {
-            errorDialog.dismiss();
-        }
-    }
-
-    void showConfigSaved() {
-        Toast.makeText(getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
     }
 
     final RadioGroup.OnCheckedChangeListener versioningChangeListener = new RadioGroup.OnCheckedChangeListener() {

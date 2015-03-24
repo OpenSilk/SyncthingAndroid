@@ -17,13 +17,11 @@
 
 package syncthing.android.ui.session.edit;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,10 +56,7 @@ public class SettingsScreenView extends ScrollView {
     @InjectView(R.id.check_usage_reporting) CheckBox enableUsageReporting;
     @InjectView(R.id.edit_apikey) EditText editApiKey;
 
-
     final SettingsPresenter presenter;
-
-    AlertDialog errorDialog;
 
     DeviceConfig deviceConfig;
     GUIConfig guiConfig;
@@ -69,20 +64,20 @@ public class SettingsScreenView extends ScrollView {
 
     public SettingsScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (isInEditMode()) {
-            presenter = null;
-        } else {
-            presenter = DaggerService.<SettingsComponent>getDaggerComponent(getContext()).presenter();
-        }
+        presenter = DaggerService.<SettingsComponent>getDaggerComponent(getContext()).presenter();
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        if (!isInEditMode()) {
-            presenter.takeView(this);
-        }
+        presenter.takeView(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        presenter.dropView(this);
     }
 
     @OnClick(R.id.btn_generate_apikey)
@@ -152,25 +147,6 @@ public class SettingsScreenView extends ScrollView {
         enableBrowser.setChecked(options.startBrowser);
         enableUsageReporting.setChecked(options.urAccepted >= 0);
         editApiKey.setText(guiConfig.apiKey);
-    }
-
-    void showError(String msg) {
-        dismissErrorDialog();
-        errorDialog = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.error)
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    void dismissErrorDialog() {
-        if (errorDialog != null && errorDialog.isShowing()) {
-            errorDialog.dismiss();
-        }
-    }
-
-    void showConfigSaved() {
-        Toast.makeText(getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -24,9 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 
-import mortar.MortarScope;
-import mortar.ViewPresenter;
-import rx.Subscription;
+import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.GUIConfig;
@@ -36,37 +34,19 @@ import syncthing.api.model.OptionsConfig;
  * Created by drew on 3/17/15.
  */
 @EditScope
-public class SettingsPresenter extends ViewPresenter<SettingsScreenView> {
-
-    final SessionController controller;
-    final EditFragmentPresenter editFragmentPresenter;
+public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
 
     DeviceConfig thisDevice;
     OptionsConfig options;
     GUIConfig guiConfig;
 
-    Subscription saveSubscription;
-
     @Inject
     public SettingsPresenter(
             SessionController controller,
-            EditFragmentPresenter editFragmentPresenter
+            EditFragmentPresenter editFragmentPresenter,
+            SessionPresenter sessionPresenter
     ) {
-        this.controller = controller;
-        this.editFragmentPresenter = editFragmentPresenter;
-    }
-
-    @Override
-    protected void onEnterScope(MortarScope scope) {
-        super.onEnterScope(scope);
-    }
-
-    @Override
-    protected void onExitScope() {
-        super.onExitScope();
-        if (saveSubscription != null) {
-            saveSubscription.unsubscribe();
-        }
+        super(controller, editFragmentPresenter, sessionPresenter, null, null, false);
     }
 
     @Override
@@ -118,26 +98,15 @@ public class SettingsPresenter extends ViewPresenter<SettingsScreenView> {
         return true;
     }
 
-    void dismissDialog() {
-        editFragmentPresenter.dismissDialog();
-    }
-
     void saveConfig(DeviceConfig device, OptionsConfig options, GUIConfig guiConfig) {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
         }
+        onSaveStart();
         saveSubscription = controller.editSettings(device, options, guiConfig,
-                t -> {
-                    if (hasView()) {
-                        getView().showError(t.getMessage());
-                    }
-                },
-                () -> {
-                    if (hasView()) {
-                        getView().showConfigSaved();
-                    }
-                    dismissDialog();
-                });
+                this::onSavefailed,
+                this::onSaveSuccessfull
+        );
     }
 
 }

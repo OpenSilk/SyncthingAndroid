@@ -21,6 +21,7 @@ import android.view.View;
 
 import mortar.ViewPresenter;
 import rx.Subscription;
+import syncthing.android.R;
 import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
 
@@ -60,6 +61,23 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
         }
+    }
+
+    //TODO save saving state and restore
+
+    protected void onSaveStart() {
+        sessionPresenter.showSavingDialog();
+    }
+
+    protected void onSaveSuccessfull() {
+        sessionPresenter.dismissSavingDialog();
+        sessionPresenter.showSuccessMsg();
+        dismissDialog();
+    }
+
+    protected void onSavefailed(Throwable e) {
+        sessionPresenter.dismissSavingDialog();
+        sessionPresenter.showError(R.string.operation_failed, e.getMessage());
     }
 
     protected  void dismissDialog() {

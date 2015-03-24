@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.session.edit;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -30,7 +29,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -75,15 +73,10 @@ public class EditDeviceScreenView extends ScrollView {
 
     boolean isAdd;
     DeviceConfig device;
-    AlertDialog errorDialog;
 
     public EditDeviceScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (isInEditMode()) {
-            presenter = null;
-        } else {
-            presenter = DaggerService.<EditDeviceComponent>getDaggerComponent(getContext()).presenter();
-        }
+        presenter = DaggerService.<EditDeviceComponent>getDaggerComponent(getContext()).presenter();
     }
 
     @Override
@@ -91,16 +84,13 @@ public class EditDeviceScreenView extends ScrollView {
         super.onFinishInflate();
         ButterKnife.inject(this);
         groupCompression.setOnCheckedChangeListener(compressionChangedListener);
-        if(!isInEditMode()) {
-            presenter.takeView(this);
-        }
+        presenter.takeView(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         presenter.dropView(this);
-        dismissErrorDialog();
     }
 
     @OnClick(R.id.btn_scanqr)
@@ -239,25 +229,6 @@ public class EditDeviceScreenView extends ScrollView {
 
     void notifyInvalidAddresses() {
         //TODO
-    }
-
-    void showError(String msg) {
-        dismissErrorDialog();
-        errorDialog = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.error)
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    void dismissErrorDialog() {
-        if (errorDialog != null && errorDialog.isShowing()) {
-            errorDialog.dismiss();
-        }
-    }
-
-    void showConfigSaved() {
-        Toast.makeText(getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
     }
 
     final RadioGroup.OnCheckedChangeListener compressionChangedListener = new RadioGroup.OnCheckedChangeListener() {

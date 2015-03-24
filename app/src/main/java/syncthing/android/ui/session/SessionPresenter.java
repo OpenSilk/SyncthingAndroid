@@ -323,11 +323,11 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         }
     }
 
-    void showSavingDialog() {
+    public void showSavingDialog() {
         if (hasView()) getView().showSavingDialog();
     }
 
-    void dismissSavingDialog() {
+    public void dismissSavingDialog() {
         if (hasView()) getView().dismissSavingDialog();
     }
 
@@ -339,7 +339,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         if (hasView()) getView().dismissRestartDialog();
     }
 
-    void showError(String title, String msg) {
+    public void showError(String title, String msg) {
         if (hasView()) getView().showErrorDialog(title, msg);
     }
 
@@ -347,11 +347,11 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         if (hasView()) getView().showErrorDialog(getView().getContext().getString(res), msg);
     }
 
-    void dismissError() {
+    public void dismissError() {
         if (hasView()) getView().dismissErrorDialog();
     }
 
-    void showSuccessMsg() {
+    public void showSuccessMsg() {
         if (hasView()) getView().showConfigSaved();
     }
 
