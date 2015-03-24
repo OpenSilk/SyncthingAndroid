@@ -57,6 +57,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        checkReleaseBuilds false//Lambdas
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -115,7 +119,7 @@ dependencies {
     //compile 'com.squareup.flow:flow:0.9-SNAPSHOT'
 
     compile 'commons-io:commons-io:2.4'
-    compile 'org.zeroturnaround:zt-zip:1.8'
+    compile 'org.zeroturnaround:zt-zip:1.9-SNAPSHOT'
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.10.19"
