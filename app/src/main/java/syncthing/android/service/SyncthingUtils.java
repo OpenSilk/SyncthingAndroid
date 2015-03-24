@@ -344,8 +344,14 @@ public class SyncthingUtils {
             //TODO copy zip to temp location and check if its a valid config
             is = context.getContentResolver().openInputStream(uri);
             ZipUtil.unpack(is, configDir);
+            File[] files = configDir.listFiles();
+            for (File f : files) {
+                Runtime.getRuntime().exec("chmod 0600 " + f.getAbsolutePath());
+                Timber.d("chmod 0600 on %s", f.getAbsolutePath());
+            }
             Toast.makeText(context, R.string.config_imported, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
+            FileUtils.deleteQuietly(configDir);
             Toast.makeText(context, R.string.operation_failed, Toast.LENGTH_LONG).show();
         } finally {
             IOUtils.closeQuietly(is);

@@ -256,7 +256,7 @@ public class SyncthingInstance extends MortarService {
 
             String writingFilePath = dstFile + ".writing";
             Timber.d("wrote out %s", writingFilePath);
-            Runtime.getRuntime().exec("chmod 0777 " + writingFilePath);
+            Runtime.getRuntime().exec("chmod 0700 " + writingFilePath);
             Timber.d("did chmod 0700 on %s", writingFilePath);
             Runtime.getRuntime().exec("mv " + writingFilePath + " " + dstFile);
             Timber.d("moved %s to %s", writingFilePath, dstFile);
