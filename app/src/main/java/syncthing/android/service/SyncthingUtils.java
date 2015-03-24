@@ -18,21 +18,32 @@
 package syncthing.android.service;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.format.ISODateTimeFormat;
+import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.WeakHashMap;
@@ -272,6 +283,73 @@ public class SyncthingUtils {
 
     public static long minutesToMillis(int minutes) {
         return (long) minutes * 60000L;
+    }
+
+    public static void exportConfig(Context context) {
+        File configDir = getConfigDirectory(context);
+        if (!configDir.exists()) {
+            Toast.makeText(context, R.string.no_config_found, Toast.LENGTH_LONG).show();
+            return;
+        }
+        File zipFile = new File(Environment.getExternalStorageDirectory(),
+                context.getPackageName() + "-export-"
+                        + DateTime.now().toString(ISODateTimeFormat.dateHourMinute()) + ".zip");
+        if (zipFile.exists()) {
+            return;//Double click or something. just ignore
+        }
+        File tmpDir = new File(context.getApplicationContext().getCacheDir(), randomString(6));
+        try {
+            //copy the files we care about into tmp location
+            File[] files = configDir.listFiles((dir, filename) -> filename.endsWith(".xml") || filename.endsWith(".pem"));
+            for (File f : files) {
+                FileUtils.copyFileToDirectory(f, tmpDir);
+            }
+            ZipUtil.pack(tmpDir, zipFile);
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.archive_created)
+                    .setMessage(context.getString(R.string.archive_at_location, zipFile.getAbsolutePath()))
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+        } catch (IOException|RuntimeException e) {
+            FileUtils.deleteQuietly(zipFile);
+            Toast.makeText(context, R.string.operation_failed, Toast.LENGTH_LONG).show();
+        } finally {
+            FileUtils.deleteQuietly(tmpDir);
+        }
+    }
+
+    public static void importConfig(Context context, Uri uri, boolean force) {
+        File configDir = getConfigDirectory(context);
+        if (configDir.exists()) {
+            if (!force) {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.overwrite)
+                        .setMessage(R.string.overwrite_current_config)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> importConfig(context, uri, true))
+                        .show();
+                return;
+            } else {
+                context.startService(new Intent(context, SyncthingInstance.class).setAction(SyncthingInstance.SHUTDOWN));
+                try {
+                    FileUtils.cleanDirectory(configDir);
+                } catch (IOException e) {
+                    Toast.makeText(context, R.string.operation_failed, Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+        InputStream is = null;
+        try {
+            //TODO copy zip to temp location and check if its a valid config
+            is = context.getContentResolver().openInputStream(uri);
+            ZipUtil.unpack(is, configDir);
+            Toast.makeText(context, R.string.config_imported, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(context, R.string.operation_failed, Toast.LENGTH_LONG).show();
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
     }
 
     public static void copyDeviceId(Context context, String id) {

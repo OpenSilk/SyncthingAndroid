@@ -58,7 +58,7 @@ public class AlarmManagerHelper {
     void scheduleDelayedShutdown() {
         cancelDelayedShutdown();
         if (shutdownIntent == null) {
-            Intent intent = new Intent(service, SyncthingInstance.class).setAction(SyncthingInstance.SHUTDOWN);
+            Intent intent = new Intent(service, SyncthingInstance.class).setAction(SyncthingInstance.SCHEDULED_SHUTDOWN);
             shutdownIntent = PendingIntent.getService(service, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
         if (settings.isOnSchedule()) {
@@ -86,7 +86,7 @@ public class AlarmManagerHelper {
 
     void scheduleWakeup() {
         if (wakeupIntent == null) {
-            Intent intent = new Intent(service, SyncthingInstance.class).setAction(SyncthingInstance.WAKEUP);
+            Intent intent = new Intent(service, SyncthingInstance.class).setAction(SyncthingInstance.SCHEDULED_WAKEUP);
             wakeupIntent = PendingIntent.getService(service, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
         if (settings.isOnSchedule()) {

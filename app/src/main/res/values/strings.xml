@@ -37,6 +37,7 @@
     <string name="external">External</string>
     <string name="retry">Retry</string>
     <string name="could_not_connect">Could not connect</string>
+    <string name="operation_failed">Operation failed</string>
 
     <!--Notification-->
     <string name="syncthing_is_running">Syncthing is running</string>
@@ -59,4 +60,14 @@
     <string name="only_on_wifi">Only on wifi</string>
     <string name="when_connected_to">Only when connected to…</string>
 
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="export_config">Export configuration</string>
+    <string name="import_config">Import configuration</string>
+    <string name="no_file_picker_found">No file picker found</string>
+    <string name="archive_created">Archive created</string>
+    <string name="archive_at_location">Archive at:\n%1$s</string>
+    <string name="overwrite">Overwrite?</string>
+    <string name="overwrite_current_config">Overwrite current config?</string>
+    <string name="config_imported">Config imported</string>
+    <string name="no_config_found">No config directory found</string>
 </resources>

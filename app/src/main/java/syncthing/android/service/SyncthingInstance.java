@@ -54,8 +54,9 @@ public class SyncthingInstance extends MortarService {
     public static final String REEVALUATE = PACKAGE + ".action.reevaluate";
     //shutdown service
     public static final String SHUTDOWN = PACKAGE + ".action.shutdown";
-    //received be alarmmanager
-    public static final String WAKEUP = PACKAGE + "action.wakeup";
+    //recieved by alarmmanager
+    static final String SCHEDULED_SHUTDOWN = PACKAGE + ".action.scheduledshutdown";
+    static final String SCHEDULED_WAKEUP = PACKAGE + "action.wakeup";
 
     @Inject ServiceSettings mSettings;
     @Inject NotificationHelper mNotificationHelper;
@@ -116,8 +117,10 @@ public class SyncthingInstance extends MortarService {
                 mAnyActivityInForeground = intent.getBooleanExtra(EXTRA_NOW_IN_FOREGROUND, false);
             }
 
-            if (SHUTDOWN.equals(action)) {
-                mAlarmManagerHelper.onReceivedDelayedShutdown();
+            if (SHUTDOWN.equals(action) || SCHEDULED_SHUTDOWN.equals(action)) {
+                if (SCHEDULED_SHUTDOWN.equals(action)) {
+                    mAlarmManagerHelper.onReceivedDelayedShutdown();
+                }
                 doOrderlyShutdown();
                 return START_NOT_STICKY;
             }
@@ -131,7 +134,7 @@ public class SyncthingInstance extends MortarService {
                     updateForegroundState();
                     break;
                 case REEVALUATE:
-                case WAKEUP:
+                case SCHEDULED_WAKEUP:
                 default:
                     reevaluate();
                     break;

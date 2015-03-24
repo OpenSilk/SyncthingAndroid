@@ -25,4 +25,5 @@ public interface ActivityRequestCodes {
     int LOGIN_ACTIVITY = _BASE << 1;
     int SCAN_QR = _BASE << 2;
     int DIRECTORY_PICKER = _BASE << 3;
+    int IMPORT_CONFIG = _BASE << 4;
 }

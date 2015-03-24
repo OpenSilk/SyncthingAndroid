@@ -17,10 +17,14 @@
 
 package syncthing.android.ui.settings;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
@@ -29,8 +33,12 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.webkit.MimeTypeMap;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
+
+import org.opensilk.common.util.VersionUtils;
 
 import java.util.List;
 
@@ -38,16 +46,23 @@ import butterknife.ButterKnife;
 import syncthing.android.R;
 import syncthing.android.service.ServiceSettings;
 import syncthing.android.service.SyncthingInstance;
+import syncthing.android.service.SyncthingUtils;
+import syncthing.android.ui.common.ActivityRequestCodes;
 
 /**
  * Created by drew on 3/21/15.
  */
-public class ServiceSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+public class ServiceSettingsFragment extends PreferenceFragment implements
+        Preference.OnPreferenceClickListener,
+        Preference.OnPreferenceChangeListener {
 
     ListPreference runWhen;
     MultiSelectListPreference wifiNetwork;
 
     PreferenceCategory catBetween;
+
+    Preference exportConfig;
+    Preference importConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +84,10 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
         hideShowRunWhenCategories(getPreferenceManager().getSharedPreferences()
                 .getString(ServiceSettings.RUN_WHEN, ServiceSettings.WHEN_OPEN));
 
+        exportConfig = findPreference("export");
+        exportConfig.setOnPreferenceClickListener(this);
+        importConfig = findPreference("import");
+        importConfig.setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -101,6 +120,31 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference == exportConfig) {
+            SyncthingUtils.exportConfig(getActivity());
+            return true;
+        } else if (preference == importConfig) {
+            Intent intent = new Intent();
+            if (VersionUtils.hasKitkat()) {
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            } else {
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+            }
+            intent.setType("application/zip");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            try {
+                startActivityForResult(intent, ActivityRequestCodes.IMPORT_CONFIG);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), R.string.no_file_picker_found, Toast.LENGTH_LONG).show();
+            }
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference == runWhen) {
@@ -109,6 +153,15 @@ public class ServiceSettingsFragment extends PreferenceFragment implements Prefe
         return true;
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivityRequestCodes.IMPORT_CONFIG && resultCode == Activity.RESULT_OK) {
+            SyncthingUtils.importConfig(getActivity(), data.getData(), false);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     void hideShowRunWhenCategories(String runwhen) {
         switch (runwhen) {

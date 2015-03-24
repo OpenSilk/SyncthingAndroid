@@ -108,13 +108,17 @@ public class SyncthingThread extends Thread {
 
     public void kill() {
         Timber.d("kill");
-        Process p = goProcess.get();
+        final Process p = goProcess.get();
         if (p == null) {
             return;
         }
-        p.destroy();
         goProcess.set(null);
-        Timber.d("Sycnthing killed ret=%d", p.exitValue());
+        p.destroy();
+        try {
+            p.waitFor();
+        } catch (InterruptedException ignored) {
+        }
+        Timber.d("Syncthing killed ret=%d", p.exitValue());
     }
 
     static class LogWriterThread extends Thread {

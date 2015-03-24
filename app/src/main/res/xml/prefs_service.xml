@@ -59,4 +59,19 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/miscellaneous">
+
+        <Preference
+            android:key="export"
+            android:title="@string/export_config"
+            android:persistent="false"/>
+
+        <Preference
+            android:key="import"
+            android:title="@string/import_config"
+            android:persistent="false"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
