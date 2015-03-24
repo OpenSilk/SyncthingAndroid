@@ -72,16 +72,32 @@ public class ConfigXml {
         boolean changed = false;
         Element options = (Element) mConfig.getDocumentElement()
                 .getElementsByTagName("options").item(0);
-        Element gui = (Element) mConfig.getDocumentElement()
-                .getElementsByTagName("gui").item(0);
 
         // Hardcode default globalAnnounceServer ip.
-        Element globalAnnounceServer = (Element)
-                options.getElementsByTagName("globalAnnounceServer").item(0);
-        if (globalAnnounceServer.getTextContent().equals("udp4://announce.syncthing.net:22026")) {
-            Timber.d("Replacing globalAnnounceServer host with ip");
-            globalAnnounceServer.setTextContent("udp4://194.126.249.5:22026");
-            changed = true;
+        NodeList globalAnnounceServers = options.getElementsByTagName("globalAnnounceServer");
+        if (globalAnnounceServers != null) {
+            for (int ii=0; ii<globalAnnounceServers.getLength(); ii++) {
+                Node e = globalAnnounceServers.item(ii);
+                if (e.getTextContent().equals("udp4://announce.syncthing.net:22026")) {
+                    Timber.d("Replacing globalAnnounceServer host with ip");
+                    e.setTextContent("udp4://194.126.249.5:22026");
+                    changed = true;
+                } else if (e.getTextContent().equals("udp6://announce-v6.syncthing.net:22026")) {
+//                    Timber.d("Replacing globalAnnounceServer IPv6 host with ip");
+//                    e.setTextContent("udp6://[2001:470:28:4d6::5]:22026");
+//                    changed = true;
+                }
+            }
+        }
+
+        //disable start browser
+        NodeList startBrowser = options.getElementsByTagName("startBrowser");
+        if (startBrowser != null && startBrowser.getLength() == 1) {
+            if (Boolean.parseBoolean(startBrowser.item(0).getTextContent())) {
+                Timber.d("Set 'startBrowser' to false");
+                startBrowser.item(0).setTextContent(Boolean.toString(false));
+                changed = true;
+            }
         }
 
         NodeList folders = mConfig.getDocumentElement().getElementsByTagName("folder");
