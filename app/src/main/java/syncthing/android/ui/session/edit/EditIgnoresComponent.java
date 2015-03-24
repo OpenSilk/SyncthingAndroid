@@ -15,15 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.api.model;
+package syncthing.android.ui.session.edit;
 
-import java.io.Serializable;
+import dagger.Component;
+import syncthing.android.ui.session.SessionComponent;
 
 /**
- * Created by drew on 3/4/15.
+ * Created by drew on 3/23/15.
  */
-public class Ignores implements Serializable {
-    private static final long serialVersionUID = -9077298927333528483L;
-    public String[] ignore;
-    public String[] patterns;
+@EditScope
+@Component(
+        dependencies = SessionComponent.class,
+        modules = EditIgnoresModule.class
+)
+//TODO this should really be a child of EditFolderComponent
+public interface EditIgnoresComponent extends EditFragmentComponent {
+    EditIgnoresPresenter presenter();
 }

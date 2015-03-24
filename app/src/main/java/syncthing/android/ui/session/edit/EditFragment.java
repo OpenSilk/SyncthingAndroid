@@ -42,7 +42,6 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         return f;
     }
 
-
     public static EditFragment newFolderInstance(String folderId) {
         EditFragment f = new EditFragment();
         Bundle b = new Bundle();
@@ -60,6 +59,17 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         b.putInt("title", R.string.share_folder);
         b.putString("folder", folderId);
         b.putString("device", deviceId);
+        f.setArguments(b);
+        return f;
+    }
+
+    public static EditFragment newFolderIgnoresInstance(String folderId) {
+        EditFragment f = new EditFragment();
+        Bundle b = new Bundle();
+        b.putBoolean("isFolder", true);
+        b.putBoolean("isIgnores", true);
+        b.putInt("title", R.string.ignore_patterns);
+        b.putString("folder", folderId);
         f.setArguments(b);
         return f;
     }
@@ -95,14 +105,18 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         return f;
     }
 
+
     @Override
     protected Object getScreen() {
         boolean isFolder = getArguments().getBoolean("isFolder");
         boolean isDevice = getArguments().getBoolean("isDevice");
         if (isFolder) {
+            boolean isIgnores = getArguments().getBoolean("isIgnores");
             String fid = getArguments().getString("folder");
             String did = getArguments().getString("device");
-            if (fid != null && did != null) {
+            if (isIgnores) {
+                return new EditIgnoresScreen(fid); //ignores
+            } else if (fid != null && did != null) {
                 return new EditFolderScreen(fid, did);//share
             } else if (fid != null) {
                 return new EditFolderScreen(fid);//Edit
@@ -119,6 +133,12 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         } else {
             return new SettingsScreen();
         }
+    }
+
+    @Override
+    protected String getScopeName() {
+        //hack for editignores
+        return super.getScopeName() + Integer.toHexString(getArguments().getInt("title"));
     }
 
     EditFragmentPresenter mFragmetnPresenter;

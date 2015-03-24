@@ -15,15 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.api.model;
+package syncthing.android.ui.session.edit;
 
-import java.io.Serializable;
+import org.opensilk.common.mortar.WithComponent;
+import org.opensilk.common.mortarfragment.Layout;
+
+import syncthing.android.R;
 
 /**
- * Created by drew on 3/4/15.
+ * Created by drew on 3/23/15.
  */
-public class Ignores implements Serializable {
-    private static final long serialVersionUID = -9077298927333528483L;
-    public String[] ignore;
-    public String[] patterns;
+@Layout(R.layout.screen_edit_folder_ignores)
+@WithComponent(EditIgnoresComponent.class)
+public class EditIgnoresScreen {
+    final String folderId;
+
+    public EditIgnoresScreen(String folderId) {
+        this.folderId = folderId;
+    }
 }

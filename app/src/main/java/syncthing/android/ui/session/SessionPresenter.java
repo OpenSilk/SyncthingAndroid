@@ -405,6 +405,10 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         doOpenScreen(EditFragment.newFolderInstance(folderId, deviceId), "folderedit"+folderId);
     }
 
+    public void openEditIgnoresScreen(String folderId) {
+        doOpenScreen(EditFragment.newFolderIgnoresInstance(folderId), "folderignores"+folderId);
+    }
+
     void openSettingsScreen() {
         doOpenScreen(EditFragment.newSettingsInstance(), "settings");
     }

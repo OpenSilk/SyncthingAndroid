@@ -138,7 +138,8 @@ public interface SyncthingApi {
     @POST("/rest/error/clear")
     Observable<Void> clearErrors();
 
-    //@POST("/rest/ignores")
+    @POST("/rest/ignores")
+    Observable<Ignores> updateIgnores(@Query("folder") String folder, @Body Ignores ignores);
 
     @POST("/rest/model/override")
     Observable<Void> override(@Query("folder") String folder);

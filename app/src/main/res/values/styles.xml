@@ -161,6 +161,11 @@
         <item name="android:inputType">textPassword</item>
     </style>
 
+    <style name="session.edit.EditTextMultiLine">
+        <item name="android:inputType">textMultiLine|textNoSuggestions</item>
+        <item name="android:gravity">top</item>
+    </style>
+
     <style name="session.edit.Checkbox">
 
     </style>
@@ -171,6 +176,10 @@
 
     <style name="session.edit.Warning" parent="session.edit.FieldDescription">
         <item name="android:textColor">@color/warning_text</item>
+    </style>
+
+    <style name="session.edit.TextCode" parent="session.edit.FieldDescription">
+        <item name="android:textColor">@color/red2_A200</item>
     </style>
 
 

@@ -33,10 +33,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import mortar.MortarScope;
-import mortar.ViewPresenter;
 import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.ui.common.ActivityRequestCodes;
+import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
 import syncthing.api.model.DeviceConfig;
 
@@ -44,31 +44,24 @@ import syncthing.api.model.DeviceConfig;
  * Created by drew on 3/16/15.
  */
 @EditScope
-public class EditDevicePresenter extends ViewPresenter<EditDeviceScreenView> implements ActivityResultsListener {
+public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> implements ActivityResultsListener {
 
-    final String deviceId;
-    final boolean isAdd;
-    final SessionController controller;
-    final EditFragmentPresenter editFragmentPresenter;
     final ActivityResultsController activityResultsController;
 
     DeviceConfig originalDevice;
 
-    Subscription saveSubscription;
     Subscription deleteSubscription;
 
     @Inject
     public EditDevicePresenter(
-            @Named("deviceid") String deviceId,
-            @Named("isadd") boolean isAdd,
             SessionController controller,
             EditFragmentPresenter editFragmentPresenter,
+            SessionPresenter sessionPresenter,
+            @Named("deviceid") String deviceId,
+            @Named("isadd") boolean isAdd,
             ActivityResultsController activityResultsController
     ) {
-        this.deviceId = deviceId;
-        this.isAdd = isAdd;
-        this.controller = controller;
-        this.editFragmentPresenter = editFragmentPresenter;
+        super(controller, editFragmentPresenter, sessionPresenter, null, deviceId, isAdd);
         this.activityResultsController = activityResultsController;
     }
 
@@ -81,9 +74,6 @@ public class EditDevicePresenter extends ViewPresenter<EditDeviceScreenView> imp
     @Override
     protected void onExitScope() {
         super.onExitScope();
-        if (saveSubscription != null) {
-            saveSubscription.unsubscribe();
-        }
         if (deleteSubscription != null) {
             deleteSubscription.unsubscribe();
         }
@@ -123,10 +113,6 @@ public class EditDevicePresenter extends ViewPresenter<EditDeviceScreenView> imp
 
     boolean validateAddresses(CharSequence text) {
         return true;//TODO
-    }
-
-    void dismissDialog() {
-        editFragmentPresenter.dismissDialog();
     }
 
     void saveDevice(Map<String, Boolean> folders) {

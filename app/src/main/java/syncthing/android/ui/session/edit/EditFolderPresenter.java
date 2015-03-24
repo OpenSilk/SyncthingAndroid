@@ -18,20 +18,19 @@
 package syncthing.android.ui.session.edit;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import mortar.ViewPresenter;
 import rx.Subscription;
+import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
@@ -42,40 +41,27 @@ import static syncthing.android.ui.session.edit.EditModule.INVALID_ID;
  * Created by drew on 3/16/15.
  */
 @EditScope
-public class EditFolderPresenter extends ViewPresenter<EditFolderScreenView> {
-
-    final String folderId;
-    final String deviceId;
-    final boolean isAdd;
-    final SessionController controller;
-    final EditFragmentPresenter editFragmentPresenter;
+public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
 
     FolderConfig origFolder;
 
-    Subscription saveSubscription;
     Subscription deleteSubscription;
 
     @Inject
     public EditFolderPresenter(
+            SessionController controller,
+            EditFragmentPresenter editFragmentPresenter,
+            SessionPresenter sessionPresenter,
             @Named("folderid") String folderId,
             @Named("isadd") boolean isAdd,
-            @Named("deviceid") String deviceId,
-            SessionController controller,
-            EditFragmentPresenter editFragmentPresenter
+            @Named("deviceid") String deviceId
     ) {
-        this.folderId = folderId;
-        this.deviceId = deviceId;
-        this.isAdd = isAdd;
-        this.controller = controller;
-        this.editFragmentPresenter = editFragmentPresenter;
+        super(controller, editFragmentPresenter, sessionPresenter, folderId, deviceId, isAdd);
     }
 
     @Override
     protected void onExitScope() {
         super.onExitScope();
-        if (saveSubscription != null) {
-            saveSubscription.unsubscribe();
-        }
         if (deleteSubscription != null) {
             deleteSubscription.unsubscribe();
         }
@@ -169,10 +155,6 @@ public class EditFolderPresenter extends ViewPresenter<EditFolderScreenView> {
         }
     }
 
-    void dismissDialog() {
-        editFragmentPresenter.dismissDialog();
-    }
-
     void saveFolder() {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
@@ -210,4 +192,9 @@ public class EditFolderPresenter extends ViewPresenter<EditFolderScreenView> {
                 }
         );
     }
+
+    void openIgnoresEditor() {
+        sessionPresenter.openEditIgnoresScreen(folderId);
+    }
+
 }

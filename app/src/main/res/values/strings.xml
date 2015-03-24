@@ -39,6 +39,7 @@
     <string name="could_not_connect">Could not connect</string>
     <string name="operation_failed">Operation failed</string>
     <string name="copy">Copy</string>
+    <string name="help">Help</string>
 
     <!--Notification-->
     <string name="syncthing_is_running">Syncthing is running</string>

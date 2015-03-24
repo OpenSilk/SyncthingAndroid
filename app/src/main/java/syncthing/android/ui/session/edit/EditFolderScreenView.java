@@ -131,7 +131,7 @@ public class EditFolderScreenView extends ScrollView {
 
     @OnClick(R.id.btn_ignore_ptrn)
     void openIgnoresEditor() {
-
+        presenter.openIgnoresEditor();
     }
 
     @OnClick(R.id.btn_cancel)

@@ -64,6 +64,7 @@ import syncthing.api.model.FolderStatsMap;
 import syncthing.api.model.GUIConfig;
 import syncthing.api.model.GuiError;
 import syncthing.api.model.GuiErrors;
+import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
 import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.Report;
@@ -997,6 +998,21 @@ public class SessionController implements EventMonitor.EventListener {
         return restApi.scan(id).subscribe(
                 (v) -> {},
                 onError
+        );
+    }
+
+    public Subscription getIgnores(String id, Action1<Ignores> onNext, Action1<Throwable> onError) {
+        return restApi.ignores(id).subscribe(
+                onNext,
+                onError
+        );
+    }
+
+    public Subscription editIgnores(String id, Ignores ignores, Action1<Ignores> onNext, Action1<Throwable> onError, Action0 onComplete) {
+        return restApi.updateIgnores(id, ignores).subscribe(
+                onNext,
+                onError,
+                onComplete
         );
     }
 

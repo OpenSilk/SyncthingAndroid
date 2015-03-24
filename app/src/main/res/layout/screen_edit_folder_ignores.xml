@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015 OpenSilk Productions LLC
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<syncthing.android.ui.session.edit.EditIgnoresScreenView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/session.edit.Container">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/editing"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:id="@+id/desc_filename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.edit.TextCode"
+                tools:text="/sdcard/stuff"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_ignore_patterns_one_per_line"
+            style="@style/session.edit.FieldHeader"/>
+
+        <EditText
+            android:id="@+id/edit_ignores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="240dp"
+            style="@style/session.edit.EditTextMultiLine"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/quick_guide_to_supported_patterns"
+            style="@style/session.edit.FieldDescription"/>
+
+        <TableLayout
+            android:id="@+id/tips_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <TextView
+                    android:text="@string/exclamation_point"
+                    style="@style/session.edit.TextCode"/>
+                <TextView
+                    android:text="@string/inversion_of_the_given_condition_ie_do_not_exclude"
+                    style="@style/session.edit.FieldDescription"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="@string/star"
+                    style="@style/session.edit.TextCode"/>
+                <TextView
+                    android:text="@string/single_level_wildcard_matches_within_a_directory_only"
+                    style="@style/session.edit.FieldDescription"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="@string/double_star"
+                    style="@style/session.edit.TextCode"/>
+                <TextView
+                    android:text="@string/multi_level_wildcard_matches_multiple_directory_levels"
+                    style="@style/session.edit.FieldDescription"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="@string/double_slash"
+                    style="@style/session.edit.TextCode"/>
+                <TextView
+                    android:text="@string/comment_when_used_at_the_start_of_a_line"
+                    style="@style/session.edit.FieldDescription"/>
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <Button
+                android:id="@+id/btn_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/help"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@android:string/cancel"/>
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</syncthing.android.ui.session.edit.EditIgnoresScreenView>
