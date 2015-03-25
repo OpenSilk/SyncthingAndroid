@@ -16,7 +16,9 @@
 
 package org.opensilk.common.mortarfragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -49,12 +51,21 @@ public abstract class MortarDialogFragment extends DialogFragment {
         mScope = findOrMakeScope();
     }
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(mScope.createContext(getActivity()), getTheme());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ensureScreen();
         LayoutCreator layoutCreator = (LayoutCreator) getActivity().getSystemService(LayoutCreator.SERVICE_NAME);
-        return LayoutInflater.from(mScope.createContext(getActivity())).inflate(layoutCreator.getLayout(mScreen), container, false);
+        //Watch out, inflater here is assumed to be from the dialogs context
+        return inflater.inflate(layoutCreator.getLayout(mScreen), container, false);
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

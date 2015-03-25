@@ -414,9 +414,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     }
 
     void doOpenScreen(DialogFragment fragment, String tag) {
-        FragmentTransaction ft = fragmentPresenter.newTransaction();
-        //fragmentPresenter.decorateTrasaction(ft, fragment);
-        fragment.show(ft, tag);
+        fragmentPresenter.openDialogFragment(fragment, tag);
     }
 
 

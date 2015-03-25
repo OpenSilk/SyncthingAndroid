@@ -78,14 +78,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/message"
                 android:gravity="end"
-                style="?android:buttonBarStyle">
+                style="@style/mtrl.ButtonBar">
 
                 <Button
                     android:id="@+id/btn_dismiss"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@android:string/ok"
-                    style="?android:buttonBarButtonStyle"/>
+                    style="@style/mtrl.ButtonBarButton.Small"/>
 
             </LinearLayout>
 

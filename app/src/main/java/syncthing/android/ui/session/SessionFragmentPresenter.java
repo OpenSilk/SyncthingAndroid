@@ -18,12 +18,16 @@
 package syncthing.android.ui.session;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.internal.VersionUtils;
 import android.transition.Explode;
+import android.transition.Slide;
 
 import org.opensilk.common.mortar.HasScope;
+import org.opensilk.common.util.VersionUtils;
 
 import javax.inject.Inject;
 
@@ -55,17 +59,8 @@ public class SessionFragmentPresenter extends Presenter<SessionFragmentPresenter
         return getView().getChildFragmentManager();
     }
 
-    @SuppressLint("CommitTransaction")
-    public FragmentTransaction newTransaction() {
-        return getFragmentManager().beginTransaction();
-    }
-
-    public void decorateTrasaction(FragmentTransaction transaction, android.support.v4.app.Fragment fragment) {
-        if (VersionUtils.isAtLeastL()) {
-            fragment.setEnterTransition(new Explode());
-            fragment.setExitTransition(new Explode());
-        } else {
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void openDialogFragment(DialogFragment fragment, String tag) {
+        fragment.show(getFragmentManager(), tag);
     }
 }

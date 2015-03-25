@@ -19,6 +19,10 @@
 <resources>
     <color name="syncthing_brand">#3498db</color>
 
+    <color name="color_primary">@color/syncthing_brand</color>
+    <color name="color_primary_dark">@color/light_blue_700</color>
+    <color name="color_accent">@color/yellow_A700</color>
+
     <color name="folder_idle">@color/green_500</color>
     <color name="folder_scanning">@color/syncthing_brand</color>
     <color name="folder_unshared">@color/amber_500</color>
@@ -32,5 +36,8 @@
     <color name="announce_fail">@color/red2_500</color>
 
     <color name="error_text">@color/red2_500</color>
-    <color name="warning_text">@color/amber_500</color>
+    <color name="warning_text">@color/amber_A400</color>
+    <color name="code_text">@color/red2_400</color>
+
+    <color name="notif_background">@color/amber_500</color>
 </resources>

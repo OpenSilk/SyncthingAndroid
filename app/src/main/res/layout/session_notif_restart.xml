@@ -70,14 +70,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/message"
                 android:gravity="end"
-                style="?android:buttonBarStyle">
+                style="@style/mtrl.ButtonBar">
 
                 <Button
                     android:id="@+id/btn_restart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/restart"
-                    style="?android:buttonBarButtonStyle"/>
+                    style="@style/mtrl.ButtonBarButton.Small"/>
 
             </LinearLayout>
 

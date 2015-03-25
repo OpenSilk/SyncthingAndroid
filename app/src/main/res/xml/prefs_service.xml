@@ -36,7 +36,13 @@
         <MultiSelectListPreference
             android:key="TRANSIENT_wifi_networks"
             android:title="@string/when_connected_to"
-            android:dependency="only_on_wifi"/>
+            android:dependency="only_on_wifi"
+            android:defaultValue="@array/empty_array"/>
+        <!--Empty array is a hack for fucking stupid platform bug
+            pre L or maybe earlier. Found while testing JB.
+            Setting a dependency causes NPE so can either
+            remove dependency or add default value.
+            Sometimes android is infuriating -->
 
         <CheckBoxPreference
             android:key="only_when_charging"

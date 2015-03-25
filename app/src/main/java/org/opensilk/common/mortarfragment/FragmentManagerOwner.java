@@ -16,20 +16,20 @@
 
 package org.opensilk.common.mortarfragment;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.internal.VersionUtils;
 import android.transition.Explode;
 import android.transition.Slide;
 import android.view.Gravity;
 
 import org.opensilk.common.dagger2.ActivityScope;
 import org.opensilk.common.mortar.HasScope;
+import org.opensilk.common.util.VersionUtils;
 
 import javax.inject.Inject;
 
@@ -60,7 +60,7 @@ public class FragmentManagerOwner extends Presenter<FragmentManagerOwner.Activit
     public int addFragment(Fragment frag, String tag, boolean addToBackstack) {
         if (!hasView()) return -1;
         FragmentTransaction ft = getView().getSupportFragmentManager().beginTransaction();
-        if (VersionUtils.isAtLeastL()) {
+        if (VersionUtils.hasLollipop()) {
             frag.setEnterTransition(new Explode());
             frag.setExitTransition(new Explode());
         } else {
@@ -71,13 +71,14 @@ public class FragmentManagerOwner extends Presenter<FragmentManagerOwner.Activit
         return ft.commit();
     }
 
+    @SuppressLint("RtlHardcoded")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public int replaceMainContent(Fragment frag, String tag, boolean addToBackstack) {
         if (!hasView()) return -1;
         FragmentTransaction ft = getView().getSupportFragmentManager().beginTransaction();
-        if (VersionUtils.isAtLeastL()) {
-            frag.setEnterTransition(new Slide(GravityCompat.END));
-            frag.setExitTransition(new Slide(GravityCompat.START));
+        if (VersionUtils.hasLollipop()) {
+            frag.setEnterTransition(new Slide(Gravity.RIGHT));
+            frag.setExitTransition(new Slide(Gravity.LEFT));
         } else {
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         }

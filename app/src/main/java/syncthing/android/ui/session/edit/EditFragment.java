@@ -17,7 +17,13 @@
 
 package syncthing.android.ui.session.edit;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.transition.TransitionManager;
+import android.view.Gravity;
 
 import org.opensilk.common.mortar.ScreenScoper;
 import org.opensilk.common.mortarfragment.MortarDialogFragment;
@@ -48,6 +54,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         b.putBoolean("isFolder", true);
         b.putInt("title", R.string.edit_folder);
         b.putString("folder", folderId);
+        b.putBoolean("editmode", true);
         f.setArguments(b);
         return f;
     }
@@ -59,6 +66,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         b.putInt("title", R.string.share_folder);
         b.putString("folder", folderId);
         b.putString("device", deviceId);
+        b.putBoolean("editmode", true);
         f.setArguments(b);
         return f;
     }
@@ -91,6 +99,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         b.putBoolean("isDevice", true);
         b.putInt("title", R.string.edit_device);
         b.putString("device", deviceId);
+        b.putBoolean("editmode", true);
         f.setArguments(b);
         return f;
     }
@@ -101,6 +110,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         b.putBoolean("isFolder", false);
         b.putBoolean("isDevice", false);
         b.putInt("title", R.string.settings);
+        b.putBoolean("editmode", true);
         f.setArguments(b);
         return f;
     }
@@ -141,12 +151,30 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         return super.getScopeName() + Integer.toHexString(getArguments().getInt("title"));
     }
 
+    @Override
+    protected MortarScope findOrMakeScope() {
+        //This scope descends from SessionScope
+        MortarScope parentScope = ((MortarFragment) getParentFragment()).getScope();
+        MortarScope scope = parentScope.findChild(getScopeName());
+        if (scope != null) {
+            Timber.d("Reusing fragment scope %s", getScopeName());
+        }
+        if (scope == null) {
+            ScreenScoper scoper = getScreenScoperService();
+            scope = scoper.getScreenScope(getResources(),  parentScope, getScopeName(), getScreen());
+            Timber.d("Created new fragment scope %s", getScopeName());
+        }
+        return scope;
+    }
+
+    //bridge for presenters to dismiss the dialog without context
     EditFragmentPresenter mFragmetnPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.SessionEditDialogTheme);
+        boolean editing = getArguments().getBoolean("editmode");
+        setStyle(STYLE_NORMAL, editing ? R.style.SessionEditDialogTheme_Edit : R.style.SessionEditDialogTheme);
         mFragmetnPresenter = MortarFragmentUtils.<EditFragmentComponent>getDaggerComponent(mScope).fragmentPresenter();
         mFragmetnPresenter.takeView(this);
     }
@@ -160,23 +188,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getShowsDialog()) {
-            getDialog().setTitle(getArguments().getInt("title"));
-        }
+        getDialog().setTitle(getArguments().getInt("title"));
     }
 
-    @Override
-    protected MortarScope findOrMakeScope() {
-        MortarScope parentScope = ((MortarFragment) getParentFragment()).getScope();
-        MortarScope scope = parentScope.findChild(getScopeName());
-        if (scope != null) {
-            Timber.d("Reusing fragment scope %s", getScopeName());
-        }
-        if (scope == null) {
-            ScreenScoper scoper = getScreenScoperService();
-            scope = scoper.getScreenScope(getResources(),  parentScope, getScopeName(), getScreen());
-            Timber.d("Created new fragment scope %s", getScopeName());
-        }
-        return scope;
-    }
 }

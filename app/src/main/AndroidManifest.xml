@@ -51,7 +51,8 @@
 
         <activity
             android:name=".ui.settings.SettingsActivity"
-            android:theme="@style/SettingsTheme"/>
+            android:theme="@style/SettingsTheme"
+            android:label="@string/settings"/>
 
         <service
             android:name=".service.SyncthingInstance"

@@ -38,15 +38,6 @@ import mortar.bundler.BundleService;
 @ActivityScope
 public class ActivityResultsOwner extends Presenter<ActivityResultsActivity> implements ActivityResultsController {
 
-    @dagger.Module
-    public static class Module {
-        //Proxy to hide ActivityResultsOwner
-        @Provides @ActivityScope
-        public ActivityResultsController provideActivityResultsController(ActivityResultsOwner owner) {
-            return owner;
-        }
-    }
-
     private final Set<Registration> registrations = new LinkedHashSet<>();
 
     @Inject
@@ -73,7 +64,7 @@ public class ActivityResultsOwner extends Presenter<ActivityResultsActivity> imp
     @Override
     public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
         if (hasView()) {
-            getView().startActivityForResult(intent, requestCode, options);
+            getView().startActivityForResult(intent, requestCode);
         }
     }
 

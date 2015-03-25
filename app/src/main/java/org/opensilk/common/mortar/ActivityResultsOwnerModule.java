@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package org.opensilk.common.mortarfragment;
+package org.opensilk.common.mortar;
 
-import org.opensilk.common.mortar.ActivityResultsOwnerModule;
+import org.opensilk.common.dagger2.ActivityScope;
+
+import dagger.Provides;
 
 /**
-* Created by drew on 3/11/15.
+* Created by drew on 3/24/15.
 */
-@dagger.Module(
-        includes = ActivityResultsOwnerModule.class
-)
-public class MortarFragmentActivityModule {
-
+@dagger.Module
+public class ActivityResultsOwnerModule {
+    //Proxy to hide ActivityResultsOwner
+    @Provides @ActivityScope
+    public ActivityResultsController provideActivityResultsController(ActivityResultsOwner owner) {
+        return owner;
+    }
 }

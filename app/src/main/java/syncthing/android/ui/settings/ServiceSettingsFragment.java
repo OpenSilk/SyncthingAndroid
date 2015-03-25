@@ -177,6 +177,9 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
 
     String[] getWifiNetworks() {
         List<WifiConfiguration> networks = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE)).getConfiguredNetworks();
+        if (networks == null) {
+            return new String[0];
+        }
         String[] ssids = new String[networks.size()];
         for (int ii=0 ; ii<networks.size(); ii++) {
             ssids[ii] = networks.get(ii).SSID;

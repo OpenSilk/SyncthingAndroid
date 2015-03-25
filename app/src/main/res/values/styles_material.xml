@@ -101,4 +101,19 @@
         <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
+    <!--Button bars-->
+    <style name="mtrl.ButtonBar">
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- also in -v21-->
+    <style name="mtrl.ButtonBarButton" parent="Widget.AppCompat.Button">
+
+    </style>
+
+    <!-- also in -v21-->
+    <style name="mtrl.ButtonBarButton.Small" parent="Widget.AppCompat.Button.Small">
+        <item name="android:minWidth">78dip</item><!--88 norm 48 small-->
+    </style>
+
 </resources>

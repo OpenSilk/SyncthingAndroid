@@ -17,7 +17,10 @@
 
 package syncthing.android.ui.settings;
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceActivity;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -49,6 +52,17 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected boolean isValidFragment(String fragmentName) {
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

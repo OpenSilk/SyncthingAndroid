@@ -79,7 +79,7 @@
     <style name="session.RecyclerNotifHeader" parent="mtrl.SingleLineListItemLinear">
         <!--<item name="android:layout_width">match_parent</item>-->
         <!--<item name="android:layout_height">56dp</item>-->
-        <item name="android:background">@color/amber_500</item>
+        <item name="android:background">@color/notif_background</item>
         <!--<item name="android:padding">8dp</item>-->
         <!--<item name="android:gravity">center_vertical</item>-->
     </style>
@@ -144,8 +144,10 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="TextAppearanceFieldDescription" parent="TextAppearance.AppCompat.Caption">
-
+    <style name="TextAppearanceFieldDescription" parent="android:TextAppearance.DeviceDefault">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/black_text_secondary</item>
     </style>
 
     <style name="session.edit.EditText">
@@ -179,7 +181,7 @@
     </style>
 
     <style name="session.edit.TextCode" parent="session.edit.FieldDescription">
-        <item name="android:textColor">@color/red2_A200</item>
+        <item name="android:textColor">@color/code_text</item>
     </style>
 
 

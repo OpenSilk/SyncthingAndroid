@@ -23,6 +23,6 @@ import android.os.Bundle;
  * Created by drew on 3/10/15.
  */
 public interface ActivityResultsActivity extends HasScope {
-    void startActivityForResult(Intent intent, int requestCode, Bundle options);
+    void startActivityForResult(Intent intent, int requestCode);
     void setResultAndFinish(int resultCode, Intent data);
 }

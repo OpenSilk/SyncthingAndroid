@@ -100,21 +100,21 @@
             android:layout_below="@id/use_tls"
             android:layout_marginTop="16dp"
             android:gravity="end"
-            style="?android:buttonBarStyle">
+            style="@style/mtrl.ButtonBar">
 
             <Button
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@android:string/cancel"
-                style="?android:buttonBarButtonStyle"/>
+                style="@style/mtrl.ButtonBarButton.Small"/>
 
             <Button
                 android:id="@+id/submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login"
-                style="?android:buttonBarButtonStyle"/>
+                style="@style/mtrl.ButtonBarButton.Small"/>
 
         </LinearLayout>
 

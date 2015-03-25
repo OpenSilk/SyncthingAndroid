@@ -74,28 +74,28 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/message"
                 android:gravity="end"
-                style="?android:buttonBarStyle">
+                style="@style/mtrl.ButtonBar">
 
                 <Button
                     android:id="@+id/btn_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add"
-                    style="?android:buttonBarButtonStyle"/>
+                    style="@style/mtrl.ButtonBarButton.Small"/>
 
                 <Button
                     android:id="@+id/btn_ignore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ignore"
-                    style="?android:buttonBarButtonStyle"/>
+                    style="@style/mtrl.ButtonBarButton.Small"/>
 
                 <Button
                     android:id="@+id/btn_later"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/later"
-                    style="?android:buttonBarButtonStyle"/>
+                    style="@style/mtrl.ButtonBarButton.Small"/>
 
             </LinearLayout>
 

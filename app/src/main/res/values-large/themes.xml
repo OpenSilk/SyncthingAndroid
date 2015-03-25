@@ -16,22 +16,10 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <string-array name="when_to_run_entries" translatable="false">
-        <item>@string/run_when_app_is_open</item>
-        <item>@string/run_always</item>
-        <item>@string/run_between_times</item>
-    </string-array>
-
-    <string-array name="when_to_run_values" translatable="false">
-        <item>when_open</item>
-        <item>always</item>
-        <item>scheduled</item>
-    </string-array>
-
-    <string-array name="empty_array" translatable="false">
-
-    </string-array>
-
+<resources>
+    <style name="DialogWindowTitleTextAppearance" parent="android:TextAppearance.DeviceDefault.DialogWindowTitle">
+        <item name="android:textSize">20sp</item>
+        <!--<item name="android:fontFamily">sans-serif-medium</item>-->
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
 </resources>
