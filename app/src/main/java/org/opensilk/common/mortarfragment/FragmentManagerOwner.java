@@ -19,16 +19,13 @@ package org.opensilk.common.mortarfragment;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.transition.Explode;
 import android.transition.Slide;
 import android.view.Gravity;
 
 import org.opensilk.common.dagger2.ActivityScope;
-import org.opensilk.common.mortar.HasScope;
 import org.opensilk.common.util.VersionUtils;
 
 import javax.inject.Inject;
@@ -40,19 +37,14 @@ import mortar.bundler.BundleService;
  * Created by drew on 3/10/15.
  */
 @ActivityScope
-public class FragmentManagerOwner extends Presenter<FragmentManagerOwner.Activity> {
-
-    public interface Activity extends HasScope {
-        FragmentManager getSupportFragmentManager();
-        @IdRes int getContainerViewId();
-    }
+public class FragmentManagerOwner extends Presenter<FragmentManagerOwnerActivity> {
 
     @Inject
     public FragmentManagerOwner() {
     }
 
     @Override
-    protected BundleService extractBundleService(Activity view) {
+    protected BundleService extractBundleService(FragmentManagerOwnerActivity view) {
         return BundleService.getBundleService(view.getScope());
     }
 

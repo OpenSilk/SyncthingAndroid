@@ -28,14 +28,7 @@ import mortar.bundler.BundleService;
  * Created by drew on 10/5/14.
  */
 @ActivityScope
-public class DrawerOwner extends Presenter<DrawerOwner.Activity> {
-
-    public interface Activity extends HasScope {
-        void openDrawer();
-        void closeDrawer();
-        void disableDrawer(boolean hideIndicator);
-        void enableDrawer();
-    }
+public class DrawerOwner extends Presenter<DrawerOwnerActivity> {
 
     @Inject
     public DrawerOwner() {
@@ -43,30 +36,30 @@ public class DrawerOwner extends Presenter<DrawerOwner.Activity> {
     }
 
     @Override
-    protected BundleService extractBundleService(Activity view) {
+    protected BundleService extractBundleService(DrawerOwnerActivity view) {
         return BundleService.getBundleService(view.getScope());
     }
 
     public void openDrawer() {
-        Activity v = getView();
+        DrawerOwnerActivity v = getView();
         if (v == null) return;
         v.openDrawer();
     }
 
     public void closeDrawer() {
-        Activity v = getView();
+        DrawerOwnerActivity v = getView();
         if (v == null) return;
         v.closeDrawer();
     }
 
     public void disableDrawer(boolean hideIndicator) {
-        Activity v = getView();
+        DrawerOwnerActivity v = getView();
         if (v == null) return;
         v.disableDrawer(hideIndicator);
     }
 
     public void enableDrawer() {
-        Activity v = getView();
+        DrawerOwnerActivity v = getView();
         if (v == null) return;
         v.enableDrawer();
     }

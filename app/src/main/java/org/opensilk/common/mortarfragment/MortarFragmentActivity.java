@@ -32,7 +32,7 @@ import mortar.MortarScope;
  * Created by drew on 3/10/15.
  */
 public abstract class MortarFragmentActivity extends MortarActivity implements
-        FragmentManagerOwner.Activity,
+        FragmentManagerOwnerActivity,
         ActivityResultsActivity {
 
     @Inject protected FragmentManagerOwner mFragmentManagerOwner;

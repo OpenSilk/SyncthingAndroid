@@ -18,7 +18,6 @@
 package syncthing.android.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +30,7 @@ import android.view.WindowManager;
 
 import org.opensilk.common.mortar.ActionBarOwner;
 import org.opensilk.common.mortar.DrawerOwner;
+import org.opensilk.common.mortar.DrawerOwnerActivity;
 import org.opensilk.common.mortarfragment.MortarFragmentActivity;
 
 import javax.inject.Inject;
@@ -41,14 +41,13 @@ import butterknife.Optional;
 import mortar.MortarScope;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
-import syncthing.android.service.SyncthingInstance;
 import syncthing.android.service.SyncthingUtils;
 
 /**
  * Created by drew on 3/1/15.
  */
 public class LauncherActivity extends MortarFragmentActivity implements
-        ActionBarOwner.Activity, DrawerOwner.Activity {
+        ActionBarOwner.Activity, DrawerOwnerActivity {
 
     @Inject ActionBarOwner mActionBarOwner;
     @Inject DrawerOwner mDrawerOwner;
