@@ -41,15 +41,12 @@
         <item name="android:displayOptions">homeAsUp|showTitle</item>
     </style>
 
-    <!--dialog when large-->
     <style name="SessionEditDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_accent</item>
-        <item name="android:windowNoTitle">false</item>
-        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
-        <item name="android:windowTitleSize">?actionBarSize</item>
-        <item name="android:windowTitleBackgroundStyle">@style/DialogWindowTitleBackground</item>
+        <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/DialogWindowAnimation</item>
         <item name="android:windowSoftInputMode">stateVisible|adjustPan</item>
     </style>
@@ -58,32 +55,10 @@
         <item name="android:windowSoftInputMode">stateHidden|adjustPan</item>
     </style>
 
-    <style name="DialogWindowTitle">
-        <item name="android:maxLines">1</item>
-        <item name="android:scrollHorizontally">true</item>
-        <item name="android:textAppearance">@style/DialogWindowTitleTextAppearance</item>
-    </style>
-
-    <!--also in -large-->
-    <style name="DialogWindowTitleTextAppearance" parent="android:TextAppearance.DeviceDefault.DialogWindowTitle">
-        <item name="android:textSize">20sp</item>
-        <!--<item name="android:fontFamily">sans-serif-medium</item>-->
-        <item name="android:textColor">?android:textColorPrimaryInverse</item>
-    </style>
-
-    <style name="DialogWindowTitleBackground">
-        <item name="android:background">?colorPrimary</item>
-        <item name="android:paddingLeft">16dp</item>
-        <!--<item name="android:paddingStart">16dp</item>-->
-        <item name="android:gravity">center_vertical</item>
-        <!--<item name="android:paddingTop">0dp</item>-->
-    </style>
-
     <style name="DialogWindowAnimation" parent="android:Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/grow_fade_in_from_bottom</item>
         <!--<item name="android:windowExitAnimation">@anim/grow_fade_in_from_bottom</item>-->
     </style>
-    <!--end dialog when large-->
 
     <!-- Base themes for dialog activities -->
 

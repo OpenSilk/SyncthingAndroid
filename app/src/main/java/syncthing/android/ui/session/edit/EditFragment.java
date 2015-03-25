@@ -20,16 +20,23 @@ package syncthing.android.ui.session.edit;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Slide;
 import android.transition.TransitionManager;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.opensilk.common.mortar.ScreenScoper;
 import org.opensilk.common.mortarfragment.MortarDialogFragment;
 import org.opensilk.common.mortarfragment.MortarFragment;
 import org.opensilk.common.mortarfragment.MortarFragmentUtils;
 
+import butterknife.ButterKnife;
 import mortar.MortarScope;
 import syncthing.android.R;
 import timber.log.Timber;
@@ -186,9 +193,19 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getDialog().setTitle(getArguments().getInt("title"));
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.screen_edit_container, container, false);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        vg.addView(v);
+        return vg;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Toolbar tb = ButterKnife.findById(view, R.id.edit_toolbar);
+        tb.setTitle(getArguments().getInt("title"));
+        tb.setNavigationOnClickListener(v -> dismiss());
     }
 
 }
