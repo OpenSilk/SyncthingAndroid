@@ -146,7 +146,7 @@ public class ServiceSettings {
 
     boolean isConnectedToWhitelistedNetwork() {
         Set<String> whitelist = getPrefs().getStringSet(WIFI_NETWORKS, null);
-        if (whitelist == null) {
+        if (whitelist == null || whitelist.isEmpty()) {
             Timber.d("No whitelist found");
             return true;
         }
