@@ -21,31 +21,16 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.BatteryManager;
 
 /**
- * Created by drew on 3/21/15.
+ * Created by drew on 3/29/15.
  */
-public class ServiceBroadcastReceiver extends BroadcastReceiver {
-
+public class ChargingReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        String action = intent.getAction();
-        if (action == null) {
-            return;
-        }
-
-        switch (action) {
-            case Intent.ACTION_POWER_DISCONNECTED:
-            case Intent.ACTION_POWER_CONNECTED:
-                break;
-        }
-
-    }
-
-    void notifyService(Context context, Intent intent) {
-        intent.setComponent(new ComponentName(context, SyncthingInstance.class));
-        context.startService(intent);
+        context.startService(new Intent()
+                        .setComponent(new ComponentName(context, SyncthingInstance.class))
+                        .setAction(SyncthingInstance.REEVALUATE)
+        );
     }
 }

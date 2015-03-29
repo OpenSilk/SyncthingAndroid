@@ -59,15 +59,30 @@
             android:process=":service"/>
 
         <receiver
-            android:name=".service.ServiceBroadcastReceiver"
-            android:process=":service">
+            android:name=".service.BootReceiver"
+            android:process=":service"
+            android:enabled="false">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
+        <receiver
+            android:name=".service.ChargingReceiver"
+            android:process=":service"
+            android:enabled="false">
+            <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
 
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <receiver
+            android:name=".service.ConnectivityReceiver"
+            android:process=":service"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 

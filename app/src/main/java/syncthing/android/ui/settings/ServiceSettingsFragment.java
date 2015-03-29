@@ -26,6 +26,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
@@ -33,7 +34,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.webkit.MimeTypeMap;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -44,6 +44,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import syncthing.android.R;
+import syncthing.android.service.ReceiverHelper;
 import syncthing.android.service.ServiceSettings;
 import syncthing.android.service.SyncthingInstance;
 import syncthing.android.service.SyncthingUtils;
@@ -56,8 +57,11 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         Preference.OnPreferenceClickListener,
         Preference.OnPreferenceChangeListener {
 
+    ReceiverHelper receiverHelper;
+
     ListPreference runWhen;
     MultiSelectListPreference wifiNetwork;
+    CheckBoxPreference onlyCharging;
 
     PreferenceCategory catBetween;
 
@@ -72,6 +76,8 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
 
         addPreferencesFromResource(R.xml.prefs_service);
 
+        receiverHelper = new ReceiverHelper(getActivity());
+
         runWhen = (ListPreference) findPreference(ServiceSettings.RUN_WHEN);
         runWhen.setOnPreferenceChangeListener(this);
 
@@ -79,6 +85,9 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         String[] ssids = getWifiNetworks();
         wifiNetwork.setEntries(ssids);
         wifiNetwork.setEntryValues(ssids);
+
+        onlyCharging = (CheckBoxPreference) findPreference(ServiceSettings.ONLY_CHARGING);
+        onlyCharging.setOnPreferenceChangeListener(this);
 
         catBetween = (PreferenceCategory) findPreference("cat_between");
         hideShowRunWhenCategories(getPreferenceManager().getSharedPreferences()
@@ -106,7 +115,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.service_settings, menu);
-        boolean enabled = getPreferenceManager().getSharedPreferences().getBoolean(ServiceSettings.ENABLED, false);
+        boolean enabled = isEnabled();
         getPreferenceScreen().setEnabled(enabled);
         Switch enableSwitch = ButterKnife.findById(
                 menu.findItem(R.id.menu_enable_switch).getActionView(), R.id.action_widget_switch);
@@ -114,8 +123,9 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, isChecked).commit();
+                setEnabled(isChecked);
                 getPreferenceScreen().setEnabled(isChecked);
+                updateReceievers();
             }
         });
     }
@@ -151,6 +161,12 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         if (preference == runWhen) {
             hideShowRunWhenCategories((String) newValue);
         }
+        getView().post(new Runnable() {
+            @Override
+            public void run() {
+                updateReceievers();
+            }
+        });
         return true;
     }
 
@@ -175,6 +191,14 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         }
     }
 
+    boolean isEnabled() {
+        return getPreferenceManager().getSharedPreferences().getBoolean(ServiceSettings.ENABLED, false);
+    }
+
+    void setEnabled(boolean enabled) {
+        getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, enabled).commit();
+    }
+
     String[] getWifiNetworks() {
         List<WifiConfiguration> networks = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE)).getConfiguredNetworks();
         if (networks == null) {
@@ -185,5 +209,19 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
             ssids[ii] = networks.get(ii).SSID;
         }
         return ssids;
+    }
+
+    void updateReceievers() {
+        boolean enabled = isEnabled();
+        if (!enabled) {
+            receiverHelper.setBootReceiverEnabled(false);
+            receiverHelper.setChargingReceiverEnabled(false);
+            //receiverHelper.setConnectivityReceiverEnabled(false);
+        } else {
+            //Dont care if not allowed to run in background
+            receiverHelper.setBootReceiverEnabled(!ServiceSettings.WHEN_OPEN.equals(runWhen.getValue()));
+            //dont care if we can run whenever
+            receiverHelper.setChargingReceiverEnabled(onlyCharging.isChecked());
+        }
     }
 }
