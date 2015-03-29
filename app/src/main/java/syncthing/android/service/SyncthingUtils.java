@@ -246,13 +246,10 @@ public class SyncthingUtils {
     public static Interval getIntervalForRange(DateTime now, long start, long end) {
         DateTime daybreak = now.withTimeAtStartOfDay();
         Interval interval;
-        if (start == end) {
-            Timber.w("start and end ranges are the same!");
-            interval = new Interval(daybreak.plus(start), daybreak.plus(end));
-        } else if (start < end) {
+        if (start < end) {
             //same day
             interval = new Interval(daybreak.plus(start), daybreak.plus(end));
-        } else /*start > end*/ {
+        } else /*start >|== end*/ {
             if (now.isAfter(daybreak.plus(start))) {
                 //rolls next day
                 interval = new Interval(daybreak.plus(start), daybreak.plusDays(1).plus(end));
