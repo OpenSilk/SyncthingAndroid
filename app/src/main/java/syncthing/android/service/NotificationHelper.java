@@ -18,11 +18,15 @@
 package syncthing.android.service;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NotificationCompat;
 
 import javax.inject.Inject;
 
 import syncthing.android.R;
+import syncthing.android.ui.LauncherActivity;
 import syncthing.api.SessionScope;
 
 /**
@@ -52,7 +56,24 @@ public class NotificationHelper {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setSmallIcon(R.drawable.ic_cloud_circle_white_24dp)//TODO real icon
+                .setLargeIcon(((BitmapDrawable) service.getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap())
                 .setContentTitle(service.getString(R.string.syncthing_is_running))
+                .setContentIntent(PendingIntent.getActivity(service, 0,
+                        new Intent(service, LauncherActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        PendingIntent.FLAG_UPDATE_CURRENT)
+                )
+                //.setProgress(100, 100, false) //TODO
+                .addAction(R.drawable.ic_close_grey600_24dp,
+                        service.getResources().getString(R.string.shutdown),
+                        PendingIntent.getService(service, 0,
+                                new Intent(service, SyncthingInstance.class)
+                                    .setAction(SyncthingInstance.SHUTDOWN),
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        )
+                )
                 ;
         service.startForeground(SERVICE_NOTIFICATION, builder.build());
     }
