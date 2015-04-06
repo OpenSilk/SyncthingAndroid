@@ -1,3 +1,6 @@
 [submodule "syncthing"]
 	path = syncthing/src/github.com/syncthing/syncthing
 	url = https://github.com/syncthing/syncthing
+[submodule "go"]
+	path = golang/go
+	url = https://go.googlesource.com/go
