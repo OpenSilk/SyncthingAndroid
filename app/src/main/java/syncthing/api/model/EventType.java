@@ -38,4 +38,6 @@ public enum EventType {
     @SerializedName("DeviceRejected") DEVICE_REJECTED,
     @SerializedName("ConfigSaved") CONFIG_SAVED,
     @SerializedName("DownloadProgress") DOWNLOAD_PROGRESS,
+    @SerializedName("FolderSummary") FOLDER_SUMMARY,
+    @SerializedName("FolderCompletion") FOLDER_COMPLETION,
 }

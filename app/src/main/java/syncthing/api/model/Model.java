@@ -37,5 +37,5 @@ public class Model {
     public String invalid;
     public DateTime stateChanged;
     public boolean ignorePatterns;
-    public int version;
+    public long version;
 }

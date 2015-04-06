@@ -18,8 +18,9 @@
 package syncthing.api.model;
 
 /**
-* Created by drew on 3/17/15.
-*/
+ * TODO this is atrocious, could maybe just do a map, and cast things in SessionController
+ * Created by drew on 3/17/15.
+ */
 public class EventData {
     //STARTING
     public String home;
@@ -29,6 +30,7 @@ public class EventData {
     //REMOTE_INDEX_UPDATED
     //FOLDER_REJECTED
     //DEVICE_REJECTED
+    //FOLDER_COMPLETION
     public String device;
     //DEVICE_CONNECTED
     public String addr;
@@ -43,9 +45,13 @@ public class EventData {
     //ITEM_FINISHED
     //STATE_CHANGED
     //FOLDER_REJECTED
+    //FOLDER_SUMMARY
+    //FOLDER_COMPLETION
     public String folder;
     //REMOTE_INDEX_UPDATED
-    public long items;
+    public int items;
+    //REMOTE_INDEX_UPDATED
+    public long version;
     //LOCAL_INDEX_UPDATED
     public String flags;
     //LOCAL_INDEX_UPDATED
@@ -54,6 +60,8 @@ public class EventData {
     public String name;
     //LOCAL_INDEX_UPDATED
     public long size;
+    //LOCAL_INDEX_UPDATED
+    public int numFiles; //atm localindexupdated sends 2 kinds of events
     //ITEM_STARTED
     //ITEM_FINISHED
     public String item;
@@ -76,4 +84,8 @@ public class EventData {
     public String address;
     //TODO CONFIG_SAVED
     //TODO DOWNLOAD_PROGRESS
+    //FOLDER_SUMMARY
+    public Model summary;
+    //FOLDER_COMPLETION
+    public float completion;
 }

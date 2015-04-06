@@ -22,4 +22,8 @@ package syncthing.api.model;
  */
 public class Completion {
     public float completion;
+
+    public Completion(float completion) {
+        this.completion = completion;
+    }
 }

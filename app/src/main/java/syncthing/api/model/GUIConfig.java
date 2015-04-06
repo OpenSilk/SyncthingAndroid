@@ -34,7 +34,7 @@ public class GUIConfig implements Serializable {
     public static GUIConfig withDefaults() {
         GUIConfig c = new GUIConfig();
         c.enabled = true;
-        c.address = "127.0.0.1:8080";
+        c.address = "127.0.0.1:8384";
         return c;
     }
 }

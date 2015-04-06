@@ -115,8 +115,6 @@ public class SessionController implements EventMonitor.EventListener {
     Map<String, Event> deviceRejections = new LinkedHashMap<>();
     Map<String, Event> folderRejections = new LinkedHashMap<>();
     GuiErrors errorsList;
-    Set<String> debouncedLocalIndexes = new LinkedHashSet<>();
-    Set<String> debouncedRemoteIndexes = new LinkedHashSet<>();
 
     long prevDate;
     boolean online;
@@ -125,6 +123,7 @@ public class SessionController implements EventMonitor.EventListener {
     Subscription onlineSub;
     Subscription subspendSubscription;
     Subscription periodicRefreshSubscription;
+    Subscription onLocalIndexUpdatedSubscription;
 
     final SyncthingApi restApi;
     final EventMonitor eventMonitor;
@@ -205,7 +204,7 @@ public class SessionController implements EventMonitor.EventListener {
                 onLocalIndexUpdated(e);
                 break;
             } case REMOTE_INDEX_UPDATED: {
-                onRemoteIndexUpdated(e);
+                //pass
                 break;
             } case DEVICE_CONNECTED: {
                 refreshConnections();
@@ -227,6 +226,15 @@ public class SessionController implements EventMonitor.EventListener {
                 refreshConfig();
                 break;
             } case DOWNLOAD_PROGRESS: {
+                //TODO
+                break;
+            } case FOLDER_SUMMARY: {
+                updateModel(e.data.folder, e.data.summary);
+                postChange(Change.MODEL);
+                break;
+            } case FOLDER_COMPLETION: {
+                updateCompletion(e.data.device, e.data.folder, new Completion(e.data.completion));
+                postChange(Change.COMPLETION);
                 break;
             } case PING: {
                 //refreshSystem();
@@ -462,48 +470,17 @@ public class SessionController implements EventMonitor.EventListener {
                 );
     }
 
-    //TODO could probably do a better job here
-    void onLocalIndexUpdated(Event e) {
-        if (debouncedLocalIndexes.contains(e.data.folder)) {
-            Timber.i("Ignoring LocalIndexUpdate for %s refresh in progress", e.data.folder);
-            return;
-        }
-        debouncedLocalIndexes.add(e.data.folder);
-        Subscription s = Observable.timer(200, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                .subscribe(
-                        ii -> {
-                            refreshFolder(e.data.folder);
-                            refreshFolderStats();
-                            FolderConfig f = folders.get(e.data.folder);
-                            if (f != null) {
-                                List<Map.Entry<String, String>> needUpdate = new ArrayList<>(f.devices.size());
-                                for (FolderDeviceConfig d : f.devices) {
-                                    needUpdate.add(Pair.of(d.deviceID, f.id));
-                                }
-                                if (!needUpdate.isEmpty()) {
-                                    refreshCompletions(needUpdate);
-                                }
-                            }
-                        },
-                        this::logException,
-                        () -> debouncedLocalIndexes.remove(e.data.folder)
-                );
-    }
 
-    void onRemoteIndexUpdated(Event e) {
-        if (debouncedRemoteIndexes.contains(e.data.folder)) {
-            Timber.i("Ignoring RemoteIndexUpdate for %s refresh in progress", e.data.folder);
+    void onLocalIndexUpdated(Event e) {
+        if (onLocalIndexUpdatedSubscription != null &&
+                !onLocalIndexUpdatedSubscription.isUnsubscribed()) {
+            Timber.i("Ignoring LocalIndexUpdate... refresh in progress");
             return;
         }
-        debouncedRemoteIndexes.add(e.data.folder);
-        Subscription s = Observable.timer(200, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+        onLocalIndexUpdatedSubscription = Observable.timer(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                 .subscribe(
-                        ii -> {
-                            refreshFolder(e.data.folder);
-                            refreshCompletion(e.data.device, e.data.folder);
-                        },
-                        this::logException,
-                        () -> debouncedRemoteIndexes.remove(e.data.folder)
+                        ii -> refreshFolderStats(),
+                        this::logException
                 );
     }
 
@@ -630,6 +607,13 @@ public class SessionController implements EventMonitor.EventListener {
 
     public Model getModel(String folderName) {
         return models.get(folderName);
+    }
+
+    void updateModel(String folderName, Model model) {
+        if (models.containsKey(folderName)) {
+            models.remove(folderName);
+        }
+        models.put(folderName, model);
     }
 
     public FolderConfig getFolder(String name) {
