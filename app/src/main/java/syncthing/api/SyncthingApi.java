@@ -56,28 +56,21 @@ public interface SyncthingApi {
      * GET
      */
 
-    @GET("/rest/ping")
-    Observable<Ping> ping();
-
-    @GET("/rest/completion")
+    @GET("/rest/db/completion")
     Observable<Completion> completion(@Query("device") String device, @Query("folder") String folder);
 
-    @GET("/rest/config")
-    Observable<Config> config();
+    //@GET("/rest/db/file")
 
-    @GET("/rest/config/sync")
-    Observable<ConfigStats> configStatus();
+    @GET("/rest/db/ignores")
+    Observable<Ignores> ignores(@Query("folder") String folder);
 
-    @GET("/rest/connections")
-    Observable<ConnectionInfoMap> connections();
+    @GET("/rest/db/need")
+    Observable<Need> need(@Query("folder") String folder);
 
-    @GET("/rest/autocomplete/directory")
-    Observable<List<String>> autocompleteDirectory(@Query("current") String current);
+    @GET("/rest/db/status")
+    Observable<Model> model(@Query("folder") String folder);
 
-    //@GET("/rest/discovery")
-
-    @GET("/rest/errors")
-    Observable<GuiErrors> errors();
+    //@GET("/rest/db/browse")
 
     @GET("/rest/events")
     Observable<Event[]> events(@Query("since") long lastId);
@@ -85,86 +78,89 @@ public interface SyncthingApi {
     @GET("/rest/events")
     Observable<Event[]> events(@Query("since") long lastId, @Query("limit") int lim);
 
-    @GET("/rest/ignores")
-    Observable<Ignores> ignores(@Query("folder") String folder);
-
-    //@GET("/rest/lang")
-
-    @GET("/rest/model")
-    Observable<Model> model(@Query("folder") String folder);
-
-    @GET("/rest/need")
-    Observable<Need> need();
-
-    @GET("/rest/need")
-    Observable<Need> need(@Query("folder") String folder);
-
-    @GET("/rest/deviceid")
-    Observable<DeviceId> deviceId(@Query("id") String id);
-
-    @GET("/rest/report")
-    Observable<Report> report();
-
-    @GET("/rest/system")
-    Observable<SystemInfo> system();
-
-    //@GET("/rest/upgrade")
-
-    @GET("/rest/version")
-    Observable<Version> version();
-
     @GET("/rest/stats/device")
     Observable<DeviceStatsMap> deviceStats();
 
     @GET("/rest/stats/folder")
     Observable<FolderStatsMap> folderStats();
 
-    //@GET("/rest/filestatus")
-    //fileStatus(@Query("folder") String folder, @Query("file") String file);
+    @GET("/rest/svc/deviceid")
+    Observable<DeviceId> deviceId(@Query("id") String id);
+
+    //@GET("/rest/svc/lang")
+
+    @GET("/rest/svc/report")
+    Observable<Report> report();
+
+    @GET("/rest/system/browse")
+    Observable<List<String>> autocompleteDirectory(@Query("current") String current);
+
+    @GET("/rest/system/config")
+    Observable<Config> config();
+
+    @GET("/rest/system/config/insync")
+    Observable<ConfigStats> configStatus();
+
+    @GET("/rest/system/connections")
+    Observable<ConnectionInfoMap> connections();
+
+    //@GET("/rest/system/discovery")
+
+    @GET("/rest/system/error")
+    Observable<GuiErrors> errors();
+
+    @GET("/rest/system/ping")
+    Observable<Ping> ping();
+
+    @GET("/rest/system/status")
+    Observable<SystemInfo> system();
+
+    //@GET("/rest/system/upgrade")
+
+    @GET("/rest/system/version")
+    Observable<Version> version();
 
     /*
      * POST
      */
 
-    //@POST("/rest/ping")
+    //@POST("/rest/db/prio")
+    //Observable<Void> bump(@Query("folder") String folder, @Query("file") String file);
 
-    @POST("/rest/config")
-    Observable<Void> updateConfig(@Body Config config);
-
-    //@POST("/rest/discovery/hint")
-
-    //@POST("/rest/error")
-
-    @POST("/rest/error/clear")
-    Observable<Void> clearErrors();
-
-    @POST("/rest/ignores")
+    @POST("/rest/db/ignores")
     Observable<Ignores> updateIgnores(@Query("folder") String folder, @Body Ignores ignores);
 
-    @POST("/rest/model/override")
+    @POST("/rest/db/override")
     Observable<Void> override(@Query("folder") String folder);
 
-    //@POST("/rest/reset")
+    @POST("/rest/db/scan")
+    Observable<Void> scan(@Query("folder") String folder);
 
-    @POST("/rest/restart")
+    @POST("/rest/db/scan")
+    Observable<Void> scan(@Query("folder") String folder, @Query("sub") String subfolder);
+
+    @POST("/rest/system/config")
+    Observable<Void> updateConfig(@Body Config config);
+
+    //@POST("/rest/system/discovery")
+    //@POST("/rest/error")
+
+    @POST("/rest/system/error/clear")
+    Observable<Void> clearErrors();
+
+    //@POST("/rest/system/ping")
+    //@POST("/rest/system/reset")
+
+    @POST("/rest/system/restart")
     Observable<Void> restart();
 
-    @POST("/rest/shutdown")
+    @POST("/rest/system/shutdown")
     Observable<Void> shutdown();
 
-    //@POST("/rest/upgrade")
+    //@POST("/rest/system/upgrade")
 
     @POST("/rest/scan")
     Observable<Void> scan();
-
-    @POST("/rest/scan")
-    Observable<Void> scan(@Query("folder") String folder);
-
-    @POST("/rest/scan")
-    Observable<Void> scan(@Query("folder") String folder, @Query("sub") String subfolder);
-
-    @POST("/rest/bump")
-    Observable<Void> bump(@Query("folder") String folder);
 
     /*
      * Misc
