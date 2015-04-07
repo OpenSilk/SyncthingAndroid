@@ -18,7 +18,10 @@
 package syncthing.android.ui;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -40,8 +43,13 @@ import butterknife.InjectView;
 import butterknife.Optional;
 import mortar.MortarScope;
 import mortar.dagger2support.DaggerService;
+import rx.Subscription;
+import rx.android.observables.AndroidObservable;
+import rx.functions.Action1;
+import syncthing.android.AppSettings;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/1/15.
@@ -51,10 +59,11 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
     @Inject ActionBarOwner mActionBarOwner;
     @Inject DrawerOwner mDrawerOwner;
+    @Inject AppSettings mSettings;
 
     ActionBarDrawerToggle mDrawerToggle;
     protected ActionBarOwner.MenuConfig mMenuConfig;
-
+    Subscription mChargingSubscription;
 
     @InjectView(R.id.drawer_layout) @Optional DrawerLayout mDrawerLayout;
     @InjectView(R.id.drawer) ViewGroup mDrawer;
@@ -89,7 +98,9 @@ public class LauncherActivity extends MortarFragmentActivity implements
             mDrawerOwner.takeView(this);
         }
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//TODO temporary
+        if (mSettings.keepScreenOn()) {
+            subscribeChargingState();
+        }
 
     }
 
@@ -99,6 +110,9 @@ public class LauncherActivity extends MortarFragmentActivity implements
         mActionBarOwner.dropView(this);
         mDrawerOwner.dropView(this);//Noop if no view taken
         mMenuConfig = null;
+        if (mChargingSubscription != null) {
+            mChargingSubscription.unsubscribe();
+        }
     }
 
     @Override
@@ -228,6 +242,28 @@ public class LauncherActivity extends MortarFragmentActivity implements
         public void onDrawerClosed(View view) {
             super.onDrawerClosed(view);
         }
+    }
+
+    /*
+     * Battery
+     */
+
+    void subscribeChargingState() {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        mChargingSubscription = AndroidObservable.bindActivity(this,AndroidObservable.fromBroadcast(this, filter))
+                .subscribe(new Action1<Intent>() {
+                               @Override
+                               public void call(Intent intent) {
+                                   int status = intent != null ? intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) : 0;
+                                   Timber.d("received BATTERY_CHANGED plugged=%s", status != 0);
+                                   if (mSettings.keepScreenOn() && status != 0) {
+                                       getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                                   } else {
+                                       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                                   }
+                               }
+                           }
+                );
     }
 
 }

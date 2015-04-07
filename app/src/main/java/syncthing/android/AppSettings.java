@@ -49,6 +49,7 @@ public class AppSettings {
 
     public static final String DEFAULT_CREDENTIALS = "TRANSIENT_default_credentials";
     public static final String SAVED_CREDENTIALS = "TRANSIENT_saved_credentials";
+    public static final String KEEP_SCREEN_ON = "keep_screen_on";
 
     final Gson gson;
     final Context appContext;
@@ -63,6 +64,10 @@ public class AppSettings {
 
     public String getString(String pref, String def) {
         return prefs.getString(pref, def);
+    }
+
+    public boolean getBoolean(String pref, boolean def) {
+        return prefs.getBoolean(pref, def);
     }
 
     public void saveString(String pref, String val) {
@@ -139,6 +144,10 @@ public class AppSettings {
 
     public void setDefaultCredentials(Credentials credentials) {
         saveString(DEFAULT_CREDENTIALS, gson.toJson(credentials));
+    }
+
+    public boolean keepScreenOn() {
+        return getBoolean(KEEP_SCREEN_ON, false);
     }
 
 }
