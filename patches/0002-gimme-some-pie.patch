@@ -1,0 +1,26 @@
+From c88ad0112e64f63875671ae513fadeaffe1f3aa5 Mon Sep 17 00:00:00 2001
+From: Andrew Sutherland <dr3wsuth3rland@gmail.com>
+Date: Tue, 7 Apr 2015 09:28:12 -0500
+Subject: [PATCH 2/4] gimme some pie
+
+---
+ build.go | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/build.go b/build.go
+index 2287f28..7dd7e26 100644
+--- a/build.go
++++ b/build.go
+@@ -331,6 +331,9 @@ func ldflags() string {
+ 	b.WriteString(fmt.Sprintf(" -X main.BuildUser %s", buildUser()))
+ 	b.WriteString(fmt.Sprintf(" -X main.BuildHost %s", buildHost()))
+ 	b.WriteString(fmt.Sprintf(" -X main.BuildEnv %s", buildEnvironment()))
++	if goos == "android" {
++		b.WriteString(` -extldflags '-fPIE -pie'`)
++	}
+ 	return b.String()
+ }
+ 
+-- 
+2.3.4
+

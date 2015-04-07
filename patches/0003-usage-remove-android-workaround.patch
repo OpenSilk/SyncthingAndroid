@@ -1,0 +1,43 @@
+From 1eae481df7fbdb6d241314f828c28c6643157fb2 Mon Sep 17 00:00:00 2001
+From: Andrew Sutherland <dr3wsuth3rland@gmail.com>
+Date: Tue, 7 Apr 2015 09:28:53 -0500
+Subject: [PATCH 3/4] usage: remove android workaround
+
+---
+ cmd/syncthing/usage_report.go | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/cmd/syncthing/usage_report.go b/cmd/syncthing/usage_report.go
+index 1f7ffed..ee27619 100644
+--- a/cmd/syncthing/usage_report.go
++++ b/cmd/syncthing/usage_report.go
+@@ -11,7 +11,6 @@ import (
+ 	"crypto/rand"
+ 	"crypto/sha256"
+ 	"encoding/json"
+-	"net"
+ 	"net/http"
+ 	"runtime"
+ 	"time"
+@@ -80,17 +79,7 @@ func sendUsageReport(m *model.Model) error {
+ 	var b bytes.Buffer
+ 	json.NewEncoder(&b).Encode(d)
+ 
+-	var client = http.DefaultClient
+-	if BuildEnv == "android" {
+-		// This works around the lack of DNS resolution on Android... :(
+-		tr := &http.Transport{
+-			Dial: func(network, addr string) (net.Conn, error) {
+-				return net.Dial(network, "194.126.249.13:443")
+-			},
+-		}
+-		client = &http.Client{Transport: tr}
+-	}
+-	_, err := client.Post("https://data.syncthing.net/newdata", "application/json", &b)
++	_, err := http.DefaultClient.Post("https://data.syncthing.net/newdata", "application/json", &b)
+ 	return err
+ }
+ 
+-- 
+2.3.4
+

@@ -1,0 +1,27 @@
+From 44c904dbfe7a3dcf0ef058cf88c07d2743ba8654 Mon Sep 17 00:00:00 2001
+From: Andrew Sutherland <dr3wsuth3rland@gmail.com>
+Date: Mon, 6 Apr 2015 22:02:57 -0500
+Subject: [PATCH 1/4] fix build with -no-upgrade
+
+---
+ internal/upgrade/upgrade_unsupp.go | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/internal/upgrade/upgrade_unsupp.go b/internal/upgrade/upgrade_unsupp.go
+index bbb3d65..94d82b7 100644
+--- a/internal/upgrade/upgrade_unsupp.go
++++ b/internal/upgrade/upgrade_unsupp.go
+@@ -16,6 +16,10 @@ func upgradeToURL(binary, url string) error {
+ 	return ErrUpgradeUnsupported
+ }
+ 
++func LatestGithubRelease(version string) (Release, error) {
++	return Release{}, ErrUpgradeUnsupported
++}
++
+ func LatestRelease(prerelease bool) (Release, error) {
+ 	return Release{}, ErrUpgradeUnsupported
+ }
+-- 
+2.3.4
+
