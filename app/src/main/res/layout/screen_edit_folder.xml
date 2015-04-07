@@ -351,7 +351,7 @@
                 android:id="@+id/edit_external_versioning_command"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/session.edit.EditText.Number"/>
+                style="@style/session.edit.EditText"/>
 
             <TextView
                 android:id="@+id/desc_external_versioning_command"
