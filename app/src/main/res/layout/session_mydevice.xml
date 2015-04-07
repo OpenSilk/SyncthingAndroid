@@ -152,6 +152,24 @@
                 style="@style/session.RecyclerCardRow">
 
                 <TextView
+                    android:id="@+id/uptime_title"
+                    android:text="@string/uptime"
+                    style="@style/session.RecyclerTextLeftColumn"
+                    />
+
+                <TextView
+                    android:id="@+id/uptime"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="v0.10"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
                     android:id="@+id/version_title"
                     android:text="@string/version"
                     style="@style/session.RecyclerTextLeftColumn"

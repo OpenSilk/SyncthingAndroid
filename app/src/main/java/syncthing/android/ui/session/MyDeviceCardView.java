@@ -26,6 +26,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.Duration;
+import org.joda.time.format.PeriodFormat;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.DecimalFormat;
 
@@ -59,10 +63,12 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     @InjectView(R.id.cpu_usage) TextView cpu;
     @InjectView(R.id.global_discovery_container) ViewGroup globalDiscoveryHider;
     @InjectView(R.id.global_discovery) TextView globalDiscovery;
+    @InjectView(R.id.uptime) TextView uptime;
     @InjectView(R.id.version) TextView version;
 
     final SessionPresenter presenter;
     final DecimalFormat cpuFormat;
+    final PeriodFormatter uptimeFormatter;
 
     Subscription identiconSubscription;
     Subscription connectionSubscription;
@@ -76,6 +82,14 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
         } else {
             presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
         }
+        uptimeFormatter = new PeriodFormatterBuilder()
+                .appendDays()
+                .appendSuffix(" d")
+                .appendHours()
+                .appendSuffix(" h")
+                .appendSeconds()
+                .appendSuffix(" s")
+                .toFormatter();
     }
 
     @Override
@@ -157,6 +171,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
         }
         memory.setText(SyncthingUtils.humanReadableSize(sys.sys));
         cpu.setText(getResources().getString(R.string.cpu_percent, cpuFormat.format(sys.cpuPercent)));
+        uptime.setText(uptimeFormatter.print(Duration.standardSeconds(sys.uptime).toPeriod()));
 
         if (sys.extAnnounceOK != null && sys.announceServersTotal > 0) {
             globalDiscoveryHider.setVisibility(VISIBLE);
