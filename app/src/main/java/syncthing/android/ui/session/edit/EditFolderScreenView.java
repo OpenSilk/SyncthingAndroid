@@ -83,6 +83,11 @@ public class EditFolderScreenView extends ScrollView {
     @InjectView(R.id.desc_staggered_max_age) TextView descStaggeredVerMaxAge;
     @InjectView(R.id.error_staggered_max_age_invalid) TextView errorStaggeredMaxAgeInvalid;
     @InjectView(R.id.edit_staggered_path) EditText editStaggeredVerPath;
+    @InjectView(R.id.radio_external_versioning) RadioButton rdioExternalVer;
+    @InjectView(R.id.external_versioning_extra) ViewGroup externalVerExtra;
+    @InjectView(R.id.edit_external_versioning_command) EditText editExternalVerCmd;
+    @InjectView(R.id.desc_external_versioning_command) TextView descExternalVerCmd;
+    @InjectView(R.id.error_external_versioning_command_blank) TextView errorExternalVerCmdBlank;
     @InjectView(R.id.share_devices_container) ViewGroup sharedDevicesContainer;
     @InjectView(R.id.add_warning) View addingWarning;
     @InjectView(R.id.btn_delete) Button deleteBtn;
@@ -166,6 +171,14 @@ public class EditFolderScreenView extends ScrollView {
                     folder.versioning.params.versionPath = editStaggeredVerPath.getText().toString();
                 }
                 break;
+            case R.id.radio_external_versioning:
+                folder.versioning = new VersioningConfig();
+                folder.versioning.type = VersioningType.EXTERNAL;
+                if (!presenter.validateExternalVersioningCmd(editExternalVerCmd.getText().toString())) {
+                    return;
+                }
+                folder.versioning.params.command = editExternalVerCmd.getText().toString();
+                break;
             case R.id.radio_no_versioning:
             default:
                 folder.versioning = new VersioningConfig();
@@ -217,6 +230,10 @@ public class EditFolderScreenView extends ScrollView {
                     editStaggeredVerMaxAge.setText(SyncthingUtils.secondsToDays(folder.versioning.params.maxAge));
                     editStaggeredVerPath.setText(folder.versioning.params.versionPath);
                     break;
+                case EXTERNAL:
+                    rdioExternalVer.setChecked(true);
+                    editExternalVerCmd.setText(folder.versioning.params.command);
+                    break;
             }
 
             addingWarning.setVisibility(GONE);
@@ -263,75 +280,64 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_folder_id)
     void onFolderIdChanged(CharSequence text) {
         if (isAdd && !StringUtils.isEmpty(text)) {
-            if (presenter.validateFolderId(text)) {
-                descFolderId.setVisibility(VISIBLE);
-                errorFolderIdBlank.setVisibility(GONE);
-                errorFolderIdUnique.setVisibility(GONE);
-                errorFolderIdInvalid.setVisibility(GONE);
-            }
+            presenter.validateFolderId(text);
         }
     }
 
-    void notifyEmptyFolderId() {
-        descFolderId.setVisibility(GONE);
-        errorFolderIdBlank.setVisibility(VISIBLE);
+    void notifyEmptyFolderId(boolean valid) {
+        descFolderId.setVisibility(valid ? VISIBLE : GONE );
+        errorFolderIdBlank.setVisibility(valid ? GONE : VISIBLE);
         errorFolderIdUnique.setVisibility(GONE);
         errorFolderIdInvalid.setVisibility(GONE);
     }
 
-    void notifyInvalidFolderId() {
-        descFolderId.setVisibility(GONE);
+    void notifyInvalidFolderId(boolean valid) {
+        descFolderId.setVisibility(valid ? VISIBLE : GONE);
         errorFolderIdBlank.setVisibility(GONE);
         errorFolderIdUnique.setVisibility(GONE);
-        errorFolderIdInvalid.setVisibility(VISIBLE);
+        errorFolderIdInvalid.setVisibility(valid ? GONE : VISIBLE);
     }
 
-    void notifyNotUniqueFolderId() {
-        descFolderId.setVisibility(GONE);
+    void notifyNotUniqueFolderId(boolean valid) {
+        descFolderId.setVisibility(valid ? VISIBLE : GONE);
         errorFolderIdBlank.setVisibility(GONE);
-        errorFolderIdUnique.setVisibility(VISIBLE);
+        errorFolderIdUnique.setVisibility(valid ? GONE : VISIBLE);
         errorFolderIdInvalid.setVisibility(GONE);
     }
 
-    void notifyEmptyFolderPath() {
-        descFolderPath.setVisibility(GONE);
-        errorFolderPathBlank.setVisibility(VISIBLE);
+    void notifyEmptyFolderPath(boolean valid) {
+        descFolderPath.setVisibility(valid ? VISIBLE : GONE);
+        errorFolderPathBlank.setVisibility(valid ? GONE : VISIBLE);
     }
 
     @OnTextChanged(R.id.edit_rescan_interval)
     void onRescanIntrvlChanged(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            if (presenter.validateRescanInterval(text)) {
-                errorRescanIntrvl.setVisibility(GONE);
-            }
+            presenter.validateRescanInterval(text);
         }
     }
 
-    void notifyInvalidRescanInterval() {
-        errorRescanIntrvl.setVisibility(VISIBLE);
+    void notifyInvalidRescanInterval(boolean valid) {
+        errorRescanIntrvl.setVisibility(valid ? GONE : VISIBLE);
     }
 
     @OnTextChanged(R.id.edit_simple_versioning_keep)
     void onSimpleVerKeepChanged(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            if (presenter.validateSimpleVersioningKeep(text)) {
-                descSimpleVerKeep.setVisibility(VISIBLE);
-                errorSimpleVerKeepBlank.setVisibility(GONE);
-                errorSimpleVerKeepInvalid.setVisibility(GONE);
-            }
+            presenter.validateSimpleVersioningKeep(text);
         }
     }
 
-    void notifySimpleVersioningKeepEmpty() {
-        descSimpleVerKeep.setVisibility(GONE);
-        errorSimpleVerKeepBlank.setVisibility(VISIBLE);
+    void notifySimpleVersioningKeepEmpty(boolean valid) {
+        descSimpleVerKeep.setVisibility(valid ? VISIBLE : GONE);
+        errorSimpleVerKeepBlank.setVisibility(valid ? GONE : VISIBLE);
         errorSimpleVerKeepInvalid.setVisibility(GONE);
     }
 
-    void notifySimpleVersioningKeepInvalid() {
-        descSimpleVerKeep.setVisibility(GONE);
+    void notifySimpleVersioningKeepInvalid(boolean valid) {
+        descSimpleVerKeep.setVisibility(valid ? VISIBLE : GONE);
         errorSimpleVerKeepBlank.setVisibility(GONE);
-        errorSimpleVerKeepInvalid.setVisibility(VISIBLE);
+        errorSimpleVerKeepInvalid.setVisibility(valid ? GONE : VISIBLE);
     }
 
     @OnTextChanged(R.id.edit_staggered_max_age)
@@ -341,9 +347,19 @@ public class EditFolderScreenView extends ScrollView {
         }
     }
 
-    void notifyStaggeredMaxAgeInvalid() {
-        descStaggeredVerMaxAge.setVisibility(GONE);
-        errorStaggeredMaxAgeInvalid.setVisibility(GONE);
+    void notifyStaggeredMaxAgeInvalid(boolean valid) {
+        descStaggeredVerMaxAge.setVisibility(valid ? VISIBLE : GONE);
+        errorStaggeredMaxAgeInvalid.setVisibility(valid ? GONE : VISIBLE);
+    }
+
+    @OnTextChanged(R.id.edit_external_versioning_command)
+    void onExternalVerCmdChange(CharSequence text) {
+        presenter.validateExternalVersioningCmd(text);
+    }
+
+    void notifyExternalVersioningCmdInvalid(boolean valid) {
+        descExternalVerCmd.setVisibility(valid ? VISIBLE : GONE);
+        errorExternalVerCmdBlank.setVisibility(valid ? GONE : VISIBLE);
     }
 
     final RadioGroup.OnCheckedChangeListener versioningChangeListener = new RadioGroup.OnCheckedChangeListener() {
@@ -353,15 +369,23 @@ public class EditFolderScreenView extends ScrollView {
                 case R.id.radio_simple_versioning:
                     simpleVerExtra.setVisibility(VISIBLE);
                     staggeredVerExtra.setVisibility(GONE);
+                    externalVerExtra.setVisibility(GONE);
                     break;
                 case R.id.radio_staggered_versioning:
                     simpleVerExtra.setVisibility(GONE);
                     staggeredVerExtra.setVisibility(VISIBLE);
+                    externalVerExtra.setVisibility(GONE);
+                    break;
+                case R.id.radio_external_versioning:
+                    simpleVerExtra.setVisibility(GONE);
+                    staggeredVerExtra.setVisibility(GONE);
+                    externalVerExtra.setVisibility(VISIBLE);
                     break;
                 case R.id.radio_no_versioning:
                 default:
                     simpleVerExtra.setVisibility(GONE);
                     staggeredVerExtra.setVisibility(GONE);
+                    externalVerExtra.setVisibility(GONE);
                     break;
             }
         }

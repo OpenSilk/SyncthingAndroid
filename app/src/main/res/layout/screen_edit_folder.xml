@@ -192,6 +192,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/staggered_file_versioning"/>
 
+            <RadioButton
+                android:id="@+id/radio_external_versioning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/external_file_versioning"/>
+
         </RadioGroup>
 
         <LinearLayout
@@ -318,6 +324,49 @@
                 android:layout_height="wrap_content"
                 android:text="@string/path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder"
                 style="@style/session.edit.FieldDescription"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/external_versioning_extra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/command"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_external_versioning_command"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.edit.EditText.Number"/>
+
+            <TextView
+                android:id="@+id/desc_external_versioning_command"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_first_command_line_parameter_is_the_folder_path_and_the_second_parameter_is_the_relative_path_in_the_folder"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:id="@+id/error_external_versioning_command_blank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_path_cannot_be_blank"
+                style="@style/session.edit.FieldError"
+                tools:visibility="visible"/>
 
         </LinearLayout>
 

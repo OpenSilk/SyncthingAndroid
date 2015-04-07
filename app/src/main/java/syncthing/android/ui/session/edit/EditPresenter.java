@@ -77,7 +77,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
 
     protected void onSavefailed(Throwable e) {
         sessionPresenter.dismissSavingDialog();
-        sessionPresenter.showError(R.string.operation_failed, e.getMessage());
+        sessionPresenter.showError(R.string.error, e.getMessage());
     }
 
     protected  void dismissDialog() {

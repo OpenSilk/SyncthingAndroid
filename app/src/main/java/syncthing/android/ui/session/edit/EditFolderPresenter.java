@@ -95,15 +95,18 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
 
     boolean validateFolderId(CharSequence text) {
         if (StringUtils.isEmpty(text)) {
-            getView().notifyEmptyFolderId();
+            getView().notifyEmptyFolderId(false);
             return false;
         } else if (!text.toString().matches("^[-.\\w]{1,64}$")) {
-            getView().notifyInvalidFolderId();
+            getView().notifyInvalidFolderId(false);
             return false;
         } else if (!isFolderIdUnique(text, controller.getFolders())) {
-            getView().notifyNotUniqueFolderId();
+            getView().notifyNotUniqueFolderId(false);
             return false;
         } else {
+            getView().notifyEmptyFolderId(true);
+            getView().notifyInvalidFolderId(true);
+            getView().notifyNotUniqueFolderId(true);
             return true;
         }
     }
@@ -114,44 +117,63 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     }
 
     boolean validateFolderPath(CharSequence text) {
+        boolean valid;
         if (StringUtils.isEmpty(text)) {
-            getView().notifyEmptyFolderPath();
-            return false;
+            valid = false;
         } else {
-            return true;
+            valid = true;
         }
+        getView().notifyEmptyFolderPath(valid);
+        return valid;
     }
 
     boolean validateRescanInterval(CharSequence text) {
+        boolean valid;
         if (!StringUtils.isNumeric(text) || Integer.decode(text.toString()) < 0) {
-            getView().notifyInvalidRescanInterval();
-            return false;
+            valid = false;
         } else {
-            return true;
+            valid = true;
         }
+        getView().notifyInvalidRescanInterval(valid);
+        return valid;
     }
 
     boolean validateSimpleVersioningKeep(CharSequence text) {
         if (StringUtils.isEmpty(text) || !StringUtils.isNumeric(text)) {
-            getView().notifySimpleVersioningKeepEmpty();
+            getView().notifySimpleVersioningKeepEmpty(false);
             return false;
         } else if (!StringUtils.isNumeric(text) || Integer.decode(text.toString()) < 1) {
-            getView().notifySimpleVersioningKeepInvalid();
+            getView().notifySimpleVersioningKeepInvalid(false);
             return false;
         } else {
+            getView().notifySimpleVersioningKeepEmpty(true);
+            getView().notifySimpleVersioningKeepInvalid(true);
             return true;
         }
     }
 
     boolean validateStaggeredMaxAge(CharSequence text) {
+        boolean valid;
         if (StringUtils.isEmpty(text)
                 || !StringUtils.isNumeric(text)
                 || Integer.decode(text.toString()) < 0) {
-            getView().notifyStaggeredMaxAgeInvalid();
-            return false;
+            valid = false;
         } else {
-            return true;
+            valid = true;
         }
+        getView().notifyStaggeredMaxAgeInvalid(valid);
+        return valid;
+    }
+
+    boolean validateExternalVersioningCmd(CharSequence text) {
+        boolean valid;
+        if (StringUtils.isEmpty(text)) {
+            valid = false;
+        } else {
+            valid = true;
+        }
+        getView().notifyExternalVersioningCmdInvalid(valid);
+        return valid;
     }
 
     void saveFolder() {
