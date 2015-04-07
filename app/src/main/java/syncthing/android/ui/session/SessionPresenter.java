@@ -151,7 +151,6 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             case FAILURE:
                 if (hasView()) {
                     //controller has given up
-                    getView().setEmptyText(R.string.could_not_connect);
                     getView().setListEmpty(true, true);
                     dismissRestartingDialog();
                 }

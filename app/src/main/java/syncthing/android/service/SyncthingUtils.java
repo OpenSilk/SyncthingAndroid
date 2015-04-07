@@ -308,7 +308,7 @@ public class SyncthingUtils {
                     .show();
         } catch (IOException|RuntimeException e) {
             FileUtils.deleteQuietly(zipFile);
-            Toast.makeText(context, R.string.operation_failed, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.error, Toast.LENGTH_LONG).show();
         } finally {
             FileUtils.deleteQuietly(tmpDir);
         }
@@ -330,7 +330,7 @@ public class SyncthingUtils {
                 try {
                     FileUtils.cleanDirectory(configDir);
                 } catch (IOException e) {
-                    Toast.makeText(context, R.string.operation_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.error, Toast.LENGTH_LONG).show();
                     return;
                 }
             }
@@ -348,7 +348,7 @@ public class SyncthingUtils {
             Toast.makeText(context, R.string.config_imported, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             FileUtils.deleteQuietly(configDir);
-            Toast.makeText(context, R.string.operation_failed, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.error, Toast.LENGTH_LONG).show();
         } finally {
             IOUtils.closeQuietly(is);
         }
@@ -366,7 +366,7 @@ public class SyncthingUtils {
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, id);
-        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.send_device_id_to)));
+        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share)));
     }
 
 }

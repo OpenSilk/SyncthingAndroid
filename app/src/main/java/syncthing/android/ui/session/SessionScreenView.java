@@ -115,7 +115,7 @@ public class SessionScreenView extends RecyclerListFrame {
     }
 
     void showRestartDialog() {
-        showProgressDialog(getResources().getString(R.string.restarting));
+        showProgressDialog(getResources().getString(R.string.syncthing_is_restarting));
     }
 
     void dismissRestartDialog() {
