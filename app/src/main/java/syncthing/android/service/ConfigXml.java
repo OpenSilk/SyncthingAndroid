@@ -67,34 +67,12 @@ public class ConfigXml {
 
     /**
      * Updates the config file.
-     * <p/>
-     * Coming from 0.2.0 and earlier, globalAnnounceServer value "announce.syncthing.net:22025" is
-     * replaced with "194.126.249.5:22025" (as domain resolve is broken).
-     * <p/>
-     * Coming from 0.3.0 and earlier, the ignorePerms flag is set to true on every folder.
      */
     public void updateIfNeeded() {
         Timber.d("Checking for needed config updates");
         boolean changed = false;
         Element options = (Element) mConfig.getDocumentElement()
                 .getElementsByTagName("options").item(0);
-
-        // Hardcode default globalAnnounceServer ip.
-        NodeList globalAnnounceServers = options.getElementsByTagName("globalAnnounceServer");
-        if (globalAnnounceServers != null) {
-            for (int ii=0; ii<globalAnnounceServers.getLength(); ii++) {
-                Node e = globalAnnounceServers.item(ii);
-                if (e.getTextContent().equals("udp4://announce.syncthing.net:22026")) {
-                    Timber.d("Replacing globalAnnounceServer host with ip");
-                    e.setTextContent("udp4://194.126.249.5:22026");
-                    changed = true;
-                } else if (e.getTextContent().equals("udp6://announce-v6.syncthing.net:22026")) {
-//                    Timber.d("Replacing globalAnnounceServer IPv6 host with ip");
-//                    e.setTextContent("udp6://[2001:470:28:4d6::5]:22026");
-//                    changed = true;
-                }
-            }
-        }
 
         //disable start browser
         NodeList startBrowser = options.getElementsByTagName("startBrowser");
