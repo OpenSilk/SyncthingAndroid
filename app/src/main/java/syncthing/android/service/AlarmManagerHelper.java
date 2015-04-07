@@ -75,6 +75,7 @@ public class AlarmManagerHelper {
 
     void cancelDelayedShutdown() {
         if (shudownScheduled) {
+            Timber.d("Canceling delayed shutdown");
             shudownScheduled = false;
             alarmManager.cancel(shutdownIntent);
         }
