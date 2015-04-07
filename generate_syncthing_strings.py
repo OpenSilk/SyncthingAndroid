@@ -7,12 +7,7 @@ from collections import OrderedDict
 import re
 import string
 
-try:
-    script, base_path = sys.argv
-except:
-    print("Usage %s <syncthing_repo_path>" % sys.argv[0])
-    exit()
-
+base_path = "syncthing/src/github.com/syncthing/syncthing"
 langdir = "gui/assets/lang"
 resdir = "app/src/main/res"
 resfile = "strings-syncthing.xml"

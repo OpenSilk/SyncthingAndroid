@@ -10,6 +10,7 @@
     <string name="addresses">Adresser</string>
     <string name="all_data">Alle data</string>
     <string name="allow_anonymous_usage_reporting">Tillat Anonym Innsamling Av Brukerdata?</string>
+    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
     <string name="anonymous_usage_reporting">Anonym Innsamling Av Brukerdata</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Enheter konfigurert på en introduksjonsenhet vil også bli lagt til denne enheten.</string>
     <string name="api_key">API-nøkkel</string>
@@ -17,13 +18,13 @@
     <string name="bugs">Programfeil</string>
     <string name="changelog">Endringslog</string>
     <string name="close">Lukk</string>
+    <string name="command">Kommando</string>
     <string name="comment_when_used_at_the_start_of_a_line">Kommentar, når det blir brukt i starten av en linje.</string>
     <string name="compression">Komprimering</string>
-    <string name="compression_is_recommended_in_most_setups">Komprimering er anbefalt i de fleste tilfeller.</string>
     <string name="connection_error">Tilkoblingsfeil</string>
     <string name="copied_from_elsewhere">Kopiert fra et annet sted</string>
     <string name="copied_from_original">Kopiert fra original</string>
-    <string name="copyright_2014_jakob_borg_and_the_following_contributors">Copyright © 2014 Jakob Borg og følgende Bidragsytere:</string>
+    <string name="copyright_2015_the_following_contributors">Kopirett © 2015 de følgende bidragsytere:</string>
     <string name="cpu_utilization">CPU-utnyttelse</string>
     <string name="delete">Slett</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Enhet %1$s (%2$s) ønsker å koble seg til. Legg til ny enhet?</string>
@@ -45,9 +46,10 @@
     <string name="enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address"> Skriv inn kommaseparerte \"ip:port\"-adresser, eller \"dynamic\" for å automatisk finne adressen.</string>
     <string name="enter_ignore_patterns_one_per_line">Skriv inn mønster som skal utelates, ett per linje.</string>
     <string name="error">Feilmelding</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_filesystems">Ignorer bit som styrer filtilgang når en ser etter endringer. Bruk på FAT-filsystem.</string>
+    <string name="external_file_versioning">Ekstern versjonskontroll</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
     <string name="file_versioning">Versjonskontroll</string>
-    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Filer blir flyttet til tidsstemplede versjoner i en .stversions-mappe når de blir erstattet eller slettet av syncthing.</string>
+    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Filer er beskyttet mot endringer som er gjort på andre enheter, men endringer som er gjort på denne enheten blir sendt til resten av gruppen.</string>
     <string name="folder_id">Mappe ID</string>
     <string name="folder_master">Styrende Mappe</string>
@@ -61,7 +63,6 @@
     <string name="gui_authentication_password">GUI Passord</string>
     <string name="gui_authentication_user">GUI Bruker</string>
     <string name="gui_listen_addresses">GUI Lytteadresse</string>
-    <string name="idle">Pause</string>
     <string name="ignore">Ignorer</string>
     <string name="ignore_patterns">Utelatelsesmønster</string>
     <string name="ignore_permissions">Ignorer Tilgangsbit</string>
@@ -71,10 +72,8 @@
     <string name="items">element</string>
     <string name="keep_versions">Behold Versjoner</string>
     <string name="last_file_received">Sist Mottatte Fil</string>
-    <string name="last_file_synced">Sist Synkroniserte Fil</string>
     <string name="last_seen">Sist sett</string>
     <string name="later">Senere</string>
-    <string name="latest_release">Nyeste Versjon</string>
     <string name="local_discovery">Lokal Søking</string>
     <string name="local_state">Lokal Tilstand</string>
     <string name="maximum_age">Maksimal Levetid</string>
@@ -88,9 +87,7 @@
     <string name="no_file_versioning">Ingen Versjonskontroll</string>
     <string name="notice">Merknad</string>
     <string name="off">Av</string>
-    <string name="offline">Frakobla</string>
     <string name="ok">OK</string>
-    <string name="online">Tilkobla</string>
     <string name="out_of_sync">Ikke Synkronisert</string>
     <string name="out_of_sync_items">Ikke Synkroniserte Element</string>
     <string name="outgoing_rate_limit_kibs">Utgående Hastighetsbegrensning (KiB/s)</string>
@@ -133,9 +130,7 @@
     <string name="start_browser">Start Nettleser</string>
     <string name="stopped">Stoppa</string>
     <string name="support">Brukerstøtte</string>
-    <string name="support_forum">Brukerstøtte / Forum</string>
     <string name="sync_protocol_listen_addresses">Lytteadresse For Synkroniseringsprotokoll</string>
-    <string name="synchronization">Synkronisering</string>
     <string name="syncing">Synkroniserer</string>
     <string name="syncthing_has_been_shut_down">Syncthing har blitt slått av.</string>
     <string name="syncthing_includes_the_following_software_or_portions_thereof">Syncthing inkluderer helt eller delvis følgende programvare:</string>
@@ -149,6 +144,7 @@
     <string name="the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored">Enhet-IDen lagt til her kan hentes fram via \"Rediger > Vis ID\"-dialogboksen på den andre enheten. Mellomrom og bindestrek er valgfritt (blir ignorert).</string>
     <string name="the_encrypted_usage_report_is_sent_daily_it_is_used_to_track_common_platforms_folder_sizes_and_app_versions_if_the_reported_data_set_is_changed_you_will_be_prompted_with_this_dialog_again">Kryptert informasjon om bruken av programmet blir gjort daglig. Dette blir brukt til å følge med på vanlig brukte systemoppsett, størrelser på mapper, og versjoner av programmet. Om datasettet endrer seg vil denne dialogboksen dukke opp og du vil bli bedt om å godkjenne dette.</string>
     <string name="the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional">IDen for denne enheten er ikke godkjent. Det bør være 52 eller 56 tegn bestående av bokstaver og tall, valgfritt med mellomrom og bindestrek.</string>
+    <string name="the_first_command_line_parameter_is_the_folder_path_and_the_second_parameter_is_the_relative_path_in_the_folder">The first command line parameter is the folder path and the second parameter is the relative path in the folder.</string>
     <string name="the_folder_id_cannot_be_blank">Mappe-ID kan ikke være tom.</string>
     <string name="the_folder_id_must_be_a_short_identifier_64_characters_or_less_consisting_of_letters_numbers_and_the_dot_dash_and_underscode_characters_only">Mappe-IDen må være et kort kjennemerke (64 tegn eller mindre) bestående kun av bokstaver, tall og tegnene punktum (.), mellomrom (-) og strek (_).</string>
     <string name="the_folder_id_must_be_unique">Mappe-ID må være unik.</string>
@@ -158,8 +154,8 @@
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Maksimal tid å beholde en versjon (i dager, sett til 0 for å beholde versjoner på ubegrenset tid).</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Antall gamle versjoner å beholde, per fil.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Antall versjoner må være et tall og kan ikke være tomt.</string>
+    <string name="the_path_cannot_be_blank">Plasseringen kan ikke være tom.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Antall sekund i skanneintervallet kan ikke være negativt.</string>
-    <string name="the_rescan_interval_must_be_at_least_5_seconds">Skanneintervallet må være minst 5 sekund.</string>
     <string name="unknown">Ukjent</string>
     <string name="unshared">Ikke delt</string>
     <string name="unused">Ikke i bruk</string>
@@ -167,7 +163,6 @@
     <string name="upgrade_to_version">Oppgrader Til %1$s</string>
     <string name="upgrading">Oppgraderer</string>
     <string name="upload_rate">Opplastingsrate</string>
-    <string name="use_compression">Bruk Komprimering</string>
     <string name="use_https_for_gui">Bruk HTTPS for GUI</string>
     <string name="version">Versjon</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Versjoner blir automatisk slettet når maksimal levetid er nådd eller når antall filer er oversteget.</string>

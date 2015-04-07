@@ -10,6 +10,7 @@
     <string name="addresses">Endereços</string>
     <string name="all_data">Todos os dados</string>
     <string name="allow_anonymous_usage_reporting">Permitir envio de relatórios anónimos de utilização?</string>
+    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Um comando externo trata do controle de versões. Esse comando tem que remover o ficheiro da pasta sincronizada.</string>
     <string name="anonymous_usage_reporting">Enviar relatórios anónimos de utilização</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Quaisquer dispositivos configurados num dispositivo apresentador serão também adicionados a este dispositivo.</string>
     <string name="api_key">Chave da API</string>
@@ -17,13 +18,13 @@
     <string name="bugs">Erros</string>
     <string name="changelog">Registo de alterações</string>
     <string name="close">Fechar</string>
+    <string name="command">Comando</string>
     <string name="comment_when_used_at_the_start_of_a_line">Comentário, quando usado no início de uma linha</string>
     <string name="compression">Compressão</string>
-    <string name="compression_is_recommended_in_most_setups">A compressão é recomendada na maior parte dos casos.</string>
     <string name="connection_error">Erro de ligação</string>
     <string name="copied_from_elsewhere">Copiado doutro sítio</string>
     <string name="copied_from_original">Copiado do original</string>
-    <string name="copyright_2014_jakob_borg_and_the_following_contributors">Direitos reservados © 2014 Jakob Borg e os seguintes contribuidores:</string>
+    <string name="copyright_2015_the_following_contributors">Copyright © 2015 os seguintes contribuidores:</string>
     <string name="cpu_utilization">Utilização da CPU</string>
     <string name="delete">Eliminar</string>
     <string name="device_device_address_wants_to_connect_add_new_device">O dispositivo %1$s (%2$s) quer conectar-se. Adiciono este novo dispositivo?</string>
@@ -45,9 +46,10 @@
     <string name="enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Introduza endereços \"ip:porto\" separados por vírgulas ou \"dynamic\" para descobrir automaticamente o endereço.</string>
     <string name="enter_ignore_patterns_one_per_line">Escreva os padrões de exclusão, um por linha.</string>
     <string name="error">Erro</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_filesystems">As permissões do ficheiro são ignoradas ao procurar alterações. Utilize nos sistemas de ficheiros FAT.</string>
+    <string name="external_file_versioning">Controle de versões de ficheiros externo</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">As permissões do ficheiro são ignoradas ao procurar alterações. Utilize nos sistemas de ficheiros FAT.</string>
     <string name="file_versioning">Gestão de versões</string>
-    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Os ficheiros são movidos para versões marcadas com o tempo numa pasta .stversions, quando substituídos ou apagados pelo syncthing.</string>
+    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Os ficheiros são movidos para versões carimbadas com o tempo numa pasta .stversions, ao serem substituídos ou apagados pelo Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Os ficheiros estão protegidos contra alterações feitas noutros dispositivos, mas alterações feitas neste dispositivo serão enviadas ao resto do grupo.</string>
     <string name="folder_id">ID da pasta</string>
     <string name="folder_master">Pasta mestre</string>
@@ -61,7 +63,6 @@
     <string name="gui_authentication_password">Senha da autenticação na interface gráfica</string>
     <string name="gui_authentication_user">Utilizador da autenticação na interface gráfica</string>
     <string name="gui_listen_addresses">Endereço de escuta da interface gráfica</string>
-    <string name="idle">Em espera</string>
     <string name="ignore">Ignorar</string>
     <string name="ignore_patterns">Padrões de exclusão</string>
     <string name="ignore_permissions">Ignorar permissões</string>
@@ -71,10 +72,8 @@
     <string name="items">itens</string>
     <string name="keep_versions">Manter versões</string>
     <string name="last_file_received">Último ficheiro recebido</string>
-    <string name="last_file_synced">Último ficheiro sincronizado</string>
     <string name="last_seen">Última vez que foi verificado</string>
     <string name="later">Mais tarde</string>
-    <string name="latest_release">Última versão</string>
     <string name="local_discovery">Busca local</string>
     <string name="local_state">Estado local</string>
     <string name="maximum_age">Idade máxima</string>
@@ -88,9 +87,7 @@
     <string name="no_file_versioning">Sem gestão de versões de ficheiros</string>
     <string name="notice">Avisos</string>
     <string name="off">Desligado</string>
-    <string name="offline">Desconectado</string>
     <string name="ok">OK</string>
-    <string name="online">Conectado</string>
     <string name="out_of_sync">Não sincronizado</string>
     <string name="out_of_sync_items">Itens não sincronizados</string>
     <string name="outgoing_rate_limit_kibs">Limite da velocidade de envio (KiB/s)</string>
@@ -133,9 +130,7 @@
     <string name="start_browser">Iniciar navegador</string>
     <string name="stopped">Parado</string>
     <string name="support">Suporte</string>
-    <string name="support_forum">Suporte / Fórum</string>
     <string name="sync_protocol_listen_addresses">Endereços de escuta do protocolo de sincronização</string>
-    <string name="synchronization">Sincronização</string>
     <string name="syncing">A Sincronizar</string>
     <string name="syncthing_has_been_shut_down">O Syncthing foi desligado.</string>
     <string name="syncthing_includes_the_following_software_or_portions_thereof">O Syncthing inclui as seguintes aplicações ou partes delas:</string>
@@ -149,6 +144,7 @@
     <string name="the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored">O ID do dispositivo a introduzir aqui pode ser encontrado no menu \"Editar > Mostrar ID\" do outro dispositivo. Espaços e hífenes são opcionais (ignorados).</string>
     <string name="the_encrypted_usage_report_is_sent_daily_it_is_used_to_track_common_platforms_folder_sizes_and_app_versions_if_the_reported_data_set_is_changed_you_will_be_prompted_with_this_dialog_again">O relatório de utilização cifrado é enviado diariamente. É utilizado para rastrear plataformas comuns, tamanhos de pastas e versões da aplicação. Se o tipo de dados do relatório for alterado, será notificado novamente através desta janela.</string>
     <string name="the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional">O ID do dispositivo fornecido não parece ser válido. Deveria ter 52 ou 56 caracteres constituídos por letras e números, com espaços e hífenes opcionais.</string>
+    <string name="the_first_command_line_parameter_is_the_folder_path_and_the_second_parameter_is_the_relative_path_in_the_folder">O primeiro parâmetro na linha de comandos é o caminho para a pasta e o segundo parâmetro é o caminho relativo dentro da pasta.</string>
     <string name="the_folder_id_cannot_be_blank">O ID da pasta não pode estar vazio.</string>
     <string name="the_folder_id_must_be_a_short_identifier_64_characters_or_less_consisting_of_letters_numbers_and_the_dot_dash_and_underscode_characters_only">O ID da pasta tem que ser um identificador curto (64 caracteres ou menos) e ser constituído somente por letras, números e os caracteres ponto (.), hífen (-) e sublinhado (_).</string>
     <string name="the_folder_id_must_be_unique">O ID da pasta tem que ser único.</string>
@@ -158,8 +154,8 @@
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Tempo máximo para manter uma versão (em dias, use 0 para manter a versão para sempre).</string>
     <string name="the_number_of_old_versions_to_keep_per_file">O número de versões antigas a manter, por ficheiro.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">O número de versões tem que ser um número e não pode estar vazio.</string>
+    <string name="the_path_cannot_be_blank">O caminho não pode estar vazio.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">O intervalo entre verificações tem que ser um valor não negativo de segundos.</string>
-    <string name="the_rescan_interval_must_be_at_least_5_seconds">O intervalo entre verificações tem que ser pelo menos de 5 segundos.</string>
     <string name="unknown">Desconhecido</string>
     <string name="unshared">Não partilhada</string>
     <string name="unused">Não utilizado</string>
@@ -167,7 +163,6 @@
     <string name="upgrade_to_version">Actualizar para %1$s</string>
     <string name="upgrading">Actualizando</string>
     <string name="upload_rate">Velocidade de envio</string>
-    <string name="use_compression">Usar compressão</string>
     <string name="use_https_for_gui">Utilizar HTTPS na interface gráfica</string>
     <string name="version">Versão</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">As versões são eliminadas automaticamente se forem mais antigas do que a idade máxima ou excederem o número máximo de ficheiros permitido num intervalo.</string>

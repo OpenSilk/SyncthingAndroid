@@ -10,6 +10,7 @@
     <string name="addresses">Адреси</string>
     <string name="all_data">Всички данни</string>
     <string name="allow_anonymous_usage_reporting">Разреши анонимен доклад за ползване на програмата?</string>
+    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Друга команда се занимава с версиите. Тази команда трябва да премахни файла от синхронизираната папка.</string>
     <string name="anonymous_usage_reporting">Анонимен Доклад</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Устройства настроени на introducer компютъра също ще бъдат добавени към този компютър.</string>
     <string name="api_key">API Ключ</string>
@@ -17,13 +18,13 @@
     <string name="bugs">Бъгове</string>
     <string name="changelog">Сипъск с промени</string>
     <string name="close">Затвори</string>
+    <string name="command">Команда</string>
     <string name="comment_when_used_at_the_start_of_a_line">Коментар, използван в началото на реда</string>
     <string name="compression">Компресия</string>
-    <string name="compression_is_recommended_in_most_setups">Компресията е препоръчителна в повечето конфигурации.</string>
     <string name="connection_error">Грешка при Свързването</string>
     <string name="copied_from_elsewhere">Копиране от някъде другаде</string>
     <string name="copied_from_original">Копиран от оригинала</string>
-    <string name="copyright_2014_jakob_borg_and_the_following_contributors">Правата запазени © 2014 Jakob Borg и следните Сътрудници:</string>
+    <string name="copyright_2015_the_following_contributors">Правата запазени © 2015 Сътрудници:</string>
     <string name="cpu_utilization">Натоварване на Процесора</string>
     <string name="delete">Изтрий</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Устройство %1$s (%2$s) желае да се свърже. Добави ново устройство?</string>
@@ -45,7 +46,8 @@
     <string name="enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Въведи \"ip:port\" адреси разделени със запетая или \"dynamic\", за да извършиш автоматична връзка на адреси.</string>
     <string name="enter_ignore_patterns_one_per_line">Добави шаблони за игнориране, по един на ред.</string>
     <string name="error">Грешка</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_filesystems">Битовете за права за достъп са игнорирани, когато се проверява за промени. Използвай с файлови системи тип FAT.</string>
+    <string name="external_file_versioning">Външно упраление на версиите</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Битовете за права за достъп са игнорирани, когато се проверява за промени. Използвай с файлови системи тип FAT.</string>
     <string name="file_versioning">Файлови Версии</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Когато syncthing замени или изтрие файл той се премества в  .stversions и преименува с дабавени дата и час.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Файловете са защитени от промени направени на други устройства, но промени направени на това устройство ще бъдат синхронизирани с другите устройства.</string>
@@ -61,7 +63,6 @@
     <string name="gui_authentication_password">Парола за Потребителския Интерфейс</string>
     <string name="gui_authentication_user">Потребител за Потребителския Интерфейс</string>
     <string name="gui_listen_addresses">Адрес за Свързване с Потребителския Интерфейс</string>
-    <string name="idle">Без Работа</string>
     <string name="ignore">Игнорирай</string>
     <string name="ignore_patterns">Шаблони за Игнориране</string>
     <string name="ignore_permissions">Игнорирай Права за Достъп</string>
@@ -71,10 +72,8 @@
     <string name="items">артикула</string>
     <string name="keep_versions">Пази Версии</string>
     <string name="last_file_received">Последния получен файл</string>
-    <string name="last_file_synced">Последния синхронизиран файл</string>
     <string name="last_seen">Последно видян</string>
     <string name="later">По-късно</string>
-    <string name="latest_release">Най-новата Версия</string>
     <string name="local_discovery">Локално Откриване</string>
     <string name="local_state">Локално състояние</string>
     <string name="maximum_age">Максимална Възраст</string>
@@ -88,9 +87,7 @@
     <string name="no_file_versioning">Няма Файлови Версии</string>
     <string name="notice">Известие</string>
     <string name="off">Изключено</string>
-    <string name="offline">Не е на линия</string>
     <string name="ok">ОК</string>
-    <string name="online">На линия</string>
     <string name="out_of_sync">Не Синхронизиран</string>
     <string name="out_of_sync_items">Несинхронизирани елементи</string>
     <string name="outgoing_rate_limit_kibs">Лимит на Изходящата Скорост (KiB/s)</string>
@@ -133,9 +130,7 @@
     <string name="start_browser">Стартирай Браузъра</string>
     <string name="stopped">Спряна</string>
     <string name="support">Помощ</string>
-    <string name="support_forum">Помощ / Форум</string>
     <string name="sync_protocol_listen_addresses">Адрес за слушане на синхронизиращия протокол</string>
-    <string name="synchronization">Синхронизация</string>
     <string name="syncing">Синхронизиране</string>
     <string name="syncthing_has_been_shut_down">Syncthing е спрян.</string>
     <string name="syncthing_includes_the_following_software_or_portions_thereof">Syncthing включва следният софтуер пълно или частично:</string>
@@ -149,6 +144,7 @@
     <string name="the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored">Идентификатор на устройство за въвеждане тук, може да бъде намерен в \"Промени > Покажи Идентификатора\". Интервалите и тиретата са пожелание(биват прескачани).</string>
     <string name="the_encrypted_usage_report_is_sent_daily_it_is_used_to_track_common_platforms_folder_sizes_and_app_versions_if_the_reported_data_set_is_changed_you_will_be_prompted_with_this_dialog_again">Криптираният доклад се изпраща дневно. Използва се, за да следи общи платформи, размери на папки и версии на приложението. Ако събираните данни се променят, ще бъдете информиран с подобен на този диалог.</string>
     <string name="the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional">Въведни идентификатор на устройство не е валиден. Трябва да бъде 52 или 56 символа и да се състои от букви и цифри, като интервалите и тиретата са пожелание.</string>
+    <string name="the_first_command_line_parameter_is_the_folder_path_and_the_second_parameter_is_the_relative_path_in_the_folder">Първият параметър за командата е пътя до папката, а вторият е релативния път в самата папка.</string>
     <string name="the_folder_id_cannot_be_blank">Полето идентификатор на папка неможе да бъде празно.</string>
     <string name="the_folder_id_must_be_a_short_identifier_64_characters_or_less_consisting_of_letters_numbers_and_the_dot_dash_and_underscode_characters_only">Идентификаторът на папка трябва да бъде къс (64 символа или по-малко) състоящ се само от букви, цифри, точка(.), тире(-) и подчерта (_).</string>
     <string name="the_folder_id_must_be_unique">Идентификаторът на папката тряба да бъде уникален.</string>
@@ -158,8 +154,8 @@
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Максималното време да се пазят весрсии (в дни, сложи 0, за да пазиш версии завинаги).</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Броят стари версии, които да бъдат пазени за всеки файл.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Броят версии трябва да бъде число и не може да бъде празно.</string>
+    <string name="the_path_cannot_be_blank">Пътят неможе да бъде празен.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Интервала на сканиране трябва да бъде не отрицателно число в секунди.</string>
-    <string name="the_rescan_interval_must_be_at_least_5_seconds">Интервала за повторно сканиране трябва да бъде поне 5 секунди.</string>
     <string name="unknown">Неясен</string>
     <string name="unshared">Споделянето прекратено</string>
     <string name="unused">Неизползван</string>
@@ -167,7 +163,6 @@
     <string name="upgrade_to_version">Обновен До %1$s</string>
     <string name="upgrading">Обновяване</string>
     <string name="upload_rate">Скорост на Качване</string>
-    <string name="use_compression">Използвай Компресиране</string>
     <string name="use_https_for_gui">Използвай HTTPS за Потребителския Интерфейс</string>
     <string name="version">Версия</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Версиите биват изтривани автоматично, когато са по-стари от максималната възраст или надминават броя файлове разрешени в даден интервал.</string>
