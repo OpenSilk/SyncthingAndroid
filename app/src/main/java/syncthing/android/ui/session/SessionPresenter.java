@@ -145,7 +145,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
                 if (controller.isRestarting()) {
                     showRestartingDialog();
                 } else if (hasView()) {
-                    getView().setLoading(true);
+                    getView().setListShown(false, true);
                 }
                 break;
             case FAILURE:
@@ -363,6 +363,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         if (!controller.isRunning()) {
             controller.init();
             if (hasView()) {
+                getView().setListEmpty(false, true);
                 getView().setLoading(true);
             }
         }
