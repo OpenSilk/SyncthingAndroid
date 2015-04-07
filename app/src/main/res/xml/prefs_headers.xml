@@ -26,4 +26,8 @@
         android:fragment="syncthing.android.ui.settings.UiSettingsFragment"
         android:title="@string/ui_settings"/>
 
+    <header
+        android:fragment="syncthing.android.ui.settings.SettingsAboutFragment"
+        android:title="@string/about"/>
+
 </preference-headers>

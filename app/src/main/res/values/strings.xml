@@ -54,7 +54,7 @@
     <!--Notification-->
     <string name="syncthing_is_running">Syncthing is running</string>
 
-    <!--Settings-->
+    <!--Settings service-->
     <string name="service_settings">Syncthing</string>
     <string name="local_instance_disabled">Local Syncthing instance disabled</string>
     <string name="local_instance_enabled">Local Syncthing instance enabled</string>
@@ -83,6 +83,14 @@
     <string name="config_imported">Config imported</string>
     <string name="no_config_found">No config directory found</string>
 
+    <!--Settings ui-->
     <string name="ui_settings">UI</string>
     <string name="keep_screen_on_while_charging">Keep screen on while charging</string>
+
+    <!--Settings about-->
+    <string name="opensilk_productions">Created by OpenSilk Productions LLC</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="send_crash_reports">Send crash reports</string>
+    <string name="send_crash_reports_summary">Crash reports are anonymous and secure</string>
+    <string name="open_source_licenses">Open source licenses</string>
 </resources>
