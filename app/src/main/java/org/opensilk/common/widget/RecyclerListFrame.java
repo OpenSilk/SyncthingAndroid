@@ -97,6 +97,7 @@ public class RecyclerListFrame extends FrameLayout {
     }
 
     public void setListEmpty(boolean shown, boolean animate) {
+        setLoading(false);
         if (mEmptyShown == shown) {
             return;
         }
