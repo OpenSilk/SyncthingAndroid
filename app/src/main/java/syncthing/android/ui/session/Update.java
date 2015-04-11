@@ -76,9 +76,14 @@ public class Update {
         }
     }
 
-    public static class ModelState extends Model {
+    //Cant extend, bus can't distinguish
+    public static class ModelState /*extends Model*/ {
+        final String id;
+        final syncthing.api.model.Model model;
+
         public ModelState(String id, syncthing.api.model.Model model) {
-            super(id, model);
+            this.id = id;
+            this.model = model;
         }
     }
 
