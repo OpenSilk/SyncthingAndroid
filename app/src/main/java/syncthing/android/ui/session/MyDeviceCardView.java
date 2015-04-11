@@ -195,7 +195,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     }
 
     void updateVersion(Version ver) {
-        version.setText(ver.version);
+        version.setText(ver.toString());
     }
 
     void subscribeUpdates() {
