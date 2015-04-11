@@ -120,8 +120,8 @@ dependencies {
     compile 'joda-time:joda-time:2.7'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     //dagger deps
-    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
-    provided 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
+    compile 'com.google.dagger:dagger:2.0'
+    provided 'com.google.dagger:dagger-compiler:2.0'
     provided 'javax.annotation:jsr250-api:1.0'
     //mortar
     compile 'com.squareup.mortar:mortar:0.17-SNAPSHOT'
