@@ -48,6 +48,7 @@ import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/4/15.
@@ -84,11 +85,13 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
         }
         uptimeFormatter = new PeriodFormatterBuilder()
                 .appendDays()
-                .appendSuffix(" d")
+                .appendSuffix("d ")
                 .appendHours()
-                .appendSuffix(" h")
+                .appendSuffix("h ")
+                .appendMinutes()
+                .appendPrefix("m ")
                 .appendSeconds()
-                .appendSuffix(" s")
+                .appendSuffix("s")
                 .toFormatter();
     }
 
@@ -166,6 +169,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     }
 
     public void updateSystem(SystemInfo sys) {
+        Timber.d("updteSystem(%s) sys=%s", getCard().device.name, sys);
         if (sys == null) {
             return;
         }
