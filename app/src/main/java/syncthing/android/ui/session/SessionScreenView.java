@@ -34,6 +34,7 @@ import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
 import syncthing.android.ui.common.Card;
+import syncthing.android.ui.common.CardRecyclerView;
 import syncthing.android.ui.common.ExpandableCard;
 
 /**
@@ -60,6 +61,7 @@ public class SessionScreenView extends RecyclerListFrame {
         mListAdapter.setExpandListener((CanExpand.OnExpandListener) mList);
         mList.setAdapter(mListAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
+        //((CardRecyclerView) mList).setWobbleOnExpand(false);
         mPresenter.takeView(this);
     }
 
