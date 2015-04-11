@@ -7,6 +7,7 @@
 package syncthing.android.service;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 
 import org.w3c.dom.Document;
@@ -138,7 +139,7 @@ public class ConfigXml {
     public void changeDefaultFolder() {
         Element folder = (Element) mConfig.getDocumentElement()
                 .getElementsByTagName("folder").item(0);
-        folder.setAttribute("id", "camera");
+        folder.setAttribute("id", Build.MODEL + " Camera");
         folder.setAttribute("path", Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
         folder.setAttribute("ro", "true");
