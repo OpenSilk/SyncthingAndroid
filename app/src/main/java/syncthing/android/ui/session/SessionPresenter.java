@@ -130,7 +130,8 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         super.onSave(outState);
     }
 
-    void onChange(SessionController.Change change) {
+    void onChange(SessionController.ChangeEvent e) {
+        SessionController.Change change = e.change;
         Timber.d("onChange(%s)", change.toString());
         switch (change) {
             case ONLINE:
@@ -191,10 +192,10 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
                 postSystemInfoUpdate();
                 break;
             case MODEL:
-                postModelUpdate();
+                postModelUpdate(e.id);
                 break;
             case MODEL_STATE:
-                postModelStateUpdate();
+                postModelStateUpdate(e.id);
                 break;
             case FOLDER_STATS:
                 Timber.w("Ignoring FOLDER_STATS update");
@@ -304,21 +305,35 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         bus.post(controller.getSystemInfo());
     }
 
-    void postModelUpdate() {
+    void postModelUpdate(String id) {
+        if (!SessionController.ChangeEvent.NONE.equals(id)) {
+            sendModelUpdate(id, controller.getModel(id));
+            return;
+        }
         for (FolderConfig f : controller.getFolders()) {
-            Model m = controller.getModel(f.id);
-            if (m != null) {
-                bus.post(new Update.Model(f.id, m));
-            }
+            sendModelUpdate(f.id, controller.getModel(f.id));
         }
     }
 
-    void postModelStateUpdate() {
+    void sendModelUpdate(String id, Model m) {
+        if (m != null) {
+            bus.post(new Update.Model(id, m));
+        }
+    }
+
+    void postModelStateUpdate(String id) {
+        if (!SessionController.ChangeEvent.NONE.equals(id)) {
+            sendModelStateUpdate(id, controller.getModel(id));
+            return;
+        }
         for (FolderConfig f : controller.getFolders()) {
-            Model m = controller.getModel(f.id);
-            if (m != null) {
-                bus.post(new Update.ModelState(f.id, m));
-            }
+           sendModelStateUpdate(f.id, controller.getModel(f.id));
+        }
+    }
+
+    void sendModelStateUpdate(String id, Model m) {
+        if (m != null) {
+            bus.post(new Update.ModelState(id, m));
         }
     }
 

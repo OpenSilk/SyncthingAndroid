@@ -100,6 +100,20 @@ public class SessionController implements EventMonitor.EventListener {
 
     }
 
+    public class ChangeEvent {
+        public static final String NONE = "";
+        public final Change change;
+        // Id or name of object being effected
+        // mostly useful for model updates
+        public final String id;
+
+        public ChangeEvent(Change change, String id) {
+            this.change = change;
+            this.id = id == null ? NONE : id;
+        }
+
+    }
+
     SystemInfo systemInfo;
     String myID;
     Config config;
@@ -128,7 +142,7 @@ public class SessionController implements EventMonitor.EventListener {
 
     final SyncthingApi restApi;
     final EventMonitor eventMonitor;
-    final BehaviorSubject<Change> changeBus = BehaviorSubject.create();
+    final BehaviorSubject<ChangeEvent> changeBus = BehaviorSubject.create();
 
     @Inject
     public SessionController(SyncthingApi restApi, @Named("longpoll") SyncthingApi longpollRestApi) {
@@ -196,7 +210,7 @@ public class SessionController implements EventMonitor.EventListener {
             } case STATE_CHANGED: {
                 if (models.containsKey(e.data.folder)) {
                     models.get(e.data.folder).state = e.data.to;
-                    postChange(Change.MODEL_STATE);
+                    postChange(Change.MODEL_STATE, e.data.folder);
                 } else {
                     refreshFolder(e.data.folder);
                 }
@@ -231,7 +245,7 @@ public class SessionController implements EventMonitor.EventListener {
                 break;
             } case FOLDER_SUMMARY: {
                 updateModel(e.data.folder, e.data.summary);
-                postChange(Change.MODEL);
+                postChange(Change.MODEL, e.data.folder);
                 break;
             } case FOLDER_COMPLETION: {
                 updateCompletion(e.data.device, e.data.folder, new Completion(e.data.completion));
@@ -318,19 +332,27 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     void postChange(Change change) {
+        postChange(change, null);
+    }
+
+    void postChange(Change change, String id) {
         switch (change) {
             case OFFLINE:
             case NEED_LOGIN:
             case FAILURE:
-                changeBus.onNext(change);
+                sendChangeEvent(new ChangeEvent(change, id));
                 return;
             default:
                 if (isOnline()) {
-                    changeBus.onNext(change);
+                    sendChangeEvent(new ChangeEvent(change, id));
                 } else {
                     Timber.w("Dropping change %s while offline", change.toString());
                 }
         }
+    }
+
+    void sendChangeEvent(ChangeEvent event) {
+        changeBus.onNext(event);
     }
 
     public void refreshSystem() {
@@ -535,6 +557,7 @@ public class SessionController implements EventMonitor.EventListener {
             folders.put(f.id, f);
         }
         devices = config.devices;
+        //TODO clear out device/folder rejections if found in config
     }
 
     public boolean isConfigInSync() {
@@ -1033,19 +1056,19 @@ public class SessionController implements EventMonitor.EventListener {
 //        }
     }
 
-    public Subscription subscribeChanges(Action1<Change> onNext, Change... changes) {
-        Observable<Change> o;
+    public Subscription subscribeChanges(Action1<ChangeEvent> onNext, Change... changes) {
+        Observable<ChangeEvent> o;
         if (changes.length == 0) {
             o = changeBus.asObservable();
         } else {
             o = changeBus.asObservable().filter(c -> {
                 for (Change cc : changes) {
-                    if (c == cc) return true;
+                    if (c.change == cc) return true;
                 }
                 return false;
             });
         }
-        onNext.call(online ? Change.ONLINE : Change.OFFLINE);
+        onNext.call(new ChangeEvent(online ? Change.ONLINE : Change.OFFLINE, null));
         return o.subscribe(onNext);
     }
 
