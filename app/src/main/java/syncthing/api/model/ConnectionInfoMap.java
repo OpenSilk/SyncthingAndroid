@@ -30,6 +30,7 @@ import static java.util.Collections.EMPTY_SET;
  */
 public class ConnectionInfoMap extends LinkedHashMap<String, ConnectionInfo> {
     public static final ConnectionInfoMap EMPTY = new ConnectionInfoMap() {
+        private static final long serialVersionUID = 4044861933924729085L;
         @Override public boolean containsKey(Object key) {
             return false;
         }
@@ -52,4 +53,5 @@ public class ConnectionInfoMap extends LinkedHashMap<String, ConnectionInfo> {
             return EMPTY_MAP;
         }
     };
+    private static final long serialVersionUID = -7693076998337489873L;
 }

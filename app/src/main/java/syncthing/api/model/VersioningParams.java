@@ -30,5 +30,6 @@ public class VersioningParams implements Serializable {
     public String versionPath;
     public String maxAge = "31536000"; //365days
     public String cleanInterval = "3600";
+    //External
     public String command;
 }
