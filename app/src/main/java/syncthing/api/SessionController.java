@@ -638,6 +638,7 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     void updateModel(String folderName, Model model) {
+        Timber.d("updateModel(%s) m=%s", folderName, model);
         if (models.containsKey(folderName)) {
             models.remove(folderName);
         }

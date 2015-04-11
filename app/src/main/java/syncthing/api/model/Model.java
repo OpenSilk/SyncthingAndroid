@@ -19,6 +19,8 @@ package syncthing.api.model;
 
 import org.joda.time.DateTime;
 
+import syncthing.api.ApiUtils;
+
 /**
  * Created by drew on 3/1/15.
  */
@@ -38,4 +40,9 @@ public class Model {
     public DateTime stateChanged;
     public boolean ignorePatterns;
     public long version;
+
+    @Override
+    public String toString() {
+        return ApiUtils.reflectionToString(this);
+    }
 }
