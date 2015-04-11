@@ -53,6 +53,7 @@ import syncthing.api.model.Config;
 import syncthing.api.model.ConfigStats;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.ConnectionInfoMap;
+import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import syncthing.api.model.DeviceStatsMap;
@@ -103,7 +104,7 @@ public class SessionController implements EventMonitor.EventListener {
     String myID;
     Config config;
     boolean configInSync;
-    ConnectionInfoMap connections = ConnectionInfoMap.EMPTY;
+    Connections connections = new Connections();
     DeviceStatsMap deviceStats = DeviceStatsMap.EMPTY;
     FolderStatsMap folderStats = FolderStatsMap.EMPTY;
     Version version;
@@ -294,7 +295,7 @@ public class SessionController implements EventMonitor.EventListener {
                         updateSystemInfo((SystemInfo) map.get(SystemInfo.class));
                         updateConfig((Config) map.get(Config.class));
                         updateConfigStats((ConfigStats) map.get(ConfigStats.class));
-                        updateConnections((ConnectionInfoMap) map.get(ConnectionInfoMap.class));
+                        updateConnections((Connections) map.get(Connections.class));
                         setDeviceStats((DeviceStatsMap) map.get(DeviceStatsMap.class));
                         updateFolderStats((FolderStatsMap) map.get(FolderStatsMap.class));
                         setVersion((Version) map.get(Version.class));
@@ -545,17 +546,21 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     public ConnectionInfo getConnection(String id) {
-        return connections.get(id);
+        return connections.connections.get(id);
     }
 
-    void updateConnections(ConnectionInfoMap conns) {
+    public ConnectionInfo getConnectionTotal() {
+        return connections.total;
+    }
+
+    void updateConnections(Connections conns) {
         long now = System.currentTimeMillis();
-        for (String key : conns.keySet()) {
-            ConnectionInfo newC = conns.get(key);
+        for (String key : conns.connections.keySet()) {
+            ConnectionInfo newC = conns.connections.get(key);
             newC.deviceId = key;
             newC.lastUpdate = now;
-            if (connections.containsKey(key)) {
-                ConnectionInfo oldC = connections.get(key);
+            if (connections.connections.containsKey(key)) {
+                ConnectionInfo oldC = connections.connections.get(key);
                 long td = (now - oldC.lastUpdate) / 1000;
                 if (td > 0) {
                     newC.inbps = Math.max(0, (newC.inBytesTotal - oldC.inBytesTotal) / td);

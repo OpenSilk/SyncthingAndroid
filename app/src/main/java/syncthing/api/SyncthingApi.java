@@ -29,6 +29,7 @@ import syncthing.api.model.Completion;
 import syncthing.api.model.Config;
 import syncthing.api.model.ConfigStats;
 import syncthing.api.model.ConnectionInfoMap;
+import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceId;
 import syncthing.api.model.DeviceStatsMap;
 import syncthing.api.model.Event;
@@ -102,7 +103,7 @@ public interface SyncthingApi {
     Observable<ConfigStats> configStatus();
 
     @GET("/rest/system/connections")
-    Observable<ConnectionInfoMap> connections();
+    Observable<Connections> connections();
 
     //@GET("/rest/system/discovery")
 

@@ -255,7 +255,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     MyDeviceCard getThisDevice() {
         return new MyDeviceCard(
                 controller.getThisDevice(),
-                controller.getConnection("total"),
+                controller.getConnectionTotal(),
                 controller.getSystemInfo(),
                 controller.getVersion()
         );
@@ -285,7 +285,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
                 bus.post(new Update.ConnectionInfo(d.deviceID, conn));
             }
         }
-        ConnectionInfo tConn = controller.getConnection("total");
+        ConnectionInfo tConn = controller.getConnectionTotal();
         if (tConn != null) {
             bus.post(new Update.ConnectionInfo(getMyDeviceId(), tConn));
         }

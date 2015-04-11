@@ -19,6 +19,8 @@ package syncthing.api.model;
 
 import org.joda.time.DateTime;
 
+import syncthing.api.ApiUtils;
+
 /**
  * Created by drew on 3/1/15.
  */
@@ -33,4 +35,9 @@ public class ConnectionInfo {
     public transient long inbps;
     public transient long outbps;
     public transient long lastUpdate;
+
+    @Override
+    public String toString() {
+        return ApiUtils.reflectionToString(this);
+    }
 }

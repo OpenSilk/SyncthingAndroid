@@ -41,6 +41,7 @@ import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/1/15.
@@ -126,6 +127,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     }
 
     void updateDevice(DeviceConfig device) {
+        //Timber.d("updateDevice(%s) cfg=%s", getCard().device.name, device);
         identiconSubscription = presenter.identiconGenerator.generateAsync(device.deviceID)
                 .subscribe(identicon::setImageBitmap);
 
@@ -137,6 +139,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     }
 
     void updateConnection(ConnectionInfo conn) {
+        //Timber.d("updateConnection(%s) conn=%s", getCard().device.name, conn);
         if (conn == null) {
             downloadHider.setVisibility(GONE);
             uploadHider.setVisibility(GONE);
@@ -169,6 +172,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     }
 
     void updateStats(DeviceStats stats) {
+        //Timber.d("updateStats(%s) stats=%s", getCard().device.name, stats);
         if (stats == null) {
             lastSeen.setText(R.string.unknown);
         } else {
@@ -182,6 +186,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     }
 
     void updateCompletion(int completion) {
+        //Timber.d("updateCompletion(%s) comp=%d", getCard().device.name, completion);
         Resources r = getContext().getResources();
         if (completion < 0) {
             status.setText(R.string.disconnected);

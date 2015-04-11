@@ -15,20 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.api.model;
+package syncthing.api;
 
-import org.joda.time.DateTime;
-
-import syncthing.api.ApiUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Created by drew on 3/4/15.
+ * Created by drew on 4/11/15.
  */
-public class DeviceStats {
-    public DateTime lastSeen;
-
-    @Override
-    public String toString() {
-        return ApiUtils.reflectionToString(this);
+public class ApiUtils {
+    public static <T> String reflectionToString(T obj) {
+        return ReflectionToStringBuilder.toString(obj, ToStringStyle.SHORT_PREFIX_STYLE, true);
     }
 }

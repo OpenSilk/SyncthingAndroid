@@ -169,7 +169,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     }
 
     public void updateSystem(SystemInfo sys) {
-        Timber.d("updteSystem(%s) sys=%s", getCard().device.name, sys);
+        //Timber.d("updateSystem(%s) sys=%s", getCard().device.name, sys);
         if (sys == null) {
             return;
         }

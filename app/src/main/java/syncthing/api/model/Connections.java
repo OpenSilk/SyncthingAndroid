@@ -17,18 +17,10 @@
 
 package syncthing.api.model;
 
-import org.joda.time.DateTime;
-
-import syncthing.api.ApiUtils;
-
 /**
- * Created by drew on 3/4/15.
+ * Created by drew on 4/11/15.
  */
-public class DeviceStats {
-    public DateTime lastSeen;
-
-    @Override
-    public String toString() {
-        return ApiUtils.reflectionToString(this);
-    }
+public class Connections {
+    public ConnectionInfo total;
+    public ConnectionInfoMap connections = ConnectionInfoMap.EMPTY;
 }

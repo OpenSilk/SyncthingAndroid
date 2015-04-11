@@ -19,6 +19,8 @@ package syncthing.api.model;
 
 import java.io.Serializable;
 
+import syncthing.api.ApiUtils;
+
 /**
  * Created by drew on 3/1/15.
  */
@@ -55,5 +57,10 @@ public class DeviceConfig implements Serializable {
     @Override
     public int hashCode() {
         return deviceID != null ? deviceID.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return ApiUtils.reflectionToString(this);
     }
 }

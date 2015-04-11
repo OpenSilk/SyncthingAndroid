@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import syncthing.api.ApiUtils;
+
 /**
  * Created by drew on 3/1/15.
  */
@@ -38,4 +40,9 @@ public class SystemInfo {
     //pojo
     public transient int announceServersTotal;
     public transient List<String> announceServersFailed = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return ApiUtils.reflectionToString(this);
+    }
 }
