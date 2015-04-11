@@ -88,7 +88,7 @@ public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpand
 
                     cardView.setExpanded(false);//card.setExpanded(true);
 
-                    notifyAdapter(recyclerView, recyclerView.getLayoutManager().getPosition((View)cardView));
+                    //notifyAdapter(recyclerView, recyclerView.getLayoutManager().getPosition((View)cardView));
 
 //                Card card = cardView.getCard();
 //                if (card.getOnCollapseAnimatorEndListener()!=null)
@@ -149,7 +149,7 @@ public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpand
                     super.onAnimationEnd(animation);
                     cardView.setExpanded(true);//card.setExpanded(true);
 
-                    notifyAdapter(recyclerView,recyclerView.getLayoutManager().getPosition((View)cardView));
+                    //notifyAdapter(recyclerView,recyclerView.getLayoutManager().getPosition((View)cardView));
 
 //                Card card = cardView.getCard();
 //                if (card.getOnExpandAnimatorEndListener()!=null)
