@@ -89,7 +89,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
                 .appendHours()
                 .appendSuffix("h ")
                 .appendMinutes()
-                .appendPrefix("m ")
+                .appendSuffix("m ")
                 .appendSeconds()
                 .appendSuffix("s")
                 .toFormatter();
