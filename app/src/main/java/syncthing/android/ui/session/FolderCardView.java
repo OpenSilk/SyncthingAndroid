@@ -49,6 +49,7 @@ import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.Model;
 import syncthing.api.model.ModelState;
 import syncthing.api.model.VersioningType;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/1/15.
@@ -158,7 +159,6 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
         error.setText(folder.invalid);
         errorHider.setVisibility(StringUtils.isEmpty(folder.invalid) ? GONE : VISIBLE);
         folderMasterHider.setVisibility(folder.readOnly ? VISIBLE : GONE);
-        btnOverride.setVisibility(folder.readOnly ? VISIBLE : GONE);
         ignorePermsHider.setVisibility(folder.ignorePerms ? VISIBLE : GONE);
         rescanInterval.setText(String.valueOf(folder.rescanIntervalS));
 
@@ -234,11 +234,13 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
             state.setText(R.string.unknown);
             state.setTextColor(getResources().getColor(R.color.folder_default));
             btnRescan.setVisibility(VISIBLE);
+            btnOverride.setVisibility(getCard().folder.readOnly ? VISIBLE : GONE);
             return;
         }
 
         btnRescan.setVisibility((status == ModelState.SCANNING) ? GONE : VISIBLE);
-
+        btnOverride.setVisibility((status == ModelState.SCANNING) ? GONE
+                : (getCard().folder.readOnly ? VISIBLE : GONE));
 
         state.setText(getContext().getString(R.string.status_percent_complete,
                         status.localizedString(getContext()), completion)
@@ -265,6 +267,7 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
                     if (!StringUtils.equals(m.id, getCard().folder.id)) {
                         return;
                     }
+                    Timber.d("Update.Model(%s)", getCard().folder.id);
                     getCard().setModel(m.model);
                     updateModel(m.model);
                 },
@@ -275,6 +278,7 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
                     if (!StringUtils.equals(m.id, getCard().folder.id)) {
                         return;
                     }
+                    Timber.d("Update.ModelState(%s)", getCard().folder.id);
                     getCard().setModel(m.model);
                     updateFolderStatus(m.model.state, calculateCompletion(m.model));
                 },
