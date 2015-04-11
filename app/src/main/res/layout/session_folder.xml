@@ -77,7 +77,7 @@
 
                 <TextView
                     android:id="@+id/directory"
-                    android:ellipsize="end"
+                    android:ellipsize="start"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="/folder/path"/>
 
@@ -96,7 +96,6 @@
 
                 <TextView
                     android:id="@+id/error"
-                    android:ellipsize="end"
                     android:textColor="@color/error_text"
                     style="@style/session.RecyclerTextRightColumn"
                     tools:text="error msng"/>
