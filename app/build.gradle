@@ -125,7 +125,7 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     //mortar
     compile 'com.squareup.mortar:mortar:0.17-SNAPSHOT'
-    compile 'com.squareup.mortar:dagger2support:0.17-SNAPSHOT'
+    //compile 'com.squareup.mortar:dagger2support:0.17-SNAPSHOT'
     //compile 'com.squareup.flow:flow:0.9-SNAPSHOT'
 
     compile 'commons-io:commons-io:2.4'
