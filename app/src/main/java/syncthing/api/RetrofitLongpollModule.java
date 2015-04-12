@@ -17,14 +17,10 @@
 
 package syncthing.api;
 
-import com.google.gson.Gson;
 import com.squareup.okhttp.ConnectionPool;
 import com.squareup.okhttp.OkHttpClient;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,52 +28,50 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
-import retrofit.converter.Converter;
-import retrofit.converter.GsonConverter;
-
-import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
 /**
- * Created by drew on 3/9/15.
+ * Created by drew on 4/11/15.
  */
 @Module(
         includes = RetrofitCoreModule.class
 )
-public class RetrofitModule {
+public class RetrofitLongpollModule {
 
-    static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
-    static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
+    static final int LONGPOLL_CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
+    static final int LONGPOLL_READ_TIMEOUT_MILLIS = 3 * 60 * 1000; // 3m //20 * 1000; // 20s
+    static final int LONGPOLL_MAX_IDLE_CONNECTIONS = 2;
+    static final long LONGPOLL_KEEP_ALIVE_DURATION_MS = 5 * 60 * 1000; // 5 min
 
-    @Provides @Singleton
-    public Client provideRetrofitClient(SSLSocketFactory sslSocketFactory) {
+    @Provides @Singleton @Named("longpoll")
+    public Client provideLongpollRetrofitClient(SSLSocketFactory sslSocketFactory) {
         final OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        client.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setConnectTimeout(LONGPOLL_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setReadTimeout(LONGPOLL_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setConnectionPool(new ConnectionPool(LONGPOLL_MAX_IDLE_CONNECTIONS, LONGPOLL_KEEP_ALIVE_DURATION_MS));
         client.setSslSocketFactory(sslSocketFactory);
         return new OkClient(client);
     }
 
-    static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
-    static final int CORE_POOL_SIZE = 0;// 1;
-    static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
+    static final int LONGPOLL_CORE_POOL_SIZE = 0;
+    static final int LONGPOLL_MAXIMUM_POOL_SIZE = 2;
 
-    @Provides @Singleton
-    public Executor provideRetrofitHttpExecutor(ThreadFactory factory) {
-        return new ThreadPoolExecutor(
-                CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
+    //Gross hack, when switching sessions the longpoll will block until it
+    //receives an event or it times out which can be minutes, so just make
+    //a new executor until i figure a better way
+    @Provides /*@Singleton*/ @Named("longpoll")
+    public Executor provideLongpollRetrofitHttpExecutor(ThreadFactory factory) {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                LONGPOLL_CORE_POOL_SIZE, LONGPOLL_MAXIMUM_POOL_SIZE,
                 60L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(), //new SynchronousQueue<Runnable>(),
+                new SynchronousQueue<Runnable>(),
                 factory
         );
+        return executor;
     }
-
 }

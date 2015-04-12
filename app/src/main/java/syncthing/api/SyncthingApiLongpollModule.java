@@ -30,17 +30,16 @@ import retrofit.client.Client;
 import retrofit.converter.Converter;
 
 /**
- * Created by drew on 3/4/15.
+ * Created by drew on 4/11/15.
  */
 @Module
-public class SyncthingApiModule {
-
-    @Provides @SessionScope
-    public SyncthingApi provideSyncthingApi(Endpoint endpoint,
-                                            RequestInterceptor interceptor,
-                                            Converter converter,
-                                            Client client,
-                                            Executor httpExecutor) {
+public class SyncthingApiLongpollModule {
+    @Provides @SessionScope @Named("longpoll")
+    public SyncthingApi provideLongpollSyncthingApi(Endpoint endpoint,
+                                                    RequestInterceptor interceptor,
+                                                    Converter converter,
+                                                    @Named("longpoll") Client client,
+                                                    @Named("longpoll") Executor httpExecutor) {
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(endpoint)
                 .setConverter(converter)
@@ -51,5 +50,4 @@ public class SyncthingApiModule {
                 .build();
         return adapter.create(SyncthingApi.class);
     }
-
 }

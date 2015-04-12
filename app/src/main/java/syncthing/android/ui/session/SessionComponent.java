@@ -22,6 +22,7 @@ import org.opensilk.common.mortar.ActivityResultsController;
 import syncthing.android.ui.LauncherActivityComponent;
 import syncthing.api.SessionController;
 import syncthing.api.SessionScope;
+import syncthing.api.SyncthingApiLongpollModule;
 import syncthing.api.SyncthingApiModule;
 
 /**
@@ -32,7 +33,8 @@ import syncthing.api.SyncthingApiModule;
         dependencies = LauncherActivityComponent.class,
         modules = {
                 SessionModule.class,
-                SyncthingApiModule.class
+                SyncthingApiModule.class,
+                SyncthingApiLongpollModule.class
         }
 )
 public interface SessionComponent {

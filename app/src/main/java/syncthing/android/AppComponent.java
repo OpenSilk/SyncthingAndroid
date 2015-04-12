@@ -34,6 +34,7 @@ import retrofit.converter.Converter;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.identicon.IdenticonModule;
 import syncthing.api.GsonModule;
+import syncthing.api.RetrofitLongpollModule;
 import syncthing.api.RetrofitModule;
 
 /**
@@ -45,6 +46,7 @@ import syncthing.api.RetrofitModule;
                 AppModule.class,
                 GsonModule.class,
                 RetrofitModule.class,
+                RetrofitLongpollModule.class,
                 IdenticonModule.class
         }
 )
