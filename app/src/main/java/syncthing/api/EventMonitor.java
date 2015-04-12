@@ -72,11 +72,11 @@ public class EventMonitor {
         eventSubscription = Observable.timer(delay, TimeUnit.MILLISECONDS)
                 .flatMap(ii -> restApi.events(lastEvent))
                 .flatMap(events -> {
-                    List<Event> topass = new ArrayList<>();
                     if (lastEvent == 0) {
                         // if we are just starting
                         // we eat all the events to
                         // avoid flooding the clients
+                        List<Event> topass = new ArrayList<>();
                         int dispached = 0;
                         for (Event e : events) {
                             switch (e.type) {
@@ -160,7 +160,7 @@ public class EventMonitor {
                                     }
                                     default: {
                                         Timber.e(e.getCause(), "Unknown RetrofitError:");
-                                        unhandledErrorCount++;
+                                        unhandledErrorCount++;//undo decrement above
                                         break;
                                     }
                                 }
@@ -171,10 +171,11 @@ public class EventMonitor {
                             } else {
                                 Timber.e(t, "Unforeseen Exception: %s %s",t.getClass().getSimpleName(), t.getMessage());
                             }
-                            connectExceptionCount = 0;
+                            connectExceptionCount = 0;//Incase we just came out of a connecting loop.
                             if (++unhandledErrorCount < 20) {
                                 start(1200);
                             } else {
+                                //At this point we have no fucking clue what is going on
                                 Timber.w("Too many errors suspending longpoll");
                                 unhandledErrorCount = 0;
                                 listener.onError(Error.STOPPING);
