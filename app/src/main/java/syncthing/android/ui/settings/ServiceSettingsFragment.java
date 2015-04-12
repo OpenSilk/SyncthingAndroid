@@ -216,12 +216,13 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         if (!enabled) {
             receiverHelper.setBootReceiverEnabled(false);
             receiverHelper.setChargingReceiverEnabled(false);
-            //receiverHelper.setConnectivityReceiverEnabled(false);
+            receiverHelper.setConnectivityReceiverEnabled(false);
         } else {
             //Dont care if not allowed to run in background
             receiverHelper.setBootReceiverEnabled(!ServiceSettings.WHEN_OPEN.equals(runWhen.getValue()));
             //dont care if we can run whenever
             receiverHelper.setChargingReceiverEnabled(onlyCharging.isChecked());
+            receiverHelper.setConnectivityReceiverEnabled(true);
         }
     }
 }
