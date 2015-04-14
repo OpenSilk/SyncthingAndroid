@@ -84,6 +84,10 @@ public class ServiceSettings {
         return !getPrefs().getBoolean(ENABLED, false);
     }
 
+    public String runWhen() {
+        return getPrefs().getString(RUN_WHEN, ALWAYS);
+    }
+
     boolean isAllowedToRun() {
         if (isDisabled()) {
             Timber.d("isAllowedToRun(): SyncthingInstance disabled");
@@ -98,19 +102,20 @@ public class ServiceSettings {
             Timber.d("isAllowedToRun(): No suitable network... rejecting");
             return false;
         }
-        String runWhen = getPrefs().getString(RUN_WHEN, WHEN_OPEN);
-        if (ALWAYS.equals(runWhen)) {
-            Timber.d("isAllowedToRun(): Always mate!");
-            return true;
-        } else if (SCHEDULED.equals(runWhen)) {
-            long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
-            long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
-            boolean can = SyncthingUtils.isNowBetweenRange(start, end);
-            Timber.d("isAllowedToRun(): is now a good time? %s", can);
-            return can;
-        } else /*runWhen == WHEN_OPEN*/ {
-            Timber.d("isAllowedToRun(): nope!");
-            return false;
+        switch (runWhen()) {
+            case WHEN_OPEN:
+                Timber.d("isAllowedToRun(): nope!");
+                return false;
+            case SCHEDULED:
+                long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
+                long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
+                boolean can = SyncthingUtils.isNowBetweenRange(start, end);
+                Timber.d("isAllowedToRun(): is now a good time? %s", can);
+                return can;
+            case ALWAYS:
+            default:
+                Timber.d("isAllowedToRun(): Always mate!");
+                return true;
         }
     }
 
@@ -169,7 +174,7 @@ public class ServiceSettings {
     }
 
     boolean isOnSchedule() {
-        return SCHEDULED.equals(getPrefs().getString(RUN_WHEN, WHEN_OPEN));
+        return SCHEDULED.equals(runWhen());
     }
 
     long getNextScheduledEndTime() {

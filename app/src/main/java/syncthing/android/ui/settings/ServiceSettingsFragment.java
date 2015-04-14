@@ -51,6 +51,7 @@ import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.ActivityRequestCodes;
 
 /**
+ * TODO inject ServiceSettings and wifiService, and probably RecieverHelper
  * Created by drew on 3/21/15.
  */
 public class ServiceSettingsFragment extends PreferenceFragment implements
@@ -91,7 +92,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
 
         catBetween = (PreferenceCategory) findPreference("cat_between");
         hideShowRunWhenCategories(getPreferenceManager().getSharedPreferences()
-                .getString(ServiceSettings.RUN_WHEN, ServiceSettings.WHEN_OPEN));
+                .getString(ServiceSettings.RUN_WHEN, ServiceSettings.ALWAYS));
 
         exportConfig = findPreference("export");
         exportConfig.setOnPreferenceClickListener(this);
@@ -197,6 +198,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
 
     void setEnabled(boolean enabled) {
         getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, enabled).commit();
+        getActivity().startService(new Intent(getActivity(), SyncthingInstance.class).setAction(SyncthingInstance.REEVALUATE));
     }
 
     String[] getWifiNetworks() {
