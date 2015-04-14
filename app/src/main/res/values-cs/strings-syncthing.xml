@@ -10,7 +10,7 @@
     <string name="addresses">Adresy</string>
     <string name="all_data">Všechna data</string>
     <string name="allow_anonymous_usage_reporting">Povolit anonymní hlášení o používání?</string>
-    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
+    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Verzování obstarává externí příkaz. Musí odstranit soubor ze sdíleného adresáře.</string>
     <string name="anonymous_usage_reporting">Anonymní hlášení o používání</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Jakékoliv přístroje nakonfigurované na zavaděči budou přidány také na tento přístroj.</string>
     <string name="api_key">API klíč</string>
@@ -24,7 +24,7 @@
     <string name="connection_error">Chyba připojení</string>
     <string name="copied_from_elsewhere">Zkopírováno odjinud</string>
     <string name="copied_from_original">Zkopírováno z originálu</string>
-    <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
+    <string name="copyright_2015_the_following_contributors">Copyright © 2015 následující přispěvatelé:</string>
     <string name="cpu_utilization">Využití CPU</string>
     <string name="delete">Smazat</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Přístroj %1$s (%2$s) žádá o připojení. Chcete ho přidat?</string>
@@ -47,9 +47,9 @@
     <string name="enter_ignore_patterns_one_per_line">Vložit ignorované vzory, jeden na řádek.</string>
     <string name="error">Chyba</string>
     <string name="external_file_versioning">Externí verzování souborů</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Bity označující práva souborů jsou při hledání změn ignorovány. Použít pro souborové systémy FAT.</string>
     <string name="file_versioning">Verze souborů</string>
-    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
+    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Po nahrazení nebo smazání aplikací Syncthing jsou soubory přesunuty do verzí označených daty v adresáři .stversions.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Soubory jsou chráněny před změnami na ostatních přístrojích, ale změny provedené z tohoto přístroje budou rozeslány na zbytek clusteru.</string>
     <string name="folder_id">ID adresáře</string>
     <string name="folder_master">Master adresář</string>
@@ -137,7 +137,7 @@
     <string name="syncthing_is_restarting">Syncthing se restartuje.</string>
     <string name="syncthing_is_upgrading">Syncthing se aktualizuje.</string>
     <string name="syncthing_seems_to_be_down_or_there_is_a_problem_with_your_internet_connection_retrying">Syncthing se zdá být nefunkční, nebo je problém s připojením k Internetu. Opakuji...</string>
-    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing seems to be experiencing a problem processing your request. Please refresh the page or restart Syncthing if the problem persists.</string>
+    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing má nejspíše problém s provedením vašeho požadavku. Pokud problém přetrvává, obnovte stránku v prohlížeči nebo restartujte Syncthing.</string>
     <string name="the_aggregated_statistics_are_publicly_available_at_url">Souhrnné statistiky jsou veřejně dostupné na %1$s.</string>
     <string name="the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration">Konfigurace byla uložena, ale není aktivována. Pro aktivaci nové konfigurace je třeba restartovat Syncthing.</string>
     <string name="the_device_id_cannot_be_blank">ID přístroje nemůže být prázdné.</string>
