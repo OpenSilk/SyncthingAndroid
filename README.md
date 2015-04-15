@@ -4,19 +4,28 @@
 
 Requirements
 
-* I guess you'll need build-essential or base-devel (maybe more)
-* Android sdk
+* You'll need build-essential or base-devel
 * Android ndk set `TOOLCHAIN_ROOT` or update scripts to point to yours
 
 ```bash
+# You only need to run these once (or whenever the submodules are updated)
+
 # Build go for android
 ./make-go.bash
-
 # Build syncthing for android
 ./make-syncthing.bash
+```
 
-# You only need to run the above once (or whenever the submodules are updated)
+Alternatively use docker
 
+```bash
+#Make the image (only need to run once)
+./make-docker-image.bash
+#Build syncthing (only need to run once or whenever the submodules are updated)
+./make-syncthing-docker.bash
+```
+
+```bash
 # Build apk
 ./gradlew assembleDebug
 ```
