@@ -1,10 +1,5 @@
-FROM buildpack-deps:jessie-scm
+FROM buildpack-deps:jessie
 
-RUN apt-get update && \
-	apt-get -y install \
-		build-essential
-
-ENV GO_VERSION 1.4.2
 ENV NDK_VERSION 10d
 
 #Download ndk and install toolchain
@@ -14,12 +9,12 @@ RUN mkdir -p /opt/android/ndk && \
 	chmod a+x /tmp/ndk.bin && \
 	/tmp/ndk.bin && \
 	rm /tmp/ndk.bin
-#This isn't quite right (shouldnt need to specify --system)
 RUN bash /opt/android/ndk/android-ndk-r${NDK_VERSION}/build/tools/make-standalone-toolchain.sh \
 		--platform=android-16 --arch=arm \
-		--system=linux-x86_64 \
 		--install-dir=/opt/android/ndk/toolchain-arm && \
 	rm -r /tmp/ndk-*
+
+ENV GO_VERSION 1.4.2
 
 #Download go
 RUN curl -L -o /tmp/golang.tar.gz https://storage.googleapis.com/golang/go${GO_VERSION}.src.tar.gz
@@ -39,11 +34,12 @@ RUN cd /opt/go/src && \
 
 ENV GOROOT /opt/go
 ENV PATH ${GOROOT}/bin:${PATH}
-ENV DOCKER_BUILD true
 
 #Bind mount syncthing repo here
 VOLUME /opt/workspace
 WORKDIR /opt/workspace
+
+ENV DOCKER_BUILD true
 
 COPY do-build.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/do-build.sh
