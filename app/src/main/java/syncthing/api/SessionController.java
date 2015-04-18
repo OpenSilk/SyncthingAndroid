@@ -100,7 +100,7 @@ public class SessionController implements EventMonitor.EventListener {
 
     }
 
-    public class ChangeEvent {
+    public static class ChangeEvent {
         public static final String NONE = "";
         public final Change change;
         // Id or name of object being effected
@@ -633,6 +633,7 @@ public class SessionController implements EventMonitor.EventListener {
         this.report = report;
     }
 
+    @Nullable
     public Model getModel(String folderName) {
         return models.get(folderName);
     }
@@ -976,6 +977,7 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     public void shutdown() {
+        restarting = false;
         eventMonitor.stop();
         updateState(false);
         restApi.shutdown().subscribe(v -> {}, this::logException);
