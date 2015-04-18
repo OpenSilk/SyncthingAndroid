@@ -1,11 +1,22 @@
 ##Syncthing on Android
 
+This app aims to be a full featured [Syncthing](https://syncthing.net/) client comparable to the web ui.
+
+Secondary objectives include:
+
+* Showcase real world usage of:
+  * [Mortar](https://github.com/square/mortar) + [Dagger2](https://github.com/google/dagger)
+  * [RxJava](https://github.com/ReactiveX/RxJava) + [Retrolamba](https://github.com/orfjackal/retrolambda)
+* CGO support for Syncthing on android.
+
 ###Building
+
+#####Syncthing binary
 
 Requirements
 
 * You'll need build-essential or base-devel
-* Android ndk set `TOOLCHAIN_ROOT` or update scripts to point to yours
+* Android ndk. Set `TOOLCHAIN_ROOT` or update scripts to point to yours
 
 ```bash
 # You only need to run these once (or whenever the submodules are updated)
@@ -25,9 +36,11 @@ Alternatively use docker
 ./make-syncthing-docker.bash
 ```
 
+#####App
+
 ```bash
 # Build apk
-./gradlew assembleDebug
+./gradlew app:assembleDebug
 ```
 
 ###Contributing
@@ -41,6 +54,7 @@ mkdir OpenSilk && cd OpenSilk
 repo init -u https://github.com/OpenSilk/Manifest.git
 repo sync
 cd SyncthingAndroid
+repo start mybranch .
 #make changes
 repo upload .
 ```
