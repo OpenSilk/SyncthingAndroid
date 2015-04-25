@@ -23,21 +23,22 @@ import com.google.gson.annotations.SerializedName;
 * Created by drew on 3/17/15.
 */
 public enum EventType {
+    @SerializedName("Ping") PING,
     @SerializedName("Starting") STARTING,
     @SerializedName("StartupComplete") STARTUP_COMPLETE,
-    @SerializedName("Ping") PING,
     @SerializedName("DeviceDiscovered") DEVICE_DISCOVERED,
     @SerializedName("DeviceConnected") DEVICE_CONNECTED,
     @SerializedName("DeviceDisconnected") DEVICE_DISCONNECTED,
-    @SerializedName("RemoteIndexUpdated") REMOTE_INDEX_UPDATED,
+    @SerializedName("DeviceRejected") DEVICE_REJECTED,
     @SerializedName("LocalIndexUpdated") LOCAL_INDEX_UPDATED,
+    @SerializedName("RemoteIndexUpdated") REMOTE_INDEX_UPDATED,
     @SerializedName("ItemStarted") ITEM_STARTED,
     @SerializedName("ItemFinished") ITEM_FINISHED,
     @SerializedName("StateChanged") STATE_CHANGED,
     @SerializedName("FolderRejected") FOLDER_REJECTED,
-    @SerializedName("DeviceRejected") DEVICE_REJECTED,
     @SerializedName("ConfigSaved") CONFIG_SAVED,
     @SerializedName("DownloadProgress") DOWNLOAD_PROGRESS,
     @SerializedName("FolderSummary") FOLDER_SUMMARY,
     @SerializedName("FolderCompletion") FOLDER_COMPLETION,
+    @SerializedName("Unknown") UNKNOWN,
 }

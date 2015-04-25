@@ -40,6 +40,7 @@ public class EventData {
     //DEVICE_DISCONNECTED
     //ITEM_FINISHED
     //public String error; //TODO Itemfinished is an object
+    //LOCAL_INDEX_UPDATED
     //REMOTE_INDEX_UPDATED
     //ITEM_STARTED
     //ITEM_FINISHED
@@ -52,16 +53,6 @@ public class EventData {
     public int items;
     //REMOTE_INDEX_UPDATED
     public long version;
-    //LOCAL_INDEX_UPDATED
-    public String flags;
-    //LOCAL_INDEX_UPDATED
-    public String modified;
-    //LOCAL_INDEX_UPDATED
-    public String name;
-    //LOCAL_INDEX_UPDATED
-    public long size;
-    //LOCAL_INDEX_UPDATED
-    public int numFiles; //atm localindexupdated sends 2 kinds of events
     //ITEM_STARTED
     //ITEM_FINISHED
     public String item;

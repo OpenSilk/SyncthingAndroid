@@ -24,7 +24,7 @@ import org.joda.time.DateTime;
  */
 public class Event {
     public long id;
-    public EventType type;
     public DateTime time;
+    public EventType type;
     public EventData data;
 }
