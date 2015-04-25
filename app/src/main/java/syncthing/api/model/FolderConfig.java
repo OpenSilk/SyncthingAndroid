@@ -39,6 +39,7 @@ public class FolderConfig implements Serializable {
     public int copiers;// = 1;
     public int pullers;// = 16;
     public int hashers;// = 0;
+    public PullOrder order;
     public String invalid;
 
     public static FolderConfig withDefaults() {
@@ -49,6 +50,7 @@ public class FolderConfig implements Serializable {
         f.autoNormalize = true;
         f.versioning = new VersioningConfig();
         f.lenientMTimes = false;
+        f.order = PullOrder.RANDOM;
         f.invalid = "";
         return f;
     }

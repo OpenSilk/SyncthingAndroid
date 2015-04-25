@@ -37,6 +37,7 @@ public class OptionsConfig implements Serializable {
     public boolean upnpEnabled;
     public int upnpLeaseMinutes;
     public int upnpRenewalMinutes;
+    public int upnpTimeoutSeconds;
     public int urAccepted;
     public String urUniqueId;
     public boolean restartOnWakeup;
@@ -62,6 +63,7 @@ public class OptionsConfig implements Serializable {
         o.upnpEnabled = true;
         o.upnpLeaseMinutes = 0;
         o.upnpRenewalMinutes = 30;
+        o.upnpTimeoutSeconds = 3;
         o.urAccepted = -1; //0 off, -1 permanent
         o.restartOnWakeup = true;
         o.autoUpgradeIntervalH = 12;
