@@ -22,12 +22,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
+import timber.log.Timber;
+
 /**
  * Created by drew on 3/29/15.
  */
 public class ConnectivityReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        Timber.d("Received %s", intent.getAction());
         //TODO this should be debounced to prevent stopping syncthing just to restarting it a few seconds later
         context.startService(new Intent()
                         .setComponent(new ComponentName(context, SyncthingInstance.class))

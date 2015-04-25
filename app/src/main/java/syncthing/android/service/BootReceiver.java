@@ -22,12 +22,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
+import timber.log.Timber;
+
 /**
  * Created by drew on 3/29/15.
  */
 public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        Timber.d("Received %s", intent.getAction());
         context.startService(new Intent()
                 .setComponent(new ComponentName(context, SyncthingInstance.class))
                 .setAction(SyncthingInstance.REEVALUATE)
