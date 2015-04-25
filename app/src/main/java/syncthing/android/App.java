@@ -34,6 +34,7 @@ import java.util.List;
 import mortar.MortarScope;
 import mortar.dagger2support.DaggerService;
 import syncthing.android.service.ServiceComponent;
+import syncthing.android.service.ServiceSettings;
 import timber.log.Timber;
 
 import static org.acra.ReportField.*;
@@ -76,6 +77,9 @@ import static org.acra.ReportField.*;
         },
         excludeMatchingSharedPreferencesKeys = {
                 "TRANSIENT.*", //Private stuff
+        },
+        additionalSharedPreferences = {
+                ServiceSettings.FILE_NAME,
         }
 )
 public class App extends Application {
