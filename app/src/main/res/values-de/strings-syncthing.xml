@@ -16,7 +16,7 @@
     <string name="api_key">API-Schlüssel</string>
     <string name="automatic_upgrades">automatische Updates</string>
     <string name="bugs">Fehler</string>
-    <string name="changelog">Versionsinfo</string>
+    <string name="changelog">Änderungsprotokoll</string>
     <string name="close">Schließen</string>
     <string name="command">Kommando</string>
     <string name="comment_when_used_at_the_start_of_a_line">Kommentar, wenn am Anfang der Zeile benutzt.</string>

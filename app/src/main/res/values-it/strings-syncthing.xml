@@ -24,7 +24,7 @@
     <string name="connection_error">Errore di Connessione</string>
     <string name="copied_from_elsewhere">Copiato da qualche altra parte</string>
     <string name="copied_from_original">Copiato dall\'originale</string>
-    <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
+    <string name="copyright_2015_the_following_contributors">Copyright © 2015 i seguenti Collaboratori:</string>
     <string name="cpu_utilization">Utilizzo CPU</string>
     <string name="delete">Elimina</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Il dispositivo %1$s (%2$s) chiede di connettersi. Aggiungere il nuovo dispositivo?</string>
@@ -47,9 +47,9 @@
     <string name="enter_ignore_patterns_one_per_line">Inserisci gli schemi di esclusione, uno per riga.</string>
     <string name="error">Errore</string>
     <string name="external_file_versioning">Controllo Versione Esterno</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Il software evita i bit dei permessi dei file durante il controllo delle modifiche. Utilizzato nei filesystem FAT.</string>
     <string name="file_versioning">Controllo Versione dei File</string>
-    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
+    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">I file sostituiti o eliminati da Syncthing vengono datati e spostati in una cartella .stversions.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">I file sono protetti dalle modifiche effettuate negli altri dispositivi, ma le modifiche effettuate in questo dispositivo verranno inviate anche al resto del cluster.</string>
     <string name="folder_id">ID Cartella</string>
     <string name="folder_master">Cartella Principale</string>
@@ -137,7 +137,7 @@
     <string name="syncthing_is_restarting">Riavvio di Syncthing in corso.</string>
     <string name="syncthing_is_upgrading">Aggiornamento di Syncthing in corso.</string>
     <string name="syncthing_seems_to_be_down_or_there_is_a_problem_with_your_internet_connection_retrying">Syncthing sembra inattivo, oppure c\'è un problema con la tua connessione a Internet. Nuovo tentativo…</string>
-    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing seems to be experiencing a problem processing your request. Please refresh the page or restart Syncthing if the problem persists.</string>
+    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Sembra che Syncthing non sia in grado di elaborare il tuo comando. Se il problema persiste prova a ricaricare la pagina nel tuo navigatore oppure prova a riavviare Syncthing.</string>
     <string name="the_aggregated_statistics_are_publicly_available_at_url">Le statistiche aggregate sono disponibili pubblicamente su %1$s.</string>
     <string name="the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration">La configurazione è stata salvata ma non attivata. Devi riavviare Syncthing per attivare la nuova configurazione.</string>
     <string name="the_device_id_cannot_be_blank">L\'ID del dispositivo non può essere vuoto.</string>

@@ -24,7 +24,7 @@
     <string name="connection_error">Bağlantı hatası</string>
     <string name="copied_from_elsewhere">Başka bir yerden kopyalanmış</string>
     <string name="copied_from_original">Aslından kopyalanmış</string>
-    <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
+    <string name="copyright_2015_the_following_contributors">Telif Hakkı © 2015 Katkıda bulunanlar:</string>
     <string name="cpu_utilization">İşlemci Kullanımı</string>
     <string name="delete">Sil</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Cihaz %1$s (%2$s) bağlanmak istiyor. Yeni cihaz ekle?</string>
@@ -46,10 +46,10 @@
     <string name="enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">IP adresleri eklemek için virgül ile ayırarak \"ip:port\" yazın, ya da \"dynamic\" yazarak otomatik bulma işlemini seçin.</string>
     <string name="enter_ignore_patterns_one_per_line">Yoksayılacak kalıp dizilerini her satıra bir tane olacak şekilde girin.</string>
     <string name="error">Hata</string>
-    <string name="external_file_versioning">External File Versioning</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="external_file_versioning">Harici Dosya Sürümlendirme</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Değişimleri yoklarken dosya izin bilgilerini ihmal et. FAT dosya sistemlerinde kullanın.</string>
     <string name="file_versioning">Dosya Sürümlendirme</string>
-    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
+    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Dosyalar Syncthing tarafından değiştirildiğinde ya da silindiğinde, tarih damgalı sürümleri .stversions dizinine taşınır.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Dosyalar diğer cihazlarda yapılan değişikliklerden korunur, ancak bu cihazdaki değişiklikler kümedeki diğer cihazlara gönderilir.</string>
     <string name="folder_id">Klasör ID</string>
     <string name="folder_master">Ana Klasör</string>
@@ -137,7 +137,7 @@
     <string name="syncthing_is_restarting">Syncthing yeniden başlatılıyor.</string>
     <string name="syncthing_is_upgrading">Syncthing yükseltiliyor.</string>
     <string name="syncthing_seems_to_be_down_or_there_is_a_problem_with_your_internet_connection_retrying">Syncthing görünüşe durdu veya internetin bağlantınızda problem var. Tekrar deniyor....</string>
-    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing seems to be experiencing a problem processing your request. Please refresh the page or restart Syncthing if the problem persists.</string>
+    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing isteminizi işleme alırken bir sorunla karşılaştı. Lütfen sayfanızı yenileyin veya sorun devam ediyorsa Syncthing\'i yeniden başlatın.</string>
     <string name="the_aggregated_statistics_are_publicly_available_at_url">Toplanan halka açık istatistiklere ulaşabileceğiniz adres %1$s.</string>
     <string name="the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration">Ayarlar kaydedildi ancak aktifleştirilmedi. Aktifleştirmek için Syncthing yeniden başlatılmalı.</string>
     <string name="the_device_id_cannot_be_blank">Cihaz ID boş olamaz.</string>
@@ -154,7 +154,7 @@
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Bir sürümün tutulması için belirlenen azami süre (sürümleri daimi olarak tutabilmek için 0 değeri atayın)</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Dosya başına saklanacak eski sürüm.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Sürümlerin sayısı sayı olmalı ve boş bırakılamaz.</string>
-    <string name="the_path_cannot_be_blank">The path cannot be blank.</string>
+    <string name="the_path_cannot_be_blank">Dizin yolu boş bırakılamaz.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Tarama zaman aralığı, saniye cinsinden negatif olmayan bir sayı olmalıdır.</string>
     <string name="unknown">Bilinmiyor</string>
     <string name="unshared">Paylaşılmayan</string>
