@@ -280,7 +280,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_folder_id)
     void onFolderIdChanged(CharSequence text) {
         if (isAdd && !StringUtils.isEmpty(text)) {
-            presenter.validateFolderId(text);
+            presenter.validateFolderId(text.toString());
         }
     }
 
@@ -313,7 +313,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_rescan_interval)
     void onRescanIntrvlChanged(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            presenter.validateRescanInterval(text);
+            presenter.validateRescanInterval(text.toString());
         }
     }
 
@@ -324,7 +324,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_simple_versioning_keep)
     void onSimpleVerKeepChanged(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            presenter.validateSimpleVersioningKeep(text);
+            presenter.validateSimpleVersioningKeep(text.toString());
         }
     }
 
@@ -343,7 +343,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_staggered_max_age)
     void onStaggeredMaxAgeChange(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            presenter.validateStaggeredMaxAge(text);
+            presenter.validateStaggeredMaxAge(text.toString());
         }
     }
 
@@ -354,7 +354,7 @@ public class EditFolderScreenView extends ScrollView {
 
     @OnTextChanged(R.id.edit_external_versioning_command)
     void onExternalVerCmdChange(CharSequence text) {
-        presenter.validateExternalVersioningCmd(text);
+        presenter.validateExternalVersioningCmd(text.toString());
     }
 
     void notifyExternalVersioningCmdInvalid(boolean valid) {

@@ -205,7 +205,7 @@ public class EditDeviceScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_device_id)
     void onDeviceIdChange(CharSequence text) {
         if (isAdd && !StringUtils.isEmpty(text)) {
-            if (presenter.validateDeviceId(text, true)) {
+            if (presenter.validateDeviceId(text.toString(), true)) {
                 descDeviceId.setVisibility(VISIBLE);
                 descDeviceId2.setVisibility(VISIBLE);
                 errorDeviceIdBlank.setVisibility(GONE);
