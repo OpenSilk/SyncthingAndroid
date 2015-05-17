@@ -26,10 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import org.opensilk.common.core.mortar.DaggerService;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.model.Credentials;

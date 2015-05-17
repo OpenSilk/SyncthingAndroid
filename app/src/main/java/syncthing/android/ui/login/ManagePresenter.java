@@ -20,8 +20,8 @@ package syncthing.android.ui.login;
 import android.app.Activity;
 import android.os.Bundle;
 
-import org.opensilk.common.mortar.ActivityResultsController;
-import org.opensilk.common.mortarfragment.FragmentManagerOwner;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.List;
 

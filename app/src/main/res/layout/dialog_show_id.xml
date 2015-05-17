@@ -31,7 +31,7 @@
         android:paddingBottom="8dp"
         android:gravity="center_horizontal"/>
 
-    <org.opensilk.common.widget.SquareImageView
+    <org.opensilk.common.ui.widget.SquareImageView
         android:id="@+id/qr_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

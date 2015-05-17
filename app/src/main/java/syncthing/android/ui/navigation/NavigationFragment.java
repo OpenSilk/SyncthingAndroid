@@ -17,7 +17,8 @@
 
 package syncthing.android.ui.navigation;
 
-import org.opensilk.common.mortarfragment.MortarFragment;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 /**
  * Created by drew on 3/10/15.
@@ -25,7 +26,7 @@ import org.opensilk.common.mortarfragment.MortarFragment;
 public class NavigationFragment extends MortarFragment {
 
     @Override
-    protected Object getScreen() {
+    protected Screen newScreen() {
         return new NavigationScreen();
     }
 

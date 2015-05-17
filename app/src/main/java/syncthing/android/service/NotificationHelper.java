@@ -27,7 +27,6 @@ import javax.inject.Inject;
 
 import syncthing.android.R;
 import syncthing.android.ui.LauncherActivity;
-import syncthing.api.SessionScope;
 
 /**
  * Created by drew on 3/21/15.

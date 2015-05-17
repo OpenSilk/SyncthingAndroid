@@ -24,14 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.mortar.DaggerService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import syncthing.android.R;
-import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.BindsCard;
 import syncthing.android.ui.common.Card;
 

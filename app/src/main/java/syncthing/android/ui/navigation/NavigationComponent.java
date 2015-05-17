@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.navigation;
 
+import rx.functions.Func1;
 import syncthing.android.ui.LauncherActivityComponent;
 
 /**
@@ -24,9 +25,17 @@ import syncthing.android.ui.LauncherActivityComponent;
 */
 @NavigationScope
 @dagger.Component(
-        dependencies = LauncherActivityComponent.class,
-        modules = NavigationModule.class
+        dependencies = LauncherActivityComponent.class
 )
 public interface NavigationComponent {
+    Func1<LauncherActivityComponent, NavigationComponent> FACTORY =
+            new Func1<LauncherActivityComponent, NavigationComponent>() {
+                @Override
+                public NavigationComponent call(LauncherActivityComponent launcherActivityComponent) {
+                    return DaggerNavigationComponent.builder()
+                            .launcherActivityComponent(launcherActivityComponent)
+                            .build();
+                }
+            };
     NavigationPresenter presenter();
 }

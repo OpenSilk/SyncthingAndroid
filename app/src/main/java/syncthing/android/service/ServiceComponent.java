@@ -23,12 +23,9 @@ import android.app.NotificationManager;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import syncthing.android.AppComponent;
 import syncthing.android.AppModule;
 import syncthing.api.GsonModule;
 import syncthing.api.RetrofitModule;
-import syncthing.api.SyncthingApi;
-import syncthing.api.SyncthingApiModule;
 
 /**
  * Created by drew on 3/21/15.

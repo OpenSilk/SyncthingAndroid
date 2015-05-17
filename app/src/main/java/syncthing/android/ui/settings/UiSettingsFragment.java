@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.settings;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 

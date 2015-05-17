@@ -24,11 +24,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.mortar.DaggerService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.Ignores;

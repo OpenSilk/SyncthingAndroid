@@ -24,17 +24,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 import android.widget.Toast;
 
-import org.opensilk.common.widget.RecyclerListFrame;
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.recycler.RecyclerListFrame;
 
 import java.util.List;
 
-import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
-import syncthing.android.ui.common.Card;
-import syncthing.android.ui.common.CardRecyclerView;
 import syncthing.android.ui.common.ExpandableCard;
 
 /**

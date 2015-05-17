@@ -37,7 +37,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.ISODateTimeFormat;
-import org.opensilk.common.util.VersionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;

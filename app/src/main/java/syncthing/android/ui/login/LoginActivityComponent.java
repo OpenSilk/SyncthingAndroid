@@ -17,10 +17,13 @@
 
 package syncthing.android.ui.login;
 
-import org.opensilk.common.dagger2.ActivityScope;
-import org.opensilk.common.mortar.ActivityResultsController;
-import org.opensilk.common.mortarfragment.FragmentManagerOwner;
+import org.opensilk.common.core.dagger2.ActivityScope;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ActivityResultsOwnerModule;
+import org.opensilk.common.ui.mortar.PauseAndResumeModule;
+import org.opensilk.common.ui.mortarfragment.MortarFragmentActivityComponent;
 
+import rx.functions.Func1;
 import syncthing.android.AppComponent;
 
 /**
@@ -29,10 +32,21 @@ import syncthing.android.AppComponent;
 @ActivityScope
 @dagger.Component(
         dependencies = AppComponent.class,
-        modules = LoginActivityModule.class
+        modules = {
+                ActivityResultsOwnerModule.class,
+                PauseAndResumeModule.class
+        }
 )
-public interface LoginActivityComponent extends AppComponent {
+public interface LoginActivityComponent extends MortarFragmentActivityComponent, AppComponent {
+    Func1<AppComponent, LoginActivityComponent> FACTORY =
+            new Func1<AppComponent, LoginActivityComponent>() {
+                @Override
+                public LoginActivityComponent call(AppComponent appComponent) {
+                    return DaggerLoginActivityComponent.builder()
+                            .appComponent(appComponent)
+                            .build();
+                }
+            };
     void inject(LoginActivity activity);
     ActivityResultsController activityResultsController();
-    FragmentManagerOwner fragmentManagerOwner();
 }

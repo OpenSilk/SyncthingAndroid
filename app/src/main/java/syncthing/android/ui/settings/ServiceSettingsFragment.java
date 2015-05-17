@@ -38,7 +38,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import org.opensilk.common.util.VersionUtils;
+import org.opensilk.common.core.util.VersionUtils;
 
 import java.util.List;
 

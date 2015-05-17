@@ -17,9 +17,16 @@
 
 package syncthing.android.ui.login;
 
-import org.opensilk.common.mortar.WithComponent;
-import org.opensilk.common.mortarfragment.Layout;
 
+import android.content.res.Resources;
+
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ComponentFactory;
+import org.opensilk.common.ui.mortar.Layout;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.WithComponentFactory;
+
+import mortar.MortarScope;
 import syncthing.android.R;
 import syncthing.android.model.Credentials;
 
@@ -27,11 +34,19 @@ import syncthing.android.model.Credentials;
  * Created by drew on 3/10/15.
  */
 @Layout(R.layout.screen_login)
-@WithComponent(LoginComponent.class)
-public class LoginScreen {
+@WithComponentFactory(LoginScreen.Factory.class)
+public class LoginScreen extends Screen {
     final Credentials credentials;
 
     public LoginScreen(Credentials credentials) {
         this.credentials = credentials;
+    }
+
+    public static class Factory extends ComponentFactory<LoginScreen> {
+        @Override
+        protected Object createDaggerComponent(Resources resources, MortarScope parentScope, LoginScreen screen) {
+            LoginActivityComponent component = DaggerService.getDaggerComponent(parentScope);
+            return LoginComponent.FACTORY.call(component, screen);
+        }
     }
 }

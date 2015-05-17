@@ -21,7 +21,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import mortar.dagger2support.DaggerService;
+import org.opensilk.common.core.mortar.DaggerService;
+
 import syncthing.android.ui.common.BindsCard;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.NoDecorate;

@@ -18,6 +18,7 @@
 package syncthing.android.ui.session.edit;
 
 import dagger.Component;
+import rx.functions.Func1;
 import syncthing.android.ui.session.SessionComponent;
 
 /**
@@ -25,9 +26,17 @@ import syncthing.android.ui.session.SessionComponent;
  */
 @EditScope
 @Component (
-        dependencies = SessionComponent.class,
-        modules = SettingsModule.class
+        dependencies = SessionComponent.class
 )
 public interface SettingsComponent extends EditFragmentComponent {
+    Func1<SessionComponent, SettingsComponent> FACTORY =
+            new Func1<SessionComponent, SettingsComponent>() {
+                @Override
+                public SettingsComponent call(SessionComponent sessionComponent) {
+                    return DaggerSettingsComponent.builder()
+                            .sessionComponent(sessionComponent)
+                            .build();
+                }
+            };
     SettingsPresenter presenter();
 }

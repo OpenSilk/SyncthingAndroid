@@ -17,12 +17,15 @@
 
 package syncthing.android.ui;
 
-import org.opensilk.common.dagger2.ActivityScope;
-import org.opensilk.common.mortar.ActionBarOwner;
-import org.opensilk.common.mortar.ActivityResultsController;
-import org.opensilk.common.mortar.DrawerOwner;
-import org.opensilk.common.mortarfragment.FragmentManagerOwner;
+import org.opensilk.common.core.dagger2.ActivityScope;
+import org.opensilk.common.ui.mortar.ActionBarOwner;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ActivityResultsOwnerModule;
+import org.opensilk.common.ui.mortar.DrawerOwner;
+import org.opensilk.common.ui.mortar.PauseAndResumeModule;
+import org.opensilk.common.ui.mortarfragment.MortarFragmentActivityComponent;
 
+import rx.functions.Func1;
 import syncthing.android.AppComponent;
 
 /**
@@ -31,12 +34,23 @@ import syncthing.android.AppComponent;
 @ActivityScope
 @dagger.Component(
         dependencies = AppComponent.class,
-        modules = LauncherActivityModule.class
+        modules = {
+                ActivityResultsOwnerModule.class,
+                PauseAndResumeModule.class
+        }
 )
-public interface LauncherActivityComponent extends AppComponent {
+public interface LauncherActivityComponent extends MortarFragmentActivityComponent, AppComponent {
+    Func1<AppComponent, LauncherActivityComponent> FACTORY =
+            new Func1<AppComponent, LauncherActivityComponent>() {
+                @Override
+                public LauncherActivityComponent call(AppComponent appComponent) {
+                    return DaggerLauncherActivityComponent.builder()
+                            .appComponent(appComponent)
+                            .build();
+                }
+            };
     void inject(LauncherActivity activity);
     ActionBarOwner actionBarOwner();
     DrawerOwner drawerOwner();
-    FragmentManagerOwner fragmentManagerOwner();
     ActivityResultsController activityResultsController();
 }

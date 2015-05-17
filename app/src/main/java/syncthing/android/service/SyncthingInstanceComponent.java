@@ -18,9 +18,7 @@
 package syncthing.android.service;
 
 import dagger.Component;
-import syncthing.android.ui.session.SessionModule;
-import syncthing.api.SessionScope;
-import syncthing.api.SyncthingApiModule;
+import rx.functions.Func2;
 
 /**
  * Created by drew on 3/21/15.
@@ -33,5 +31,15 @@ import syncthing.api.SyncthingApiModule;
         }
 )
 public interface SyncthingInstanceComponent {
+    Func2<ServiceComponent, SyncthingInstance, SyncthingInstanceComponent> FACTORY =
+            new Func2<ServiceComponent, SyncthingInstance, SyncthingInstanceComponent>() {
+                @Override
+                public SyncthingInstanceComponent call(ServiceComponent serviceComponent, SyncthingInstance syncthingInstance) {
+                    return DaggerSyncthingInstanceComponent.builder()
+                            .serviceComponent(serviceComponent)
+                            .syncthingInstanceModule(new SyncthingInstanceModule(syncthingInstance))
+                            .build();
+                }
+            };
     void inject(SyncthingInstance service);
 }

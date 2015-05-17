@@ -17,24 +17,18 @@
 
 package syncthing.android.ui.session.edit;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Slide;
-import android.transition.TransitionManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import org.opensilk.common.mortar.ScreenScoper;
-import org.opensilk.common.mortarfragment.MortarDialogFragment;
-import org.opensilk.common.mortarfragment.MortarFragment;
-import org.opensilk.common.mortarfragment.MortarFragmentUtils;
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.ScreenScoper;
+import org.opensilk.common.ui.mortarfragment.MortarDialogFragment;
+import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import butterknife.ButterKnife;
 import mortar.MortarScope;
@@ -124,7 +118,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
 
 
     @Override
-    protected Object getScreen() {
+    protected Screen newScreen() {
         boolean isFolder = getArguments().getBoolean("isFolder");
         boolean isDevice = getArguments().getBoolean("isDevice");
         if (isFolder) {
@@ -153,12 +147,6 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
     }
 
     @Override
-    protected String getScopeName() {
-        //hack for editignores
-        return super.getScopeName() + Integer.toHexString(getArguments().getInt("title"));
-    }
-
-    @Override
     protected MortarScope findOrMakeScope() {
         //This scope descends from SessionScope
         MortarScope parentScope = ((MortarFragment) getParentFragment()).getScope();
@@ -167,7 +155,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
             Timber.d("Reusing fragment scope %s", getScopeName());
         }
         if (scope == null) {
-            ScreenScoper scoper = getScreenScoperService();
+            ScreenScoper scoper = ScreenScoper.getService(parentScope);
             scope = scoper.getScreenScope(getResources(),  parentScope, getScopeName(), getScreen());
             Timber.d("Created new fragment scope %s", getScopeName());
         }
@@ -182,7 +170,7 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
         super.onCreate(savedInstanceState);
         boolean editing = getArguments().getBoolean("editmode");
         setStyle(STYLE_NORMAL, editing ? R.style.SessionEditDialogTheme_Edit : R.style.SessionEditDialogTheme);
-        mFragmetnPresenter = MortarFragmentUtils.<EditFragmentComponent>getDaggerComponent(mScope).fragmentPresenter();
+        mFragmetnPresenter = DaggerService.<EditFragmentComponent>getDaggerComponent(getScope()).fragmentPresenter();
         mFragmetnPresenter.takeView(this);
     }
 

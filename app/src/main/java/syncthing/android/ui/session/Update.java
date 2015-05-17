@@ -17,10 +17,6 @@
 
 package syncthing.android.ui.session;
 
-import syncthing.api.model.ConnectionInfo;
-import syncthing.api.model.DeviceStats;
-import syncthing.api.model.Model;
-
 /**
  * Created by drew on 3/20/15.
  */

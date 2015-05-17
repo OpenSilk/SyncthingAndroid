@@ -17,8 +17,9 @@
 
 package syncthing.android.ui.session.edit;
 
-import org.opensilk.common.mortar.WithComponent;
-import org.opensilk.common.mortarfragment.Layout;
+import org.opensilk.common.ui.mortar.Layout;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.WithComponent;
 
 import syncthing.android.R;
 
@@ -27,10 +28,15 @@ import syncthing.android.R;
  */
 @Layout(R.layout.screen_edit_folder_ignores)
 @WithComponent(EditIgnoresComponent.class)
-public class EditIgnoresScreen {
+public class EditIgnoresScreen extends Screen {
     final String folderId;
 
     public EditIgnoresScreen(String folderId) {
         this.folderId = folderId;
+    }
+
+    @Override
+    public String getName() {
+        return super.getName() + folderId;
     }
 }

@@ -23,13 +23,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.opensilk.common.core.mortar.DaggerService;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
-import syncthing.android.ui.common.Card;
-import syncthing.android.ui.common.CardViewWrapper;
 import syncthing.android.ui.common.ExpandableCardViewWrapper;
 
 /**

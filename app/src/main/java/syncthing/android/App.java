@@ -17,27 +17,47 @@
 
 package syncthing.android;
 
-import android.app.Application;
-import android.os.StrictMode;
 import android.text.TextUtils;
 
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
-import org.acra.log.ACRALog;
 import org.acra.sender.HttpSender;
 import org.apache.commons.io.FileUtils;
+import org.opensilk.common.core.app.BaseApp;
+import org.opensilk.common.core.mortar.DaggerService;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import mortar.MortarScope;
-import mortar.dagger2support.DaggerService;
 import syncthing.android.service.ServiceComponent;
 import syncthing.android.service.ServiceSettings;
 import timber.log.Timber;
 
-import static org.acra.ReportField.*;
+import static org.acra.ReportField.ANDROID_VERSION;
+import static org.acra.ReportField.APP_VERSION_CODE;
+import static org.acra.ReportField.APP_VERSION_NAME;
+import static org.acra.ReportField.AVAILABLE_MEM_SIZE;
+import static org.acra.ReportField.BRAND;
+import static org.acra.ReportField.BUILD;
+import static org.acra.ReportField.BUILD_CONFIG;
+import static org.acra.ReportField.CRASH_CONFIGURATION;
+import static org.acra.ReportField.DEVICE_FEATURES;
+import static org.acra.ReportField.DISPLAY;
+import static org.acra.ReportField.ENVIRONMENT;
+import static org.acra.ReportField.INITIAL_CONFIGURATION;
+import static org.acra.ReportField.INSTALLATION_ID;
+import static org.acra.ReportField.IS_SILENT;
+import static org.acra.ReportField.PACKAGE_NAME;
+import static org.acra.ReportField.PHONE_MODEL;
+import static org.acra.ReportField.PRODUCT;
+import static org.acra.ReportField.REPORT_ID;
+import static org.acra.ReportField.SHARED_PREFERENCES;
+import static org.acra.ReportField.STACK_TRACE;
+import static org.acra.ReportField.THREAD_DETAILS;
+import static org.acra.ReportField.TOTAL_MEM_SIZE;
+import static org.acra.ReportField.USER_APP_START_DATE;
+import static org.acra.ReportField.USER_CRASH_DATE;
 
 /**
  * Created by drew on 3/4/15.
@@ -82,35 +102,18 @@ import static org.acra.ReportField.*;
                 ServiceSettings.FILE_NAME,
         }
 )
-public class App extends Application {
-
-    MortarScope rootScope;
+public class App extends BaseApp {
 
     @Override
     public void onCreate() {
         Timber.d("onCreate()");
         super.onCreate();
-        Timber.plant(new Timber.DebugTree());
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+        setupTimber(true, null);
+        enableStrictMode();
     }
 
     @Override
-    public Object getSystemService(String name) {
-        Timber.d("getSystemService(%s)", name);
-        if (rootScope == null) {
-            rootScope = MortarScope.buildRootScope()
-                    .withService(DaggerService.SERVICE_NAME, makeComponent())
-                    .build("ROOT");
-        }
-        if (rootScope.hasService(name)) {
-            return rootScope.getService(name);
-        }
-        return super.getSystemService(name);
-
-    }
-
-    Object makeComponent() {
+    protected Object getRootComponent() {
         if (isServiceProcess()) {
             return DaggerService.createComponent(ServiceComponent.class, new AppModule(this));
         } else {

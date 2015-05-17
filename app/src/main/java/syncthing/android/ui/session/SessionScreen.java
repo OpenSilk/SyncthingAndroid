@@ -17,22 +17,41 @@
 
 package syncthing.android.ui.session;
 
-import org.opensilk.common.mortar.WithComponentFactory;
-import org.opensilk.common.mortarfragment.Layout;
+import android.content.res.Resources;
 
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ComponentFactory;
+import org.opensilk.common.ui.mortar.Layout;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.WithComponentFactory;
+
+import mortar.MortarScope;
 import syncthing.android.R;
 import syncthing.android.model.Credentials;
+import syncthing.android.ui.LauncherActivityComponent;
 
 /**
  * Created by drew on 3/6/15.
  */
 @Layout(R.layout.screen_session)
-@WithComponentFactory(SesssionComponentFactory.class)
-public class SessionScreen {
+@WithComponentFactory(SessionScreen.Factory.class)
+public class SessionScreen extends Screen {
     final Credentials credentials;
 
     public SessionScreen(Credentials credentials) {
         this.credentials = credentials;
     }
 
+    @Override
+    public String getName() {
+        return super.getName() + credentials.apiKey;
+    }
+
+    public static class Factory extends ComponentFactory<SessionScreen> {
+        @Override
+        protected Object createDaggerComponent(Resources resources, MortarScope parentScope, SessionScreen screen) {
+            LauncherActivityComponent component = DaggerService.getDaggerComponent(parentScope);
+            return SessionComponent.FACTORY.call(component, screen);
+        }
+    }
 }

@@ -33,7 +33,7 @@
             android:id="@+id/header"
             style="@style/session.RecyclerHeader">
 
-            <org.opensilk.common.widget.SquareImageView
+            <org.opensilk.common.ui.widget.SquareImageView
                 android:id="@+id/identicon"
                 style="@style/session.RecyclerHeaderIcon"/>
 

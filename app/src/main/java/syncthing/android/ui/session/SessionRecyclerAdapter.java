@@ -27,7 +27,6 @@ import java.util.List;
 import rx.functions.Func1;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardRecyclerAdapter;
-import syncthing.android.ui.common.Expandable;
 import syncthing.android.ui.common.ExpandableCard;
 
 /**

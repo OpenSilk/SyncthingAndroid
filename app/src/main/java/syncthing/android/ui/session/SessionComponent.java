@@ -17,8 +17,9 @@
 
 package syncthing.android.ui.session;
 
-import org.opensilk.common.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
 
+import rx.functions.Func2;
 import syncthing.android.ui.LauncherActivityComponent;
 import syncthing.api.SessionController;
 import syncthing.api.SessionScope;
@@ -38,6 +39,16 @@ import syncthing.api.SyncthingApiModule;
         }
 )
 public interface SessionComponent {
+    Func2<LauncherActivityComponent, SessionScreen, SessionComponent> FACTORY =
+            new Func2<LauncherActivityComponent, SessionScreen, SessionComponent>() {
+                @Override
+                public SessionComponent call(LauncherActivityComponent launcherActivityComponent, SessionScreen sessionScreen) {
+                    return DaggerSessionComponent.builder()
+                            .launcherActivityComponent(launcherActivityComponent)
+                            .sessionModule(new SessionModule(sessionScreen))
+                            .build();
+                }
+            };
     SessionController sessionController();
     SessionPresenter presenter();
     SessionFragmentPresenter fragmentPresenter();

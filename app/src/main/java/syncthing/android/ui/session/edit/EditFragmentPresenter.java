@@ -17,7 +17,7 @@
 
 package syncthing.android.ui.session.edit;
 
-import org.opensilk.common.mortar.HasScope;
+import org.opensilk.common.core.mortar.HasScope;
 
 import javax.inject.Inject;
 

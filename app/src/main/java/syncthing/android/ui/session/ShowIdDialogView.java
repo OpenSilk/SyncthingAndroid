@@ -27,11 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.mortar.DaggerService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import syncthing.android.R;

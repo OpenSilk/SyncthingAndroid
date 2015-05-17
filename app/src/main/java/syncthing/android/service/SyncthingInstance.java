@@ -22,7 +22,8 @@ import android.content.pm.PackageManager;
 import android.os.IBinder;
 
 import org.apache.commons.io.IOUtils;
-import org.opensilk.common.mortar.MortarService;
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.core.mortar.MortarService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,7 +33,6 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import mortar.MortarScope;
-import mortar.dagger2support.DaggerService;
 import syncthing.android.BuildConfig;
 import timber.log.Timber;
 
@@ -69,13 +69,9 @@ public class SyncthingInstance extends MortarService {
 
     @Override
     protected void onBuildScope(MortarScope.Builder builder) {
-        builder.withService(DaggerService.SERVICE_NAME,
-                DaggerService.createComponent(
-                        SyncthingInstanceComponent.class,
-                        DaggerService.getDaggerComponent(getApplicationContext()),
-                        new SyncthingInstanceModule(this)
-                )
-        );
+        ServiceComponent component = DaggerService.getDaggerComponent(getApplicationContext());
+        builder.withService(DaggerService.DAGGER_SERVICE,
+                SyncthingInstanceComponent.FACTORY.call(component, this));
     }
 
     @Override

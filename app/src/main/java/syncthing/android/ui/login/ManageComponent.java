@@ -18,15 +18,24 @@
 package syncthing.android.ui.login;
 
 import dagger.Component;
+import rx.functions.Func1;
 
 /**
  * Created by drew on 3/15/15.
  */
 @ManageScreenScope
 @Component(
-        dependencies = LoginActivityComponent.class,
-        modules = ManageModule.class
+        dependencies = LoginActivityComponent.class
 )
 public interface ManageComponent {
+    Func1<LoginActivityComponent, ManageComponent> FACTORY =
+            new Func1<LoginActivityComponent, ManageComponent>() {
+                @Override
+                public ManageComponent call(LoginActivityComponent loginActivityComponent) {
+                    return DaggerManageComponent.builder()
+                            .loginActivityComponent(loginActivityComponent)
+                            .build();
+                }
+            };
     ManagePresenter presenter();
 }

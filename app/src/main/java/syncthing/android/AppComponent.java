@@ -21,7 +21,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import org.opensilk.common.dagger2.ForApplication;
+import org.opensilk.common.core.dagger2.ForApplication;
 
 import java.util.concurrent.Executor;
 

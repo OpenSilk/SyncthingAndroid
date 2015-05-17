@@ -17,15 +17,29 @@
 
 package syncthing.android.ui.session.edit;
 
-import org.opensilk.common.mortar.WithComponent;
-import org.opensilk.common.mortarfragment.Layout;
+import android.content.res.Resources;
 
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ComponentFactory;
+import org.opensilk.common.ui.mortar.Layout;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.WithComponentFactory;
+
+import mortar.MortarScope;
 import syncthing.android.R;
+import syncthing.android.ui.session.SessionComponent;
 
 /**
  * Created by drew on 3/17/15.
  */
 @Layout(R.layout.screen_edit_settings)
-@WithComponent(SettingsComponent.class)
-public class SettingsScreen {
+@WithComponentFactory(SettingsScreen.Factory.class)
+public class SettingsScreen extends Screen {
+    public static class Factory extends ComponentFactory<SettingsScreen> {
+        @Override
+        protected Object createDaggerComponent(Resources resources, MortarScope parentScope, SettingsScreen screen) {
+            SessionComponent component = DaggerService.getDaggerComponent(parentScope);
+            return SettingsComponent.FACTORY.call(component);
+        }
+    }
 }

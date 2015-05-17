@@ -17,8 +17,6 @@
 
 package syncthing.android.ui.settings;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 

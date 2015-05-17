@@ -23,11 +23,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import org.opensilk.common.dagger2.ForApplication;
-import org.opensilk.common.mortar.ActivityResultsController;
-import org.opensilk.common.mortar.ActivityResultsListener;
-import org.opensilk.common.mortar.DrawerOwner;
-import org.opensilk.common.mortarfragment.FragmentManagerOwner;
+import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ActivityResultsListener;
+import org.opensilk.common.ui.mortar.DrawerOwner;
+import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.List;
 
@@ -90,6 +90,7 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
         super.onLoad(savedInstanceState);
         if (savedInstanceState != null) {
             Timber.d("from saved instance");
+            savedInstanceState.setClassLoader(getClass().getClassLoader());
             currentDevice = savedInstanceState.getParcelable("current");
         } else {
             currentDevice = appSettings.getDefaultCredentials();

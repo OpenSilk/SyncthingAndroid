@@ -32,6 +32,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.mortar.DaggerService;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,7 +42,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.api.model.Compression;

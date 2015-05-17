@@ -29,7 +29,8 @@ import android.os.BatteryManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.opensilk.common.dagger2.ForApplication;
+import org.opensilk.common.core.app.PreferencesWrapper;
+import org.opensilk.common.core.dagger2.ForApplication;
 
 import java.util.Set;
 
@@ -42,7 +43,7 @@ import timber.log.Timber;
  * Created by drew on 3/21/15.
  */
 @Singleton
-public class ServiceSettings {
+public class ServiceSettings extends PreferencesWrapper {
 
     public static final String FILE_NAME = "service";
 
@@ -75,7 +76,7 @@ public class ServiceSettings {
         this.wm = wm;
     }
 
-    SharedPreferences getPrefs() {
+    protected SharedPreferences getPrefs() {
         //must reaquire everytime since prefs are modified in another process
         return appContext.getSharedPreferences(FILE_NAME, Context.MODE_MULTI_PROCESS);
     }

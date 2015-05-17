@@ -23,7 +23,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
-import org.opensilk.common.dagger2.ForApplication;
+import org.opensilk.common.core.dagger2.ForApplication;
 
 import javax.inject.Singleton;
 

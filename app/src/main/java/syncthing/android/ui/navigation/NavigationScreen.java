@@ -17,16 +17,29 @@
 
 package syncthing.android.ui.navigation;
 
-import org.opensilk.common.mortar.WithComponent;
-import org.opensilk.common.mortarfragment.Layout;
+import android.content.res.Resources;
 
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ComponentFactory;
+import org.opensilk.common.ui.mortar.Layout;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.WithComponentFactory;
+
+import mortar.MortarScope;
 import syncthing.android.R;
+import syncthing.android.ui.LauncherActivityComponent;
 
 /**
  * Created by drew on 3/10/15.
  */
 @Layout(R.layout.screen_navigation)
-@WithComponent(NavigationComponent.class)
-public class NavigationScreen {
-
+@WithComponentFactory(NavigationScreen.Factory.class)
+public class NavigationScreen extends Screen {
+    public static class Factory extends ComponentFactory<NavigationScreen> {
+        @Override
+        protected Object createDaggerComponent(Resources resources, MortarScope parentScope, NavigationScreen screen) {
+            LauncherActivityComponent component = DaggerService.getDaggerComponent(parentScope);
+            return NavigationComponent.FACTORY.call(component);
+        }
+    }
 }

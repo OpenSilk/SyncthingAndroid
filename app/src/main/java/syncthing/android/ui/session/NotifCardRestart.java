@@ -18,7 +18,6 @@
 package syncthing.android.ui.session;
 
 import syncthing.android.R;
-import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.ExpandableCard;
 
 /**

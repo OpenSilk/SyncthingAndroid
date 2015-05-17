@@ -17,6 +17,8 @@
 
 package syncthing.android.ui.login;
 
+import rx.functions.Func2;
+
 /**
 * Created by drew on 3/11/15.
 */
@@ -26,5 +28,15 @@ package syncthing.android.ui.login;
         modules = LoginModule.class
 )
 public interface LoginComponent {
+    Func2<LoginActivityComponent, LoginScreen, LoginComponent> FACTORY =
+            new Func2<LoginActivityComponent, LoginScreen, LoginComponent>() {
+                @Override
+                public LoginComponent call(LoginActivityComponent loginActivityComponent, LoginScreen loginScreen) {
+                    return DaggerLoginComponent.builder()
+                            .loginActivityComponent(loginActivityComponent)
+                            .loginModule(new LoginModule(loginScreen))
+                            .build();
+                }
+            };
     void inject(LoginScreenView view);
 }

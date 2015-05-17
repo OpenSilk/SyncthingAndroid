@@ -27,21 +27,18 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.opensilk.common.core.mortar.DaggerService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
-import syncthing.android.ui.common.Card;
-import syncthing.android.ui.common.CardViewWrapper;
 import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
-import timber.log.Timber;
 
 /**
  * Created by drew on 3/1/15.

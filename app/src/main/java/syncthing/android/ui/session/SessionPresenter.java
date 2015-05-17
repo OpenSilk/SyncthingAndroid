@@ -22,12 +22,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 
-import org.opensilk.common.dagger2.ForApplication;
-import org.opensilk.common.mortar.ActivityResultsController;
-import org.opensilk.common.mortarfragment.FragmentManagerOwner;
+import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.rx.RxBus;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,12 +21,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
-import org.opensilk.common.mortarfragment.MortarFragmentActivity;
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import mortar.MortarScope;
-import mortar.dagger2support.DaggerService;
+import syncthing.android.AppComponent;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 
@@ -42,9 +43,8 @@ public class LoginActivity extends MortarFragmentActivity {
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
-        builder.withService(DaggerService.SERVICE_NAME,
-                DaggerService.createComponent(LoginActivityComponent.class,
-                        DaggerService.getDaggerComponent(getApplicationContext()), new LoginActivityModule()));
+        AppComponent component = DaggerService.getDaggerComponent(getApplicationContext());
+        builder.withService(DaggerService.DAGGER_SERVICE, LoginActivityComponent.FACTORY.call(component));
     }
 
     @Override

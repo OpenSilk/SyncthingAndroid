@@ -17,17 +17,12 @@
 
 package syncthing.android.ui.session;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.transition.Explode;
-import android.transition.Slide;
 
-import org.opensilk.common.mortar.HasScope;
-import org.opensilk.common.util.VersionUtils;
+import org.opensilk.common.core.mortar.HasScope;
 
 import javax.inject.Inject;
 

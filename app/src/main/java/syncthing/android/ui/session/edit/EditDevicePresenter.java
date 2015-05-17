@@ -24,8 +24,8 @@ import android.os.Bundle;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.opensilk.common.mortar.ActivityResultsController;
-import org.opensilk.common.mortar.ActivityResultsListener;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ActivityResultsListener;
 
 import java.util.Map;
 

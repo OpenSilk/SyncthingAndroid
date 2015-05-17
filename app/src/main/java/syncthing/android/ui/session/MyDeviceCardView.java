@@ -27,28 +27,24 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Duration;
-import org.joda.time.format.PeriodFormat;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
+import org.opensilk.common.core.mortar.DaggerService;
 
 import java.text.DecimalFormat;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
-import syncthing.android.ui.common.Card;
-import syncthing.android.ui.common.CardViewWrapper;
 import syncthing.android.ui.common.ExpandableCardViewWrapper;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
-import timber.log.Timber;
 
 /**
  * Created by drew on 3/4/15.

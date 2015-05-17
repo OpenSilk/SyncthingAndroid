@@ -38,7 +38,7 @@
                 android:id="@+id/header_texts"
                 style="@style/session.RecyclerHeader">
 
-                <org.opensilk.common.widget.SquareImageView
+                <org.opensilk.common.ui.widget.SquareImageView
                     android:id="@+id/identicon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"

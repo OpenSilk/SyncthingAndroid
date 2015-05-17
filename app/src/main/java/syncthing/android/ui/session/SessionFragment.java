@@ -21,17 +21,20 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
-import org.opensilk.common.mortarfragment.MortarFragment;
-import org.opensilk.common.mortarfragment.MortarFragmentUtils;
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
+import org.opensilk.common.ui.mortar.ActionBarOwner;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import syncthing.android.R;
 import syncthing.android.model.Credentials;
+import syncthing.android.ui.LauncherActivity;
+import syncthing.android.ui.LauncherActivityComponent;
 
 /**
  * Created by drew on 3/11/15.
@@ -53,22 +56,16 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
     SessionFragmentPresenter mFragmentPresenter;
 
     @Override
-    protected Object getScreen() {
+    protected Screen newScreen() {
         ensureCredentials();
         return new SessionScreen(mCredentials);
     }
 
     @Override
-    protected String getScopeName() {
-        ensureCredentials();
-        return super.getScopeName() + "-" + mCredentials.apiKey;
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = MortarFragmentUtils.<SessionComponent>getDaggerComponent(mScope).presenter();
-        mFragmentPresenter = MortarFragmentUtils.<SessionComponent>getDaggerComponent(mScope).fragmentPresenter();
+        mPresenter = DaggerService.<SessionComponent>getDaggerComponent(getScope()).presenter();
+        mFragmentPresenter = DaggerService.<SessionComponent>getDaggerComponent(getScope()).fragmentPresenter();
         mFragmentPresenter.takeView(this);
     }
 
@@ -81,8 +78,11 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //TODO stop doing this
         setHasOptionsMenu(true);
-        getActivity().setTitle(mCredentials.alias);
+        ActionBarOwner actionBarOwner = DaggerService.<LauncherActivityComponent>
+                getDaggerComponent(getActivity()).actionBarOwner();
+        actionBarOwner.setConfig(actionBarOwner.getConfig().buildUpon().setTitle(mCredentials.alias).build());
     }
 
     @Override
@@ -116,11 +116,11 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
                 mPresenter.openSettingsScreen();
                 return true;
             case R.id.show_id: {
-                Context context = mScope.createContext(getActivity());
+                Context context = getScope().createContext(getActivity());
                 new ShowIdDialog(context).show();
                 return true;
             } case R.id.shutdown: {
-                Context context = mScope.createContext(getActivity());
+                Context context = getScope().createContext(getActivity());
                 new AlertDialog.Builder(context)
                         .setTitle(R.string.shutdown)
                         .setMessage(R.string.are_you_sure_you_want_to_shutdown_syncthing)
@@ -139,6 +139,7 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
 
     void ensureCredentials() {
         if (mCredentials == null) {
+            getArguments().setClassLoader(getClass().getClassLoader());
             mCredentials = getArguments().getParcelable("creds");
         }
         if (mCredentials == null) {

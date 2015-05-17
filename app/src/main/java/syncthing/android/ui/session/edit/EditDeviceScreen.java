@@ -17,8 +17,9 @@
 
 package syncthing.android.ui.session.edit;
 
-import org.opensilk.common.mortar.WithComponent;
-import org.opensilk.common.mortarfragment.Layout;
+import org.opensilk.common.ui.mortar.Layout;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.WithComponent;
 
 import syncthing.android.R;
 
@@ -29,7 +30,7 @@ import static syncthing.android.ui.session.edit.EditModule.INVALID_ID;
  */
 @Layout(R.layout.screen_edit_device)
 @WithComponent(EditDeviceComponent.class)
-public class EditDeviceScreen {
+public class EditDeviceScreen extends Screen {
     final String deviceId;
     final boolean isAdd;
 
@@ -44,5 +45,10 @@ public class EditDeviceScreen {
     public EditDeviceScreen(String deviceId, boolean isAdd) {
         this.deviceId = deviceId;
         this.isAdd = isAdd;
+    }
+
+    @Override
+    public String getName() {
+        return super.getName() + deviceId;
     }
 }

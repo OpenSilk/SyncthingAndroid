@@ -25,8 +25,8 @@ import android.os.Parcelable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.opensilk.common.dagger2.ForApplication;
-import org.opensilk.common.mortar.ActivityResultsController;
+import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import java.io.Serializable;
 
@@ -113,6 +113,7 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
                 getView().initWithCredentials(initialCredentials);
             }
         } else {
+            savedInstanceState.setClassLoader(getClass().getClassLoader());
             isloading = savedInstanceState.getBoolean("isloading");
             newCredentials = savedInstanceState.getParcelable("creds");
             error = savedInstanceState.getString("error");

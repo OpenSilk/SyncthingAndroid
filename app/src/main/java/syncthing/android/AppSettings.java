@@ -26,7 +26,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.opensilk.common.dagger2.ForApplication;
+import org.opensilk.common.core.app.PreferencesWrapper;
+import org.opensilk.common.core.dagger2.ForApplication;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +46,7 @@ import timber.log.Timber;
  * Created by drew on 3/8/15.
  */
 @Singleton
-public class AppSettings {
+public class AppSettings extends PreferencesWrapper {
 
     public static final String DEFAULT_CREDENTIALS = "TRANSIENT_default_credentials";
     public static final String SAVED_CREDENTIALS = "TRANSIENT_saved_credentials";
@@ -62,20 +63,9 @@ public class AppSettings {
         prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
     }
 
-    public String getString(String pref, String def) {
-        return prefs.getString(pref, def);
-    }
-
-    public boolean getBoolean(String pref, boolean def) {
-        return prefs.getBoolean(pref, def);
-    }
-
-    public void saveString(String pref, String val) {
-        prefs.edit().putString(pref, val).apply();
-    }
-
-    public void removePref(String pref) {
-        prefs.edit().remove(pref).apply();
+    @Override
+    public SharedPreferences getPrefs() {
+        return prefs;
     }
 
     public Set<Credentials> getSavedCredentials() {
@@ -104,8 +94,9 @@ public class AppSettings {
         Set<Credentials> oldSet = getSavedCredentials();
         if (oldSet.contains(creds)) oldSet.remove(creds);
         oldSet.add(creds);
-        saveString(SAVED_CREDENTIALS, gson.toJson(oldSet,
-                new TypeToken<Set<Credentials>>() {}.getType()));
+        putString(SAVED_CREDENTIALS, gson.toJson(oldSet,
+                new TypeToken<Set<Credentials>>() {
+                }.getType()));
         //update default
         Credentials def = getDefaultCredentials();
         if (def == null || creds.equals(def)) {
@@ -117,8 +108,9 @@ public class AppSettings {
     public Set<Credentials> removeCredentials(Credentials creds) {
         Set<Credentials> oldSet = getSavedCredentials();
         oldSet.remove(creds);
-        saveString(SAVED_CREDENTIALS, gson.toJson(oldSet,
-                new TypeToken<Set<Credentials>>() {}.getType()));
+        putString(SAVED_CREDENTIALS, gson.toJson(oldSet,
+                new TypeToken<Set<Credentials>>() {
+                }.getType()));
         //update default
         if (creds.equals(getDefaultCredentials())) {
             Iterator<Credentials> ii = oldSet.iterator();
@@ -127,7 +119,7 @@ public class AppSettings {
                 setDefaultCredentials(ii.next());
             } else {
                 //no devices left
-                removePref(DEFAULT_CREDENTIALS);
+                remove(DEFAULT_CREDENTIALS);
             }
         }
         return oldSet;
@@ -143,7 +135,7 @@ public class AppSettings {
     }
 
     public void setDefaultCredentials(Credentials credentials) {
-        saveString(DEFAULT_CREDENTIALS, gson.toJson(credentials));
+        putString(DEFAULT_CREDENTIALS, gson.toJson(credentials));
     }
 
     public boolean keepScreenOn() {

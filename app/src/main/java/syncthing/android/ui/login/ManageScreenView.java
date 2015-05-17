@@ -22,12 +22,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import org.opensilk.common.core.mortar.DaggerService;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import mortar.dagger2support.DaggerService;
 import syncthing.android.R;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.CardRecyclerView;

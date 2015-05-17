@@ -28,24 +28,24 @@ import syncthing.api.SessionScope;
 */
 @dagger.Module
 public class SessionModule {
-    final Credentials credentials;
+    final SessionScreen screen;
 
-    public SessionModule(Credentials credentials) {
-        this.credentials = credentials;
+    public SessionModule(SessionScreen screen) {
+        this.screen = screen;
     }
 
     @Provides @SessionScope
     public Credentials provideCredentials(){
-        return credentials;
+        return screen.credentials;
     }
 
     @Provides @SessionScope
     public Endpoint provideEnpoint() {
-        return credentials;
+        return screen.credentials;
     }
 
     @Provides @SessionScope
     public RequestInterceptor provideRequestInterceptor() {
-        return credentials;
+        return screen.credentials;
     }
 }

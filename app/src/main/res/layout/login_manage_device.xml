@@ -24,7 +24,7 @@
     android:layout_height="wrap_content"
     style="@style/mtrl.SingleLineListItemLinear">
 
-    <org.opensilk.common.widget.SquareImageView
+    <org.opensilk.common.ui.widget.SquareImageView
         android:id="@+id/identicon"
         style="@style/mtrl.SingleLineListItemLinearInner.Avatar"/>
 

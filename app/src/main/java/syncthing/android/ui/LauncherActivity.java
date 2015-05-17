@@ -26,15 +26,19 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import org.opensilk.common.mortar.ActionBarOwner;
-import org.opensilk.common.mortar.DrawerOwner;
-import org.opensilk.common.mortar.DrawerOwnerActivity;
-import org.opensilk.common.mortarfragment.MortarFragmentActivity;
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
+import org.opensilk.common.ui.mortar.ActionBarOwner;
+import org.opensilk.common.ui.mortar.ActionBarOwnerDelegate;
+import org.opensilk.common.ui.mortar.DrawerOwner;
+import org.opensilk.common.ui.mortar.DrawerOwnerActivity;
+import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import javax.inject.Inject;
 
@@ -42,10 +46,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
 import mortar.MortarScope;
-import mortar.dagger2support.DaggerService;
 import rx.Subscription;
 import rx.android.observables.AndroidObservable;
 import rx.functions.Action1;
+import syncthing.android.AppComponent;
 import syncthing.android.AppSettings;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
@@ -55,14 +59,14 @@ import timber.log.Timber;
  * Created by drew on 3/1/15.
  */
 public class LauncherActivity extends MortarFragmentActivity implements
-        ActionBarOwner.Activity, DrawerOwnerActivity {
+        DrawerOwnerActivity {
 
     @Inject ActionBarOwner mActionBarOwner;
     @Inject DrawerOwner mDrawerOwner;
     @Inject AppSettings mSettings;
 
     ActionBarDrawerToggle mDrawerToggle;
-    protected ActionBarOwner.MenuConfig mMenuConfig;
+    protected ActionBarOwnerDelegate<LauncherActivity> mActionBarOwnerDelegate;
     Subscription mChargingSubscription;
 
     @InjectView(R.id.drawer_layout) @Optional DrawerLayout mDrawerLayout;
@@ -72,9 +76,8 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
-        builder.withService(DaggerService.SERVICE_NAME,
-                DaggerService.createComponent(LauncherActivityComponent.class,
-                        new LauncherActivityModule(), DaggerService.getDaggerComponent(getApplicationContext())));
+        AppComponent component = DaggerService.getDaggerComponent(getApplicationContext());
+        builder.withService(DaggerService.DAGGER_SERVICE, LauncherActivityComponent.FACTORY.call(component));
     }
 
     @Override
@@ -88,9 +91,9 @@ public class LauncherActivity extends MortarFragmentActivity implements
         setContentView(R.layout.activity_launcher);
         ButterKnife.inject(this);
 
-        setSupportActionBar(mToolbar);
-        setTitle("");
-        mActionBarOwner.takeView(this);
+        mActionBarOwner.setConfig(ActionBarConfig.builder().setTitle("").build());
+        mActionBarOwnerDelegate = new ActionBarOwnerDelegate<>(this, mActionBarOwner, mToolbar);
+        mActionBarOwnerDelegate.onCreate();
 
         if (mDrawerLayout != null) {
             mDrawerToggle = new Toggle(this, mDrawerLayout, mToolbar);
@@ -107,9 +110,8 @@ public class LauncherActivity extends MortarFragmentActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mActionBarOwner.dropView(this);
+        mActionBarOwnerDelegate.onDestroy();
         mDrawerOwner.dropView(this);//Noop if no view taken
-        mMenuConfig = null;
         if (mChargingSubscription != null) {
             mChargingSubscription.unsubscribe();
         }
@@ -140,8 +142,15 @@ public class LauncherActivity extends MortarFragmentActivity implements
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return mActionBarOwnerDelegate.onCreateOptionsMenu(menu) || super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
+        return (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) ||
+                mActionBarOwnerDelegate.onOptionsItemSelected(item) ||
+                super.onOptionsItemSelected(item);
     }
 
     /*
@@ -176,47 +185,6 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
     private boolean isDrawerOpen() {
         return mDrawer != null && mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mDrawer);
-    }
-
-
-    /*
-     * ActionBarOwner.Activity
-     */
-
-    @Override
-    public void setUpButtonEnabled(boolean enabled) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
-    }
-
-    @Override
-    public void setTitle(int titleId) {
-        getSupportActionBar().setTitle(titleId);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        getSupportActionBar().setTitle(title);
-    }
-
-    @Override
-    public void setSubtitle(int subTitleRes) {
-        getSupportActionBar().setSubtitle(subTitleRes);
-    }
-
-    @Override
-    public void setSubtitle(CharSequence title) {
-        getSupportActionBar().setSubtitle(title);
-    }
-
-    @Override
-    public void setMenu(ActionBarOwner.MenuConfig menuConfig) {
-        mMenuConfig = menuConfig;
-        supportInvalidateOptionsMenu();
-    }
-
-    @Override
-    public void setTransparentActionbar(boolean yes) {
-        mToolbar.getBackground().setAlpha(yes ? 0 : 255);
     }
 
     /*

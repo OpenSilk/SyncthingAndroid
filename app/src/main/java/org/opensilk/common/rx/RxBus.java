@@ -1,6 +1,6 @@
 package org.opensilk.common.rx;
 
-import org.opensilk.common.dagger2.ActivityScope;
+import org.opensilk.common.core.dagger2.ActivityScope;
 
 import javax.inject.Inject;
 

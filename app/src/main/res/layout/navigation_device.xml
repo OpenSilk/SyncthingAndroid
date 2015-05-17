@@ -23,7 +23,7 @@
     android:id="@+id/list_item"
     style="@style/mtrl.SingleLineListItemLinear">
 
-    <org.opensilk.common.widget.SquareImageView
+    <org.opensilk.common.ui.widget.SquareImageView
         android:id="@+id/identicon"
         style="@style/mtrl.SingleLineListItemLinearInner.Avatar"/>
 

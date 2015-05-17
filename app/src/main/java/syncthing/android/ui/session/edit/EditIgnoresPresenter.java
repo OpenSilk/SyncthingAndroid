@@ -23,7 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import org.apache.commons.lang3.StringUtils;
-import org.opensilk.common.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import javax.inject.Inject;
 import javax.inject.Named;
