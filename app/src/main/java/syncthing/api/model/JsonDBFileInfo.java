@@ -18,13 +18,13 @@
 package syncthing.api.model;
 
 /**
- * Created by drew on 3/4/15.
- */
-public class Need {
-    public JsonDBFileInfo[] progress;
-    public JsonDBFileInfo[] queued;
-    public JsonDBFileInfo[] rest;
-    int total;
-    int page;
-    int perpage;
+* Created by drew on 3/17/15.
+*/
+public class JsonDBFileInfo {
+    public String name;
+    public int flags;
+    public long modified;
+    public int version;
+    public int localVersion;
+    public long size;
 }

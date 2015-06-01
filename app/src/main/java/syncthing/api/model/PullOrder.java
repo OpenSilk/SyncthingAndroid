@@ -17,17 +17,31 @@
 
 package syncthing.api.model;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
+
+import syncthing.android.R;
 
 /**
  * Created by drew on 4/25/15.
  */
 public enum PullOrder {
-    @SerializedName("random") RANDOM,
-    @SerializedName("alphabetic") ALPHABETIC,
-    @SerializedName("smallestFirst") SMALLESTFIRST,
-    @SerializedName("largestFirst") LARGESTFIRST,
-    @SerializedName("oldestFirst") OLDESTFIRST,
-    @SerializedName("newestFirst") NEWESTFIRST,
-    @SerializedName("unknown") UNKNOWN;
+    @SerializedName("random") RANDOM(R.string.random),
+    @SerializedName("alphabetic") ALPHABETIC(R.string.alphabetic),
+    @SerializedName("smallestFirst") SMALLESTFIRST(R.string.smallest_first),
+    @SerializedName("largestFirst") LARGESTFIRST(R.string.largest_first),
+    @SerializedName("oldestFirst") OLDESTFIRST(R.string.oldest_first),
+    @SerializedName("newestFirst") NEWESTFIRST(R.string.newest_first),
+    @SerializedName("unknown") UNKNOWN(R.string.unknown);
+
+    private final int resource;
+
+    private PullOrder(int resource) {
+        this.resource = resource;
+    }
+
+    public CharSequence localizedString(Context context) {
+        return context.getString(resource);
+    }
 }

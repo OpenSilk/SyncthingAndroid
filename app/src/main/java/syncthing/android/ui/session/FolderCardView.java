@@ -46,6 +46,7 @@ import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.Model;
 import syncthing.api.model.ModelState;
+import syncthing.api.model.PullOrder;
 import syncthing.api.model.VersioningType;
 import timber.log.Timber;
 
@@ -68,6 +69,8 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
     @InjectView(R.id.ignore_patterns) ViewGroup ignorePatternsHider;
     @InjectView(R.id.ignore_perms) ViewGroup ignorePermsHider;
     @InjectView(R.id.rescan_interval) TextView rescanInterval;
+    @InjectView(R.id.pull_order_container) ViewGroup pullOrderHider;
+    @InjectView(R.id.pull_order) TextView pullOrder;
     @InjectView(R.id.versioning_container) ViewGroup versioningHider;
     @InjectView(R.id.versioning) TextView versioning;
     @InjectView(R.id.shared_with) TextView sharedWith;
@@ -160,6 +163,13 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
         ignorePermsHider.setVisibility(folder.ignorePerms ? VISIBLE : GONE);
         rescanInterval.setText(String.valueOf(folder.rescanIntervalS));
 
+        pullOrder.setText(folder.order.localizedString(getContext()));
+        if (folder.order == PullOrder.RANDOM || folder.order == PullOrder.UNKNOWN) {
+            pullOrderHider.setVisibility(GONE);
+        } else {
+            pullOrderHider.setVisibility(VISIBLE);
+        }
+
         if (folder.versioning.type != VersioningType.NONE) {
             versioningHider.setVisibility(VISIBLE);
             versioning.setText(folder.versioning.type.localizedString(getContext()));
@@ -224,6 +234,7 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
         error.setText(model.invalid);
         errorHider.setVisibility(StringUtils.isEmpty(model.invalid) ? GONE : VISIBLE);
+
     }
 
     void updateFolderStatus(ModelState status, int completion) {

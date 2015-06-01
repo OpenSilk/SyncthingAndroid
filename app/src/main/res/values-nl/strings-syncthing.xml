@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">Het kan voorkomen dat een grote nieuwe update niet meer werkt met eerdere versies.</string>
     <string name="about">Over</string>
     <string name="add">Toevoegen</string>
     <string name="add_device">Toestel toevoegen</string>
@@ -10,7 +11,8 @@
     <string name="addresses">Adressen</string>
     <string name="all_data">Alle Gegevens</string>
     <string name="allow_anonymous_usage_reporting">Bijhouden van anonieme gebruikers statistieken toestaan?</string>
-    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
+    <string name="alphabetic">Alfabetisch</string>
+    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Versiebeheer gebeurt door een extern commando. Het moet het bestand verwijderen van de gesynchroniseerde map.</string>
     <string name="anonymous_usage_reporting">Bijhouden anonieme gebruikers statistieken</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Toestellen geconfigureerd op een introductie toestel zullen ook aan dit toestel worden toegevoegd.</string>
     <string name="api_key">API-sleutel</string>
@@ -24,7 +26,7 @@
     <string name="connection_error">Verbindingsfout</string>
     <string name="copied_from_elsewhere">Van elders gekopieerd</string>
     <string name="copied_from_original">Gekopieerd van het origineel</string>
-    <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
+    <string name="copyright_2015_the_following_contributors">Copyright © 2015 de volgende Bijdragers:</string>
     <string name="cpu_utilization">CPU Gebruik</string>
     <string name="delete">Verwijderen</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Het apparaat %1$s (%2$s) wenst te verbinden. Dit apparaat toevoegen?</string>
@@ -46,10 +48,11 @@
     <string name="enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Geef, gescheiden door komma\'s, \"ip:port\" adressen of \"dynamic\" voor het automatische vinden van de addressen.</string>
     <string name="enter_ignore_patterns_one_per_line">Geef te negeren patronen, één per regel.</string>
     <string name="error">Fout</string>
-    <string name="external_file_versioning">External File Versioning</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="external_file_versioning">Extern Bestandsversiebeheer</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Toegangsrechten voor bestanden worden genegeerd bij het zoeken naar wijzigingen. Gebruik voor FAT bestandssystemen.</string>
+    <string name="file_pull_order">Volgorde van updaten bestanden</string>
     <string name="file_versioning">Versiebeheer</string>
-    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
+    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Bestanden worden niet door Syncthing vervangen of verwijderd, maar verplaatst naar de .stversions-map.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Bestanden zijn beschermt tegen aanpassingen gemaakt door andere apparaten maar aanpassingen op dit apparaat worden doorgestuurd naar de rest van de cluster.</string>
     <string name="folder_id">Folder ID</string>
     <string name="folder_master">Hoofdfolder</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Inversie van de gegeven voorwaarde (bv. niet uitsluiten)</string>
     <string name="items">objecten</string>
     <string name="keep_versions">Versies behouden</string>
+    <string name="largest_first">Grootste eerst</string>
     <string name="last_file_received">Laatste ontvangen bestand</string>
     <string name="last_seen">Laatst gezien op</string>
     <string name="later">Later</string>
     <string name="local_discovery">Lokaal zoeken</string>
     <string name="local_state">Lokale status</string>
+    <string name="major_upgrade">Grote update</string>
     <string name="maximum_age">Maximum leeftijd</string>
     <string name="metadata_only">Alleen Metadata</string>
     <string name="move_to_top_of_queue">Verplaats naar begin van wachtrij</string>
@@ -83,22 +88,27 @@
     <string name="never">Nooit</string>
     <string name="new_device">Nieuw Apparaat</string>
     <string name="new_folder">Nieuwe Folder</string>
+    <string name="newest_first">Nieuwste eerst</string>
     <string name="no">Nee</string>
     <string name="no_file_versioning">Geen versiebeheer</string>
     <string name="notice">Notificatie</string>
     <string name="off">Uit</string>
     <string name="ok">OK</string>
+    <string name="oldest_first">Oudste eerst</string>
     <string name="out_of_sync">Niet gesynchroniseerd</string>
     <string name="out_of_sync_items">Niet gesynchroniseerde objecten</string>
     <string name="outgoing_rate_limit_kibs">Uitgaande snelheidslimiet (KiB/s)</string>
     <string name="override_changes">Veranderingen overschrijven</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Locatie van de folder op de lokale computer. Zal aangemaakt worden wanneer deze niet bestaat. De tilde (~) kan gebruikt in plaats van</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Locatie waar de versies opgeslagen moeten worden (leeg laten voor de standaard .stversions subfolder).</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Lees eerst de release notes voordat u een grote update uitvoert.</string>
     <string name="please_wait">Even geduld</string>
     <string name="preview">Voorbeeld</string>
     <string name="preview_usage_report">Bekijk gebruiksstatistieken</string>
     <string name="quick_guide_to_supported_patterns">Snelgids voor ondersteunde patronen</string>
     <string name="ram_utilization">RAM gebruik</string>
+    <string name="random">Willekeurig</string>
+    <string name="release_notes">Release notes</string>
     <string name="rescan">Opnieuw scannen</string>
     <string name="rescan_all">Scan Alles Opnieuw</string>
     <string name="rescan_interval">Scanfrequentie</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">Afsluiten voltooid</string>
     <string name="simple_file_versioning">Eenvoudig versiebeheer</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Wildcard op enkel niveau (toepasbaar binnen een enkele folder)</string>
+    <string name="smallest_first">Kleinste eerst</string>
     <string name="source_code">Broncode</string>
     <string name="staggered_file_versioning">Gelaagd versiebeheer</string>
     <string name="start_browser">Start browser</string>
@@ -137,14 +148,14 @@
     <string name="syncthing_is_restarting">Syncthing is aan het herstarten.</string>
     <string name="syncthing_is_upgrading">Syncthing is aan het upgraden.</string>
     <string name="syncthing_seems_to_be_down_or_there_is_a_problem_with_your_internet_connection_retrying">Syncthing lijkt afgesloten te zijn, of er is een verbindingsprobleem met het internet. Nieuwe poging....</string>
-    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing seems to be experiencing a problem processing your request. Please refresh the page or restart Syncthing if the problem persists.</string>
+    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing heeft een probleem met het verwerken van je verzoek. Gelieve de pagina te vernieuwen of Syncthing te herstarten als het probleem zich blijft voordoen.</string>
     <string name="the_aggregated_statistics_are_publicly_available_at_url">The verzamelde statistieken zijn publiek beschikbaar op %1$s</string>
     <string name="the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration">De configuratie is opslagen maar nog niet actief. Syncthing moet opnieuw opgestart worden om de nieuwe configuratie te activeren.</string>
     <string name="the_device_id_cannot_be_blank">Het toestel ID mag niet leeg zijn.</string>
     <string name="the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored">Het verwachte toestel ID kan teruggevonden worden in het \"Aanpassen > Toon ID\" scherm op het andere toestel. Spaties en streepjes zijn facultatief (worden genegeerd).</string>
     <string name="the_encrypted_usage_report_is_sent_daily_it_is_used_to_track_common_platforms_folder_sizes_and_app_versions_if_the_reported_data_set_is_changed_you_will_be_prompted_with_this_dialog_again">Het versleutelde gebruiksrapport wordt dagelijks opgestuurd en wordt gebruikt om de verschillende platformen, folder groottes en versies op te volgen. Als de reeks gegevens wijzigt zal opnieuw toestemming gevraagd worden.</string>
     <string name="the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional">Dit toestel ID lijkt ongeldig. Het toestel ID bestaat uit 52 of 56 letters en nummers met facultatieve spaties en streepjes.</string>
-    <string name="the_first_command_line_parameter_is_the_folder_path_and_the_second_parameter_is_the_relative_path_in_the_folder">The first command line parameter is the folder path and the second parameter is the relative path in the folder.</string>
+    <string name="the_first_command_line_parameter_is_the_folder_path_and_the_second_parameter_is_the_relative_path_in_the_folder">De eerste parameter is het pad naar de map en de tweede parameter is het relatieve pad binnenin de map.</string>
     <string name="the_folder_id_cannot_be_blank">De folder ID mag niet leeg zijn.</string>
     <string name="the_folder_id_must_be_a_short_identifier_64_characters_or_less_consisting_of_letters_numbers_and_the_dot_dash_and_underscode_characters_only">De folder ID mag maximaal 64 tekens lang zijn en bestaat enkel uit letters, nummers, punten (.), streepjes (-) en onderstrepingstekens (_).</string>
     <string name="the_folder_id_must_be_unique">De folder ID moet uniek zijn.</string>
@@ -156,13 +167,16 @@
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Het aantal nummers moet een getal zijn en mag niet leeg blijven.</string>
     <string name="the_path_cannot_be_blank">U dient een locatie in te voeren.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">De scanfrequentie moet een positief getal in seconden zijn.</string>
+    <string name="this_is_a_major_version_upgrade">Dit is een grote update.</string>
     <string name="unknown">Onbekend</string>
     <string name="unshared">Niet gedeeld</string>
     <string name="unused">Ongebruikt</string>
     <string name="up_to_date">Gesynchroniseerd</string>
+    <string name="upgrade">Update</string>
     <string name="upgrade_to_version">Upgrade naar %1$s</string>
     <string name="upgrading">Bezig met upgrade</string>
     <string name="upload_rate">Upload snelheid</string>
+    <string name="uptime">Uptime</string>
     <string name="use_https_for_gui">Gebruik HTTPS voor de GUI</string>
     <string name="version">Versie</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Versies worden automatisch verwijderd als deze ouder zijn dan de maximale leeftijd of als ze het maximaal aantal toegestane bestanden per interval overschrijden. </string>

@@ -47,6 +47,7 @@ public class OptionsConfig implements Serializable {
     public int progressUpdateIntervalS;
     public boolean symlinksEnabled;
     public boolean limitBandwidthInLan;
+    public int databaseBlockCacheMiB;
 
     public static OptionsConfig withDefaults() {
         OptionsConfig o = new OptionsConfig();
@@ -61,9 +62,9 @@ public class OptionsConfig implements Serializable {
         o.reconnectionIntervalS = 60;
         o.startBrowser = true;
         o.upnpEnabled = true;
-        o.upnpLeaseMinutes = 0;
+        o.upnpLeaseMinutes = 60;
         o.upnpRenewalMinutes = 30;
-        o.upnpTimeoutSeconds = 3;
+        o.upnpTimeoutSeconds = 10;
         o.urAccepted = -1; //0 off, -1 permanent
         o.restartOnWakeup = true;
         o.autoUpgradeIntervalH = 12;
@@ -72,6 +73,7 @@ public class OptionsConfig implements Serializable {
         o.progressUpdateIntervalS = 5;
         o.symlinksEnabled = true;
         o.limitBandwidthInLan = false;
+        o.databaseBlockCacheMiB = 0;
         return o;
     }
 }

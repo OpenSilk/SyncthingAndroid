@@ -223,6 +223,24 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/pull_order_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.RecyclerCardRow">
+
+                <TextView
+                    android:id="@+id/pull_order_title"
+                    android:text="@string/rescan_interval"
+                    style="@style/session.RecyclerTextLeftColumn"/>
+
+                <TextView
+                    android:id="@+id/pull_order"
+                    style="@style/session.RecyclerTextRightColumn"
+                    tools:text="alphabetic"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/versioning_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

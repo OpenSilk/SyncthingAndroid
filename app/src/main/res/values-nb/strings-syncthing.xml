@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">A new major version may not be compatible with previous versions.</string>
     <string name="about">Om</string>
     <string name="add">Legg til</string>
     <string name="add_device">Legg Til Enhet</string>
@@ -10,6 +11,7 @@
     <string name="addresses">Adresser</string>
     <string name="all_data">Alle data</string>
     <string name="allow_anonymous_usage_reporting">Tillat Anonym Innsamling Av Brukerdata?</string>
+    <string name="alphabetic">Alphabetic</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
     <string name="anonymous_usage_reporting">Anonym Innsamling Av Brukerdata</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Enheter konfigurert på en introduksjonsenhet vil også bli lagt til denne enheten.</string>
@@ -48,6 +50,7 @@
     <string name="error">Feilmelding</string>
     <string name="external_file_versioning">Ekstern versjonskontroll</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_pull_order">File Pull Order</string>
     <string name="file_versioning">Versjonskontroll</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Filer er beskyttet mot endringer som er gjort på andre enheter, men endringer som er gjort på denne enheten blir sendt til resten av gruppen.</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Invers av den gitte tilstanden (t.d. ikke ekskluder)</string>
     <string name="items">element</string>
     <string name="keep_versions">Behold Versjoner</string>
+    <string name="largest_first">Largest First</string>
     <string name="last_file_received">Sist Mottatte Fil</string>
     <string name="last_seen">Sist sett</string>
     <string name="later">Senere</string>
     <string name="local_discovery">Lokal Søking</string>
     <string name="local_state">Lokal Tilstand</string>
+    <string name="major_upgrade">Major Upgrade</string>
     <string name="maximum_age">Maksimal Levetid</string>
     <string name="metadata_only">Kun metadata</string>
     <string name="move_to_top_of_queue">Flytt til topp av kø</string>
@@ -83,22 +88,27 @@
     <string name="never">Aldri</string>
     <string name="new_device">Ny Enhet</string>
     <string name="new_folder">Ny Mappe</string>
+    <string name="newest_first">Newest First</string>
     <string name="no">Nei</string>
     <string name="no_file_versioning">Ingen Versjonskontroll</string>
     <string name="notice">Merknad</string>
     <string name="off">Av</string>
     <string name="ok">OK</string>
+    <string name="oldest_first">Oldest First</string>
     <string name="out_of_sync">Ikke Synkronisert</string>
     <string name="out_of_sync_items">Ikke Synkroniserte Element</string>
     <string name="outgoing_rate_limit_kibs">Utgående Hastighetsbegrensning (KiB/s)</string>
     <string name="override_changes">Overstyr Endringer</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Plasseringen av mappen på datamaskinen. Blir opprettet om den ikke finnes. Krøllstrektegnet (~) kan brukes som forkortelse for</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Plasseringen for lagrede versjoner (la denne være tom for å bruke standard .stversions-mappen i mappen).</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Vennligst vent</string>
     <string name="preview">Forhåndsvisning</string>
     <string name="preview_usage_report">Forhåndsvisning Av Datainnsamling</string>
     <string name="quick_guide_to_supported_patterns">Kjapp innføring i godkjente mønster</string>
     <string name="ram_utilization">RAM-utnyttelse</string>
+    <string name="random">Random</string>
+    <string name="release_notes">Release Notes</string>
     <string name="rescan">Skann på nytt</string>
     <string name="rescan_all">Skann alt på nytt</string>
     <string name="rescan_interval">Skanneintervall</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">Avslutning fullført</string>
     <string name="simple_file_versioning">Enkel Versjonskontroll</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Enkeltnivåsøk (søker kun i en mappe)</string>
+    <string name="smallest_first">Smallest First</string>
     <string name="source_code">Kildekode</string>
     <string name="staggered_file_versioning">Forskjøvet Versjonskontroll</string>
     <string name="start_browser">Start Nettleser</string>
@@ -156,13 +167,16 @@
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Antall versjoner må være et tall og kan ikke være tomt.</string>
     <string name="the_path_cannot_be_blank">Plasseringen kan ikke være tom.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Antall sekund i skanneintervallet kan ikke være negativt.</string>
+    <string name="this_is_a_major_version_upgrade">This is a major version upgrade.</string>
     <string name="unknown">Ukjent</string>
     <string name="unshared">Ikke delt</string>
     <string name="unused">Ikke i bruk</string>
     <string name="up_to_date">Oppdatert</string>
+    <string name="upgrade">Upgrade</string>
     <string name="upgrade_to_version">Oppgrader Til %1$s</string>
     <string name="upgrading">Oppgraderer</string>
     <string name="upload_rate">Opplastingsrate</string>
+    <string name="uptime">Uptime</string>
     <string name="use_https_for_gui">Bruk HTTPS for GUI</string>
     <string name="version">Versjon</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Versjoner blir automatisk slettet når maksimal levetid er nådd eller når antall filer er oversteget.</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">A new major version may not be compatible with previous versions.</string>
     <string name="about">关于</string>
     <string name="add">添加</string>
     <string name="add_device">添加设备</string>
@@ -10,6 +11,7 @@
     <string name="addresses">地址列表</string>
     <string name="all_data">所有数据</string>
     <string name="allow_anonymous_usage_reporting">允许匿名使用报告?</string>
+    <string name="alphabetic">Alphabetic</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
     <string name="anonymous_usage_reporting">匿名使用报告</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">在介绍人设备上被添加的其它设备，也将会被添加到本机。</string>
@@ -48,6 +50,7 @@
     <string name="error">错误</string>
     <string name="external_file_versioning">外部版本控制</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_pull_order">File Pull Order</string>
     <string name="file_versioning">版本控制</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">在其它设备中对该文件夹内文件的修改并不会被同步到本机，但是在本机上对其的修改，则会被同步到其它设备中。</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">对本条件取反（例如：不要排除某项）</string>
     <string name="items">条目</string>
     <string name="keep_versions">保留历史版本数量</string>
+    <string name="largest_first">Largest First</string>
     <string name="last_file_received">最后接收的文件</string>
     <string name="last_seen">最后可见</string>
     <string name="later">稍后</string>
     <string name="local_discovery">在局域网上寻找节点</string>
     <string name="local_state">本地状态</string>
+    <string name="major_upgrade">Major Upgrade</string>
     <string name="maximum_age">历史版本最长保留时间</string>
     <string name="metadata_only">仅元数据</string>
     <string name="move_to_top_of_queue">移动到队列顶端</string>
@@ -83,22 +88,27 @@
     <string name="never">从未</string>
     <string name="new_device">新设备</string>
     <string name="new_folder">新文件夹</string>
+    <string name="newest_first">Newest First</string>
     <string name="no">否</string>
     <string name="no_file_versioning">不启用版本控制</string>
     <string name="notice">提示</string>
     <string name="off">关闭</string>
     <string name="ok">确定</string>
+    <string name="oldest_first">Oldest First</string>
     <string name="out_of_sync">未同步</string>
     <string name="out_of_sync_items">未同步的项目</string>
     <string name="outgoing_rate_limit_kibs">上传速度限制(千字节/秒)</string>
     <string name="override_changes">撤销改变</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">文件夹在本地的路径。如果不存在，则会被创建。波浪线符号（~）是如下路径的缩略符：</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">用来存储历史版本的文件夹（留空则将默认会存储在.stversions文件夹中）</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">请稍候</string>
     <string name="preview">预览</string>
     <string name="preview_usage_report">预览使用报告</string>
     <string name="quick_guide_to_supported_patterns">支持的通配符的简单教程：</string>
     <string name="ram_utilization">内存使用量</string>
+    <string name="random">Random</string>
+    <string name="release_notes">Release Notes</string>
     <string name="rescan">重新扫描</string>
     <string name="rescan_all">全部重新扫描</string>
     <string name="rescan_interval">扫描间隔</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">关闭完成</string>
     <string name="simple_file_versioning">简易版本控制</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">单级通配符（仅匹配单层文件夹）</string>
+    <string name="smallest_first">Smallest First</string>
     <string name="source_code">源代码</string>
     <string name="staggered_file_versioning">阶段版本控制</string>
     <string name="start_browser">启动浏览器</string>
@@ -156,13 +167,16 @@
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">保留版本数量必须为数字，且不能为空。</string>
     <string name="the_path_cannot_be_blank">路径不能为空</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">扫描间隔单位为秒，且不能为负数。</string>
+    <string name="this_is_a_major_version_upgrade">This is a major version upgrade.</string>
     <string name="unknown">未知</string>
     <string name="unshared">未共享</string>
     <string name="unused">已共享</string>
     <string name="up_to_date">同步完成</string>
+    <string name="upgrade">Upgrade</string>
     <string name="upgrade_to_version">升级至版本%1$s</string>
     <string name="upgrading">升级中</string>
     <string name="upload_rate">上传速度</string>
+    <string name="uptime">Uptime</string>
     <string name="use_https_for_gui">使用HTTPS连接web管理页面</string>
     <string name="version">版本</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">超过最长保留时间，或者不满足下列条件的历史版本，将会被删除。</string>

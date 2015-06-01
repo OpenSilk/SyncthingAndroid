@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">A new major version may not be compatible with previous versions.</string>
     <string name="about">O Syncthing</string>
     <string name="add">Dodaj</string>
     <string name="add_device">Dodaj urządzenie</string>
@@ -10,6 +11,7 @@
     <string name="addresses">Adresy</string>
     <string name="all_data">Wszystkie dane</string>
     <string name="allow_anonymous_usage_reporting">Zezwalaj na anonimowe statystyki użycia</string>
+    <string name="alphabetic">Alfabetycznie</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
     <string name="anonymous_usage_reporting">Anonimowe statystyki użycia</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Wszystkie urządzenia skonfigurowane na urządzeniu wprowadzającym zostaną dodane także do tego urządzenia.</string>
@@ -18,11 +20,11 @@
     <string name="bugs">Błędy</string>
     <string name="changelog">Historia zmian</string>
     <string name="close">Zamknij</string>
-    <string name="command">Command</string>
+    <string name="command">Polecenie</string>
     <string name="comment_when_used_at_the_start_of_a_line">Komentarz, jeżeli użyty na początku linii</string>
     <string name="compression">Kompresja</string>
     <string name="connection_error">Błąd połączenia</string>
-    <string name="copied_from_elsewhere">Copied from elsewhere</string>
+    <string name="copied_from_elsewhere">Skopiowane z innego miejsca </string>
     <string name="copied_from_original">Skopiowane z oryginału</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
     <string name="cpu_utilization">Użycie CPU</string>
@@ -46,8 +48,9 @@
     <string name="enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Wprowadź adresy oddzielone przecinkiem \"ip:port\", lub wpisz \"dynamic\" w celu wykrycia adresu. </string>
     <string name="enter_ignore_patterns_one_per_line">Wprowadz wzorce ignorowania, jeden w każdej linii.</string>
     <string name="error">Błąd</string>
-    <string name="external_file_versioning">External File Versioning</string>
+    <string name="external_file_versioning">Zewnętrzne wersjonowanie pliku</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_pull_order">Kolejność pobierania plików</string>
     <string name="file_versioning">Wersjonowanie plików</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Pliki są zabezpieczone przed zmianami na innym urządzeniu, jednak zmiany w tym urządzeniu będą wysłane do reszty.</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Odwrócenie podanego wzorca (np. nie wykluczaj)</string>
     <string name="items">pozycji</string>
     <string name="keep_versions">Zachowuj wersje</string>
+    <string name="largest_first">Największe na początku</string>
     <string name="last_file_received">Ostatni otrzymany plik</string>
     <string name="last_seen">Ostatnio widziany</string>
     <string name="later">Później</string>
     <string name="local_discovery">Lokalne odnajdywanie</string>
     <string name="local_state">Status lokalny</string>
+    <string name="major_upgrade">Major Upgrade</string>
     <string name="maximum_age">Maksymalny wiek</string>
     <string name="metadata_only">Tylko metadane</string>
     <string name="move_to_top_of_queue">Przenieś na początek kolejki</string>
@@ -83,11 +88,13 @@
     <string name="never">Nigdy</string>
     <string name="new_device">Nowe urządzenie</string>
     <string name="new_folder">Nowy folder</string>
+    <string name="newest_first">Najnowsze na początku</string>
     <string name="no">Nie</string>
     <string name="no_file_versioning">Bez wersjonowania pliku</string>
     <string name="notice">Wskazówka</string>
     <string name="off">Wyłącz</string>
     <string name="ok">OK</string>
+    <string name="oldest_first">Najstarsze na początku</string>
     <string name="out_of_sync">Niezsynchronizowane</string>
     <string name="out_of_sync_items">Niezsynchronizowane pliki</string>
     <string name="outgoing_rate_limit_kibs">Ograniczenie prędkości wysyłania (KiB/s)</string>
@@ -95,11 +102,14 @@
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Ścieżka do lokalnego folderu. Zostanie utworzona jeżeli nie istnieje.
 Znak tyldy (~) może zostać użyty jako skrót do</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Ścieżka gdzie będą przechowywane wersje (pozostaw puste dla domyślnego folderu .stversions)</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Proszę czekać</string>
     <string name="preview">Podgląd</string>
     <string name="preview_usage_report">Podgląd raportu użycia.</string>
     <string name="quick_guide_to_supported_patterns">Krótki przewodnik po obsługiwanych wzorcach</string>
     <string name="ram_utilization">Użycie pamięci RAM</string>
+    <string name="random">Losowo</string>
+    <string name="release_notes">Informacje o wydaniu</string>
     <string name="rescan">Skanuj ponownie</string>
     <string name="rescan_all">Skanuj wszystko ponownie</string>
     <string name="rescan_interval">Interwał skanowania</string>
@@ -126,6 +136,7 @@ Znak tyldy (~) może zostać użyty jako skrót do</string>
     <string name="shutdown_complete">Wyłączanie ukończone</string>
     <string name="simple_file_versioning">Proste wersjonowanie pliku</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Wieloznaczność na poziomie plików (uwzględnia nazwy plików)</string>
+    <string name="smallest_first">Najmniejsze na początku</string>
     <string name="source_code">Kod źródłowy</string>
     <string name="staggered_file_versioning">Rozbudowane wersjonowanie pliku</string>
     <string name="start_browser">Uruchom przeglądarkę</string>
@@ -138,7 +149,7 @@ Znak tyldy (~) może zostać użyty jako skrót do</string>
     <string name="syncthing_is_restarting">Restart Syncthing</string>
     <string name="syncthing_is_upgrading">Aktualizowanie Syncthing</string>
     <string name="syncthing_seems_to_be_down_or_there_is_a_problem_with_your_internet_connection_retrying">Syncthing wydaje się być wyłączony lub jest problem z twoim połączeniem internetowym. Próbuje ponownie...</string>
-    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing seems to be experiencing a problem processing your request. Please refresh the page or restart Syncthing if the problem persists.</string>
+    <string name="syncthing_seems_to_be_experiencing_a_problem_processing_your_request_please_refresh_the_page_or_restart_syncthing_if_the_problem_persists">Syncthing nie może przetworzyć twojego zapytania. Proszę przeładuj stronę lub zrestartuj Syncthing, jeśli problem pozostanie.</string>
     <string name="the_aggregated_statistics_are_publicly_available_at_url">Zebrane statystyki są publicznie dostępna pod adresem %1$s.</string>
     <string name="the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration">Konfiguracja została zapisana lecz nie jest aktywna. Syncthing musi zostać zrestartowany aby aktywować nową konfiguracje.</string>
     <string name="the_device_id_cannot_be_blank">ID urządzenia nie może być puste.</string>
@@ -156,15 +167,18 @@ Odstępy i myślniki są opcjonalne (ignorowane)</string>
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Maksymalny czas zachowania wersji (w dniach, ustaw 0 aby zachować na zawsze)</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Liczba wersji pliku do zachowania.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Liczba wersji musi być liczbą i nie może być pusta.</string>
-    <string name="the_path_cannot_be_blank">The path cannot be blank.</string>
+    <string name="the_path_cannot_be_blank">Ścieżka nie może być pusta.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Interwał skanowania musi być niezerową liczbą sekund.</string>
+    <string name="this_is_a_major_version_upgrade">This is a major version upgrade.</string>
     <string name="unknown">Nieznany</string>
     <string name="unshared">Nieudostępnione</string>
     <string name="unused">Nieużywane</string>
     <string name="up_to_date">Aktualny</string>
+    <string name="upgrade">Aktualizacja</string>
     <string name="upgrade_to_version">Aktualizuj do %1$s</string>
     <string name="upgrading">Aktualizowanie</string>
     <string name="upload_rate">Prędkość wysyłania</string>
+    <string name="uptime">Czas działania</string>
     <string name="use_https_for_gui">Używaj HTTPS</string>
     <string name="version">Wersja</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Wersje zostają automatycznie usunięte jeżeli są starsze niż maksymalny wiek lub przekraczają liczbę dopuszczalnych wersji.</string>

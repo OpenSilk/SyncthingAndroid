@@ -48,6 +48,7 @@ import syncthing.android.service.SyncthingUtils;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
+import syncthing.api.model.PullOrder;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.VersioningConfig;
 import syncthing.api.model.VersioningType;
@@ -69,6 +70,7 @@ public class EditFolderScreenView extends ScrollView {
     @InjectView(R.id.error_rescan_interval) TextView errorRescanIntrvl;
     @InjectView(R.id.check_folder_master) CheckBox checkFolderMaster;
     @InjectView(R.id.check_ignore_permissions) CheckBox checkIgnorePerms;
+    @InjectView(R.id.radio_group_pullorder) RadioGroup pullOrderGroup;
     @InjectView(R.id.radio_group_versioning) RadioGroup rdioVerGroup;
     @InjectView(R.id.radio_no_versioning) RadioButton rdioNoVer;
     @InjectView(R.id.radio_simple_versioning) RadioButton rdioSimpleVer;
@@ -151,6 +153,28 @@ public class EditFolderScreenView extends ScrollView {
         folder.readOnly = checkFolderMaster.isChecked();
         folder.ignorePerms = checkIgnorePerms.isChecked();
 
+        switch (pullOrderGroup.getCheckedRadioButtonId()) {
+            case R.id.radio_pullorder_alphabetic:
+                folder.order = PullOrder.ALPHABETIC;
+                break;
+            case R.id.radio_pullorder_smallestfirst:
+                folder.order = PullOrder.SMALLESTFIRST;
+                break;
+            case R.id.radio_pullorder_largestfirst:
+                folder.order = PullOrder.LARGESTFIRST;
+                break;
+            case R.id.radio_pullorder_oldestfirst:
+                folder.order = PullOrder.OLDESTFIRST;
+                break;
+            case R.id.radio_pullorder_newestfirst:
+                folder.order = PullOrder.NEWESTFIRST;
+                break;
+            case R.id.radio_pullorder_random:
+            default:
+                folder.order = PullOrder.RANDOM;
+                break;
+        }
+
         switch (rdioVerGroup.getCheckedRadioButtonId()) {
             case R.id.radio_simple_versioning:
                 folder.versioning = new VersioningConfig();
@@ -217,21 +241,43 @@ public class EditFolderScreenView extends ScrollView {
             checkFolderMaster.setChecked(folder.readOnly);
             checkIgnorePerms.setChecked(folder.ignorePerms);
 
+            switch (folder.order) {
+                case ALPHABETIC:
+                    pullOrderGroup.check(R.id.radio_pullorder_alphabetic);
+                    break;
+                case SMALLESTFIRST:
+                    pullOrderGroup.check(R.id.radio_pullorder_smallestfirst);
+                    break;
+                case LARGESTFIRST:
+                    pullOrderGroup.check(R.id.radio_pullorder_largestfirst);
+                    break;
+                case OLDESTFIRST:
+                    pullOrderGroup.check(R.id.radio_pullorder_oldestfirst);
+                    break;
+                case NEWESTFIRST:
+                    pullOrderGroup.check(R.id.radio_pullorder_newestfirst);
+                    break;
+                case RANDOM:
+                default:
+                    pullOrderGroup.check(R.id.radio_pullorder_random);
+                    break;
+            }
+
             switch (folder.versioning.type) {
                 case NONE:
-                    rdioNoVer.setChecked(true);
+                    rdioVerGroup.check(R.id.radio_no_versioning);
                     break;
                 case SIMPLE:
-                    rdioSimpleVer.setChecked(true);
+                    rdioVerGroup.check(R.id.radio_simple_versioning);
                     editSimpleVerKeep.setText(folder.versioning.params.keep);
                     break;
                 case STAGGERED:
-                    rdioStaggeredVer.setChecked(true);
+                    rdioVerGroup.check(R.id.radio_staggered_versioning);
                     editStaggeredVerMaxAge.setText(SyncthingUtils.secondsToDays(folder.versioning.params.maxAge));
                     editStaggeredVerPath.setText(folder.versioning.params.versionPath);
                     break;
                 case EXTERNAL:
-                    rdioExternalVer.setChecked(true);
+                    rdioVerGroup.check(R.id.radio_external_versioning);
                     editExternalVerCmd.setText(folder.versioning.params.command);
                     break;
             }
@@ -252,12 +298,13 @@ public class EditFolderScreenView extends ScrollView {
             editFolderPath.setText(systemInfo.tilde);
             editFolderPath.setAdapter(editFolderPathAdapter);
             //TODO set ignore perms if running on android
-            rdioNoVer.setChecked(true);
+            pullOrderGroup.check(R.id.radio_pullorder_random);
+            rdioVerGroup.check(R.id.radio_no_versioning);
             editSimpleVerKeep.setText(folder.versioning.params.keep);
             editStaggeredVerMaxAge.setText(SyncthingUtils.secondsToDays(folder.versioning.params.maxAge));
         }
 
-        descFolderPath.setText(descFolderPath.getText() + " " + systemInfo.tilde);//Hacky
+        descFolderPath.setText(descFolderPath.getText() + " " + systemInfo.tilde);//TODO Hacky
 
         sharedDevicesContainer.removeAllViews();
         for (DeviceConfig device : devices) {

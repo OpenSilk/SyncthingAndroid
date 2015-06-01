@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">Нова основна версия, която може да не е съвмеситима с предишни версии.</string>
     <string name="about">За Програмата</string>
     <string name="add">Добави</string>
     <string name="add_device">Добави устройство</string>
@@ -10,6 +11,7 @@
     <string name="addresses">Адреси</string>
     <string name="all_data">Всички данни</string>
     <string name="allow_anonymous_usage_reporting">Разреши анонимен доклад за ползване на програмата?</string>
+    <string name="alphabetic">Азбучен ред</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Друга команда се занимава с версиите. Тази команда трябва да премахни файла от синхронизираната папка.</string>
     <string name="anonymous_usage_reporting">Анонимен Доклад</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Устройства настроени на introducer компютъра също ще бъдат добавени към този компютър.</string>
@@ -48,6 +50,7 @@
     <string name="error">Грешка</string>
     <string name="external_file_versioning">Външно упраление на версиите</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Битовете за права за достъп са игнорирани, когато се проверява за промени. Използвай с файлови системи тип FAT.</string>
+    <string name="file_pull_order">По ред на дърпане</string>
     <string name="file_versioning">Файлови Версии</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Когато syncthing замени или изтрие файл той се премества в  .stversions и преименува с дабавени дата и час.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Файловете са защитени от промени направени на други устройства, но промени направени на това устройство ще бъдат синхронизирани с другите устройства.</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Обратното на даденото условие (пр. не изключвай)</string>
     <string name="items">артикула</string>
     <string name="keep_versions">Пази Версии</string>
+    <string name="largest_first">Най-големите първо</string>
     <string name="last_file_received">Последния получен файл</string>
     <string name="last_seen">Последно видян</string>
     <string name="later">По-късно</string>
     <string name="local_discovery">Локално Откриване</string>
     <string name="local_state">Локално състояние</string>
+    <string name="major_upgrade">Основно Обновяване</string>
     <string name="maximum_age">Максимална Възраст</string>
     <string name="metadata_only">Само мета информация</string>
     <string name="move_to_top_of_queue">Премести в началото на опашката</string>
@@ -83,22 +88,27 @@
     <string name="never">Никога</string>
     <string name="new_device">Ново устройство</string>
     <string name="new_folder">Нова папка</string>
+    <string name="newest_first">Най-новите първо</string>
     <string name="no">Не</string>
     <string name="no_file_versioning">Няма Файлови Версии</string>
     <string name="notice">Известие</string>
     <string name="off">Изключено</string>
     <string name="ok">ОК</string>
+    <string name="oldest_first">Най-старите първо</string>
     <string name="out_of_sync">Не Синхронизиран</string>
     <string name="out_of_sync_items">Несинхронизирани елементи</string>
     <string name="outgoing_rate_limit_kibs">Лимит на Изходящата Скорост (KiB/s)</string>
     <string name="override_changes">Замени Промените</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Пътят до папката на този компютър. Ще бъде създадена ако не съществува. Символът тилда (~) може да бъде използван като заместител на</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Пътят, където версиите да бъдат складирани(остави празно за папката .stversions).</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Моля прочети бележките по обновяването преди да започнеш.</string>
     <string name="please_wait">Моля изчакай</string>
     <string name="preview">Преглед</string>
     <string name="preview_usage_report">Разгледай Доклада за Използване</string>
     <string name="quick_guide_to_supported_patterns">Бърз наръчник към поддържаните шаблони</string>
     <string name="ram_utilization">RAM Натоварване</string>
+    <string name="random">Произволно</string>
+    <string name="release_notes">Бележки по обновяването</string>
     <string name="rescan">Повторно Сканиране</string>
     <string name="rescan_all">Пълно повторно сканиране</string>
     <string name="rescan_interval">Интервал за Повторно Сканиране</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">Спирането завършено</string>
     <string name="simple_file_versioning">Опростени Файлови Версии</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Маска на едно ниво (покрива само в папка)</string>
+    <string name="smallest_first">Най-малките първо</string>
     <string name="source_code">Сорс Код</string>
     <string name="staggered_file_versioning">Наслагващи се Файлови Версии</string>
     <string name="start_browser">Стартирай Браузъра</string>
@@ -156,13 +167,16 @@
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Броят версии трябва да бъде число и не може да бъде празно.</string>
     <string name="the_path_cannot_be_blank">Пътят неможе да бъде празен.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Интервала на сканиране трябва да бъде не отрицателно число в секунди.</string>
+    <string name="this_is_a_major_version_upgrade">Това е нова основна версия.</string>
     <string name="unknown">Неясен</string>
     <string name="unshared">Споделянето прекратено</string>
     <string name="unused">Неизползван</string>
     <string name="up_to_date">Актуален</string>
+    <string name="upgrade">Обнови</string>
     <string name="upgrade_to_version">Обновен До %1$s</string>
     <string name="upgrading">Обновяване</string>
     <string name="upload_rate">Скорост на Качване</string>
+    <string name="uptime">Работи вече</string>
     <string name="use_https_for_gui">Използвай HTTPS за Потребителския Интерфейс</string>
     <string name="version">Версия</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Версиите биват изтривани автоматично, когато са по-стари от максималната възраст или надминават броя файлове разрешени в даден интервал.</string>

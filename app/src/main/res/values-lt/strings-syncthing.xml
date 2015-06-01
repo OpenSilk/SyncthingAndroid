@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">Nauja versija gali būti nesuderinama su senomis versijomis.</string>
     <string name="about">Apie programą</string>
     <string name="add">Pridėti</string>
     <string name="add_device">Pridėti įrenginį</string>
@@ -10,6 +11,7 @@
     <string name="addresses">Adresai</string>
     <string name="all_data">Visiems duomenims</string>
     <string name="allow_anonymous_usage_reporting">Siųsti anonimišką vartojimo ataskaitą?</string>
+    <string name="alphabetic">Abėcėlės tvarka</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
     <string name="anonymous_usage_reporting">Anoniminė vartojimo ataskaita</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Visi supažindintojo įrenginiai bus pridėti prie jūsų įrenginių sąrašo.</string>
@@ -18,13 +20,13 @@
     <string name="bugs">Klaidos</string>
     <string name="changelog">Pasikeitimai</string>
     <string name="close">Uždaryti</string>
-    <string name="command">Command</string>
+    <string name="command">Komanda</string>
     <string name="comment_when_used_at_the_start_of_a_line">Komentaras naudojamas naujoje eilutėje</string>
     <string name="compression">Kompresija</string>
     <string name="connection_error">Susijungimo klaida</string>
     <string name="copied_from_elsewhere">Nukopijuota iš betkur</string>
     <string name="copied_from_original">Nukopijuota iš originalo</string>
-    <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
+    <string name="copyright_2015_the_following_contributors">Visos teisės saugomos © 2015 šių bendraautorių:</string>
     <string name="cpu_utilization">Procesoriaus panaudojimas</string>
     <string name="delete">Trinti</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Įrenginys %1$s (%2$s) nori prisijungti. Pridėti naują įrenginį?</string>
@@ -48,6 +50,7 @@
     <string name="error">Klaida</string>
     <string name="external_file_versioning">External File Versioning</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_pull_order">Failų siuntimo tvarka</string>
     <string name="file_versioning">Versijų valdymas</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Failai apsaugoti nuo pakeitimų atliktų kituose įrenginiuose, bet pakeitimai šiame įrenginyje bus nusiųsti kitiems.</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Apversti sąlygas (pvz.: nenustoti naudoti)</string>
     <string name="items">įrašai</string>
     <string name="keep_versions">Saugojamų versijų kiekis</string>
+    <string name="largest_first">Didžiausi pirmiau</string>
     <string name="last_file_received">Paskutinis priimtas failas</string>
     <string name="last_seen">Paskutinį kartą matytas</string>
     <string name="later">Vėliau</string>
     <string name="local_discovery">Vietinis matomumas</string>
     <string name="local_state">Vietinė būsena</string>
+    <string name="major_upgrade">Stambus atnaujinimas</string>
     <string name="maximum_age">Maksimalus amžius</string>
     <string name="metadata_only">Metaduomenims</string>
     <string name="move_to_top_of_queue">Perkelti į eilės priekį</string>
@@ -83,22 +88,27 @@
     <string name="never">Niekada</string>
     <string name="new_device">Naujas įrenginys</string>
     <string name="new_folder">Naujas aplankas</string>
+    <string name="newest_first">Naujausi pirmiau</string>
     <string name="no">Ne</string>
     <string name="no_file_versioning">Nėra versijų valdymo</string>
     <string name="notice">Įspėjimas</string>
     <string name="off">Netaikoma</string>
     <string name="ok">Gerai</string>
+    <string name="oldest_first">Seniausi pirmiau</string>
     <string name="out_of_sync">Nesutikrinta</string>
     <string name="out_of_sync_items">Nesutikrinta</string>
     <string name="outgoing_rate_limit_kibs">Išeinančio srauto maksimalus greitis (KiB/s)</string>
     <string name="override_changes">Perrašyti pakeitimus</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Kelias iki aplanko šiame kompiuteryje. Bus sukurtas, jei neegzistuoja. Tildės simbolis (~) gali būti naudojamas kaip trumpinys</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Kelias, kur bus saugomos versijos (palikite tuščią numatytam .stversions aplankui).</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Peržvelkite laidos informaciją prieš atlikdami stambų atnaujinimą.</string>
     <string name="please_wait">Prašome palaukti</string>
     <string name="preview">Peržiūra</string>
     <string name="preview_usage_report">Vartojimo statistikos peržiūra</string>
     <string name="quick_guide_to_supported_patterns">Trumpas leistinų šablonų vadovas</string>
     <string name="ram_utilization">Atminties naudojimas</string>
+    <string name="random">Atsitiktinė</string>
+    <string name="release_notes">Laidos Informacija</string>
     <string name="rescan">Nuskaityti iš naujo</string>
     <string name="rescan_all">Nuskaityti visus aplankus</string>
     <string name="rescan_interval">Pertrauka tarp nuskaitymų</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">Sėkmingai išjungta</string>
     <string name="simple_file_versioning">Supaprastintas versijų valdymas</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Vieno lygio pakaitos (atitinka tik vieną direktorijos lygį)</string>
+    <string name="smallest_first">Mažiausi pirmiau</string>
     <string name="source_code">Išeities kodas</string>
     <string name="staggered_file_versioning">Pakopinis versijų valdymas</string>
     <string name="start_browser">Paleisti naršyklę</string>
@@ -154,15 +165,18 @@
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Maksimalus laikas kurį bus saugojama versija (dienomis, nustatykite 0 norėdami saugoti amžinai).</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Kiek failo versijų saugoti.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Versijų skaičius turi būti skaitmuo ir negali būti tuščias laukelis.</string>
-    <string name="the_path_cannot_be_blank">The path cannot be blank.</string>
+    <string name="the_path_cannot_be_blank">Kelias negali būti tuščias.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Nuskaitymo dažnis negali būti neigiamas skaičius.</string>
+    <string name="this_is_a_major_version_upgrade">Tai yra stambus atnaujinimas.</string>
     <string name="unknown">Nežinoma</string>
     <string name="unshared">Nesidalinama</string>
     <string name="unused">Nenaudojamas</string>
     <string name="up_to_date">Atnaujinta</string>
+    <string name="upgrade">Atnaujinimas</string>
     <string name="upgrade_to_version">Atnaujinti į  %1$s</string>
     <string name="upgrading">Atnaujinama</string>
     <string name="upload_rate">Išsiuntimo greitis</string>
+    <string name="uptime">Veiksnumo laikas</string>
     <string name="use_https_for_gui">Valdymo skydeliui naudoti saugų ryšį </string>
     <string name="version">Versija</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Versijos ištrinamos jei senesnės už nustatyta maksimalų amžių arba jei viršytas maksimalus failų skaičius per nustatytą laiko tarpą.</string>

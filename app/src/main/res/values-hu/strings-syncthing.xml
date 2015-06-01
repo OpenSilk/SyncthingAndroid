@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">Az új főverzió nem kompatibilis az előző főverzióval.</string>
     <string name="about">Névjegy</string>
     <string name="add">Hozzáadás</string>
     <string name="add_device">Eszköz hozzáadása</string>
@@ -10,7 +11,8 @@
     <string name="addresses">Címek</string>
     <string name="all_data">Minden adat</string>
     <string name="allow_anonymous_usage_reporting">Engedélyezed a névtelen felhasználási adatok küldését?</string>
-    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
+    <string name="alphabetic">ABC rendben</string>
+    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Egy külső program kezeli a fájl verziózást. El kell távolítsa a fájlt a szinkronizált mappából.</string>
     <string name="anonymous_usage_reporting">Névtelen felhasználási adatok küldése</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Minden eszköz ami a bevezető eszközön lett beállítva hozzá lesz adva ehhez az eszközhöz is.</string>
     <string name="api_key">API kulcs</string>
@@ -24,7 +26,7 @@
     <string name="connection_error">Kapcsolódási hiba</string>
     <string name="copied_from_elsewhere">Másolva máshonnan</string>
     <string name="copied_from_original">Másolva az eredetiről</string>
-    <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
+    <string name="copyright_2015_the_following_contributors">Copyright © 2015 az alábbi Közreműködők</string>
     <string name="cpu_utilization">Processzor használat</string>
     <string name="delete">Törlés</string>
     <string name="device_device_address_wants_to_connect_add_new_device">%1$s (%2$s) csatlakozni szeretne.</string>
@@ -47,7 +49,8 @@
     <string name="enter_ignore_patterns_one_per_line">Figyelmen kívül hagyáshoz ide írhatod a mintákat, soronként egyet</string>
     <string name="error">Hiba</string>
     <string name="external_file_versioning">Külső fájl verziózás</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Fájl jogosultságok figyelmen kívül hagyása változások keresésekor. FAT fájlrendszereken használatakor.</string>
+    <string name="file_pull_order">Fájl küldési sorrend</string>
     <string name="file_versioning">Fájl verziózás</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">A fájlok védve vannak a más eszközökön történt változásokkal szemben, de az ezen az eszközön történt változások érvényesek lesznek a többire.</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">A feltétel ellentéte (pl. ki nem hagyás)</string>
     <string name="items">elemek</string>
     <string name="keep_versions">Megtartott verziók</string>
+    <string name="largest_first">Nagyobb először</string>
     <string name="last_file_received">Utolsó beérkezett fájl</string>
     <string name="last_seen">Utoljára látva</string>
     <string name="later">Később</string>
     <string name="local_discovery">Helyi felfedezés</string>
     <string name="local_state">Helyi állapot</string>
+    <string name="major_upgrade">Főverzió frissítés</string>
     <string name="maximum_age">Maximális kor</string>
     <string name="metadata_only">Csak metaadatok</string>
     <string name="move_to_top_of_queue">Sor elejére mozgatás</string>
@@ -83,22 +88,27 @@
     <string name="never">Soha</string>
     <string name="new_device">Új eszköz</string>
     <string name="new_folder">Új mappa</string>
+    <string name="newest_first">Újabb először</string>
     <string name="no">Nem</string>
     <string name="no_file_versioning">Nincs fájl verziózás</string>
     <string name="notice">Megjegyzés</string>
     <string name="off">Kikapcsolva</string>
     <string name="ok">Rendben</string>
+    <string name="oldest_first">Régebbi először</string>
     <string name="out_of_sync">Nincs szinkronban</string>
     <string name="out_of_sync_items">Nem szinkronizált elemek</string>
     <string name="outgoing_rate_limit_kibs">Kimenő sávszélesség (KiB/mp)</string>
     <string name="override_changes">Változtatások felülbírálása</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">A mappa elérési útja az eszközön. Amennyiben nem létezik, a program automatikusan létrehozza. A hullámvonal (~)  a következő helyettesítésre használható: </string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Elérési út ahol a verziók tárolásra kerülnek (szabadon hagyva az alapértelmezett .stversions mappa lesz használva)</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Kérlek, várj</string>
     <string name="preview">Előnézet</string>
     <string name="preview_usage_report">Felhasználási adatok átnézése</string>
     <string name="quick_guide_to_supported_patterns">Rövid útmutató a használható mintákról</string>
     <string name="ram_utilization">Memória használat</string>
+    <string name="random">Véletlenszerű</string>
+    <string name="release_notes">Kiadási megjegyzések</string>
     <string name="rescan">Átnézés</string>
     <string name="rescan_all">Összes átnézése</string>
     <string name="rescan_interval">Átnézési intervallum</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">Leállítás</string>
     <string name="simple_file_versioning">Egyszerű fájl verziókövetés</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Egyszintű helyettesítő karakter (csak egy mappára érvényes)</string>
+    <string name="smallest_first">Kisebb előbb</string>
     <string name="source_code">Forráskód</string>
     <string name="staggered_file_versioning">Többszintű fájl verziókövetés</string>
     <string name="start_browser">Böngésző indítása</string>
@@ -156,13 +167,16 @@
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">A megtartott verziók száma nem lehet üres</string>
     <string name="the_path_cannot_be_blank">Elérési út nem lehet üres.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Az átnézési intervallum nullánál nagyobb másodperc érték kell legyen</string>
+    <string name="this_is_a_major_version_upgrade">Ez egy főverzió frissítés.</string>
     <string name="unknown">Ismeretlen</string>
     <string name="unshared">Nincs megosztva</string>
     <string name="unused">Nincs használatban</string>
     <string name="up_to_date">Friss</string>
+    <string name="upgrade">Frissítés</string>
     <string name="upgrade_to_version">Frissítés a %1$s verzióra</string>
     <string name="upgrading">Frissítés</string>
     <string name="upload_rate">Feltöltési sebesség</string>
+    <string name="uptime">Üzemidő</string>
     <string name="use_https_for_gui">HTTPS használata a GUI-hoz</string>
     <string name="version">Verzió</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">A régi verziók automatikusan törlődnek, amennyiben öregebbek mint a maximum kor, vagy már több van belőlük mint az adott időszakban megtartható maximum.</string>

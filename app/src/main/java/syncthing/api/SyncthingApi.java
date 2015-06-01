@@ -38,6 +38,7 @@ import syncthing.api.model.GuiErrors;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
 import syncthing.api.model.Need;
+import syncthing.api.model.Ok;
 import syncthing.api.model.Ping;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
@@ -153,10 +154,10 @@ public interface SyncthingApi {
     //@POST("/rest/system/reset")
 
     @POST("/rest/system/restart")
-    Observable<Void> restart();
+    Observable<Ok> restart();
 
     @POST("/rest/system/shutdown")
-    Observable<Void> shutdown();
+    Observable<Ok> shutdown();
 
     //@POST("/rest/system/upgrade")
 

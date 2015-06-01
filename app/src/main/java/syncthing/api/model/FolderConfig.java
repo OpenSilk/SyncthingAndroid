@@ -35,7 +35,6 @@ public class FolderConfig implements Serializable {
     public boolean ignorePerms;
     public boolean autoNormalize;
     public VersioningConfig versioning;
-    public boolean lenientMTimes;
     public int copiers;// = 1;
     public int pullers;// = 16;
     public int hashers;// = 0;
@@ -49,7 +48,6 @@ public class FolderConfig implements Serializable {
         f.rescanIntervalS = 60;
         f.autoNormalize = true;
         f.versioning = new VersioningConfig();
-        f.lenientMTimes = false;
         f.order = PullOrder.RANDOM;
         f.invalid = "";
         return f;

@@ -18,13 +18,8 @@
 package syncthing.api.model;
 
 /**
-* Created by drew on 3/17/15.
-*/
-public class NeedProgress {
-    public String name;
-    public int flags;
-    public long modified;
-    public int version;
-    public int localVersion;
-    public long size;
+ * Created by drew on 5/31/15.
+ */
+public class Ok {
+    public String ok;
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">A new major version may not be compatible with previous versions.</string>
     <string name="about">Acerca de</string>
     <string name="add">Agregar</string>
     <string name="add_device">Agregar Dispositivo</string>
@@ -10,6 +11,7 @@
     <string name="addresses">Direcciones</string>
     <string name="all_data">Todos los datos</string>
     <string name="allow_anonymous_usage_reporting">Permitir reporte anónimo de uso?</string>
+    <string name="alphabetic">Alphabetic</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Un comando exterior maneja el control de versiones. Éste tiene que eliminar el archivo de la carpeta sincronizada.</string>
     <string name="anonymous_usage_reporting">Reporte anónimo de uso</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Cualquier dispositivo configurado en un dispositivo introductor será también agregado a este dispositivo.</string>
@@ -48,6 +50,7 @@
     <string name="error">Error</string>
     <string name="external_file_versioning">Control de versiones externo</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Los permisos de archivo son ignorados al buscar cambios. Usar el sistemas de archivos FAT.</string>
+    <string name="file_pull_order">File Pull Order</string>
     <string name="file_versioning">Control de versiones</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Lo archivos son movidos al directorio .stversions y renombrados a versiones marcadas por fecha cuando son reemplazados o eliminados por Syncthing,</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Los archivos están protegidos frente a los cambios realizados en otros dispositivos, peros los cambios realizados en este dispositivo serán envíados al resto del grupo</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Inversión de la condición dada (es decir, no excluir)</string>
     <string name="items">ítems</string>
     <string name="keep_versions">Conservar versiones</string>
+    <string name="largest_first">Largest First</string>
     <string name="last_file_received">Último archivo recibido</string>
     <string name="last_seen">Visto por ultima vez</string>
     <string name="later">Más tarde</string>
     <string name="local_discovery">Búsqueda en red local</string>
     <string name="local_state">Estado local</string>
+    <string name="major_upgrade">Major Upgrade</string>
     <string name="maximum_age">Edad máxima</string>
     <string name="metadata_only">Sólo metadatos</string>
     <string name="move_to_top_of_queue">Mover al principio de la cola.</string>
@@ -83,22 +88,27 @@
     <string name="never">Nunca</string>
     <string name="new_device">Nuevo dispositivo</string>
     <string name="new_folder">Nuevo repositorio</string>
+    <string name="newest_first">Newest First</string>
     <string name="no">No</string>
     <string name="no_file_versioning">Sin control de versiones de archivos</string>
     <string name="notice">Aviso</string>
     <string name="off">Apagado</string>
     <string name="ok">OK</string>
+    <string name="oldest_first">Oldest First</string>
     <string name="out_of_sync">Fuera de sincronización</string>
     <string name="out_of_sync_items">Ítems no sincronizados</string>
     <string name="outgoing_rate_limit_kibs">Tasa máxima de envío (KiB/s)</string>
     <string name="override_changes">Reemplazar los cambios</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Ruta del repositorio en el equipo local. Será creado si no existe. El carácter tilde (~) puede ser utilizado como atajo de </string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Ruta donde serán guardas las versiones (dejar vacío para usar el directorio predifinido \".stversions\" en el repositorio)</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Aguarde por favor</string>
     <string name="preview">Vista previa</string>
     <string name="preview_usage_report">Ver reporte de uso</string>
     <string name="quick_guide_to_supported_patterns">Guía rápida sobre los patrones soportados</string>
     <string name="ram_utilization">Utilización de RAM</string>
+    <string name="random">Random</string>
+    <string name="release_notes">Release Notes</string>
     <string name="rescan">Reescanear</string>
     <string name="rescan_all">Reescanear todo</string>
     <string name="rescan_interval">Intervalo de reescaneo</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">Apagado completado</string>
     <string name="simple_file_versioning">Versiones simple de archivos</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Carácter comodín de un solo nivel (coincide sólo dentro de un directorio)</string>
+    <string name="smallest_first">Smallest First</string>
     <string name="source_code">Código fuente</string>
     <string name="staggered_file_versioning">Versiones del archivo escalonado</string>
     <string name="start_browser">Iniciar navegador</string>
@@ -157,13 +168,16 @@ Syncthing debe reiniciarse para activar la nueva configuración.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">El número de versiones debe ser un número y no puede estar vacío.</string>
     <string name="the_path_cannot_be_blank">La ruta no puede estar vacía.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">El intervalo de reescaneo debe ser un número no negativo de segundos.</string>
+    <string name="this_is_a_major_version_upgrade">This is a major version upgrade.</string>
     <string name="unknown">Desconocido</string>
     <string name="unshared">No compartido</string>
     <string name="unused">No utilizado</string>
     <string name="up_to_date">Actualizado</string>
+    <string name="upgrade">Upgrade</string>
     <string name="upgrade_to_version">Actualizar a %1$s</string>
     <string name="upgrading">Actualizando</string>
     <string name="upload_rate">Tasa de subida</string>
+    <string name="uptime">Uptime</string>
     <string name="use_https_for_gui">Usar HTTPS para la GUI</string>
     <string name="version">Versión</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Las versiones se eliminan automáticamente si son mayores de la edad máxima o mayor que el número de archivos permitidos en un intervalo.</string>

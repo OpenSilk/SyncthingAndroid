@@ -166,6 +166,55 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/file_pull_order"
+            style="@style/session.edit.FieldHeader"/>
+
+        <RadioGroup
+            android:id="@+id/radio_group_pullorder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_pullorder_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/random"/>
+
+            <RadioButton
+                android:id="@+id/radio_pullorder_alphabetic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alphabetic"/>
+
+            <RadioButton
+                android:id="@+id/radio_pullorder_smallestfirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smallest_first"/>
+
+            <RadioButton
+                android:id="@+id/radio_pullorder_largestfirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/largest_first"/>
+
+            <RadioButton
+                android:id="@+id/radio_pullorder_oldestfirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/oldest_first"/>
+
+            <RadioButton
+                android:id="@+id/radio_pullorder_newestfirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/newest_first"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/file_versioning"
             style="@style/session.edit.FieldHeader"/>
 

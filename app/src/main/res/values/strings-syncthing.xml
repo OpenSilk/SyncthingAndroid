@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">A new major version may not be compatible with previous versions.</string>
     <string name="about">About</string>
     <string name="add">Add</string>
     <string name="add_device">Add Device</string>
@@ -10,6 +11,7 @@
     <string name="addresses">Addresses</string>
     <string name="all_data">All Data</string>
     <string name="allow_anonymous_usage_reporting">Allow Anonymous Usage Reporting?</string>
+    <string name="alphabetic">Alphabetic</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">An external command handles the versioning. It has to remove the file from the synced folder.</string>
     <string name="anonymous_usage_reporting">Anonymous Usage Reporting</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Any devices configured on an introducer device will be added to this device as well.</string>
@@ -48,6 +50,7 @@
     <string name="error">Error</string>
     <string name="external_file_versioning">External File Versioning</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">File permission bits are ignored when looking for changes. Use on FAT file systems.</string>
+    <string name="file_pull_order">File Pull Order</string>
     <string name="file_versioning">File Versioning</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to date stamped versions in a .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Files are protected from changes made on other devices, but changes made on this device will be sent to the rest of the cluster.</string>
@@ -71,11 +74,13 @@
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Inversion of the given condition (i.e. do not exclude)</string>
     <string name="items">items</string>
     <string name="keep_versions">Keep Versions</string>
+    <string name="largest_first">Largest First</string>
     <string name="last_file_received">Last File Received</string>
     <string name="last_seen">Last seen</string>
     <string name="later">Later</string>
     <string name="local_discovery">Local Discovery</string>
     <string name="local_state">Local State</string>
+    <string name="major_upgrade">Major Upgrade</string>
     <string name="maximum_age">Maximum Age</string>
     <string name="metadata_only">Metadata Only</string>
     <string name="move_to_top_of_queue">Move to top of queue</string>
@@ -83,22 +88,27 @@
     <string name="never">Never</string>
     <string name="new_device">New Device</string>
     <string name="new_folder">New Folder</string>
+    <string name="newest_first">Newest First</string>
     <string name="no">No</string>
     <string name="no_file_versioning">No File Versioning</string>
     <string name="notice">Notice</string>
     <string name="off">Off</string>
     <string name="ok">OK</string>
+    <string name="oldest_first">Oldest First</string>
     <string name="out_of_sync">Out Of Sync</string>
     <string name="out_of_sync_items">Out of Sync Items</string>
     <string name="outgoing_rate_limit_kibs">Outgoing Rate Limit (KiB/s)</string>
     <string name="override_changes">Override Changes</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Path to the folder on the local computer. Will be created if it does not exist. The tilde character (~) can be used as a shortcut for</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Path where versions should be stored (leave empty for the default .stversions folder in the folder).</string>
+    <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Please wait</string>
     <string name="preview">Preview</string>
     <string name="preview_usage_report">Preview Usage Report</string>
     <string name="quick_guide_to_supported_patterns">Quick guide to supported patterns</string>
     <string name="ram_utilization">RAM Utilization</string>
+    <string name="random">Random</string>
+    <string name="release_notes">Release Notes</string>
     <string name="rescan">Rescan</string>
     <string name="rescan_all">Rescan All</string>
     <string name="rescan_interval">Rescan Interval</string>
@@ -125,6 +135,7 @@
     <string name="shutdown_complete">Shutdown Complete</string>
     <string name="simple_file_versioning">Simple File Versioning</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Single level wildcard (matches within a directory only)</string>
+    <string name="smallest_first">Smallest First</string>
     <string name="source_code">Source Code</string>
     <string name="staggered_file_versioning">Staggered File Versioning</string>
     <string name="start_browser">Start Browser</string>
@@ -156,10 +167,12 @@
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">The number of versions must be a number and cannot be blank.</string>
     <string name="the_path_cannot_be_blank">The path cannot be blank.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">The rescan interval must be a non-negative number of seconds.</string>
+    <string name="this_is_a_major_version_upgrade">This is a major version upgrade.</string>
     <string name="unknown">Unknown</string>
     <string name="unshared">Unshared</string>
     <string name="unused">Unused</string>
     <string name="up_to_date">Up to Date</string>
+    <string name="upgrade">Upgrade</string>
     <string name="upgrade_to_version">Upgrade To %1$s</string>
     <string name="upgrading">Upgrading</string>
     <string name="upload_rate">Upload Rate</string>
