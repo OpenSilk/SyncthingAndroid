@@ -107,6 +107,7 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        Timber.d("onActivityResult(%d, %d, %s)", requestCode, resultCode, data);
         if (requestCode == ActivityRequestCodes.LOGIN_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK && data != null && data.hasExtra(LoginActivity.EXTRA_CREDENTIALS)) {
                 currentDevice = data.getParcelableExtra(LoginActivity.EXTRA_CREDENTIALS);

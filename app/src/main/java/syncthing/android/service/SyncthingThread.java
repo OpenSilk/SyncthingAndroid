@@ -53,6 +53,10 @@ public class SyncthingThread extends Thread {
             //to sneak the config changes in.
             realRun(true);
             configXml = ConfigXml.get(mService);
+            if (configXml == null) {
+                Timber.e("Failed to generate config");
+                return;
+            }
             configXml.changeDefaultFolder();
         }
         configXml.updateIfNeeded();
