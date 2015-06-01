@@ -72,7 +72,7 @@
     <style name="Theme.Dialog.LightBase" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <!--NoActionBar-->
         <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <!--DarkActionBar-->
         <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
         <!--Light dark actionbar-->
@@ -83,7 +83,7 @@
     <style name="Theme.Dialog.DarkBase" parent="Theme.AppCompat.DialogWhenLarge">
         <!--NoActionBar-->
         <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <!--DarkActionBar-->
         <item name="toolbarStyle">@style/Toolbar.Dark</item>
     </style>

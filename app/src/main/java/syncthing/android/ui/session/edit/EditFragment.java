@@ -147,6 +147,13 @@ public class EditFragment extends MortarDialogFragment implements EditFragmentPr
     }
 
     @Override
+    protected boolean shouldRetainScope() {
+        // Hack need to fix, will need to stop using nested dialog
+        // fragments, and rethink how to scope everything
+        return false;
+    }
+
+    @Override
     protected MortarScope findOrMakeScope() {
         //This scope descends from SessionScope
         MortarScope parentScope = ((MortarFragment) getParentFragment()).getScope();

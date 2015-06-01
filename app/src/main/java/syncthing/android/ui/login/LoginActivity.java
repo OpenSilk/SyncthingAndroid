@@ -17,12 +17,17 @@
 
 package syncthing.android.ui.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ActivityResultsActivity;
+import org.opensilk.common.ui.mortar.ActivityResultsOwner;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -34,10 +39,12 @@ import syncthing.android.service.SyncthingUtils;
 /**
  * Created by drew on 3/10/15.
  */
-public class LoginActivity extends MortarFragmentActivity {
+public class LoginActivity extends MortarFragmentActivity implements ActivityResultsActivity {
 
     public static final String ACTION_MANAGE = "manage";
     public static final String EXTRA_CREDENTIALS = "creds";
+
+    @Inject ActivityResultsOwner mActivityResultsOwner;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
 
@@ -59,15 +66,23 @@ public class LoginActivity extends MortarFragmentActivity {
         ButterKnife.inject(this);
         setSupportActionBar(mToolbar);
         setResult(RESULT_CANCELED);
+        mActivityResultsOwner.takeView(this);
         if (savedInstanceState == null) {
             Fragment f;
             if (ACTION_MANAGE.equals(getIntent().getAction())) {
                 f = ManageFragment.newInstance();
             } else {
+                getIntent().setExtrasClassLoader(getClass().getClassLoader());
                 f = LoginFragment.newInstance(getIntent().getParcelableExtra(EXTRA_CREDENTIALS));
             }
             mFragmentManagerOwner.replaceMainContent(f, f.getClass().getName(), false);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mActivityResultsOwner.dropView(this);
     }
 
     @Override
@@ -91,4 +106,13 @@ public class LoginActivity extends MortarFragmentActivity {
         return R.id.main;
     }
 
+    /*
+     * ActivityResultsOwnerActivity
+     */
+
+    @Override
+    public void setResultAndFinish(int resultCode, Intent data) {
+        setResult(resultCode, data);
+        finish();
+    }
 }

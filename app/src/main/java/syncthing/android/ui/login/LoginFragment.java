@@ -20,14 +20,11 @@ package syncthing.android.ui.login;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import org.opensilk.common.core.mortar.DaggerService;
-import org.opensilk.common.ui.mortar.ActionBarOwner;
 import org.opensilk.common.ui.mortar.Screen;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import syncthing.android.R;
 import syncthing.android.model.Credentials;
-import syncthing.android.ui.LauncherActivityComponent;
 
 /**
  * Created by drew on 3/10/15.
@@ -53,10 +50,7 @@ public class LoginFragment extends MortarFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //TODO stop tihs
-        ActionBarOwner actionBarOwner = DaggerService.<LauncherActivityComponent>
-                getDaggerComponent(getActivity()).actionBarOwner();
-        actionBarOwner.setConfig(actionBarOwner.getConfig().buildUpon().setTitle(R.string.login).build());
+        getActivity().setTitle(R.string.login);
     }
 
     void ensureCredentials() {

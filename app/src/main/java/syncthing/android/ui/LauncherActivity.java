@@ -36,6 +36,8 @@ import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActionBarOwner;
 import org.opensilk.common.ui.mortar.ActionBarOwnerDelegate;
+import org.opensilk.common.ui.mortar.ActivityResultsActivity;
+import org.opensilk.common.ui.mortar.ActivityResultsOwner;
 import org.opensilk.common.ui.mortar.DrawerOwner;
 import org.opensilk.common.ui.mortar.DrawerOwnerActivity;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
@@ -59,11 +61,12 @@ import timber.log.Timber;
  * Created by drew on 3/1/15.
  */
 public class LauncherActivity extends MortarFragmentActivity implements
-        DrawerOwnerActivity {
+        DrawerOwnerActivity, ActivityResultsActivity {
 
     @Inject ActionBarOwner mActionBarOwner;
     @Inject DrawerOwner mDrawerOwner;
     @Inject AppSettings mSettings;
+    @Inject ActivityResultsOwner mActivityResultsOwner;
 
     ActionBarDrawerToggle mDrawerToggle;
     protected ActionBarOwnerDelegate<LauncherActivity> mActionBarOwnerDelegate;
@@ -91,6 +94,8 @@ public class LauncherActivity extends MortarFragmentActivity implements
         setContentView(R.layout.activity_launcher);
         ButterKnife.inject(this);
 
+        mActivityResultsOwner.takeView(this);
+
         mActionBarOwner.setConfig(ActionBarConfig.builder().setTitle("").build());
         mActionBarOwnerDelegate = new ActionBarOwnerDelegate<>(this, mActionBarOwner, mToolbar);
         mActionBarOwnerDelegate.onCreate();
@@ -110,6 +115,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mActivityResultsOwner.dropView(this);
         mActionBarOwnerDelegate.onDestroy();
         mDrawerOwner.dropView(this);//Noop if no view taken
         if (mChargingSubscription != null) {
@@ -210,6 +216,16 @@ public class LauncherActivity extends MortarFragmentActivity implements
         public void onDrawerClosed(View view) {
             super.onDrawerClosed(view);
         }
+    }
+
+    /*
+     * ActivityResultsOwverActivity
+     */
+
+    @Override
+    public void setResultAndFinish(int resultCode, Intent data) {
+        setResult(resultCode, data);
+        finish();
     }
 
     /*

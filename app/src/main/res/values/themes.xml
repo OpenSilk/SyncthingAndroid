@@ -17,7 +17,7 @@
   -->
 
 <resources>
-    <style name="SyncthingTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="SyncthingTheme" parent="Theme.LightBase">
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_accent</item>
@@ -28,6 +28,7 @@
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_accent</item>
+        <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
     </style>
 
     <style name="SettingsTheme" parent="android:Theme.DeviceDefault.Light">
@@ -41,12 +42,11 @@
         <item name="android:displayOptions">homeAsUp|showTitle</item>
     </style>
 
-    <style name="SessionEditDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
+    <style name="SessionEditDialogTheme" parent="Theme.Dialog.LightBase">
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
-        <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/DialogWindowAnimation</item>
         <item name="android:windowSoftInputMode">stateVisible|adjustPan</item>
     </style>
@@ -60,59 +60,4 @@
         <!--<item name="android:windowExitAnimation">@anim/grow_fade_in_from_bottom</item>-->
     </style>
 
-    <!-- Base themes for dialog activities -->
-
-    <style name="Theme.Dialog.LightBase" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <!--NoActionBar-->
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <!--DarkActionBar-->
-        <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
-        <!--Light dark actionbar-->
-        <item name="colorPrimary">@color/primary_material_dark</item>
-        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
-    </style>
-
-    <style name="Theme.Dialog.DarkBase" parent="Theme.AppCompat.DialogWhenLarge">
-        <!--NoActionBar-->
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <!--DarkActionBar-->
-        <item name="toolbarStyle">@style/Toolbar.Dark</item>
-    </style>
-
-    <!-- end base dialog themes -->
-
-    <!--Toolbar Styles -->
-
-    <style name="Toolbar.Light" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">?colorPrimary</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-    </style>
-
-    <style name="Toolbar.Light.Transparent">
-        <item name="android:background">@null</item>
-        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
-    </style>
-
-    <style name="Toolbar.Dark" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">?colorPrimary</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-    </style>
-
-    <style name="Toolbar.Dark.Transparent">
-        <item name="android:background">@null</item>
-    </style>
-
-    <style name="Toolbar.Dark.WhiteOverflow">
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-    </style>
-
-    <style name="Toolbar.Dark.WhiteOverflow.Transparent">
-        <item name="android:background">@null</item>
-        <item name="toolbarNavigationButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
-    </style>
-
-    <!-- end toolbar styles -->
 </resources>
