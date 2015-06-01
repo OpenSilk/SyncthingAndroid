@@ -1,9 +1,9 @@
 FROM buildpack-deps:jessie
 
-ENV NDK_VERSION 10d
+ENV NDK_VERSION 10e
 
 #Download ndk and install toolchain
-RUN curl -L -o /tmp/ndk.bin http://dl.google.com/android/ndk/android-ndk-r${NDK_VERSION}-linux-x86_64.bin
+RUN curl -L -o /tmp/ndk.bin https://dl.google.com/android/ndk/android-ndk-r${NDK_VERSION}-linux-x86_64.bin
 RUN mkdir -p /opt/android/ndk && \
 	cd /opt/android/ndk && \
 	chmod a+x /tmp/ndk.bin && \
@@ -12,7 +12,7 @@ RUN mkdir -p /opt/android/ndk && \
 RUN bash /opt/android/ndk/android-ndk-r${NDK_VERSION}/build/tools/make-standalone-toolchain.sh \
 		--platform=android-16 --arch=arm \
 		--install-dir=/opt/android/ndk/toolchain-arm && \
-	rm -r /tmp/ndk-*
+	rm -r /tmp/ndk-* /opt/android/ndk/android-ndk-r${NDK_VERSION}
 
 ENV GO_VERSION 1.4.2
 
