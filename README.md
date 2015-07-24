@@ -17,6 +17,12 @@ Requirements
 
 * You'll need build-essential or base-devel
 * Android ndk. Set `TOOLCHAIN_ROOT` or update scripts to point to yours
+```bash
+# Create standalone ARM toolchain
+export NDK_ROOT=/opt/android/ndk/toolchain-arm
+./android-ndk-r10d/build/tools/make-standalone-toolchain.sh --platform=android-21 --install-dir=$NDK_ROOT --arch=arm
+```
+
 
 ```bash
 # You only need to run these once (or whenever the submodules are updated)

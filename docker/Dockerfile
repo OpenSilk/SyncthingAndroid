@@ -8,6 +8,7 @@ RUN mkdir -p /opt/android/ndk && \
 	cd /opt/android/ndk && \
 	chmod a+x /tmp/ndk.bin && \
 	/tmp/ndk.bin && \
+	sleep 1 && \
 	rm /tmp/ndk.bin
 RUN bash /opt/android/ndk/android-ndk-r${NDK_VERSION}/build/tools/make-standalone-toolchain.sh \
 		--platform=android-16 --arch=arm \
