@@ -109,15 +109,27 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         Timber.d("onActivityResult(%d, %d, %s)", requestCode, resultCode, data);
         if (requestCode == ActivityRequestCodes.LOGIN_ACTIVITY) {
+            // OK with credentials opens the device
             if (resultCode == Activity.RESULT_OK && data != null && data.hasExtra(LoginActivity.EXTRA_CREDENTIALS)) {
                 currentDevice = data.getParcelableExtra(LoginActivity.EXTRA_CREDENTIALS);
-                if (hasView()) reload(true);
+                if (currentDevice == null)
+                    currentDevice = appSettings.getDefaultCredentials();
+                if (hasView())
+                    postOpenCurrentDevice();
+                reload(false);
                 return true;
-            } else {
-                //could have changed
-                currentDevice = appSettings.getDefaultCredentials();
-                if (hasView()) reload(false);
             }
+            // Cancel from welcome fragment opens login
+            if (data != null && data.hasExtra(LoginActivity.EXTRA_FROM) &&
+                    data.getStringExtra(LoginActivity.EXTRA_FROM).equals(LoginActivity.ACTION_WELCOME)) {
+                if (hasView())
+                    startLoginActivity();
+                reload(false);
+                return true;
+            }
+
+            // Cancelled login
+            if (hasView()) reload(true);
         }
         return false;
     }
@@ -127,7 +139,7 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
         getView().load(creds);
         if (gotoCurrent) {
             if (creds.isEmpty()) {
-                startLoginActivity();//TODO not sure best way to handle this
+                startWelcomeActivity();
             } else {
                 postOpenCurrentDevice();
             }
@@ -170,6 +182,12 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
     void startLoginActivity() {
         drawerOwner.closeDrawer();
         Intent intent = new Intent(appContext, LoginActivity.class);
+        activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
+    }
+
+    void startWelcomeActivity() {
+        drawerOwner.closeDrawer();
+        Intent intent = new Intent(appContext, LoginActivity.class).setAction(LoginActivity.ACTION_WELCOME);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 

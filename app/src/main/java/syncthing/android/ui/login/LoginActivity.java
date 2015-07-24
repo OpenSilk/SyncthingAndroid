@@ -35,6 +35,7 @@ import mortar.MortarScope;
 import syncthing.android.AppComponent;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
+import syncthing.android.ui.welcome.WelcomeFragment;
 
 /**
  * Created by drew on 3/10/15.
@@ -42,11 +43,14 @@ import syncthing.android.service.SyncthingUtils;
 public class LoginActivity extends MortarFragmentActivity implements ActivityResultsActivity {
 
     public static final String ACTION_MANAGE = "manage";
+    public static final String ACTION_WELCOME = "welcome";
     public static final String EXTRA_CREDENTIALS = "creds";
+    public static final String EXTRA_FROM = "from";
 
     @Inject ActivityResultsOwner mActivityResultsOwner;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
+    Fragment fragment;
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
@@ -68,14 +72,15 @@ public class LoginActivity extends MortarFragmentActivity implements ActivityRes
         setResult(RESULT_CANCELED);
         mActivityResultsOwner.takeView(this);
         if (savedInstanceState == null) {
-            Fragment f;
-            if (ACTION_MANAGE.equals(getIntent().getAction())) {
-                f = ManageFragment.newInstance();
+            if (ACTION_WELCOME.equals(getIntent().getAction())) {
+                fragment = WelcomeFragment.newInstance();
+            } else if (ACTION_MANAGE.equals(getIntent().getAction())) {
+                fragment = ManageFragment.newInstance();
             } else {
                 getIntent().setExtrasClassLoader(getClass().getClassLoader());
-                f = LoginFragment.newInstance(getIntent().getParcelableExtra(EXTRA_CREDENTIALS));
+                fragment = LoginFragment.newInstance(getIntent().getParcelableExtra(EXTRA_CREDENTIALS));
             }
-            mFragmentManagerOwner.replaceMainContent(f, f.getClass().getName(), false);
+            mFragmentManagerOwner.replaceMainContent(fragment, fragment.getClass().getName(), false);
         }
     }
 
@@ -97,6 +102,13 @@ public class LoginActivity extends MortarFragmentActivity implements ActivityRes
         SyncthingUtils.notifyForegroundStateChanged(this, false);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (fragment instanceof WelcomeFragment) {
+            return;
+        }
+        super.onBackPressed();
+    }
     /*
      * FragmentManagerOwner Activity
      */

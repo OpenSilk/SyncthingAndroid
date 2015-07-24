@@ -26,6 +26,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.preference.PreferenceManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -37,6 +38,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import syncthing.android.AppSettings;
 import timber.log.Timber;
 
 /**
@@ -48,6 +50,7 @@ public class ServiceSettings extends PreferencesWrapper {
     public static final String FILE_NAME = "service";
 
     public static final String ENABLED = "local_instance_enabled";
+    public static final String INITIALISED = "local_instance_initialised";
 
     public static final String RUN_WHEN = "run_when";
     public static final String WHEN_OPEN = "when_open";
@@ -85,6 +88,16 @@ public class ServiceSettings extends PreferencesWrapper {
         return !getPrefs().getBoolean(ENABLED, true);
     }
 
+    boolean isInitialised() {
+        boolean upgradeOldVersion = false;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
+        String defaultCreds = prefs.getString(AppSettings.DEFAULT_CREDENTIALS, null);
+        if (defaultCreds != null) {
+            upgradeOldVersion = true;
+        }
+        return getPrefs().getBoolean(INITIALISED, upgradeOldVersion);
+    }
+
     public String runWhen() {
         return getPrefs().getString(RUN_WHEN, WHEN_OPEN);
     }
@@ -93,6 +106,10 @@ public class ServiceSettings extends PreferencesWrapper {
         if (isDisabled()) {
             Timber.d("isAllowedToRun(): SyncthingInstance disabled");
             return false;
+        }
+        if (!isInitialised()) {
+            Timber.d("isAllowedToRun(): SyncthingInstance initiating credentials");
+            return true;
         }
         boolean chargingOnly = getPrefs().getBoolean(ONLY_CHARGING, false);
         if (chargingOnly && !isCharging()) {

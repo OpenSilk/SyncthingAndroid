@@ -46,6 +46,8 @@ public interface SessionComponent {
                     return DaggerSessionComponent.builder()
                             .launcherActivityComponent(launcherActivityComponent)
                             .sessionModule(new SessionModule(sessionScreen))
+                            .syncthingApiModule(new SyncthingApiModule(sessionScreen.credentials.caCert))
+                            .syncthingApiLongpollModule(new SyncthingApiLongpollModule(sessionScreen.credentials.caCert))
                             .build();
                 }
             };

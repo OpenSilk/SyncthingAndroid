@@ -151,6 +151,16 @@ public class ConfigXml {
     }
 
     /**
+     * Retrieve API key
+     */
+    public String getApiKey() {
+        Element options = (Element) mConfig.getDocumentElement()
+                .getElementsByTagName("gui").item(0);
+        Element apiKey = (Element) options.getElementsByTagName("apikey").item(0);
+        return apiKey.getTextContent();
+    }
+
+    /**
      * Writes updated mConfig back to file.
      */
     private void saveChanges() {

@@ -19,6 +19,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_description">Replace proprietary services with something open, trustworthy and decentralized.</string>
 
+    <!-- Welcome -->
+    <string name="welcome_title">Syncthing Silk for Android</string>
+    <string name="welcome_text">Syncthing replaces proprietary sync and cloud services with something open, trustworthy and decentralized.\n\nYour data is your data alone and you deserve to choose where it is stored, if it is shared with some third party and how it\'s transmitted over the Internet.</string>
+    <string name="welcome_p2_title">#1: Add Devices</string>
+    <string name="welcome_p3_title">#2: Add Folders</string>
+    <string name="welcome_p4_title">#3: Add Remotes</string>
+    <string name="welcome_pl_generating">Generating secure keys&#8230;\nThis may take a minute or two</string>
+    <string name="welcome_pl_ready_title">Syncthing is ready to start!</string>
+    <string name="welcome_pl_ready">Start now!</string>
+    <string name="welcome_pl_cancel">Cancel generating secure keys</string>
+    <string name="welcome_pl_generating_failed">Key generation failed, contact support</string>
+    <string name="welcome_pl_remote">Connect to remote Syncthing</string>
+
     <!--Messages-->
     <string name="input_error">Input Error</string>
     <string name="saving_config_dots">Saving config…</string>

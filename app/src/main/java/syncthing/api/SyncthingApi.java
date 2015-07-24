@@ -142,7 +142,7 @@ public interface SyncthingApi {
     Observable<Void> scan(@Query("folder") String folder, @Query("sub") String subfolder);
 
     @POST("/rest/system/config")
-    Observable<Void> updateConfig(@Body Config config);
+    Observable<Config> updateConfig(@Body Config config);
 
     //@POST("/rest/system/discovery")
     //@POST("/rest/error")
