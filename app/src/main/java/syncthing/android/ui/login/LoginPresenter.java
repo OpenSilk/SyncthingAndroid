@@ -188,7 +188,7 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
 
     void saveKeyAndFinish() {
         isloading = false;
-        newCredentials = new Credentials(tmpCreds.alias, tmpCreds.deviceId, tmpCreds.url, tmpCreds.key);
+        newCredentials = new Credentials(tmpCreds.alias, tmpCreds.deviceId, tmpCreds.url, tmpCreds.key, null);
         Timber.d(ReflectionToStringBuilder.reflectionToString(newCredentials));
         settings.saveCredentials(newCredentials);
         if (hasView()) {

@@ -114,6 +114,8 @@ public class ConfigXml {
     public void changeDefaultGUIAddress() {
         Element options = (Element) mConfig.getDocumentElement()
                 .getElementsByTagName("gui").item(0);
+        // Enable TLS
+        options.setAttribute("tls", Boolean.toString(true));
         Element address = (Element) options.getElementsByTagName("address").item(0);
         address.setTextContent("127.0.0.1:8385");
         saveChanges();

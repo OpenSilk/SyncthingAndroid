@@ -33,7 +33,6 @@ import javax.net.ssl.SSLSocketFactory;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.client.Client;
-import retrofit.client.OkClient;
 
 /**
  * Created by drew on 4/11/15.

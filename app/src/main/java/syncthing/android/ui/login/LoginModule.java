@@ -26,7 +26,9 @@ import retrofit.RestAdapter;
 import retrofit.client.Client;
 import retrofit.converter.Converter;
 import syncthing.android.model.Credentials;
+import syncthing.api.OkClient;
 import syncthing.api.SyncthingApi;
+import syncthing.api.SyncthingSSLSocketFactory;
 
 /**
 * Created by drew on 3/11/15.
@@ -45,14 +47,17 @@ public class LoginModule {
 
     @Provides @LoginScreenScope
     public SyncthingApi provideLoginSynchingApi(Converter converter,
-                                                Client client,
+                                                OkClient okClient,
                                                 Executor httpExecutor,
                                                 Endpoint endpoint,
                                                 RequestInterceptor requestInterceptor) {
+        // Hack to update the Http client with CA Certs
+        okClient.setSslSocketFactory(
+                SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(credentials.caCert));
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(endpoint)
                 .setConverter(converter)
-                .setClient(client)
+                .setClient(okClient)
                 .setExecutors(httpExecutor, null)
                 .setLogLevel(RestAdapter.LogLevel.HEADERS_AND_ARGS)
                 .setRequestInterceptor(requestInterceptor)
@@ -68,5 +73,10 @@ public class LoginModule {
     @Provides @LoginScreenScope
     public RequestInterceptor provideRequestInterceptor(MovingRequestInterceptor interceptor) {
         return interceptor;
+    }
+
+    @Provides @LoginScreenScope
+    public OkClient provideOKHttpClient(Client client) {
+        return (OkClient) client;
     }
 }

@@ -35,12 +35,21 @@ import retrofit.converter.Converter;
 @Module
 public class SyncthingApiModule {
 
+    String caCert;
+
+    public SyncthingApiModule(String caCert) {
+        this.caCert = caCert;
+    }
+
     @Provides @SessionScope
     public SyncthingApi provideSyncthingApi(Endpoint endpoint,
                                             RequestInterceptor interceptor,
                                             Converter converter,
                                             Client client,
                                             Executor httpExecutor) {
+        // Hack to update the Http client with CA Certs
+        ((OkClient)client).setSslSocketFactory(
+                SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(caCert));
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(endpoint)
                 .setConverter(converter)

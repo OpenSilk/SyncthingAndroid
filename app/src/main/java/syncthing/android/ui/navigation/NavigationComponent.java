@@ -19,6 +19,8 @@ package syncthing.android.ui.navigation;
 
 import rx.functions.Func1;
 import syncthing.android.ui.LauncherActivityComponent;
+import syncthing.api.SyncthingApiLongpollModule;
+import syncthing.api.SyncthingApiModule;
 
 /**
 * Created by drew on 3/11/15.

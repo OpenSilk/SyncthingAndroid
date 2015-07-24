@@ -34,12 +34,22 @@ import retrofit.converter.Converter;
  */
 @Module
 public class SyncthingApiLongpollModule {
+
+    String caCert;
+
+    public SyncthingApiLongpollModule(String caCert) {
+        this.caCert = caCert;
+    }
+
     @Provides @SessionScope @Named("longpoll")
     public SyncthingApi provideLongpollSyncthingApi(Endpoint endpoint,
                                                     RequestInterceptor interceptor,
                                                     Converter converter,
                                                     @Named("longpoll") Client client,
                                                     @Named("longpoll") Executor httpExecutor) {
+        // Hack to update the Http client with CA Certs
+        ((OkClient)client).setSslSocketFactory(
+                SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(caCert));
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(endpoint)
                 .setConverter(converter)

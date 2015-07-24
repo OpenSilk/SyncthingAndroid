@@ -39,7 +39,9 @@ import org.joda.time.Interval;
 import org.joda.time.format.ISODateTimeFormat;
 import org.zeroturnaround.zip.ZipUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -161,6 +163,28 @@ public class SyncthingUtils {
 
     public static File getConfigDirectory(Context context) {
         return new File(context.getApplicationContext().getFilesDir(), "st-config");
+    }
+
+    public static String getSyncthingCACert(Context context) {
+        try {
+            return readFile(new File(context.getApplicationContext().getFilesDir(), "st-config/https-cert.pem"));
+        } catch (IOException e) {
+            Timber.e("Failed to retrieve CA Cert", e);
+            return null;
+        }
+    }
+
+    private static String readFile(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String         line = null;
+        StringBuilder  stringBuilder = new StringBuilder();
+        String         ls = System.getProperty("line.separator");
+        while((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+            stringBuilder.append(ls);
+        }
+        reader.close();
+        return stringBuilder.toString();
     }
 
     public static String getSyncthingBinaryPath(Context context) {

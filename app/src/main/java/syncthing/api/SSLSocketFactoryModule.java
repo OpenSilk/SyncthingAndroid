@@ -28,6 +28,7 @@ import javax.net.ssl.X509TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
+import timber.log.Timber;
 
 /**
  * Created by drew on 4/11/15.
@@ -43,6 +44,7 @@ public class SSLSocketFactoryModule {
                     }
                     @Override
                     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                        Timber.d("Accepting any certificate");
                     }
                     @Override
                     public X509Certificate[] getAcceptedIssuers() {

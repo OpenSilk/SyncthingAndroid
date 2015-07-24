@@ -40,7 +40,6 @@ import javax.net.ssl.X509TrustManager;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.client.Client;
-import retrofit.client.OkClient;
 import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 

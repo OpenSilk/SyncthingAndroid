@@ -34,17 +34,19 @@ public class Credentials implements Parcelable, Endpoint, RequestInterceptor {
     public final String id;
     public final String url;
     public final String apiKey;
+    public final String caCert;
 
     @Deprecated
     public Credentials(String url, String apiKey) {
-        this(null, null, url, apiKey);
+        this(null, null, url, apiKey, null);
     }
 
-    public Credentials(String alias, String id, String url, String apiKey) {
+    public Credentials(String alias, String id, String url, String apiKey, String caCert) {
         this.alias = alias;
         this.id = id;
         this.url = url;
         this.apiKey = apiKey;
+        this.caCert = caCert;
     }
 
     @Override
@@ -87,12 +89,14 @@ public class Credentials implements Parcelable, Endpoint, RequestInterceptor {
         dest.writeString(id);
         dest.writeString(url);
         dest.writeString(apiKey);
+        dest.writeString(caCert);
     }
 
     public static final Creator<Credentials> CREATOR = new Creator<Credentials>() {
         @Override
         public Credentials createFromParcel(Parcel source) {
             return new Credentials(
+                    source.readString(),
                     source.readString(),
                     source.readString(),
                     source.readString(),
