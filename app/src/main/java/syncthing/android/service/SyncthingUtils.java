@@ -250,7 +250,7 @@ public class SyncthingUtils {
 
     public static String unrollArray(String[] strings) {
         StringBuilder b = new StringBuilder(50);
-        if (strings.length == 0) {
+        if (strings == null || strings.length == 0) {
             return null;
         }
         for (int ii=0; ii<strings.length; ii++) {
