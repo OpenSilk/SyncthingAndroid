@@ -86,8 +86,8 @@ public class SyncthingThread extends Thread {
             }
             Process p = b.start();
             goProcess.set(p);
-            new LogWriterThread(Log.INFO, p.getInputStream()).start();
-            new LogWriterThread(Log.ERROR, p.getErrorStream()).start();
+            new LogWriterThread(Log.INFO, p.getInputStream(), goProcess).start();
+            new LogWriterThread(Log.ERROR, p.getErrorStream(), goProcess).start();
             ret = p.waitFor();
             Timber.d("Syncthing exited with status %d", ret);
             goProcess.set(null);
@@ -199,22 +199,25 @@ public class SyncthingThread extends Thread {
                 kill.destroy();
             }
         }
+        Timber.d("Syncthing killed ret=%d", kill.exitValue());
     }
 
     static class LogWriterThread extends Thread {
         final int type;
         final BufferedReader br;
+        final AtomicReference<Process> goProcess;
 
-        LogWriterThread(int type, InputStream is) {
+        LogWriterThread(int type, InputStream is, AtomicReference<Process> goProcess) {
             this.type = type;
             this.br = new BufferedReader(new InputStreamReader(is));
+            this.goProcess = goProcess;
         }
 
         @Override
         public void run() {
             android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
             Timber.d("Running");
-            while (true) {
+            while (true && goProcess.get() != null) {
                 String line = null;
                 try {
                     line = br.readLine();
