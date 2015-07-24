@@ -292,7 +292,7 @@ public class SyncthingUtils {
         }
         File zipFile = new File(Environment.getExternalStorageDirectory(),
                 context.getPackageName() + "-export-"
-                        + DateTime.now().toString(ISODateTimeFormat.dateHourMinute()) + ".zip");
+                        + DateTime.now().toString("yyyy-MM-dd--HH-mm-ss") + ".zip");
         if (zipFile.exists()) {
             return;//Double click or something. just ignore
         }
@@ -312,6 +312,7 @@ public class SyncthingUtils {
         } catch (IOException|RuntimeException e) {
             FileUtils.deleteQuietly(zipFile);
             Toast.makeText(context, R.string.error, Toast.LENGTH_LONG).show();
+            Timber.e("Failed to export", e);
         } finally {
             FileUtils.deleteQuietly(tmpDir);
         }
@@ -334,6 +335,7 @@ public class SyncthingUtils {
                     FileUtils.cleanDirectory(configDir);
                 } catch (IOException e) {
                     Toast.makeText(context, R.string.error, Toast.LENGTH_LONG).show();
+                    Timber.e("Failed to import", e);
                     return;
                 }
             }
