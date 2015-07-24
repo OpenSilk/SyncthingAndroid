@@ -103,6 +103,7 @@ public class EventMonitor {
                 //drop duplicate events some events like INDEX_UPDATED or STATE_CHANGED will flood
                 .distinctUntilChanged(event -> event.type)
                 //.debounce(50, TimeUnit.MILLISECONDS)
+                .filter(event -> event != null && event.type != null)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         event -> {
