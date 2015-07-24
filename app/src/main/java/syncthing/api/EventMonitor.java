@@ -123,6 +123,9 @@ public class EventMonitor {
                                         if (cause instanceof SocketTimeoutException) {
                                             //just means no events for long time, can safely ignore
                                             Timber.w("SocketTimeout: %s", cause.getMessage());
+                                        } else if (cause instanceof java.io.InterruptedIOException) {
+                                            //just means socket timeout / Syncthing startup stuttering
+                                            Timber.w("InterruptedIOException: %s", cause.getMessage());
                                         } else if (cause instanceof ConnectException) {
                                             //We could either be offline or the server could be
                                             //offline, or the server could still be booting
