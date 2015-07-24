@@ -105,6 +105,8 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!mPresenter.controller.isOnline() || mPresenter.controller.getSystemInfo() == null)
+            return false;
         switch (item.getItemId()) {
             case R.id.add_device:
                 mPresenter.openAddDeviceScreen();
