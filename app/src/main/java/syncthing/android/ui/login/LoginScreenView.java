@@ -20,6 +20,8 @@ package syncthing.android.ui.login;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -154,6 +156,11 @@ public class LoginScreenView extends RelativeLayout {
         loadingProgress = new ProgressDialog(getContext());
         loadingProgress.setMessage(getResources().getString(R.string.fetching_api_key_dots));
         loadingProgress.setCancelable(false);
+        loadingProgress.setButton(DialogInterface.BUTTON_NEGATIVE,
+                getContext().getString(android.R.string.cancel),
+                (DialogInterface dialog, int which) -> {
+                        presenter.cancelLogin();
+                });
         loadingProgress.show();
     }
 

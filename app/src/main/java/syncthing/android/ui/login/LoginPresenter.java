@@ -174,6 +174,13 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
                 );
     }
 
+    void cancelLogin() {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
+        getView().dismissLoginProgress();
+    }
+
     void saveKeyAndFinish() {
         isloading = false;
         newCredentials = new Credentials(tmpCreds.alias, tmpCreds.deviceId, tmpCreds.url, tmpCreds.key);
