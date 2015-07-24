@@ -95,6 +95,9 @@ public class EventMonitor {
                         }
                         return Observable.from(topass);
                     } else {
+                        if (events == null) {
+                            return Observable.from(new ArrayList<>());
+                        }
                         return Observable.from(events);
                     }
                 })
@@ -169,7 +172,7 @@ public class EventMonitor {
                                 unhandledErrorCount--;//ignore this error
                                 Timber.e("RejectedExecutionException: %s", t.getMessage());
                             } else {
-                                Timber.e(t, "Unforeseen Exception: %s %s",t.getClass().getSimpleName(), t.getMessage());
+                                Timber.e(t, "Unforeseen Exception: %s %s", t.getClass().getSimpleName(), t.getMessage());
                             }
                             connectExceptionCount = 0;//Incase we just came out of a connecting loop.
                             if (++unhandledErrorCount < 20) {
