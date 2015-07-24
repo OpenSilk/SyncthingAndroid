@@ -125,7 +125,7 @@ public class EventMonitor {
                                             //or other stuff idk, so we retry for a while
                                             //before giving up.
                                             Timber.w("ConnectException: %s", cause.getMessage());
-                                            if (++connectExceptionCount > 20) {
+                                            if (++connectExceptionCount > 50) {
                                                 connectExceptionCount = 0;
                                                 Timber.w("Too many ConnectExceptions... server likely offline");
                                                 listener.onError(Error.STOPPING);
