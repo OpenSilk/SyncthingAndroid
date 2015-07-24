@@ -45,7 +45,7 @@ public class FolderConfig implements Serializable {
         FolderConfig f = new FolderConfig();
         f.devices = new ArrayList<>();
         f.readOnly = false;
-        f.rescanIntervalS = 60;
+        f.rescanIntervalS = 86400;
         f.autoNormalize = true;
         f.versioning = new VersioningConfig();
         f.order = PullOrder.RANDOM;

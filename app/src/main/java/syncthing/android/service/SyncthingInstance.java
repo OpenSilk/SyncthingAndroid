@@ -63,6 +63,7 @@ public class SyncthingInstance extends MortarService {
     @Inject AlarmManagerHelper mAlarmManagerHelper;
 
     SyncthingThread mSyncthingThread;
+    SyncthingInotifyThread mSyncthingInotifyThread;
 
     int mConnectedClients = 0;
     boolean mAnyActivityInForeground;
@@ -211,6 +212,8 @@ public class SyncthingInstance extends MortarService {
     void startSyncthing() {
         mSyncthingThread = new SyncthingThread(this);
         mSyncthingThread.start();
+        mSyncthingInotifyThread = new SyncthingInotifyThread(this);
+        mSyncthingInotifyThread.start();
     }
 
     void maybeStartSyncthing() {
@@ -224,6 +227,10 @@ public class SyncthingInstance extends MortarService {
             mSyncthingThread.kill();
             mSyncthingThread = null;
         }
+        if (mSyncthingInotifyThread != null) {
+            mSyncthingInotifyThread.kill();
+            mSyncthingInotifyThread = null;
+        }
     }
 
     /*
@@ -233,15 +240,15 @@ public class SyncthingInstance extends MortarService {
     // From camlistore
     void ensureBinary() {
         long myTime = getAPKModTime();
-        String dstFile = SyncthingUtils.getGoBinaryPath(this);
+        String dstFile = SyncthingUtils.getSyncthingBinaryPath(this);
         File f = new File(dstFile);
         Timber.d("My Time: %d", myTime);
         Timber.d("Bin Time: " + f.lastModified());
         if (f.exists() && f.lastModified() > myTime) {
-            Timber.d("Go binary modtime up-to-date.");
+            Timber.d("syncthing binary modtime up-to-date.");
             return;
         }
-        Timber.d("Go binary missing or modtime stale. Re-copying from APK.");
+        Timber.d("syncthing binary missing or modtime stale. Re-copying from APK.");
         InputStream is = null;
         FileOutputStream fos = null;
         try {
@@ -252,14 +259,51 @@ public class SyncthingInstance extends MortarService {
 
             String writingFilePath = dstFile + ".writing";
             Timber.d("wrote out %s", writingFilePath);
-            Runtime.getRuntime().exec("chmod 0700 " + writingFilePath);
+            Runtime.getRuntime().exec("chmod 0700 " + writingFilePath).waitFor();
             Timber.d("did chmod 0700 on %s", writingFilePath);
-            Runtime.getRuntime().exec("mv " + writingFilePath + " " + dstFile);
+            Runtime.getRuntime().exec("mv " + writingFilePath + " " + dstFile).waitFor();
             Timber.d("moved %s to %s", writingFilePath, dstFile);
             f = new File(dstFile);
             f.setLastModified(myTime);
             Timber.d("set modtime of %s", dstFile);
-        } catch (IOException e) {
+        } catch (IOException|InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(fos);
+        }
+        ensureBinary2();
+    }
+
+    void ensureBinary2() {
+        long myTime = getAPKModTime();
+        String dstFile = SyncthingUtils.getSyncthingInotifyBinaryPath(this);
+        File f = new File(dstFile);
+        Timber.d("My Time: %d", myTime);
+        Timber.d("Bin Time: " + f.lastModified());
+        if (f.exists() && f.lastModified() > myTime) {
+            Timber.d("inotify binary modtime up-to-date.");
+            return;
+        }
+        Timber.d("Go binary missing or modtime stale. Re-copying from APK.");
+        InputStream is = null;
+        FileOutputStream fos = null;
+        try {
+            is = getAssets().open("syncthing-inotify.arm");
+            fos = getApplicationContext().openFileOutput("syncthing-inotify.bin.writing", MODE_PRIVATE);
+            IOUtils.copy(is, fos);
+            fos.flush();
+
+            String writingFilePath = dstFile + ".writing";
+            Timber.d("wrote out %s", writingFilePath);
+            Runtime.getRuntime().exec("chmod 0700 " + writingFilePath).waitFor();
+            Timber.d("did chmod 0700 on %s", writingFilePath);
+            Runtime.getRuntime().exec("mv " + writingFilePath + " " + dstFile).waitFor();
+            Timber.d("moved %s to %s", writingFilePath, dstFile);
+            f = new File(dstFile);
+            f.setLastModified(myTime);
+            Timber.d("set modtime of %s", dstFile);
+        } catch (IOException|InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
             IOUtils.closeQuietly(is);

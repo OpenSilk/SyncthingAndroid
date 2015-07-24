@@ -4,3 +4,6 @@
 [submodule "go"]
 	path = golang/go
 	url = https://go.googlesource.com/go
+[submodule "syncthing/src/github.com/syncthing/syncthing-inotify"]
+	path = syncthing/src/github.com/syncthing/syncthing-inotify
+	url = https://github.com/syncthing/syncthing-inotify

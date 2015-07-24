@@ -95,6 +95,12 @@ public class ConfigXml {
                 r.setAttribute("ignorePerms", Boolean.toString(true));
                 changed = true;
             }
+            // Set rescanIntervalS attribute.
+            if (Integer.parseInt(r.getAttribute("rescanIntervalS")) == 60) {
+                Timber.d("Set 'rescanIntervalS' on folder " + r.getAttribute("id"));
+                r.setAttribute("rescanIntervalS", "86400");
+                changed = true;
+            }
         }
 
         if (changed) {

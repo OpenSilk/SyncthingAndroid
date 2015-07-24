@@ -163,8 +163,12 @@ public class SyncthingUtils {
         return new File(context.getApplicationContext().getFilesDir(), "st-config");
     }
 
-    public static String getGoBinaryPath(Context context) {
+    public static String getSyncthingBinaryPath(Context context) {
         return new File(context.getApplicationContext().getFilesDir(), "syncthing.bin").getAbsolutePath();
+    }
+
+    public static String getSyncthingInotifyBinaryPath(Context context) {
+        return new File(context.getApplicationContext().getFilesDir(), "syncthing-inotify.bin").getAbsolutePath();
     }
 
     /*
