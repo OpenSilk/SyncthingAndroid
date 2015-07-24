@@ -109,6 +109,17 @@ public class ConfigXml {
     }
 
     /**
+     * Change default GUI address to 127.0.0.1:8385
+     */
+    public void changeDefaultGUIAddress() {
+        Element options = (Element) mConfig.getDocumentElement()
+                .getElementsByTagName("gui").item(0);
+        Element address = (Element) options.getElementsByTagName("address").item(0);
+        address.setTextContent("127.0.0.1:8385");
+        saveChanges();
+    }
+
+    /**
      * Change default folder id to camera and path to camera folder path.
      */
     public void changeDefaultFolder() {

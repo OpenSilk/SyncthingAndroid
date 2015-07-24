@@ -9,6 +9,18 @@ Secondary objectives include:
   * [RxJava](https://github.com/ReactiveX/RxJava) + [Retrolamba](https://github.com/orfjackal/retrolambda)
 * CGO support for Syncthing on android.
 
+###Custom Settings
+
+Syncthing runs with a number of custom settings to optimise your experience and to avoid conflicts with other applications (e.g. [Syncthing for Android application](https://github.com/syncthing/syncthing-android)). In particular:
+  - Default GUI address is set to 127.0.0.1:8385 (TLS on)
+  - Default Listen Address is set to 0.0.0.0:22001
+  - Default Local Announce Port is set to 21040
+  - Default Local Announce MCAddr is set to [ff32::5222]:21041
+  - Default Rescan Interval is set to 86400 seconds (1 day)
+  - Default Ignore Permissions are enabled
+  - Default IPv4 and IPv6 Global Announce Server is an ip instead of a domain name (see Github issue #4)
+  - Default folder is set to Environment.DIRECTORY_DCIM
+
 ###Building
 
 #####Syncthing binary

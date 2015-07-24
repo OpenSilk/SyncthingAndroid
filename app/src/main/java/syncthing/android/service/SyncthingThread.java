@@ -58,6 +58,7 @@ public class SyncthingThread extends Thread {
                 Timber.e("Failed to generate config");
                 return;
             }
+            configXml.changeDefaultGUIAddress();
             configXml.changeDefaultFolder();
         }
         configXml.updateIfNeeded();
