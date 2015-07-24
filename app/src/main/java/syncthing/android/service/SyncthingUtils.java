@@ -27,6 +27,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.WeakHashMap;
@@ -262,12 +264,46 @@ public class SyncthingUtils {
 
     private static final CharSequence CHARS = "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-";
 
-    public static String randomString(int len) {
-        String res = "";
-        for (int ii=0; ii<len; ii++) {
-            res += CHARS.charAt(Math.round((float)(Math.random() * (CHARS.length() - 1))));
+    public static String generateName(boolean dashed) {
+        String name = Build.MODEL.replaceAll("[^a-zA-Z0-9 ]", "");
+        if (name.startsWith("Android SDK built for"))
+            name = "Nexus One";
+        String split[] = name.split(" ");
+        name = split[0];
+        for (int i = 1; i < split.length; i++) {
+            if (name.length() + split[i].length() > 20)
+                break;
+            name += (dashed ? "-" : " ") + split[i];
         }
-        return res;
+        return name;
+    }
+
+    public static String generateDeviceName(boolean dashed) {
+        return generateName(dashed);
+    }
+
+    public static String generateUsername() {
+        return generateName(false);
+    }
+
+    public static String generatePassword() {
+        return randomString(20);
+    }
+
+    public static String hiddenString(int len) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < len; i++)
+            sb.append("*");
+        return sb.toString();
+    }
+
+    public static String randomString(int len) {
+        PRNGFixes.apply();
+        StringBuilder sb = new StringBuilder();
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < len; i++)
+            sb.append(CHARS.charAt(random.nextInt(CHARS.length())));
+        return sb.toString();
     }
 
     public static Interval getIntervalForRange(DateTime now, long start, long end) {
@@ -397,5 +433,4 @@ public class SyncthingUtils {
         shareIntent.putExtra(Intent.EXTRA_TEXT, id);
         context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share)));
     }
-
 }

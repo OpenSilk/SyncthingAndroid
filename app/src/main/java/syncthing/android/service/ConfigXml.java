@@ -127,10 +127,26 @@ public class ConfigXml {
     public void changeDefaultFolder() {
         Element folder = (Element) mConfig.getDocumentElement()
                 .getElementsByTagName("folder").item(0);
-        folder.setAttribute("id", Build.MODEL + " Camera");
+        folder.setAttribute("id", SyncthingUtils.generateDeviceName(true) + "-Camera");
         folder.setAttribute("path", Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
         folder.setAttribute("ro", "true");
+        saveChanges();
+    }
+
+    /**
+     * Change default device name from localhost to the actual device name
+     */
+    public void changeDefaultDeviceName() {
+        NodeList devices = mConfig.getDocumentElement()
+                .getElementsByTagName("device");
+        for (int i = 0; i < devices.getLength(); i++) {
+            Element d = (Element) devices.item(i);
+            if (!d.hasAttribute("name") ||
+                    d.getAttribute("name").equals("localhost")) {
+                d.setAttribute("name", SyncthingUtils.generateDeviceName(false));
+            }
+        }
         saveChanges();
     }
 
