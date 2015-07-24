@@ -92,7 +92,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
 
         catBetween = (PreferenceCategory) findPreference("cat_between");
         hideShowRunWhenCategories(getPreferenceManager().getSharedPreferences()
-                .getString(ServiceSettings.RUN_WHEN, ServiceSettings.ALWAYS));
+                .getString(ServiceSettings.RUN_WHEN, ServiceSettings.WHEN_OPEN));
 
         exportConfig = findPreference("export");
         exportConfig.setOnPreferenceClickListener(this);
@@ -193,7 +193,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
     }
 
     boolean isEnabled() {
-        return getPreferenceManager().getSharedPreferences().getBoolean(ServiceSettings.ENABLED, false);
+        return getPreferenceManager().getSharedPreferences().getBoolean(ServiceSettings.ENABLED, true);
     }
 
     void setEnabled(boolean enabled) {

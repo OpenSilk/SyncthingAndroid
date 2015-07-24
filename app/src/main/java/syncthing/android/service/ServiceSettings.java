@@ -82,11 +82,11 @@ public class ServiceSettings extends PreferencesWrapper {
     }
 
     boolean isDisabled() {
-        return !getPrefs().getBoolean(ENABLED, false);
+        return !getPrefs().getBoolean(ENABLED, true);
     }
 
     public String runWhen() {
-        return getPrefs().getString(RUN_WHEN, ALWAYS);
+        return getPrefs().getString(RUN_WHEN, WHEN_OPEN);
     }
 
     boolean isAllowedToRun() {
@@ -133,7 +133,7 @@ public class ServiceSettings extends PreferencesWrapper {
             Timber.d("Not connected to any networks");
             return false;
         }
-        boolean wifiOnly = getPrefs().getBoolean(ONLY_WIFI, true);
+        boolean wifiOnly = getPrefs().getBoolean(ONLY_WIFI, false);
         if (wifiOnly && !isWifiOrEthernet(info.getType())) {
             Timber.d("Connection is not wifi network and wifiOnly=true");
             return false;

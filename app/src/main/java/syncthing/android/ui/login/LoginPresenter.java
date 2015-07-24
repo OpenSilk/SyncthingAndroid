@@ -111,6 +111,11 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
         if (savedInstanceState == null) {
             if (initialCredentials != Credentials.NONE) {
                 getView().initWithCredentials(initialCredentials);
+            } else if (settings.getSavedCredentials().isEmpty()) {
+                // Try to obtain credentials for the default local Syncthing instance
+                fetchApiKey(
+                        Build.MODEL.replaceAll("[^a-zA-Z0-9 ]", ""),
+                        "127.0.0.1", "8384", "", "", false);
             }
         } else {
             savedInstanceState.setClassLoader(getClass().getClassLoader());
@@ -137,7 +142,7 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
         outState.putSerializable("tmpcreds", tmpCreds);
     }
 
-    void fetchApiKey(String alias, String url, String port,String user,String pass,boolean tls) {
+    void fetchApiKey(String alias, String url, String port, String user, String pass, boolean tls) {
         if (!hasView()) return;
         String uri = LoginUtils.buildUri(url, port, tls);
         String auth = LoginUtils.buildAuthorization(user, pass);

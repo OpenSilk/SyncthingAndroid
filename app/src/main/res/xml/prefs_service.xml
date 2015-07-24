@@ -23,7 +23,7 @@
         android:title="@string/when_to_run"
         android:entries="@array/when_to_run_entries"
         android:entryValues="@array/when_to_run_values"
-        android:defaultValue="always"/>
+        android:defaultValue="when_open"/>
 
     <PreferenceCategory
         android:title="@string/overrides">
@@ -31,7 +31,7 @@
         <CheckBoxPreference
             android:key="only_on_wifi"
             android:title="@string/only_on_wifi"
-            android:defaultValue="true"/>
+            android:defaultValue="false"/>
 
         <MultiSelectListPreference
             android:key="TRANSIENT_wifi_networks"
