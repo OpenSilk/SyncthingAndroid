@@ -73,7 +73,7 @@ public class AppSettings extends PreferencesWrapper {
         if (str == null) {
             return new HashSet<>();
         } else {
-            return gson.fromJson(str, new TypeToken<HashSet<Credentials>>(){}.getType());
+            return (Set<Credentials>)gson.fromJson(str, new TypeToken<Set<Credentials>>(){}.getType());
         }
     }
 
