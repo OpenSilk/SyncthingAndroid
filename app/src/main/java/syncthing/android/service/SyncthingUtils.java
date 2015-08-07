@@ -407,7 +407,7 @@ public class SyncthingUtils {
             ZipUtil.unpack(is, configDir);
             File[] files = configDir.listFiles();
             for (File f : files) {
-                Runtime.getRuntime().exec("chmod 0600 " + f.getAbsolutePath());
+                Runtime.getRuntime().exec("chmod 0600 " + f.getAbsolutePath()).waitFor();
                 Timber.d("chmod 0600 on %s", f.getAbsolutePath());
             }
             Toast.makeText(context, R.string.config_imported, Toast.LENGTH_LONG).show();
