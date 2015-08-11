@@ -145,7 +145,7 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
             mCredentials = getArguments().getParcelable("creds");
         }
         if (mCredentials == null) {
-            throw new NullPointerException("You forgot to supply credentils to the session");
+            throw new NullPointerException("You forgot to supply credentials to the session");
         }
     }
 
