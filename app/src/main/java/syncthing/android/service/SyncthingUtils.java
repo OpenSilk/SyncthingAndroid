@@ -419,6 +419,11 @@ public class SyncthingUtils {
         }
     }
 
+    public static boolean isClipBoardSupported(Context context) {
+        ClipboardManager clipboard = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+        return clipboard != null;
+    }
+
     public static void copyToClipboard(Context context, CharSequence label, String id) {
         ClipboardManager clipboard = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, id);

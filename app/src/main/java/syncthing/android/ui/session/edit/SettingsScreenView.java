@@ -19,6 +19,8 @@ package syncthing.android.ui.session.edit;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -55,6 +57,7 @@ public class SettingsScreenView extends ScrollView {
     @InjectView(R.id.check_start_browser) CheckBox enableBrowser;
     @InjectView(R.id.check_usage_reporting) CheckBox enableUsageReporting;
     @InjectView(R.id.edit_apikey) EditText editApiKey;
+    @InjectView(R.id.btn_copy_apikey) Button copyApiKeyButton;
 
     final SettingsPresenter presenter;
 
@@ -73,7 +76,12 @@ public class SettingsScreenView extends ScrollView {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        presenter.takeView(this);
+        if (!SyncthingUtils.isClipBoardSupported(getContext())) {
+            copyApiKeyButton.setVisibility(View.INVISIBLE);
+        }
+        if (!isInEditMode()) {
+            presenter.takeView(this);
+        }
     }
 
     @Override

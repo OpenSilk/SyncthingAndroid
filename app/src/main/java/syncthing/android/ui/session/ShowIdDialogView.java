@@ -20,6 +20,8 @@ package syncthing.android.ui.session;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -46,6 +48,7 @@ public class ShowIdDialogView extends RelativeLayout {
     @InjectView(R.id.id) TextView deviceId;
     @InjectView(R.id.qr_image) ImageView qrImage;
     @InjectView(R.id.loading_progress) ProgressBar progress;
+    @InjectView(R.id.btn_copy) Button copyButton;
 
     final SessionPresenter presenter;
 
@@ -66,6 +69,9 @@ public class ShowIdDialogView extends RelativeLayout {
         if (device != null && !StringUtils.isEmpty(device.deviceID)) {
             id = device.deviceID;
             deviceId.setText(device.deviceID);
+            if (!SyncthingUtils.isClipBoardSupported(getContext())) {
+                copyButton.setVisibility(View.INVISIBLE);
+            }
             qrImageSubscription = presenter.controller.getQRImage(device.deviceID)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
