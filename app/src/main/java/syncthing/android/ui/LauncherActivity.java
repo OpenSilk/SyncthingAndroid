@@ -49,7 +49,6 @@ import butterknife.InjectView;
 import butterknife.Optional;
 import mortar.MortarScope;
 import rx.Subscription;
-import rx.android.observables.AndroidObservable;
 import rx.functions.Action1;
 import syncthing.android.AppComponent;
 import syncthing.android.AppSettings;
@@ -234,6 +233,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
     void subscribeChargingState() {
         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        /*TODO fix this
         mChargingSubscription = AndroidObservable.bindActivity(this,AndroidObservable.fromBroadcast(this, filter))
                 .subscribe(new Action1<Intent>() {
                                @Override
@@ -248,6 +248,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
                                }
                            }
                 );
+                */
     }
 
 }
