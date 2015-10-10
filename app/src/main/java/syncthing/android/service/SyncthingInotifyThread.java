@@ -68,20 +68,18 @@ public class SyncthingInotifyThread extends Thread {
                 );
                 Process p = b.start();
                 goProcess.set(p);
-                new LogWriterThread(Log.INFO, p.getInputStream(), goProcess).start();
-                new LogWriterThread(Log.ERROR, p.getErrorStream(), goProcess).start();
+                LogWriterThread.initialize(Log.INFO, p.getInputStream(), goProcess);
+                LogWriterThread.initialize(Log.ERROR, p.getErrorStream(), goProcess);
                 ret = p.waitFor();
                 Timber.d("syncthing-inotify exited with status %d", ret);
                 goProcess.set(null);
                 if (ret == 3) { //restart requested
                     Thread.sleep(100);
                 }
-            } catch (IOException e) {
-                kill();
+            } catch (IOException|InterruptedException e) {
                 throw new RuntimeException(e);
-            } catch (InterruptedException e) {
+            } finally {
                 kill();
-                throw new RuntimeException(e);
             }
         }
         Timber.d("Exiting");
@@ -95,44 +93,11 @@ public class SyncthingInotifyThread extends Thread {
         }
         goProcess.set(null);
         p.destroy();
-        try { p.waitFor();
-        } catch (InterruptedException e) { }
-        Timber.d("Syncthing-inotify killed ret=%d", p.exitValue());
-    }
-
-    static class LogWriterThread extends Thread {
-        final int type;
-        final BufferedReader br;
-        final AtomicReference<Process> goProcess;
-
-        LogWriterThread(int type, InputStream is, AtomicReference<Process> goProcess) {
-            this.type = type;
-            this.br = new BufferedReader(new InputStreamReader(is));
-            this.goProcess = goProcess;
-        }
-
-        @Override
-        public void run() {
-            android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
-            Timber.d("Running");
-            while (true && goProcess.get() != null) {
-                String line = null;
-                try {
-                    line = br.readLine();
-                } catch (IOException e) {
-                    Timber.w("Unable to read Syncthing-inotify's log", e);
-                    break;
-                }
-                if (line == null) {
-                    break;
-                }
-                if (type == Log.ERROR) {
-                    Timber.e(line);
-                } else {
-                    Timber.i(line);
-                }
-            }
-            Timber.d("Exiting");
+        try {
+            p.waitFor();
+            Timber.d("Syncthing-inotify killed ret=%d", p.exitValue());
+        } catch (InterruptedException|IllegalThreadStateException e) {
+            Timber.e(e, "Error killing syncthing-inotify");
         }
     }
 }

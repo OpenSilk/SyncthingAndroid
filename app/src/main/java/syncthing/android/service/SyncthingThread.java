@@ -88,8 +88,8 @@ public class SyncthingThread extends Thread {
             }
             Process p = b.start();
             goProcess.set(p);
-            new LogWriterThread(Log.INFO, p.getInputStream(), goProcess).start();
-            new LogWriterThread(Log.ERROR, p.getErrorStream(), goProcess).start();
+            LogWriterThread.initialize(Log.INFO, p.getInputStream(), goProcess);
+            LogWriterThread.initialize(Log.ERROR, p.getErrorStream(), goProcess);
             ret = p.waitFor();
             Timber.d("Syncthing exited with status %d", ret);
             goProcess.set(null);
@@ -102,12 +102,10 @@ public class SyncthingThread extends Thread {
                             .setAction(SyncthingInstance.BINARY_WAS_SHUTDOWN));
                 }
             }
-        } catch (IOException e) {
-            kill();
+        } catch (IOException|InterruptedException e) {
             throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } finally {
             kill();
-            throw new RuntimeException(e);
         }
         Timber.d("Exiting");
     }
@@ -120,123 +118,12 @@ public class SyncthingThread extends Thread {
         }
         goProcess.set(null);
         p.destroy();
-        int retries = 60;
-        for (int i = 0; i < retries; i++) {
-            try {
-                int exitValue = p.exitValue();
-                Timber.d("Syncthing killed ret=%d", exitValue);
-                Thread.sleep(100);
-                return;
-            } catch (InterruptedException|IllegalThreadStateException e) { }
-        }
-        killAlternative();
-    }
-
-    private void killAlternative() {
-        Timber.d("killAlternative");
-        // Ensure kill
-        for (int i = 0; i < 2; i++) {
-            Process ps = null;
-            DataOutputStream psOut = null;
-            try {
-                ps = Runtime.getRuntime().exec("sh");
-                psOut = new DataOutputStream(ps.getOutputStream());
-                psOut.writeBytes("ps | grep libsyncthing.so\n");
-                psOut.writeBytes("exit\n");
-                psOut.flush();
-                ps.waitFor();
-                InputStreamReader isr = new InputStreamReader(ps.getInputStream());
-                BufferedReader br = new BufferedReader(isr);
-                String id;
-                while ((id = br.readLine()) != null) {
-                    killProcessId(id, i > 0);
-                }
-            } catch (IOException | InterruptedException e) {
-                Timber.e("No Syncthing processes found", e);
-            } finally {
-                try {
-                    if (psOut != null)
-                        psOut.close();
-                } catch (IOException e) {
-                    Timber.e("Failed close the psOut stream", e);
-                }
-                if (ps != null) {
-                    ps.destroy();
-                }
-            }
-        }
-    }
-
-    /**
-     * Kill a given process ID
-     *
-     * @param force Whether to use a SIGKILL.
-     */
-    void killProcessId(String id, boolean force) {
-        Process kill = null;
-        DataOutputStream killOut = null;
         try {
-            kill = Runtime.getRuntime().exec("sh");
-            killOut = new DataOutputStream(kill.getOutputStream());
-            if (!force) {
-                killOut.writeBytes("kill " + id + "\n");
-                killOut.writeBytes("sleep 1\n");
-            } else {
-                killOut.writeBytes("sleep 3\n");
-                killOut.writeBytes("kill -9 " + id + "\n");
-            }
-            killOut.writeBytes("exit\n");
-            killOut.flush();
-            kill.waitFor();
-            Timber.d("Killed Syncthing process " + id);
-        } catch (IOException | InterruptedException e) {
-            Timber.e("Failed to kill process id " + id, e);
-        } finally {
-            try {
-                if (killOut != null)
-                    killOut.close();
-            } catch (IOException e) {
-                Timber.e("Failed close the killOut stream", e);}
-            if (kill != null) {
-                kill.destroy();
-            }
-        }
-        Timber.d("Syncthing killed ret=%d", kill.exitValue());
-    }
-
-    static class LogWriterThread extends Thread {
-        final int type;
-        final BufferedReader br;
-        final AtomicReference<Process> goProcess;
-
-        LogWriterThread(int type, InputStream is, AtomicReference<Process> goProcess) {
-            this.type = type;
-            this.br = new BufferedReader(new InputStreamReader(is));
-            this.goProcess = goProcess;
-        }
-
-        @Override
-        public void run() {
-            android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
-            Timber.d("Running");
-            while (true && goProcess.get() != null) {
-                String line = null;
-                try {
-                    line = br.readLine();
-                } catch (IOException e) {
-                    Timber.w("Unable to read Syncthing's log", e);
-                    break;
-                }
-                if (line == null) {
-                    break;
-                }
-                if (type == Log.ERROR) {
-                    Timber.e(line);
-                } else {
-                    Timber.i(line);
-                }
-            }
-            Timber.d("Exiting");
+            p.waitFor();
+            Timber.d("Syncthing killed ret=%d", p.exitValue());
+        } catch (InterruptedException|IllegalThreadStateException e) {
+            Timber.e(e, "Error killing syncthing");
         }
     }
+
 }
