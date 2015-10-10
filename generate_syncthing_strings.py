@@ -62,18 +62,25 @@ def write_xml(json, directory):
             f.write('    <string name="%s">%s</string>\n' % (key,val))
         write_closing(f)
 
+for root, dirs, files in os.walk(resdir):
+    for name in files:
+        if name == resfile:
+            path = os.path.join(root, name)
+            print("removing " + path)
+            os.remove(path)
+
 realpath = os.path.join(base_path, langdir);
 print(realpath)
 for f in os.listdir(realpath):
     langfile = os.path.join(realpath, f)
-    if not langfile.endswith("json"):
+    if not langfile.endswith("json") or "@" in langfile:
         continue
     print(langfile)
     with open(os.path.join(base_path,langdir,f), encoding="utf-8") as jf:
         j = json.load(jf);
     if f.endswith("en.json"):
         f = "lang"
-    f = re.sub(r'(lang-..)-(..)\.json',r'\1-r\2.json',f)
+    f = re.sub(r'(lang-\w.)-(\w.)\.json',r'\1-r\2.json',f)
     xmldir=os.path.join(resdir,f.replace("lang","values").replace(".json", ""))
     print(xmldir)
     if not os.path.exists(xmldir):
