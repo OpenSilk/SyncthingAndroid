@@ -72,7 +72,9 @@ public class EventMonitor {
         eventSubscription = Observable.timer(delay, TimeUnit.MILLISECONDS)
                 .flatMap(ii -> restApi.events(lastEvent))
                 .flatMap(events -> {
-                    if (lastEvent == 0) {
+                    if (events == null) {
+                        return Observable.empty();
+                    } else if (lastEvent == 0) {
                         // if we are just starting
                         // we eat all the events to
                         // avoid flooding the clients
@@ -95,9 +97,6 @@ public class EventMonitor {
                         }
                         return Observable.from(topass);
                     } else {
-                        if (events == null) {
-                            return Observable.from(new ArrayList<>());
-                        }
                         return Observable.from(events);
                     }
                 })
