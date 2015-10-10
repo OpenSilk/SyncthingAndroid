@@ -232,7 +232,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
                             if (StringUtils.isEmpty(tmpCreds.alias)) {
                                 tmpCreds.alias = tmp.alias;
                             }
-                            newCredentials = new Credentials(true,
+                            newCredentials = new Credentials(
                                     tmpCreds.alias, tmpCreds.deviceId,
                                     tmpCreds.url, tmpCreds.key, SyncthingUtils.getSyncthingCACert(context));
                             appSettings.saveCredentials(newCredentials);

@@ -41,12 +41,10 @@
 
     <!--Buttons-->
     <string name="manage_devices">Manage Devices</string>
-    <string name="remove">Remove</string>
     <string name="make_default">Make Default</string>
     <string name="use_tls">Use TLS</string>
     <string name="retry">Retry</string>
     <string name="copy">Copy</string>
-    <string name="help">Help</string>
 
     <!--Misc-->
     <string name="cleaning">Cleaning</string>
