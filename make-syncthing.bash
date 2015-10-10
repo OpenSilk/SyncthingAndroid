@@ -28,7 +28,7 @@ fi
 
 pushd syncthing/src/github.com/syncthing/syncthing
 
-git am -3 ../../../../../patches/*
+git am -3 ../../../../../patches/syncthing/cgo/*
 
 go run build.go -goos=android -goarch=arm clean
 go run build.go -goos=android -goarch=arm -no-upgrade build
@@ -38,3 +38,25 @@ chmod 644 ${ASSETSDIR}/syncthing.arm
 #git clean -f
 
 popd
+
+#Build syncthing-inotify
+
+git submodule update --init syncthing/src/github.com/syncthing/syncthing-inotify
+
+export GOOS=android
+export GOARCH=arm
+
+pushd syncthing/src/github.com/syncthing/syncthing-inotify
+
+
+git am -3 ../../../../../patches/syncthing-inotify/godeps/*
+
+export GOPATH=$(pwd)/Godeps/_workspace:${MYDIR}/syncthing
+
+go clean
+go build -ldflags "-w -X main.Version=$(git describe --abbrev=0 --tags) -extldflags '-fPIE -pie'"
+
+mv syncthing-inotify ${ASSETSDIR}/syncthing-inotify.arm
+chmod 644 ${ASSETSDIR}/syncthing-inotify.arm
+
+echo "Build Complete"
