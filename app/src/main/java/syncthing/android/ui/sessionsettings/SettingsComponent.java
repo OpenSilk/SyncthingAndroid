@@ -15,20 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
 import dagger.Component;
+import rx.functions.Func1;
 import syncthing.android.ui.session.SessionComponent;
 
 /**
- * Created by drew on 3/23/15.
+ * Created by drew on 3/17/15.
  */
 @EditScope
-@Component(
-        dependencies = SessionComponent.class,
-        modules = EditIgnoresModule.class
+@Component (
+        dependencies = SessionComponent.class
 )
-//TODO this should really be a child of EditFolderComponent
-public interface EditIgnoresComponent extends EditFragmentComponent {
-    EditIgnoresPresenter presenter();
+public interface SettingsComponent extends EditFragmentComponent {
+    Func1<SessionComponent, SettingsComponent> FACTORY =
+            new Func1<SessionComponent, SettingsComponent>() {
+                @Override
+                public SettingsComponent call(SessionComponent sessionComponent) {
+                    return DaggerSettingsComponent.builder()
+                            .sessionComponent(sessionComponent)
+                            .build();
+                }
+            };
+    SettingsPresenter presenter();
 }

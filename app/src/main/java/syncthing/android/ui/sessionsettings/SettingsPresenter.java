@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
 import android.os.Bundle;
 

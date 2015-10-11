@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
 import android.os.Bundle;
 
@@ -34,7 +34,7 @@ import syncthing.api.SessionController;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
 
-import static syncthing.android.ui.session.edit.EditModule.INVALID_ID;
+import static syncthing.android.ui.sessionsettings.EditModule.INVALID_ID;
 
 /**
  * Created by drew on 3/16/15.

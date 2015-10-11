@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
 import org.opensilk.common.ui.mortar.Layout;
 import org.opensilk.common.ui.mortar.Screen;
@@ -23,20 +23,32 @@ import org.opensilk.common.ui.mortar.WithComponent;
 
 import syncthing.android.R;
 
-/**
- * Created by drew on 3/23/15.
- */
-@Layout(R.layout.screen_edit_folder_ignores)
-@WithComponent(EditIgnoresComponent.class)
-public class EditIgnoresScreen extends Screen {
-    final String folderId;
+import static syncthing.android.ui.sessionsettings.EditModule.INVALID_ID;
 
-    public EditIgnoresScreen(String folderId) {
-        this.folderId = folderId;
+/**
+ * Created by drew on 3/16/15.
+ */
+@Layout(R.layout.screen_edit_device)
+@WithComponent(EditDeviceComponent.class)
+public class EditDeviceScreen extends Screen {
+    final String deviceId;
+    final boolean isAdd;
+
+    public EditDeviceScreen() {
+        this(INVALID_ID, true);
+    }
+
+    public EditDeviceScreen(String deviceId) {
+        this(deviceId, false);
+    }
+
+    public EditDeviceScreen(String deviceId, boolean isAdd) {
+        this.deviceId = deviceId;
+        this.isAdd = isAdd;
     }
 
     @Override
     public String getName() {
-        return super.getName() + folderId;
+        return super.getName() + deviceId;
     }
 }

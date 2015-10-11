@@ -15,17 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
-import dagger.Module;
+import dagger.Component;
+import syncthing.android.ui.session.SessionComponent;
 
 /**
  * Created by drew on 3/23/15.
  */
-@Module
-public class EditIgnoresModule extends EditModule {
-
-    public EditIgnoresModule(EditIgnoresScreen screen) {
-        super(screen.folderId, INVALID_ID, false);
-    }
+@EditScope
+@Component(
+        dependencies = SessionComponent.class,
+        modules = EditIgnoresModule.class
+)
+//TODO this should really be a child of EditFolderComponent
+public interface EditIgnoresComponent extends EditFragmentComponent {
+    EditIgnoresPresenter presenter();
 }

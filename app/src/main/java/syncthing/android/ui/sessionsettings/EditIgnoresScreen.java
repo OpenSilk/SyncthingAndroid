@@ -15,44 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
-import javax.inject.Named;
+import org.opensilk.common.ui.mortar.Layout;
+import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.WithComponent;
 
-import dagger.Module;
-import dagger.Provides;
+import syncthing.android.R;
 
 /**
- * Created by drew on 3/17/15.
+ * Created by drew on 3/23/15.
  */
-@Module
-public class EditModule {
-    //cause cant return nulls
-    public static final String INVALID_ID = "@@@INVALID@@@";
-
+@Layout(R.layout.screen_edit_folder_ignores)
+@WithComponent(EditIgnoresComponent.class)
+public class EditIgnoresScreen extends Screen {
     final String folderId;
-    final String deviceId;
-    final boolean isAdd;
 
-    public EditModule(String folderId, String deviceId, boolean isAdd) {
+    public EditIgnoresScreen(String folderId) {
         this.folderId = folderId;
-        this.deviceId = deviceId;
-        this.isAdd = isAdd;
     }
 
-    @Provides @EditScope @Named("folderid")
-    public String provideFolderId() {
-        return folderId;
+    @Override
+    public String getName() {
+        return super.getName() + folderId;
     }
-
-    @Provides @EditScope @Named("deviceid")
-    public String provideDeviceId() {
-        return deviceId;
-    }
-
-    @Provides @EditScope @Named("isadd")
-    public boolean provideIsAdd() {
-        return isAdd;
-    }
-
 }

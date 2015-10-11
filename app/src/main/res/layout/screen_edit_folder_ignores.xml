@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<syncthing.android.ui.session.edit.EditIgnoresScreenView
+<syncthing.android.ui.sessionsettings.EditIgnoresScreenView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -145,4 +145,4 @@
 
     </LinearLayout>
 
-</syncthing.android.ui.session.edit.EditIgnoresScreenView>
+</syncthing.android.ui.sessionsettings.EditIgnoresScreenView>

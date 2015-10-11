@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
 import org.opensilk.common.ui.mortar.Layout;
 import org.opensilk.common.ui.mortar.Screen;
@@ -23,7 +23,7 @@ import org.opensilk.common.ui.mortar.WithComponent;
 
 import syncthing.android.R;
 
-import static syncthing.android.ui.session.edit.EditModule.INVALID_ID;
+import static syncthing.android.ui.sessionsettings.EditModule.INVALID_ID;
 
 /**
  * Created by drew on 3/16/15.

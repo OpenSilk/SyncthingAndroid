@@ -15,35 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
-import org.opensilk.common.core.mortar.HasScope;
-
-import javax.inject.Inject;
-
-import mortar.Presenter;
-import mortar.bundler.BundleService;
+import dagger.Component;
+import syncthing.android.ui.ManageActivityComponent;
+import syncthing.android.ui.login.ManageScreenComponent;
+import syncthing.android.ui.session.SessionComponent;
 
 /**
  * Created by drew on 3/16/15.
  */
 @EditScope
-public class EditFragmentPresenter extends Presenter<EditFragmentPresenter.DialogOwner> {
-
-    public interface DialogOwner extends HasScope {
-        void dismiss();
-    }
-
-    @Inject
-    public EditFragmentPresenter() {
-    }
-
-    @Override
-    protected BundleService extractBundleService(DialogOwner view) {
-        return BundleService.getBundleService(view.getScope());
-    }
-
-    public void dismissDialog() {
-        if (hasView()) getView().dismiss();
-    }
+@Component(
+        dependencies = ManageActivityComponent.class,
+        modules = EditDeviceModule.class
+)
+public interface EditDeviceComponent extends EditFragmentComponent {
+    EditDevicePresenter presenter();
 }

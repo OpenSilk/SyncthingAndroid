@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
 import dagger.Component;
 import syncthing.android.ui.session.SessionComponent;
@@ -26,8 +26,8 @@ import syncthing.android.ui.session.SessionComponent;
 @EditScope
 @Component(
         dependencies = SessionComponent.class,
-        modules = EditDeviceModule.class
+        modules = EditFolderModule.class
 )
-public interface EditDeviceComponent extends EditFragmentComponent {
-    EditDevicePresenter presenter();
+public interface EditFolderComponent extends EditFragmentComponent {
+    EditFolderPresenter presenter();
 }

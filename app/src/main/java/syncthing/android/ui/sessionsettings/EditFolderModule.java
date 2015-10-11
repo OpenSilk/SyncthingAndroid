@@ -15,13 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session.edit;
+package syncthing.android.ui.sessionsettings;
 
-import javax.inject.Scope;
+import dagger.Module;
 
 /**
  * Created by drew on 3/16/15.
  */
-@Scope
-public @interface EditScope {
+@Module
+public class EditFolderModule extends EditModule {
+
+    public EditFolderModule(EditFolderScreen screen) {
+        super(screen.folderId, screen.deviceId, screen.isAdd);
+    }
+
 }
