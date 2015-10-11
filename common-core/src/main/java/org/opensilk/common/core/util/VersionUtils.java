@@ -52,6 +52,14 @@ public class VersionUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
+    public static boolean hasLollipopMR1() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1;
+    }
+
+    public static boolean hasMarshmallow() {
+        return Build.VERSION.SDK_INT >= 23;
+    }
+
     public static boolean hasApi14() {
         return hasIceCreamSandwich();
     }
@@ -78,5 +86,13 @@ public class VersionUtils {
 
     public static boolean hasApi21() {
         return hasLollipop();
+    }
+
+    public static boolean hasApi22() {
+        return hasLollipopMR1();
+    }
+
+    public static boolean hasApi23() {
+        return hasMarshmallow();
     }
 }

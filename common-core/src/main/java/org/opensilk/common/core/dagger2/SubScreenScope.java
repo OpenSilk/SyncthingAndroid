@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 OpenSilk Productions LLC
+ * Copyright (c) 2015 OpenSilk Productions LLC
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.opensilk.common.core.rx;
+package org.opensilk.common.core.dagger2;
 
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import rx.Observable;
+import javax.inject.Scope;
 
 /**
- * Created by drew on 10/24/14.
+ * Created by drew on 9/17/15.
  */
-public interface RxLoader<T> {
-    interface ContentChangedListener {
-        void reload();
-    }
-    Observable<T> getObservable();
-    Observable<List<T>> getListObservable();
-    void addContentChangedListener(ContentChangedListener l);
-    void removeContentChangedListener(ContentChangedListener l);
-    void reset();
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SubScreenScope {
 }
