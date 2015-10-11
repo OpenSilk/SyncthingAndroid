@@ -17,9 +17,10 @@
 
 package syncthing.api;
 
+import com.squareup.okhttp.ResponseBody;
+
 import java.util.List;
 
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -28,7 +29,6 @@ import rx.Observable;
 import syncthing.api.model.Completion;
 import syncthing.api.model.Config;
 import syncthing.api.model.ConfigStats;
-import syncthing.api.model.ConnectionInfoMap;
 import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceId;
 import syncthing.api.model.DeviceStatsMap;
@@ -169,6 +169,6 @@ public interface SyncthingApi {
      */
 
     @GET("/qr/") //TODO proper image fetcher
-    Observable<Response> qr(@Query("text") String id);
+    Observable<ResponseBody> qr(@Query("text") String id);
 
 }

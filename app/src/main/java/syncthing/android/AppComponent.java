@@ -26,10 +26,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.identicon.IdenticonModule;
-import syncthing.api.SessionManagerComponent;
 import syncthing.api.GsonModule;
-import syncthing.api.RetrofitLongpollModule;
-import syncthing.api.RetrofitModule;
+import syncthing.api.SessionManagerComponent;
 
 /**
  * Created by drew on 3/4/15.
@@ -39,8 +37,6 @@ import syncthing.api.RetrofitModule;
         modules = {
                 AppModule.class,
                 GsonModule.class,
-                RetrofitModule.class,
-                RetrofitLongpollModule.class,
                 IdenticonModule.class
         }
 )

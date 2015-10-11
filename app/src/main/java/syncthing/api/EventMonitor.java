@@ -20,13 +20,10 @@ package syncthing.api;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit.HttpException;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -114,6 +111,52 @@ public class EventMonitor {
                             connectExceptionCount = 0;
                         },
                         t -> {
+                            unhandledErrorCount--;//network errors handle themselves
+                            if (t instanceof HttpException) {
+                                HttpException e = (HttpException) t;
+                                Timber.w("HttpException code=%d msg=%s", e.code(), e.message());
+                                if (e.code() == 401) {
+                                    listener.onError(Error.UNAUTHORIZED);
+                                } else {
+                                    listener.onError(Error.STOPPING);
+                                }
+                                return;
+                            } else if (t instanceof SocketTimeoutException) {
+                                //just means no events for long time, can safely ignore
+                                Timber.w("SocketTimeout: %s", t.getMessage());
+                            } else if (t instanceof java.io.InterruptedIOException) {
+                                //just means socket timeout / Syncthing startup stuttering
+                                Timber.w("InterruptedIOException: %s", t.getMessage());
+                            } else if (t instanceof ConnectException) {
+                                //We could either be offline or the server could be
+                                //offline, or the server could still be booting
+                                //or other stuff idk, so we retry for a while
+                                //before giving up.
+                                Timber.w("ConnectException: %s", t.getMessage());
+                                if (++connectExceptionCount > 50) {
+                                    connectExceptionCount = 0;
+                                    Timber.w("Too many ConnectExceptions... server likely offline");
+                                    listener.onError(Error.STOPPING);
+                                } else {
+                                    listener.onError(Error.DISCONNECTED);
+                                    resetCounter();//someone else could have restarted it
+                                    start(1200);
+                                }
+                                return;
+                            } else {
+                                Timber.e(t, "Unforeseen Exception: %s %s", t.getClass().getSimpleName(), t.getMessage());
+                                unhandledErrorCount++;//undo decrement above
+                            }
+                            connectExceptionCount = 0;//Incase we just came out of a connecting loop.
+                            if (++unhandledErrorCount < 20) {
+                                start(1200);
+                            } else {
+                                //At this point we have no fucking clue what is going on
+                                Timber.w("Too many errors suspending longpoll");
+                                unhandledErrorCount = 0;
+                                listener.onError(Error.STOPPING);
+                            }
+                            /*
                             if (t instanceof RetrofitError) {
                                 RetrofitError e = (RetrofitError) t;
                                 switch (e.getKind()) {
@@ -187,6 +230,7 @@ public class EventMonitor {
                                 unhandledErrorCount = 0;
                                 listener.onError(Error.STOPPING);
                             }
+                            */
                         },
                         this::start
                 );

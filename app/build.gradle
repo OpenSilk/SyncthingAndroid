@@ -114,13 +114,15 @@ dependencies {
     //rest api deps
     compile (group:'io.reactivex', name: 'rxjava', version: rootProject.ext.rxJavaVersion)
     compile (group:'io.reactivex', name: 'rxandroid', version: rootProject.ext.rxAndroidVersion)
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile (group:'com.squareup.retrofit', name :'retrofit', version:rootProject.ext.retrofitVersion)
+    compile (group:'com.squareup.retrofit', name: 'adapter-rxjava', version:rootProject.ext.retrofitVersion)
+    compile (group:'com.squareup.retrofit', name: 'converter-gson', version:rootProject.ext.retrofitVersion)
     compile (group:'com.squareup.okhttp', name: 'okhttp', version: rootProject.ext.okHttpVersion)
     compile (group: 'com.google.code.gson', name: 'gson', version: rootProject.ext.gsonVersion)
     compile 'joda-time:joda-time:2.7'
     compile (group:'org.apache.commons', name: 'commons-lang3', version: rootProject.ext.commonsLangVersion)
-
     compile (group:'commons-io', name: 'commons-io', version: rootProject.ext.commonsIoVersion)
+
     compile 'org.zeroturnaround:zt-zip:1.9-SNAPSHOT'
     //acra
     compile 'ch.acra:acra:4.6.2-SNAPSHOT'
@@ -131,6 +133,6 @@ dependencies {
     testCompile (group:"org.assertj", name:"assertj-core", version: rootProject.ext.testAssertJVersion)
     testCompile (group:"org.robolectric", name:"robolectric", version : rootProject.ext.testRobolectricVersion)
     testCompile (group:"org.mockito", name:"mockito-core", version: rootProject.ext.testMockitoVersion)
-    testCompile "commons-io:commons-io:2.4"
+    testCompile (group:'commons-io', name: 'commons-io', version: rootProject.ext.commonsIoVersion)
     testCompile (group:'com.squareup.okhttp', name:'mockwebserver', version: rootProject.ext.okHttpVersion)
 }

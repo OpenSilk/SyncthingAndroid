@@ -54,9 +54,7 @@ public class SessionManager {
             }
         }
         final SessionComponent component = parent.newSession(
-                new SessionModule(credentials),
-                new SyncthingApiModule(credentials.caCert),
-                new SyncthingApiLongpollModule(credentials.caCert)
+                new SessionModule(new SyncthingApiConfig(credentials))
         );
         final Session session = new Session(credentials, component);
         sessions.add(session);

@@ -25,7 +25,6 @@ import javax.inject.Singleton;
 import dagger.Component;
 import syncthing.android.AppModule;
 import syncthing.api.GsonModule;
-import syncthing.api.RetrofitModule;
 
 /**
  * Created by drew on 3/21/15.
@@ -35,7 +34,6 @@ import syncthing.api.RetrofitModule;
         modules = {
                 AppModule.class,
                 GsonModule.class,
-                RetrofitModule.class,
         }
 )
 public interface ServiceComponent {

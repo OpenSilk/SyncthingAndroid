@@ -17,17 +17,24 @@
 
 package syncthing.api;
 
-import java.util.concurrent.Executor;
+import com.google.gson.Gson;
+import com.squareup.okhttp.ConnectionPool;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.converter.Converter;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
+import syncthing.android.BuildConfig;
 
 /**
  * Created by drew on 4/11/15.
@@ -35,29 +42,30 @@ import retrofit.converter.Converter;
 @Module
 public class SyncthingApiLongpollModule {
 
-    String caCert;
-
-    public SyncthingApiLongpollModule(String caCert) {
-        this.caCert = caCert;
-    }
+    static final int LONGPOLL_CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
+    static final int LONGPOLL_READ_TIMEOUT_MILLIS = 3 * 60 * 1000; // 3m //20 * 1000; // 20s
+    static final int LONGPOLL_MAX_IDLE_CONNECTIONS = 2;
+    static final long LONGPOLL_KEEP_ALIVE_DURATION_MS = 5 * 60 * 1000; // 5 min
 
     @Provides @SessionScope @Named("longpoll")
-    public SyncthingApi provideLongpollSyncthingApi(Endpoint endpoint,
-                                                    RequestInterceptor interceptor,
-                                                    Converter converter,
-                                                    @Named("longpoll") Client client,
-                                                    @Named("longpoll") Executor httpExecutor) {
-        // Hack to update the Http client with CA Certs
-        ((OkClient)client).setSslSocketFactory(
-                SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(caCert));
-        RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(endpoint)
-                .setConverter(converter)
-                .setClient(client)
-                .setExecutors(httpExecutor, null)
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
-                .setRequestInterceptor(interceptor)
-                .build();
-        return adapter.create(SyncthingApi.class);
+    public SyncthingApi provideSyncthingApi(
+            Gson gson, OkHttpClient okClient, SyncthingApiConfig config
+    ) {
+        OkHttpClient client = okClient.clone();
+        client.setConnectTimeout(LONGPOLL_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setReadTimeout(LONGPOLL_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setConnectionPool(new ConnectionPool(LONGPOLL_MAX_IDLE_CONNECTIONS, LONGPOLL_KEEP_ALIVE_DURATION_MS));
+        client.setSslSocketFactory(SyncthingSSLSocketFactory.create(config.getCACert()));
+        client.setHostnameVerifier(new NullHostNameVerifier());
+        client.interceptors().add(new SyncthingApiInterceptor(config));
+        Retrofit.Builder b = new Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .baseUrl(config.getBaseUrl());
+        if (BuildConfig.DEBUG) {
+            b.validateEagerly();
+        }
+        return b.build().create(SyncthingApi.class);
     }
 }

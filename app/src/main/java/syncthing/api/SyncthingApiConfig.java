@@ -15,26 +15,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.welcome;
+package syncthing.api;
 
-import android.support.v4.app.FragmentManager;
+import java.security.cert.X509Certificate;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
+import syncthing.android.model.Credentials;
 
-import dagger.Module;
-import dagger.Provides;
+/**
+ * Created by drew on 10/10/15.
+ */
+public class SyncthingApiConfig {
 
-@Module
-public class WelcomeModule {
+    final Credentials credentials;
 
-    FragmentManager fragmentManager;
-
-    public WelcomeModule(WelcomeScreen screen) {
-        this.fragmentManager = screen.fragmentManager;
+    public SyncthingApiConfig(Credentials credentials) {
+        this.credentials = credentials;
     }
 
-    @Provides @ScreenScope
-    public FragmentManager provideFragmentManager() {
-        return fragmentManager;
+    public String getBaseUrl() {
+        return credentials.url;
+    }
+
+    public X509Certificate getCACert() {
+        return null;
+    }
+
+    public String getApiKey() {
+        return null;
+    }
+
+    public String getAuth() {
+        return null;
     }
 }

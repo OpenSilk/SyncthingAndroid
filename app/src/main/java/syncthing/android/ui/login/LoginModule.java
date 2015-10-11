@@ -17,18 +17,8 @@
 
 package syncthing.android.ui.login;
 
-import java.util.concurrent.Executor;
-
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.converter.Converter;
 import syncthing.android.model.Credentials;
-import syncthing.api.OkClient;
-import syncthing.api.SyncthingApi;
-import syncthing.api.SyncthingSSLSocketFactory;
 
 /**
 * Created by drew on 3/11/15.

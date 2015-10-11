@@ -17,13 +17,8 @@
 
 package syncthing.android.ui.session;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
-
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.RequestInterceptor;
 import syncthing.android.model.Credentials;
-import syncthing.api.SessionScope;
 
 /**
 * Created by drew on 3/11/15.

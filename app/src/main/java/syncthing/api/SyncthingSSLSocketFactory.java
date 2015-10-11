@@ -1,5 +1,7 @@
 package syncthing.api;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,10 +26,10 @@ import timber.log.Timber;
 
 public class SyncthingSSLSocketFactory {
 
-    public static SSLSocketFactory createSyncthingSSLSocketFactory(String cert) {
-        InputStream inStream = null;
+    public static X509Certificate makeCert(String cert) {
         X509Certificate tmpCa = null;
         if (cert != null) {
+            InputStream inStream = null;
             try {
                 inStream = new ByteArrayInputStream(cert.getBytes("UTF-8"));
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -35,97 +37,56 @@ public class SyncthingSSLSocketFactory {
             } catch (CertificateException | UnsupportedEncodingException e) {
                 Timber.e("Failed to parse certificate", e);
             } finally {
-                try {
-                    if (inStream != null)
-                        inStream.close();
-                } catch (IOException e) {
-                    Timber.e("Certificate error", e);
-                }
+                IOUtils.closeQuietly(inStream);
             }
         }
-        final X509Certificate ca = tmpCa;
-        final TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    @Override
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    }
+        return tmpCa;
+    }
 
-                    @Override
-                    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                        if (ca == null) {
-                            // Accept credentials without a cert
-                            Timber.d("Accepting any certificate");
-                            return;
-                        }
-                        Timber.d("Verifying Syncthing certificate");
-                        try {
-                            for (X509Certificate cert : chain) {
-                                cert.verify(ca.getPublicKey());
-                            }
-                        } catch (NoSuchAlgorithmException | InvalidKeyException |
-                                NoSuchProviderException | SignatureException e) {
-                            throw new CertificateException("Untrusted Certificate!", e);
-                        }
-                    }
-
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-                }
-        };
+    public static SSLSocketFactory create(X509Certificate cert) {
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, null);
+            sslContext.init(null, new TrustManager[]{new SyncthingTrustManager(cert)}, null);
             return sslContext.getSocketFactory();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-//    public static SSLSocketFactory createSyncthingSSLSocketFactory(String certPath) {
-//        final TrustManager[] trustAllCerts = new TrustManager[]{
-//                new X509TrustManager() {
-//                    @Override
-//                    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-//                    }
-//
-//                    @Override
-//                    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-//                        InputStream inStream = null;
-//                        try {
-//                            inStream = new FileInputStream(certPath);
-//                            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-//                            X509Certificate ca = (X509Certificate)
-//                                    cf.generateCertificate(inStream);
-//                            for (X509Certificate cert : chain) {
-//                                cert.verify(ca.getPublicKey());
-//                            }
-//                        } catch (FileNotFoundException | NoSuchAlgorithmException | InvalidKeyException |
-//                                NoSuchProviderException | SignatureException e) {
-//                            throw new CertificateException("Untrusted Certificate!", e);
-//                        } finally {
-//                            try {
-//                                if (inStream != null)
-//                                    inStream.close();
-//                            } catch (IOException e) {
-//                                Timber.e("SSL verification error", e);
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public X509Certificate[] getAcceptedIssuers() {
-//                        return null;
-//                    }
-//                }
-//        };
-//        try {
-//            final SSLContext sslContext = SSLContext.getInstance("TLS");
-//            sslContext.init(null, trustAllCerts, null);
-//            return sslContext.getSocketFactory();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    private static class SyncthingTrustManager implements X509TrustManager {
+        final X509Certificate ca;
+
+        public SyncthingTrustManager(X509Certificate ca) {
+            this.ca = ca;
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            Timber.w("All clients trusted");
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            if (ca == null) {
+                // Accept credentials without a cert
+                Timber.w("All servers trusted");
+                return;
+            }
+            Timber.i("Verifying Syncthing certificate");
+            try {
+                for (X509Certificate cert : chain) {
+                    cert.verify(ca.getPublicKey());
+                }
+            } catch (NoSuchAlgorithmException | InvalidKeyException |
+                    NoSuchProviderException | SignatureException e) {
+                throw new CertificateException("Untrusted Certificate!", e);
+            }
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+    }
+
 }

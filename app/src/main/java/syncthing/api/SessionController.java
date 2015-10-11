@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -990,12 +991,13 @@ public class SessionController implements EventMonitor.EventListener {
                 .map(resp -> {
                     InputStream in = null;
                     try {
-                        in = resp.getBody().in();
+                        in = resp.byteStream();
                         return BitmapFactory.decodeStream(in);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     } finally {
-                        if (in != null) try {in.close();} catch (Exception ignored){}
+                        IOUtils.closeQuietly(in);
+                        IOUtils.closeQuietly(resp);
                     }
                 });
     }
@@ -1060,9 +1062,10 @@ public class SessionController implements EventMonitor.EventListener {
     public Subscription subscribeChanges(Action1<ChangeEvent> onNext, Change... changes) {
         Observable<ChangeEvent> o;
         if (changes.length == 0) {
-            o = changeBus.asObservable();
+            o = changeBus.asObservable().subscribeOn(AndroidSchedulers.mainThread());
         } else {
-            o = changeBus.asObservable().filter(c -> {
+            o = changeBus.asObservable().subscribeOn(AndroidSchedulers.mainThread())
+                    .filter(c -> {
                 for (Change cc : changes) {
                     if (c.change == cc) return true;
                 }

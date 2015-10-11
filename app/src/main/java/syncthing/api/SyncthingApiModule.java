@@ -17,17 +17,20 @@
 
 package syncthing.api;
 
-import java.util.concurrent.Executor;
+import com.google.gson.Gson;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Response;
 
-import javax.inject.Named;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.converter.Converter;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
+import syncthing.android.BuildConfig;
 
 /**
  * Created by drew on 3/4/15.
@@ -35,30 +38,28 @@ import retrofit.converter.Converter;
 @Module
 public class SyncthingApiModule {
 
-    String caCert;
-
-    public SyncthingApiModule(String caCert) {
-        this.caCert = caCert;
-    }
+    static final int CONNECT_TIMEOUT_MILLIS = 15 * 1000; // 15s
+    static final int READ_TIMEOUT_MILLIS = 20 * 1000; // 20s
 
     @Provides @SessionScope
-    public SyncthingApi provideSyncthingApi(Endpoint endpoint,
-                                            RequestInterceptor interceptor,
-                                            Converter converter,
-                                            Client client,
-                                            Executor httpExecutor) {
-        // Hack to update the Http client with CA Certs
-        ((OkClient)client).setSslSocketFactory(
-                SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(caCert));
-        RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(endpoint)
-                .setConverter(converter)
-                .setClient(client)
-                .setExecutors(httpExecutor, null)
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
-                .setRequestInterceptor(interceptor)
-                .build();
-        return adapter.create(SyncthingApi.class);
+    public SyncthingApi provideSyncthingApi(
+            Gson gson, OkHttpClient okClient, SyncthingApiConfig config
+    ) {
+        OkHttpClient client = okClient.clone();
+        client.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+        client.setSslSocketFactory(SyncthingSSLSocketFactory.create(config.getCACert()));
+        client.setHostnameVerifier(new NullHostNameVerifier());
+        client.interceptors().add(new SyncthingApiInterceptor(config));
+        Retrofit.Builder b = new Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .baseUrl(config.getBaseUrl());
+        if (BuildConfig.DEBUG) {
+            b.validateEagerly();
+        }
+        return b.build().create(SyncthingApi.class);
     }
 
 }

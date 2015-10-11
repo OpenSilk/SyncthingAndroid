@@ -20,14 +20,10 @@ package syncthing.android.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import retrofit.Endpoint;
-import retrofit.RequestInterceptor;
-import syncthing.api.SyncthingApi;
-
 /**
  * Created by drew on 3/6/15.
  */
-public class Credentials implements Parcelable, Endpoint, RequestInterceptor {
+public class Credentials implements Parcelable {
     public static final Credentials NONE = new Credentials(null, null);
 
     public final String alias;
@@ -47,21 +43,6 @@ public class Credentials implements Parcelable, Endpoint, RequestInterceptor {
         this.url = url;
         this.apiKey = apiKey;
         this.caCert = caCert;
-    }
-
-    @Override
-    public String getUrl() {
-        return url;
-    }
-
-    @Override
-    public String getName() {
-        return "default";
-    }
-
-    @Override
-    public void intercept(RequestFacade request) {
-        request.addHeader(SyncthingApi.HEADER_API_KEY, apiKey);
     }
 
     @Override

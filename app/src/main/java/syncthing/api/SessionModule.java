@@ -19,9 +19,6 @@ package syncthing.api;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.RequestInterceptor;
-import syncthing.android.model.Credentials;
 
 /**
  * Created by drew on 10/10/15.
@@ -29,24 +26,15 @@ import syncthing.android.model.Credentials;
 @Module
 public class SessionModule {
 
-    final Credentials credentials;
+    final SyncthingApiConfig config;
 
-    public SessionModule(Credentials credentials) {
-        this.credentials = credentials;
+    public SessionModule(SyncthingApiConfig config) {
+        this.config = config;
     }
 
     @Provides @SessionScope
-    public Credentials provideCredentials(){
-        return credentials;
+    public SyncthingApiConfig provideConfig(){
+        return config;
     }
 
-    @Provides @SessionScope
-    public Endpoint provideEnpoint() {
-        return credentials;
-    }
-
-    @Provides @SessionScope
-    public RequestInterceptor provideRequestInterceptor() {
-        return credentials;
-    }
 }

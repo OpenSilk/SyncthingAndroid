@@ -18,32 +18,14 @@
 package syncthing.api;
 
 import com.google.gson.Gson;
-
-import org.opensilk.common.core.dagger2.AppContextComponent;
-
-import java.util.concurrent.Executor;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import dagger.Component;
-import retrofit.client.Client;
-import retrofit.converter.Converter;
-import syncthing.android.AppModule;
-import syncthing.android.identicon.IdenticonModule;
-import syncthing.android.model.Credentials;
+import com.squareup.okhttp.OkHttpClient;
 
 /**
  * Created by drew on 10/10/15.
  */
 public interface SessionManagerComponent {
     Gson gson();
-    Converter retrofitConverter();
-    Client retrofitClient();
-    Executor retrofitHttpExecutor();
-    @Named("longpoll") Client longpollRetrofitClient();
-    @Named("longpoll") Executor longpollretrofitHttpExecutor();
+    OkHttpClient okClient();
     SessionManager sessionManager();
-    SessionComponent newSession(SessionModule module, SyncthingApiModule apiModule,
-                                SyncthingApiLongpollModule longpollModule);
+    SessionComponent newSession(SessionModule module);
 }

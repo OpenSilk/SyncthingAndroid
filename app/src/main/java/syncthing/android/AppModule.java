@@ -23,6 +23,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
+
 import org.opensilk.common.core.dagger2.ForApplication;
 
 import javax.inject.Singleton;
@@ -65,5 +68,12 @@ public class AppModule {
     @Provides @Singleton
     public AlarmManager provideAlarmManager() {
         return (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
+    }
+
+    @Provides @Singleton
+    public OkHttpClient provideOkClient() {
+        OkHttpClient client = new OkHttpClient();
+        //TODO setup cache;
+        return client;
     }
 }
