@@ -47,6 +47,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import syncthing.api.model.Completion;
 import syncthing.api.model.Config;
@@ -146,7 +147,7 @@ public class SessionController implements EventMonitor.EventListener {
     @Inject
     public SessionController(SyncthingApi restApi, @Named("longpoll") SyncthingApi longpollRestApi) {
         Timber.i("new SessionController");
-        this.restApi = restApi;
+        this.restApi = SynchingApiWrapper.wrap(restApi, Schedulers.io());
         this.eventMonitor = new EventMonitor(longpollRestApi, this);
     }
 
@@ -1066,11 +1067,11 @@ public class SessionController implements EventMonitor.EventListener {
         } else {
             o = changeBus.asObservable().subscribeOn(AndroidSchedulers.mainThread())
                     .filter(c -> {
-                for (Change cc : changes) {
-                    if (c.change == cc) return true;
-                }
-                return false;
-            });
+                        for (Change cc : changes) {
+                            if (c.change == cc) return true;
+                        }
+                        return false;
+                    });
         }
         onNext.call(new ChangeEvent(online ? Change.ONLINE : Change.OFFLINE, null));
         return o.subscribe(onNext);

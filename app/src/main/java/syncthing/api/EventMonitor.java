@@ -17,6 +17,9 @@
 
 package syncthing.api;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -25,8 +28,11 @@ import java.util.concurrent.TimeUnit;
 
 import retrofit.HttpException;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.android.schedulers.HandlerScheduler;
+import rx.schedulers.Schedulers;
 import syncthing.api.model.Event;
 import timber.log.Timber;
 
@@ -55,6 +61,9 @@ public class EventMonitor {
     int connectExceptionCount = 0;
     Subscription eventSubscription;
 
+    HandlerThread handlerThread;
+    Scheduler scheduler;
+
     public EventMonitor(SyncthingApi restApi, EventListener listener) {
         this.restApi = restApi;
         this.listener = listener;
@@ -64,9 +73,17 @@ public class EventMonitor {
         start(500);
     }
 
-    public void start(long delay) {
+    public synchronized void start(long delay) {
+        if (handlerThread == null) {
+            handlerThread = new HandlerThread("EventMonitor");
+            handlerThread.start();
+        }
+        if (scheduler == null) {
+            scheduler = HandlerScheduler.from(new Handler(handlerThread.getLooper()));
+        }
         //TODO check connectivity and fail fast
         eventSubscription = Observable.timer(delay, TimeUnit.MILLISECONDS)
+                .subscribeOn(scheduler)
                 .flatMap(ii -> restApi.events(lastEvent))
                 .flatMap(events -> {
                     if (events == null) {
@@ -236,13 +253,19 @@ public class EventMonitor {
                 );
     }
 
-    public void stop() {
+    public synchronized void stop() {
         if (eventSubscription != null) {
             eventSubscription.unsubscribe();
+            eventSubscription = null;
+        }
+        if (handlerThread != null) {
+            handlerThread.getLooper().quit();
+            handlerThread = null;
+            scheduler = null;
         }
     }
 
-    public boolean isRunning() {
+    public synchronized boolean isRunning() {
         return eventSubscription != null && !eventSubscription.isUnsubscribed();
     }
 
