@@ -27,8 +27,8 @@ import android.view.MenuItem;
 
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
-import org.opensilk.common.ui.mortar.ActionBarOwner;
 import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import syncthing.android.R;
@@ -67,16 +67,6 @@ public class SessionFragment extends MortarFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //TODO stop doing this
-        setHasOptionsMenu(true);
-        ActionBarOwner actionBarOwner = DaggerService.<LauncherActivityComponent>
-                getDaggerComponent(getActivity()).actionBarOwner();
-        actionBarOwner.setConfig(actionBarOwner.getConfig().buildUpon().setTitle(mCredentials.alias).build());
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         mPresenter.controller.init();
@@ -86,48 +76,6 @@ public class SessionFragment extends MortarFragment {
     public void onStop() {
         super.onStop();
         mPresenter.controller.suspend();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.session, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (!mPresenter.controller.isOnline() || mPresenter.controller.getSystemInfo() == null)
-            return false;
-        switch (item.getItemId()) {
-            case R.id.add_device:
-                mPresenter.openAddDeviceScreen();
-                return true;
-            case R.id.add_folder:
-                mPresenter.openAddFolderScreen();
-                return true;
-            case R.id.settings:
-                mPresenter.openSettingsScreen();
-                return true;
-            case R.id.show_id: {
-                Context context = getScope().createContext(getActivity());
-                new ShowIdDialog(context).show();
-                return true;
-            } case R.id.shutdown: {
-                Context context = getScope().createContext(getActivity());
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.shutdown)
-                        .setMessage(R.string.are_you_sure_you_want_to_shutdown_syncthing)
-                        .setPositiveButton(R.string.shutdown, (dialog, which) -> mPresenter.controller.shutdown())
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show();
-                return true;
-            } case R.id.restart:
-                mPresenter.controller.restart();
-                return true;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     void ensureCredentials() {

@@ -28,6 +28,7 @@ import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import org.opensilk.common.ui.mortar.DrawerOwner;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
+import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import java.util.List;
 
@@ -158,36 +159,36 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
 
     void openSessionScreen(Credentials credentials) {
         Timber.d("opening session for %s", credentials.alias);
-        doFragmentReplace(SessionFragment.newInstance(credentials), credentials.alias);
+        doFragmentReplace(SessionFragment.newInstance(credentials));
     }
 
-    void doFragmentReplace(Fragment fragment, String tag) {
-        drawerOwner.closeDrawer();
-        fragmentManagerOwner.replaceMainContent(fragment, tag, false);
+    void doFragmentReplace(MortarFragment fragment) {
+        drawerOwner.closeDrawers();
+        fragmentManagerOwner.replaceMainContent(fragment, false);
     }
 
     void startDeviceManageActivity() {
-        drawerOwner.closeDrawer();
+        drawerOwner.closeDrawers();
         Intent intent = new Intent(appContext, ManageActivity.class)
                 .putExtra(ManageActivity.EXTRA_FRAGMENT, ManageFragment.NAME);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 
     void startSettingsActivity() {
-        drawerOwner.closeDrawer();
+        drawerOwner.closeDrawers();
         Intent intent = new Intent(appContext, SettingsActivity.class);
         activityResultsController.startActivityForResult(intent, 0, null);
     }
 
     void startLoginActivity() {
-        drawerOwner.closeDrawer();
+        drawerOwner.closeDrawers();
         Intent intent = new Intent(appContext, ManageActivity.class)
                 .putExtra(ManageActivity.EXTRA_FRAGMENT, LoginFragment.NAME);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 
     void startWelcomeActivity() {
-        drawerOwner.closeDrawer();
+        drawerOwner.closeDrawers();
         Intent intent = new Intent(appContext, ManageActivity.class)
                 .putExtra(ManageActivity.EXTRA_FRAGMENT, WelcomeFragment.NAME)
                 .putExtra(ManageActivity.EXTRA_DISABLE_BACK, true);

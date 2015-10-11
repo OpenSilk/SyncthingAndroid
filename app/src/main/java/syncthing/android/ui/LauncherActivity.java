@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -34,12 +35,13 @@ import android.view.WindowManager;
 
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
-import org.opensilk.common.ui.mortar.ActionBarOwner;
-import org.opensilk.common.ui.mortar.ActionBarOwnerDelegate;
 import org.opensilk.common.ui.mortar.ActivityResultsActivity;
 import org.opensilk.common.ui.mortar.ActivityResultsOwner;
 import org.opensilk.common.ui.mortar.DrawerOwner;
 import org.opensilk.common.ui.mortar.DrawerOwnerActivity;
+import org.opensilk.common.ui.mortar.DrawerOwnerDelegate;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
+import org.opensilk.common.ui.mortar.ToolbarOwnerDelegate;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import javax.inject.Inject;
@@ -60,21 +62,20 @@ import timber.log.Timber;
  * Created by drew on 3/1/15.
  */
 public class LauncherActivity extends MortarFragmentActivity implements
-        DrawerOwnerActivity, ActivityResultsActivity {
+        DrawerOwnerActivity, ActivityResultsActivity, ToolbarOwnerDelegate.Callback {
 
-    @Inject ActionBarOwner mActionBarOwner;
+    @Inject ToolbarOwner mActionBarOwner;
     @Inject DrawerOwner mDrawerOwner;
     @Inject AppSettings mSettings;
     @Inject ActivityResultsOwner mActivityResultsOwner;
 
     ActionBarDrawerToggle mDrawerToggle;
-    protected ActionBarOwnerDelegate<LauncherActivity> mActionBarOwnerDelegate;
+    protected DrawerOwnerDelegate<LauncherActivity> mDrawerOwnerDelegate;
+    protected ToolbarOwnerDelegate<LauncherActivity> mActionBarOwnerDelegate;
     Subscription mChargingSubscription;
 
     @InjectView(R.id.drawer_layout) @Optional DrawerLayout mDrawerLayout;
     @InjectView(R.id.drawer) ViewGroup mDrawer;
-    @InjectView(R.id.toolbar) Toolbar mToolbar;
-    @InjectView(R.id.main) ViewGroup mMain;
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
@@ -96,14 +97,16 @@ public class LauncherActivity extends MortarFragmentActivity implements
         mActivityResultsOwner.takeView(this);
 
         mActionBarOwner.setConfig(ActionBarConfig.builder().setTitle("").build());
-        mActionBarOwnerDelegate = new ActionBarOwnerDelegate<>(this, mActionBarOwner, mToolbar);
-        mActionBarOwnerDelegate.onCreate();
 
         if (mDrawerLayout != null) {
-            mDrawerToggle = new Toggle(this, mDrawerLayout, mToolbar);
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-            mDrawerOwner.takeView(this);
+            mDrawerOwnerDelegate = new DrawerOwnerDelegate<>(this, mDrawerOwner, mDrawerLayout,
+                    R.string.app_name, R.string.app_name);
+            mDrawerOwnerDelegate.onCreate();
+            mActionBarOwnerDelegate = new ToolbarOwnerDelegate<>(this, mActionBarOwner, mDrawerOwnerDelegate);
+        } else {
+            mActionBarOwnerDelegate = new ToolbarOwnerDelegate<>(this, mActionBarOwner);
         }
+        mActionBarOwnerDelegate.onCreate();
 
         if (mSettings.keepScreenOn()) {
             subscribeChargingState();
@@ -116,7 +119,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
         super.onDestroy();
         mActivityResultsOwner.dropView(this);
         mActionBarOwnerDelegate.onDestroy();
-        mDrawerOwner.dropView(this);//Noop if no view taken
+        if (mDrawerOwnerDelegate != null) mDrawerOwnerDelegate.onDestroy();
         if (mChargingSubscription != null) {
             mChargingSubscription.unsubscribe();
         }
@@ -137,13 +140,13 @@ public class LauncherActivity extends MortarFragmentActivity implements
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (mDrawerToggle != null) mDrawerToggle.syncState();
+        if (mDrawerOwnerDelegate != null) mDrawerOwnerDelegate.onPostCreate(savedInstanceState);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (mDrawerToggle != null) mDrawerToggle.onConfigurationChanged(newConfig);
+        if (mDrawerOwnerDelegate != null) mDrawerOwnerDelegate.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -153,35 +156,54 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) ||
-                mActionBarOwnerDelegate.onOptionsItemSelected(item) ||
-                super.onOptionsItemSelected(item);
+        return (mDrawerOwnerDelegate != null && mDrawerOwnerDelegate.onOptionsItemSelected(item))
+                || mActionBarOwnerDelegate.onOptionsItemSelected(item)
+                || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerOwnerDelegate != null && mDrawerOwnerDelegate.onBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     /*
      * Drawer ACtivity
      */
 
-    @Override
-    public void openDrawer() {
-        if (!isDrawerOpen()) mDrawerLayout.openDrawer(mDrawer);
-    }
 
-    public void closeDrawer() {
-        if (isDrawerOpen()) mDrawerLayout.closeDrawer(mDrawer);
+    @Override
+    public void openDrawer(int gravity) {
+        if (!isDrawerOpen()) mDrawerLayout.openDrawer(gravity);
     }
 
     @Override
-    public void disableDrawer(boolean hideIndicator) {
-        if (mDrawerToggle != null) mDrawerToggle.setDrawerIndicatorEnabled(!hideIndicator);
-        closeDrawer();
-        if (mDrawerLayout != null) mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, mDrawer);
+    public void openDrawers() {
+        openDrawer(GravityCompat.START);
     }
 
     @Override
-    public void enableDrawer() {
-        if (mDrawerToggle != null) mDrawerToggle.setDrawerIndicatorEnabled(true);
-        if (mDrawerLayout != null) mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, mDrawer);
+    public void closeDrawer(int gravity) {
+        if (isDrawerOpen()) mDrawerLayout.closeDrawer(gravity);
+    }
+
+    @Override
+    public void closeDrawers() {
+        closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void enableDrawer(int gravity, boolean enable) {
+        int mode = enable ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+        if (mDrawerToggle != null) mDrawerToggle.setDrawerIndicatorEnabled(enable);
+        if (mDrawerLayout != null) mDrawerLayout.setDrawerLockMode(mode, gravity);
+    }
+
+    @Override
+    public void enableDrawers(boolean enable) {
+        enableDrawer(GravityCompat.START, enable);
     }
 
     /*
@@ -225,6 +247,19 @@ public class LauncherActivity extends MortarFragmentActivity implements
     public void setResultAndFinish(int resultCode, Intent data) {
         setResult(resultCode, data);
         finish();
+    }
+
+    /*
+     * Toolbar
+     */
+    @Override
+    public void onToolbarAttached(Toolbar toolbar) {
+
+    }
+
+    @Override
+    public void onToolbarDetached(Toolbar toolbar) {
+
     }
 
     /*

@@ -24,8 +24,11 @@ import android.os.Parcelable;
 
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
+import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.rx.RxBus;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.ArrayList;
@@ -35,11 +38,14 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import mortar.MortarScope;
+import mortar.Presenter;
 import mortar.ViewPresenter;
+import mortar.bundler.BundleService;
 import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
+import syncthing.android.ui.LauncherActivityComponent;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.common.ExpandableCard;
 import syncthing.android.ui.ManageActivity;
@@ -64,7 +70,7 @@ import timber.log.Timber;
 * Created by drew on 3/11/15.
 */
 @ScreenScope
-public class SessionPresenter extends ViewPresenter<SessionScreenView> {
+public class SessionPresenter extends Presenter<ISessionScreenView> {
 
     final Context appContext;
     final Credentials credentials;
@@ -74,6 +80,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     final ActivityResultsController activityResultsController;
     final Session session;
     final SessionManager manager;
+    final ToolbarOwner toolbarOwner;
 
     final RxBus bus = new RxBus();
 
@@ -86,7 +93,8 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             SessionManager manager,
             FragmentManagerOwner fragmentManagerOwner,
             IdenticonGenerator identiconGenerator,
-            ActivityResultsController activityResultsController
+            ActivityResultsController activityResultsController,
+            ToolbarOwner toolbarOwner
     ) {
         this.appContext = appContext;
         this.credentials = credentials;
@@ -96,6 +104,12 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         this.session = manager.acquire(credentials);
         this.manager = manager;
         this.controller = session.controller();
+        this.toolbarOwner = toolbarOwner;
+    }
+
+    @Override
+    protected BundleService extractBundleService(ISessionScreenView view) {
+        return BundleService.getBundleService(view.getContext());
     }
 
     @Override
@@ -128,6 +142,10 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         } else /*offline*/ {
             getView().setLoading(true);
         }
+        toolbarOwner.setConfig(ActionBarConfig.builder()
+                .setTitle(credentials.alias)
+                .setMenuConfig(new SessionMenuHandler(this))
+                .build());
     }
 
     @Override
@@ -446,6 +464,15 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
 
     private void openIntent(Intent i) {
         activityResultsController.startActivityForResult(i, 2, null);
+    }
+
+    protected void showIdDialog() {
+        if (hasView()) {
+            MortarScope myScope = MortarScope.getScope(getView().getContext());
+            Context childContext = myScope.createContext(getView().getContext());
+            //TODO this could leak if not dismissed
+            new ShowIdDialog(childContext).show();
+        }
     }
 
 
