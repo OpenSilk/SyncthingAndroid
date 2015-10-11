@@ -24,15 +24,16 @@ import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
+import syncthing.api.SessionManager;
 
 /**
  * Created by drew on 3/23/15.
  */
 public class EditPresenter<V extends View> extends ViewPresenter<V> {
 
+    protected final SessionManager manager;
     protected final SessionController controller;
     protected final EditFragmentPresenter editFragmentPresenter;
-    protected final SessionPresenter sessionPresenter;
     protected final String folderId;
     protected final String deviceId;
     protected final boolean isAdd;
@@ -40,19 +41,16 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     protected Subscription saveSubscription;
 
     public EditPresenter(
-            SessionController controller,
+            SessionManager manager,
             EditFragmentPresenter editFragmentPresenter,
-            SessionPresenter sessionPresenter,
-            String folderId,
-            String deviceId,
-            boolean isAdd
+            EditPresenterConfig config
     ) {
-        this.controller = controller;
+        this.manager = manager;
         this.editFragmentPresenter = editFragmentPresenter;
-        this.sessionPresenter = sessionPresenter;
-        this.folderId = folderId;
-        this.deviceId = deviceId;
-        this.isAdd = isAdd;
+        this.folderId = config.folderId;
+        this.deviceId = config.deviceId;
+        this.isAdd = config.isAdd;
+        this.controller = null;//TODO
     }
 
     @Override
@@ -66,18 +64,18 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     //TODO save saving state and restore
 
     protected void onSaveStart() {
-        sessionPresenter.showSavingDialog();
+//        sessionPresenter.showSavingDialog();
     }
 
     protected void onSaveSuccessfull() {
-        sessionPresenter.dismissSavingDialog();
-        sessionPresenter.showSuccessMsg();
+//        sessionPresenter.dismissSavingDialog();
+//        sessionPresenter.showSuccessMsg();
         dismissDialog();
     }
 
     protected void onSavefailed(Throwable e) {
-        sessionPresenter.dismissSavingDialog();
-        sessionPresenter.showError(R.string.error, e.getMessage());
+//        sessionPresenter.dismissSavingDialog();
+//        sessionPresenter.showError(R.string.error, e.getMessage());
     }
 
     protected  void dismissDialog() {

@@ -41,7 +41,7 @@ import syncthing.android.AppSettings;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
-import syncthing.android.ui.login.LoginActivity;
+import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.session.SessionFragment;
 import syncthing.android.ui.settings.SettingsActivity;
 import timber.log.Timber;
@@ -110,8 +110,8 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
         Timber.d("onActivityResult(%d, %d, %s)", requestCode, resultCode, data);
         if (requestCode == ActivityRequestCodes.LOGIN_ACTIVITY) {
             // OK with credentials opens the device
-            if (resultCode == Activity.RESULT_OK && data != null && data.hasExtra(LoginActivity.EXTRA_CREDENTIALS)) {
-                currentDevice = data.getParcelableExtra(LoginActivity.EXTRA_CREDENTIALS);
+            if (resultCode == Activity.RESULT_OK && data != null && data.hasExtra(ManageActivity.EXTRA_CREDENTIALS)) {
+                currentDevice = data.getParcelableExtra(ManageActivity.EXTRA_CREDENTIALS);
                 if (currentDevice == null)
                     currentDevice = appSettings.getDefaultCredentials();
                 if (hasView())
@@ -120,8 +120,8 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
                 return true;
             }
             // Cancel from welcome fragment opens login
-            if (data != null && data.hasExtra(LoginActivity.EXTRA_FROM) &&
-                    data.getStringExtra(LoginActivity.EXTRA_FROM).equals(LoginActivity.ACTION_WELCOME)) {
+            if (data != null && data.hasExtra(ManageActivity.EXTRA_FROM) &&
+                    data.getStringExtra(ManageActivity.EXTRA_FROM).equals(ManageActivity.ACTION_WELCOME)) {
                 if (hasView())
                     startLoginActivity();
                 reload(false);
@@ -173,7 +173,7 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
 
     void startDeviceManageActivity() {
         drawerOwner.closeDrawer();
-        Intent intent = new Intent(appContext, LoginActivity.class).setAction(LoginActivity.ACTION_MANAGE);
+        Intent intent = new Intent(appContext, ManageActivity.class).setAction(ManageActivity.ACTION_MANAGE);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 
@@ -185,13 +185,13 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
 
     void startLoginActivity() {
         drawerOwner.closeDrawer();
-        Intent intent = new Intent(appContext, LoginActivity.class);
+        Intent intent = new Intent(appContext, ManageActivity.class);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 
     void startWelcomeActivity() {
         drawerOwner.closeDrawer();
-        Intent intent = new Intent(appContext, LoginActivity.class).setAction(LoginActivity.ACTION_WELCOME);
+        Intent intent = new Intent(appContext, ManageActivity.class).setAction(ManageActivity.ACTION_WELCOME);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 

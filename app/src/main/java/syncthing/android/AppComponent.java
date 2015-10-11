@@ -19,20 +19,14 @@ package syncthing.android;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-
 import org.opensilk.common.core.dagger2.ForApplication;
 
-import java.util.concurrent.Executor;
-
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import retrofit.client.Client;
-import retrofit.converter.Converter;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.identicon.IdenticonModule;
+import syncthing.api.SessionManagerComponent;
 import syncthing.api.GsonModule;
 import syncthing.api.RetrofitLongpollModule;
 import syncthing.api.RetrofitModule;
@@ -50,15 +44,9 @@ import syncthing.api.RetrofitModule;
                 IdenticonModule.class
         }
 )
-public interface AppComponent {
+public interface AppComponent extends SessionManagerComponent {
     String NAME = AppComponent.class.getName();
     @ForApplication Context appContext();
-    Gson gson();
-    Converter retrofitConverter();
-    Client retrofitClient();
-    Executor retrofitHttpExecutor();
     IdenticonGenerator identiconGenerator();
-    @Named("longpoll") Client longpollRetrofitClient();
-    @Named("longpoll") Executor longpollretrofitHttpExecutor();
     AppSettings appSettings();
 }

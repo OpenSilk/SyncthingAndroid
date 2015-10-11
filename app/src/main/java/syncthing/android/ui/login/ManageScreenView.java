@@ -26,6 +26,8 @@ import org.opensilk.common.core.mortar.DaggerService;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -41,12 +43,14 @@ public class ManageScreenView extends RelativeLayout {
     @InjectView(R.id.recyclerview) CardRecyclerView list;
 
     final ManageScreenAdapter adapter = new ManageScreenAdapter();
-    final ManagePresenter presenter;
+    @Inject ManagePresenter mPresenter;
 
     public ManageScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<ManageComponent>getDaggerComponent(getContext()).presenter();
-
+        if (!isInEditMode()) {
+            ManageComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -55,23 +59,25 @@ public class ManageScreenView extends RelativeLayout {
         ButterKnife.inject(this);
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
-        presenter.takeView(this);
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        presenter.dropView(this);
+        mPresenter.dropView(this);
     }
 
     @OnClick(R.id.btn_done)
     public void onDone() {
-        presenter.exitActivity();
+        mPresenter.exitActivity();
     }
 
     @OnClick(R.id.btn_add)
     public void onAddDevice() {
-        presenter.openAddScreen();
+        mPresenter.openAddScreen();
     }
 
     void load(List<Credentials> creds, Credentials def) {

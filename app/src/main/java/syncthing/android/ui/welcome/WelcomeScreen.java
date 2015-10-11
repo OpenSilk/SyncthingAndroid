@@ -28,7 +28,7 @@ import org.opensilk.common.ui.mortar.WithComponentFactory;
 
 import mortar.MortarScope;
 import syncthing.android.R;
-import syncthing.android.ui.login.LoginActivityComponent;
+import syncthing.android.ui.ManageActivityComponent;
 
 @Layout(R.layout.screen_welcome)
 @WithComponentFactory(WelcomeScreen.Factory.class)
@@ -42,7 +42,7 @@ public class WelcomeScreen extends Screen {
     public static class Factory extends ComponentFactory<WelcomeScreen> {
         @Override
         protected Object createDaggerComponent(Resources resources, MortarScope parentScope, WelcomeScreen screen) {
-            LoginActivityComponent component = DaggerService.getDaggerComponent(parentScope);
+            ManageActivityComponent component = DaggerService.getDaggerComponent(parentScope);
             return WelcomeComponent.FACTORY.call(component, screen);
         }
     }

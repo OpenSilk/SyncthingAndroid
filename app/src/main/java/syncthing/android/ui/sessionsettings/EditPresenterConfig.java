@@ -15,35 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.welcome;
-
-import javax.inject.Inject;
-
-import retrofit.Endpoint;
+package syncthing.android.ui.sessionsettings;
 
 /**
- * Created by drew on 3/12/15.
+ * Created by drew on 10/10/15.
  */
-@WelcomeScreenScope
-public class MovingEndpoint implements Endpoint {
-
-    String url;
-
-    @Inject
-    public MovingEndpoint() {
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    @Override
-    public String getUrl() {
-        return url;
-    }
-
-    @Override
-    public String getName() {
-        return "default";
-    }
+public class EditPresenterConfig {
+    public static final EditPresenterConfig NONE = new EditPresenterConfig();
+    String folderId;
+    String deviceId;
+    boolean isAdd;
 }

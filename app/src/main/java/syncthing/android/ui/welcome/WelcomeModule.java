@@ -19,6 +19,8 @@ package syncthing.android.ui.welcome;
 
 import android.support.v4.app.FragmentManager;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import java.util.concurrent.Executor;
 
 import dagger.Module;
@@ -40,40 +42,8 @@ public class WelcomeModule {
         this.fragmentManager = screen.fragmentManager;
     }
 
-    @Provides @WelcomeScreenScope
+    @Provides @ScreenScope
     public FragmentManager provideFragmentManager() {
         return fragmentManager;
-    }
-
-    @Provides @WelcomeScreenScope
-    public SyncthingApi provideWelcomeSynchingApi(Converter converter,
-                                                Client client,
-                                                Executor httpExecutor,
-                                                Endpoint endpoint,
-                                                RequestInterceptor requestInterceptor) {
-        RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(endpoint)
-                .setConverter(converter)
-                .setClient(client)
-                .setExecutors(httpExecutor, null)
-                .setLogLevel(RestAdapter.LogLevel.HEADERS_AND_ARGS)
-                .setRequestInterceptor(requestInterceptor)
-                .build();
-        return adapter.create(SyncthingApi.class);
-    }
-
-    @Provides @WelcomeScreenScope
-    public Endpoint provideEndpoint(MovingEndpoint endpoint) {
-        return endpoint;
-    }
-
-    @Provides @WelcomeScreenScope
-    public RequestInterceptor provideRequestInterceptor(MovingRequestInterceptor interceptor) {
-        return interceptor;
-    }
-
-    @Provides @WelcomeScreenScope
-    public OkClient provideOkClient(Client client) {
-        return (OkClient)client;
     }
 }

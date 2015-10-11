@@ -17,6 +17,8 @@
 
 package syncthing.android.ui.session;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import dagger.Provides;
 import retrofit.Endpoint;
 import retrofit.RequestInterceptor;
@@ -34,18 +36,8 @@ public class SessionModule {
         this.screen = screen;
     }
 
-    @Provides @SessionScope
+    @Provides
     public Credentials provideCredentials(){
-        return screen.credentials;
-    }
-
-    @Provides @SessionScope
-    public Endpoint provideEnpoint() {
-        return screen.credentials;
-    }
-
-    @Provides @SessionScope
-    public RequestInterceptor provideRequestInterceptor() {
         return screen.credentials;
     }
 }

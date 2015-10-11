@@ -17,24 +17,28 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import dagger.Component;
 import rx.functions.Func1;
+import syncthing.android.ui.ManageActivityComponent;
 import syncthing.android.ui.session.SessionComponent;
+import syncthing.api.SessionManagerComponent;
 
 /**
  * Created by drew on 3/17/15.
  */
-@EditScope
+@ScreenScope
 @Component (
-        dependencies = SessionComponent.class
+        dependencies = ManageActivityComponent.class
 )
 public interface SettingsComponent extends EditFragmentComponent {
-    Func1<SessionComponent, SettingsComponent> FACTORY =
-            new Func1<SessionComponent, SettingsComponent>() {
+    Func1<ManageActivityComponent, SettingsComponent> FACTORY =
+            new Func1<ManageActivityComponent, SettingsComponent>() {
                 @Override
-                public SettingsComponent call(SessionComponent sessionComponent) {
+                public SettingsComponent call(ManageActivityComponent sessionComponent) {
                     return DaggerSettingsComponent.builder()
-                            .sessionComponent(sessionComponent)
+                            .manageActivityComponent(sessionComponent)
                             .build();
                 }
             };

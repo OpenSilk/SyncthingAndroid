@@ -24,6 +24,7 @@ import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 
 import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.rx.RxBus;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
@@ -42,10 +43,11 @@ import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.common.ExpandableCard;
-import syncthing.android.ui.login.LoginActivity;
-import syncthing.android.ui.session.edit.EditFragment;
+import syncthing.android.ui.ManageActivity;
+import syncthing.android.ui.sessionsettings.EditFragment;
+import syncthing.api.Session;
 import syncthing.api.SessionController;
-import syncthing.api.SessionScope;
+import syncthing.api.SessionManager;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
@@ -58,7 +60,7 @@ import timber.log.Timber;
 /**
 * Created by drew on 3/11/15.
 */
-@SessionScope
+@ScreenScope
 public class SessionPresenter extends ViewPresenter<SessionScreenView> {
 
     final Context appContext;
@@ -68,6 +70,8 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     final IdenticonGenerator identiconGenerator;
     final ActivityResultsController activityResultsController;
     final SessionFragmentPresenter fragmentPresenter;
+    final Session session;
+    final SessionManager manager;
 
     final RxBus bus = new RxBus();
 
@@ -77,7 +81,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     public SessionPresenter(
             @ForApplication Context appContext,
             Credentials credentials,
-            SessionController controller,
+            SessionManager manager,
             FragmentManagerOwner fragmentManagerOwner,
             IdenticonGenerator identiconGenerator,
             ActivityResultsController activityResultsController,
@@ -85,11 +89,13 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     ) {
         this.appContext = appContext;
         this.credentials = credentials;
-        this.controller = controller;
         this.fragmentManagerOwner = fragmentManagerOwner;
         this.identiconGenerator = identiconGenerator;
         this.activityResultsController = activityResultsController;
         this.fragmentPresenter = fragmentPresenter;
+        this.session = manager.acquire(credentials);
+        this.manager = manager;
+        this.controller = session.controller();
     }
 
     @Override
@@ -106,7 +112,7 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         if (changeSubscription != null) {
             changeSubscription.unsubscribe();
         }
-        controller.kill();
+        manager.release(session);
     }
 
     @Override
@@ -392,8 +398,8 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
 
     void openLoginScreen() {
         activityResultsController.startActivityForResult(
-                new Intent(appContext, LoginActivity.class)
-                        .putExtra(LoginActivity.EXTRA_CREDENTIALS, (Parcelable) credentials),
+                new Intent(appContext, ManageActivity.class)
+                        .putExtra(ManageActivity.EXTRA_CREDENTIALS, (Parcelable) credentials),
                 ActivityRequestCodes.LOGIN_ACTIVITY,
                 null
         );

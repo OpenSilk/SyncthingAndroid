@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.session;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import rx.functions.Func2;
@@ -29,13 +30,11 @@ import syncthing.api.SyncthingApiModule;
 /**
 * Created by drew on 3/11/15.
 */
-@SessionScope
+@ScreenScope
 @dagger.Component(
         dependencies = LauncherActivityComponent.class,
         modules = {
                 SessionModule.class,
-                SyncthingApiModule.class,
-                SyncthingApiLongpollModule.class
         }
 )
 public interface SessionComponent {
@@ -46,13 +45,20 @@ public interface SessionComponent {
                     return DaggerSessionComponent.builder()
                             .launcherActivityComponent(launcherActivityComponent)
                             .sessionModule(new SessionModule(sessionScreen))
-                            .syncthingApiModule(new SyncthingApiModule(sessionScreen.credentials.caCert))
-                            .syncthingApiLongpollModule(new SyncthingApiLongpollModule(sessionScreen.credentials.caCert))
                             .build();
                 }
             };
-    SessionController sessionController();
     SessionPresenter presenter();
     SessionFragmentPresenter fragmentPresenter();
     ActivityResultsController activityResultsController();
+    void inject(DeviceCardView view);
+    void inject(FolderCardView view);
+    void inject(HeaderCardView view);
+    void inject(MyDeviceCardView view);
+    void inject(NotifCardErrorView view);
+    void inject(NotifCardRejDeviceView view);
+    void inject(NotifCardRejFolderView view);
+    void inject(NotifCardRestartView view);
+    void inject(SessionScreenView view);
+    void inject(ShowIdDialogView view);
 }

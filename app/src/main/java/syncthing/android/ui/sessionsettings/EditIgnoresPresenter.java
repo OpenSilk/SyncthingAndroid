@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import javax.inject.Inject;
@@ -32,6 +33,7 @@ import rx.Subscription;
 import syncthing.android.R;
 import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
+import syncthing.api.SessionManager;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.SystemInfo;
@@ -39,7 +41,7 @@ import syncthing.api.model.SystemInfo;
 /**
  * Created by drew on 3/23/15.
  */
-@EditScope
+@ScreenScope
 public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
 
     final ActivityResultsController activityResultsController;
@@ -50,13 +52,12 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
 
     @Inject
     public EditIgnoresPresenter(
-            SessionController controller,
+            SessionManager manager,
             EditFragmentPresenter editFragmentPresenter,
-            SessionPresenter sessionPresenter,
-            @Named("folderid") String folderId,
+            EditPresenterConfig config,
             ActivityResultsController activityResultsController
     ) {
-        super(controller, editFragmentPresenter, sessionPresenter, folderId, null, false);
+        super(manager, editFragmentPresenter, config);
         this.activityResultsController = activityResultsController;
     }
 

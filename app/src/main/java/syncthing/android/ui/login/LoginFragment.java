@@ -25,6 +25,7 @@ import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import syncthing.android.R;
 import syncthing.android.model.Credentials;
+import syncthing.android.ui.ManageActivity;
 
 /**
  * Created by drew on 3/10/15.
@@ -34,7 +35,7 @@ public class LoginFragment extends MortarFragment {
     public static LoginFragment newInstance(Credentials credentials) {
         LoginFragment f = new LoginFragment();
         Bundle b = new Bundle();
-        b.putParcelable(LoginActivity.EXTRA_CREDENTIALS, credentials);
+        b.putParcelable(ManageActivity.EXTRA_CREDENTIALS, credentials);
         f.setArguments(b);
         return f;
     }
@@ -55,7 +56,7 @@ public class LoginFragment extends MortarFragment {
 
     void ensureCredentials() {
         getArguments().setClassLoader(getClass().getClassLoader());
-        mCredentials = getArguments().getParcelable(LoginActivity.EXTRA_CREDENTIALS);
+        mCredentials = getArguments().getParcelable(ManageActivity.EXTRA_CREDENTIALS);
         if (mCredentials == null) {
             mCredentials = Credentials.NONE;
         }

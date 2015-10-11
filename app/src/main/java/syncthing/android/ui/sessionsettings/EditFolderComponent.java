@@ -17,15 +17,18 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import dagger.Component;
+import syncthing.android.ui.ManageActivityComponent;
 import syncthing.android.ui.session.SessionComponent;
 
 /**
  * Created by drew on 3/16/15.
  */
-@EditScope
+@ScreenScope
 @Component(
-        dependencies = SessionComponent.class,
+        dependencies = ManageActivityComponent.class,
         modules = EditFolderModule.class
 )
 public interface EditFolderComponent extends EditFragmentComponent {

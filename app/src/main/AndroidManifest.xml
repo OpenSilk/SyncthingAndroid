@@ -48,7 +48,7 @@
         </activity>
 
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.ManageActivity"
             android:theme="@style/LoginTheme"/>
 
         <activity

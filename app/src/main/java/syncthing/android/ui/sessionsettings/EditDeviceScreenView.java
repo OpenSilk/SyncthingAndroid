@@ -38,6 +38,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -70,14 +72,17 @@ public class EditDeviceScreenView extends ScrollView {
     @InjectView(R.id.share_folders_container) ViewGroup shareFoldersContainer;
     @InjectView(R.id.btn_delete) Button btnDelete;
 
-    final EditDevicePresenter presenter;
+    @Inject EditDevicePresenter mPresenter;
 
     boolean isAdd;
     DeviceConfig device;
 
     public EditDeviceScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<EditDeviceComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            EditDeviceComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -85,38 +90,38 @@ public class EditDeviceScreenView extends ScrollView {
         super.onFinishInflate();
         ButterKnife.inject(this);
         groupCompression.setOnCheckedChangeListener(compressionChangedListener);
-        presenter.takeView(this);
+        mPresenter.takeView(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        presenter.dropView(this);
+        mPresenter.dropView(this);
     }
 
     @OnClick(R.id.btn_scanqr)
     void scanQr() {
-        presenter.startQRScannerActivity();
+        mPresenter.startQRScannerActivity();
     }
 
     @OnClick(R.id.btn_delete)
     void onDelete() {
-        presenter.deleteDevice();
+        mPresenter.deleteDevice();
     }
 
     @OnClick(R.id.btn_cancel)
     void onCancel(){
-        presenter.dismissDialog();
+        mPresenter.dismissDialog();
     }
 
     @OnClick(R.id.btn_save)
     void onSave() {
-        if (!presenter.validateDeviceId(editDeviceId.getText().toString(), false)) {
+        if (!mPresenter.validateDeviceId(editDeviceId.getText().toString(), false)) {
             return;
         }
         device.deviceID = editDeviceId.getText().toString();
         device.name = editDeviceName.getText().toString();
-        if (!presenter.validateAddresses(editAddresses.getText().toString())) {
+        if (!mPresenter.validateAddresses(editAddresses.getText().toString())) {
             return;
         }
         device.addresses = SyncthingUtils.rollArray(editAddresses.getText().toString());
@@ -143,7 +148,7 @@ public class EditDeviceScreenView extends ScrollView {
             }
         }
 
-        presenter.saveDevice(folders);
+        mPresenter.saveDevice(folders);
     }
 
     void initialize(boolean isAdd, DeviceConfig device, Collection<FolderConfig> folders, boolean fromsavedstate) {
@@ -205,7 +210,7 @@ public class EditDeviceScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_device_id)
     void onDeviceIdChange(CharSequence text) {
         if (isAdd && !StringUtils.isEmpty(text)) {
-            if (presenter.validateDeviceId(text.toString(), true)) {
+            if (mPresenter.validateDeviceId(text.toString(), true)) {
                 descDeviceId.setVisibility(VISIBLE);
                 descDeviceId2.setVisibility(VISIBLE);
                 errorDeviceIdBlank.setVisibility(GONE);

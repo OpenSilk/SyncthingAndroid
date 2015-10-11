@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.core.mortar.HasScope;
 
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ import mortar.bundler.BundleService;
 /**
  * Created by drew on 3/16/15.
  */
-@EditScope
+@ScreenScope
 public class EditFragmentPresenter extends Presenter<EditFragmentPresenter.DialogOwner> {
 
     public interface DialogOwner extends HasScope {

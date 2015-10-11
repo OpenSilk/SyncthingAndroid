@@ -27,6 +27,7 @@ import org.opensilk.common.ui.mortar.WithComponentFactory;
 
 import mortar.MortarScope;
 import syncthing.android.R;
+import syncthing.android.ui.ManageActivityComponent;
 import syncthing.android.ui.session.SessionComponent;
 
 /**
@@ -38,7 +39,7 @@ public class SettingsScreen extends Screen {
     public static class Factory extends ComponentFactory<SettingsScreen> {
         @Override
         protected Object createDaggerComponent(Resources resources, MortarScope parentScope, SettingsScreen screen) {
-            SessionComponent component = DaggerService.getDaggerComponent(parentScope);
+            ManageActivityComponent component = DaggerService.getDaggerComponent(parentScope);
             return SettingsComponent.FACTORY.call(component);
         }
     }

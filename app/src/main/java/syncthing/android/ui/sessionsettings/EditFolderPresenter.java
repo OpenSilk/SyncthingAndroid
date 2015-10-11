@@ -21,6 +21,7 @@ import android.os.Bundle;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.dagger2.ScreenScope;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +32,8 @@ import javax.inject.Named;
 import rx.Subscription;
 import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
+import syncthing.api.SessionManager;
+import syncthing.api.model.Config;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
 
@@ -39,7 +42,7 @@ import static syncthing.android.ui.sessionsettings.EditModule.INVALID_ID;
 /**
  * Created by drew on 3/16/15.
  */
-@EditScope
+@ScreenScope
 public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
 
     FolderConfig origFolder;
@@ -48,14 +51,11 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
 
     @Inject
     public EditFolderPresenter(
-            SessionController controller,
+            SessionManager manager,
             EditFragmentPresenter editFragmentPresenter,
-            SessionPresenter sessionPresenter,
-            @Named("folderid") String folderId,
-            @Named("isadd") boolean isAdd,
-            @Named("deviceid") String deviceId
+            EditPresenterConfig config
     ) {
-        super(controller, editFragmentPresenter, sessionPresenter, folderId, deviceId, isAdd);
+        super(manager, editFragmentPresenter, config);
     }
 
     @Override
@@ -199,7 +199,8 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     }
 
     void openIgnoresEditor() {
-        sessionPresenter.openEditIgnoresScreen(folderId);
+        //TODO
+//        sessionPresenter.openEditIgnoresScreen(folderId);
     }
 
 }

@@ -18,49 +18,39 @@
 package syncthing.android.ui.welcome;
 
 import android.content.Context;
-import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
 
 import org.opensilk.common.core.mortar.DaggerService;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Optional;
-import syncthing.android.R;
-import timber.log.Timber;
 
 public class WelcomeScreenPagerView extends ViewPager {
 
     Context context;
-    WelcomePresenter presenter;
+    @Inject WelcomePresenter mPresenter;
     WelcomeScreenPagerAdapter adapter;
     boolean splash;
 
     public WelcomeScreenPagerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        if (isInEditMode())
-            return;
-        this.presenter = DaggerService.<WelcomeComponent>getDaggerComponent(getContext()).welcomePresenter();
-        this.adapter = new WelcomeScreenPagerAdapter(context, presenter);
-        this.splash = true;
-        setAdapter(adapter);
-        setOnPageChangeListener(new SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int page) {
-                splash = false;
-                presenter.updatePage(page);
-            }
-        });
+        if (!isInEditMode()) {
+            WelcomeComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+            this.adapter = new WelcomeScreenPagerAdapter(context, mPresenter);
+            this.splash = true;
+            setAdapter(adapter);
+            addOnPageChangeListener(new SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int page) {
+                    splash = false;
+                    mPresenter.updatePage(page);
+                }
+            });
+        }
     }
 
     @Override

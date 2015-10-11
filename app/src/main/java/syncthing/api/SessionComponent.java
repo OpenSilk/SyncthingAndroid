@@ -15,13 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.login;
+package syncthing.api;
 
-import javax.inject.Scope;
+import dagger.Subcomponent;
 
 /**
- * Created by drew on 3/15/15.
+ * Created by drew on 10/10/15.
  */
-@Scope
-public @interface ManageScreenScope {
+@SessionScope
+@Subcomponent(
+        modules = {
+                SessionModule.class,
+                SyncthingApiModule.class,
+                SyncthingApiLongpollModule.class
+        }
+)
+public interface SessionComponent {
+        SessionController controller();
+        SyncthingApi syncthingApi();
 }

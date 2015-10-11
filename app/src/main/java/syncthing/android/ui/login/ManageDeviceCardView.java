@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -50,11 +52,14 @@ public class ManageDeviceCardView extends LinearLayout implements BindsCard {
     Subscription identiconSubscription;
     ManageDeviceCard item;
 
-    final ManagePresenter presenter;
+    @Inject ManagePresenter mPresenter;
 
     public ManageDeviceCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<ManageComponent>getDaggerComponent(getContext()).presenter();
+        if(!isInEditMode()) {
+            ManageComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -79,17 +84,17 @@ public class ManageDeviceCardView extends LinearLayout implements BindsCard {
                 switch (item.getItemId()) {
                     case R.id.make_default:
                         if (credentials != null) {
-                            presenter.setAsDefault(credentials);
+                            mPresenter.setAsDefault(credentials);
                         }
                         return true;
                     case R.id.edit:
                         if (credentials != null) {
-                            presenter.openEditScreen(credentials);
+                            mPresenter.openEditScreen(credentials);
                         }
                         return true;
                     case R.id.remove:
                         if (credentials != null) {
-                            presenter.removeDevice(credentials);
+                            mPresenter.removeDevice(credentials);
                         }
                         return true;
                 }
@@ -109,7 +114,7 @@ public class ManageDeviceCardView extends LinearLayout implements BindsCard {
         item = (ManageDeviceCard) card;
         credentials = item.credentials;
         name.setText(credentials.alias);
-        identiconSubscription = presenter.identiconGenerator.generateAsync(credentials.id)
+        identiconSubscription = mPresenter.identiconGenerator.generateAsync(credentials.id)
                 .subscribe(identicon::setImageBitmap);
         check.setVisibility(item.isChecked() ? VISIBLE : GONE);
     }

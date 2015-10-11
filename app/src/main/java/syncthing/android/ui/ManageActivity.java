@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.login;
+package syncthing.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,12 +35,14 @@ import mortar.MortarScope;
 import syncthing.android.AppComponent;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
+import syncthing.android.ui.login.LoginFragment;
+import syncthing.android.ui.login.ManageFragment;
 import syncthing.android.ui.welcome.WelcomeFragment;
 
 /**
  * Created by drew on 3/10/15.
  */
-public class LoginActivity extends MortarFragmentActivity implements ActivityResultsActivity {
+public class ManageActivity extends MortarFragmentActivity implements ActivityResultsActivity {
 
     public static final String ACTION_MANAGE = "manage";
     public static final String ACTION_WELCOME = "welcome";
@@ -50,17 +52,18 @@ public class LoginActivity extends MortarFragmentActivity implements ActivityRes
     @Inject ActivityResultsOwner mActivityResultsOwner;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
-    Fragment fragment;
+
+    boolean ignoreBackButton;
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
         AppComponent component = DaggerService.getDaggerComponent(getApplicationContext());
-        builder.withService(DaggerService.DAGGER_SERVICE, LoginActivityComponent.FACTORY.call(component));
+        builder.withService(DaggerService.DAGGER_SERVICE, ManageActivityComponent.FACTORY.call(component));
     }
 
     @Override
     protected void performInjection() {
-        DaggerService.<LoginActivityComponent>getDaggerComponent(this).inject(this);
+        DaggerService.<ManageActivityComponent>getDaggerComponent(this).inject(this);
     }
 
     @Override
@@ -72,8 +75,10 @@ public class LoginActivity extends MortarFragmentActivity implements ActivityRes
         setResult(RESULT_CANCELED);
         mActivityResultsOwner.takeView(this);
         if (savedInstanceState == null) {
+            Fragment fragment;
             if (ACTION_WELCOME.equals(getIntent().getAction())) {
                 fragment = WelcomeFragment.newInstance();
+                ignoreBackButton = true;
             } else if (ACTION_MANAGE.equals(getIntent().getAction())) {
                 fragment = ManageFragment.newInstance();
             } else {
@@ -104,10 +109,9 @@ public class LoginActivity extends MortarFragmentActivity implements ActivityRes
 
     @Override
     public void onBackPressed() {
-        if (fragment instanceof WelcomeFragment) {
-            return;
+        if (!ignoreBackButton) {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
     /*
      * FragmentManagerOwner Activity

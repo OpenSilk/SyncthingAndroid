@@ -25,6 +25,8 @@ import android.widget.TextView;
 
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -40,11 +42,14 @@ public class NotifCardErrorView extends ExpandableCardViewWrapper<NotifCardError
     @InjectView(R.id.time) TextView time;
     @InjectView(R.id.message) TextView message;
 
-    final SessionPresenter presenter;
+    @Inject SessionPresenter mPresenter;
 
     public NotifCardErrorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -60,7 +65,7 @@ public class NotifCardErrorView extends ExpandableCardViewWrapper<NotifCardError
 
     @OnClick(R.id.btn_dismiss)
     void dismissErrors() {
-        presenter.controller.clearErrors();
+        mPresenter.controller.clearErrors();
     }
 
     @Override

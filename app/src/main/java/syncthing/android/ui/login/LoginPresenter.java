@@ -26,6 +26,7 @@ import android.os.Parcelable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import java.io.Serializable;
@@ -39,6 +40,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import syncthing.android.AppSettings;
 import syncthing.android.model.Credentials;
 import syncthing.android.service.SyncthingUtils;
+import syncthing.android.ui.ManageActivity;
+import syncthing.api.Session;
+import syncthing.api.SessionManager;
 import syncthing.api.SyncthingApi;
 import syncthing.api.model.DeviceConfig;
 import timber.log.Timber;
@@ -46,22 +50,21 @@ import timber.log.Timber;
 /**
 * Created by drew on 3/11/15.
 */
-@LoginScreenScope
+@ScreenScope
 public class LoginPresenter extends ViewPresenter<LoginScreenView> {
 
     final Context appContext;
     final Credentials initialCredentials;
     final ActivityResultsController activityResultsController;
-    final SyncthingApi syncthingApi;
-    final MovingEndpoint endpoint;
-    final MovingRequestInterceptor interceptor;
     final AppSettings settings;
+    final SessionManager manager;
 
     Subscription subscription;
     boolean isloading;
     Credentials newCredentials;
     String error;
     TempCredStorage tmpCreds = new TempCredStorage();
+    Session session;
 
     static class TempCredStorage implements Serializable {
         private static final long serialVersionUID = 0L;
@@ -76,18 +79,14 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
             @ForApplication Context context,
             Credentials initialCredentials,
             ActivityResultsController activityResultsController,
-            SyncthingApi syncthingApi,
-            MovingEndpoint endpoint,
-            MovingRequestInterceptor interceptor,
+            SessionManager manager,
             AppSettings settings
     ) {
         this.appContext = context;
         this.initialCredentials = initialCredentials;
         this.activityResultsController = activityResultsController;
-        this.syncthingApi = syncthingApi;
-        this.endpoint = endpoint;
-        this.interceptor = interceptor;
         this.settings = settings;
+        this.manager = manager;
     }
 
     @Override
@@ -102,6 +101,9 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
         super.onExitScope();
         if (subscription != null) {
             subscription.unsubscribe();
+        }
+        if (session != null) {
+            manager.release(session);
         }
     }
 
@@ -141,13 +143,11 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
         if (!hasView()) return;
         String uri = LoginUtils.buildUri(url, port, tls);
         String auth = LoginUtils.buildAuthorization(user, pass);
+        session = manager.acquire(new Credentials(null, null, uri, null, null));
         tmpCreds.alias = alias;
         tmpCreds.url = uri;
-        //sneakily set the required stuffs before invoking the retrofit client
-        endpoint.setUrl(uri);
-        interceptor.setAuthorization(auth);
         isloading = true;
-        subscription = syncthingApi.config().zipWith(syncthingApi.system(),
+        subscription = session.api().config().zipWith(session.api().system(),
                 (config, system) -> {
                     TempCredStorage tmp = new TempCredStorage();
                     tmp.key = config.gui.apiKey;
@@ -201,7 +201,7 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
     }
 
     void exitSuccess() {
-        Intent intent = new Intent().putExtra(LoginActivity.EXTRA_CREDENTIALS, (Parcelable) newCredentials);
+        Intent intent = new Intent().putExtra(ManageActivity.EXTRA_CREDENTIALS, (Parcelable) newCredentials);
         activityResultsController.setResultAndFinish(Activity.RESULT_OK, intent);
     }
 

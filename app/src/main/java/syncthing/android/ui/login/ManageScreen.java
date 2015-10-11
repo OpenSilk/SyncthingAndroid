@@ -27,6 +27,7 @@ import org.opensilk.common.ui.mortar.WithComponentFactory;
 
 import mortar.MortarScope;
 import syncthing.android.R;
+import syncthing.android.ui.ManageActivityComponent;
 
 /**
  * Created by drew on 3/15/15.
@@ -37,7 +38,7 @@ public class ManageScreen extends Screen {
     public static class Factory extends ComponentFactory<ManageScreen> {
         @Override
         protected Object createDaggerComponent(Resources resources, MortarScope parentScope, ManageScreen screen) {
-            LoginActivityComponent component = DaggerService.getDaggerComponent(parentScope);
+            ManageActivityComponent component = DaggerService.getDaggerComponent(parentScope);
             return ManageComponent.FACTORY.call(component);
         }
     }

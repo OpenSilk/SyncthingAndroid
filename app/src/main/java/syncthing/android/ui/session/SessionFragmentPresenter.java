@@ -22,6 +22,7 @@ import android.os.Build;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.core.mortar.HasScope;
 
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import syncthing.api.SessionScope;
 /**
  * Created by drew on 3/16/15.
  */
-@SessionScope
+@ScreenScope
 public class SessionFragmentPresenter extends Presenter<SessionFragmentPresenter.Fragment> {
 
     public interface Fragment extends HasScope {

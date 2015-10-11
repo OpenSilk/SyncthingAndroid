@@ -15,34 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.login;
+package syncthing.api;
+
+import com.google.gson.Gson;
+
+import org.opensilk.common.core.dagger2.AppContextComponent;
 
 import java.util.concurrent.Executor;
 
-import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import dagger.Component;
 import retrofit.client.Client;
 import retrofit.converter.Converter;
+import syncthing.android.AppModule;
+import syncthing.android.identicon.IdenticonModule;
 import syncthing.android.model.Credentials;
-import syncthing.api.OkClient;
-import syncthing.api.SyncthingApi;
-import syncthing.api.SyncthingSSLSocketFactory;
 
 /**
-* Created by drew on 3/11/15.
-*/
-@dagger.Module
-public class LoginModule {
-    final LoginScreen screen;
-    public LoginModule(LoginScreen screen) {
-        this.screen = screen;
-    }
-
-    @Provides
-    public Credentials provideCredentials() {
-        return screen.credentials;
-    }
-
+ * Created by drew on 10/10/15.
+ */
+public interface SessionManagerComponent {
+    Gson gson();
+    Converter retrofitConverter();
+    Client retrofitClient();
+    Executor retrofitHttpExecutor();
+    @Named("longpoll") Client longpollRetrofitClient();
+    @Named("longpoll") Executor longpollretrofitHttpExecutor();
+    SessionManager sessionManager();
+    SessionComponent newSession(SessionModule module, SyncthingApiModule apiModule,
+                                SyncthingApiLongpollModule longpollModule);
 }

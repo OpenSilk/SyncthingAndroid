@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import syncthing.android.ui.common.BindsCard;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.NoDecorate;
@@ -35,13 +37,16 @@ public class HeaderCardView extends TextView implements BindsCard, NoDecorate {
     //@InjectView(R.id.title) TextView title;
     //@InjectView(R.id.btn_add) Button btnAdd;
 
-    final SessionPresenter presenter;
+    @Inject SessionPresenter mPresenter;
 
     HeaderCard item;
 
     public HeaderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -53,7 +58,7 @@ public class HeaderCardView extends TextView implements BindsCard, NoDecorate {
     //@OnClick(R.id.btn_add)
     void doAdd() {
         if (item != null && item.addAction != null) {
-            item.addAction.call(presenter);
+            item.addAction.call(mPresenter);
         }
     }
 

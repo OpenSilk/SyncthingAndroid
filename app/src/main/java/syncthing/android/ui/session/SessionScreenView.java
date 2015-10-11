@@ -29,6 +29,8 @@ import org.opensilk.common.ui.recycler.RecyclerListFrame;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.OnClick;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
@@ -39,7 +41,7 @@ import syncthing.android.ui.common.ExpandableCard;
  */
 public class SessionScreenView extends RecyclerListFrame {
 
-    final SessionPresenter mPresenter;
+    @Inject SessionPresenter mPresenter;
 
     SessionRecyclerAdapter mListAdapter;
 
@@ -48,7 +50,10 @@ public class SessionScreenView extends RecyclerListFrame {
 
     public SessionScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mPresenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -59,13 +64,17 @@ public class SessionScreenView extends RecyclerListFrame {
         mList.setAdapter(mListAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         //((CardRecyclerView) mList).setWobbleOnExpand(false);
-        mPresenter.takeView(this);
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+        }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mPresenter.takeView(this);
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+        }
     }
 
     @Override

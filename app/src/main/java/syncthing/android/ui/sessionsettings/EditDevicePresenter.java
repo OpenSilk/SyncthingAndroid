@@ -24,6 +24,7 @@ import android.os.Bundle;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsListener;
 
@@ -38,12 +39,13 @@ import syncthing.android.R;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
+import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;
 
 /**
  * Created by drew on 3/16/15.
  */
-@EditScope
+@ScreenScope
 public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> implements ActivityResultsListener {
 
     final ActivityResultsController activityResultsController;
@@ -54,14 +56,12 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
 
     @Inject
     public EditDevicePresenter(
-            SessionController controller,
+            SessionManager manager,
             EditFragmentPresenter editFragmentPresenter,
-            SessionPresenter sessionPresenter,
-            @Named("deviceid") String deviceId,
-            @Named("isadd") boolean isAdd,
+            EditPresenterConfig config,
             ActivityResultsController activityResultsController
     ) {
-        super(controller, editFragmentPresenter, sessionPresenter, null, deviceId, isAdd);
+        super(manager, editFragmentPresenter, config);
         this.activityResultsController = activityResultsController;
     }
 
@@ -146,7 +146,8 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
             activityResultsController.startActivityForResult(intentScan, ActivityRequestCodes.SCAN_QR, null);
         } catch (ActivityNotFoundException e) {
             if (hasView()) {
-                sessionPresenter.showError("",getView().getResources().getString(R.string.no_qr_scanner_installed));
+                //TODO
+//                sessionPresenter.showError("",getView().getResources().getString(R.string.no_qr_scanner_installed));
             }
         }
     }

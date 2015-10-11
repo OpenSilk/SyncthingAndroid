@@ -17,27 +17,29 @@
 
 package syncthing.android.ui.welcome;
 
-import rx.functions.Func2;
-import syncthing.android.ui.LauncherActivityComponent;
-import syncthing.android.ui.login.LoginActivityComponent;
+import org.opensilk.common.core.dagger2.ScreenScope;
 
-@WelcomeScreenScope
+import rx.functions.Func2;
+import syncthing.android.ui.ManageActivityComponent;
+
+@ScreenScope
 @dagger.Component(
-        dependencies = LoginActivityComponent.class,
+        dependencies = ManageActivityComponent.class,
         modules = WelcomeModule.class
 )
 public interface WelcomeComponent {
-    Func2<LoginActivityComponent, WelcomeScreen, WelcomeComponent> FACTORY =
-            new Func2<LoginActivityComponent, WelcomeScreen, WelcomeComponent>() {
+    Func2<ManageActivityComponent, WelcomeScreen, WelcomeComponent> FACTORY =
+            new Func2<ManageActivityComponent, WelcomeScreen, WelcomeComponent>() {
                 @Override
-                public WelcomeComponent call(LoginActivityComponent loginActivityComponent, WelcomeScreen welcomeScreen) {
+                public WelcomeComponent call(ManageActivityComponent loginActivityComponent, WelcomeScreen welcomeScreen) {
                     return DaggerWelcomeComponent.builder()
-                            .loginActivityComponent(loginActivityComponent)
+                            .manageActivityComponent(loginActivityComponent)
                             .welcomeModule(new WelcomeModule(welcomeScreen))
                             .build();
                 }
             };
 
     void inject(WelcomeScreenView view);
+    void inject(WelcomeScreenPagerView view);
     WelcomePresenter welcomePresenter();
 }

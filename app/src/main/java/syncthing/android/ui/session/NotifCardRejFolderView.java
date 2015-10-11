@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -46,13 +48,16 @@ public class NotifCardRejFolderView extends ExpandableCardViewWrapper<NotifCardR
     @InjectView(R.id.message) TextView message;
     @InjectView(R.id.btn_add) Button btnAdd;
 
-    final SessionPresenter presenter;
+    @Inject SessionPresenter mPresenter;
 
     boolean share;
 
     public NotifCardRejFolderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -69,31 +74,31 @@ public class NotifCardRejFolderView extends ExpandableCardViewWrapper<NotifCardR
     @OnClick(R.id.btn_add)
     void addFolder() {
         if (share) {
-            presenter.showSavingDialog();
+            mPresenter.showSavingDialog();
             //TODO fix
-            presenter.controller.shareFolder(getCard().event.data.folder, getCard().event.data.device,
+            mPresenter.controller.shareFolder(getCard().event.data.folder, getCard().event.data.device,
                     t -> {
-                        presenter.showError("Share failed", t.getMessage());
+                        mPresenter.showError("Share failed", t.getMessage());
                     },
                     () -> {
-                        presenter.dismissSavingDialog();
-                        presenter.showSuccessMsg();
+                        mPresenter.dismissSavingDialog();
+                        mPresenter.showSuccessMsg();
                         dismissFolder();
                     }
             );
         } else {
             dismissFolder();
-            presenter.openEditFolderScreen(getCard().event.data.folder, getCard().event.data.device);
+            mPresenter.openEditFolderScreen(getCard().event.data.folder, getCard().event.data.device);
         }
     }
 
     @OnClick(R.id.btn_later)
     void dismissFolder() {
-        presenter.controller.removeFolderRejection(getCard().id);
+        mPresenter.controller.removeFolderRejection(getCard().id);
     }
 
     public void onBind(NotifCardRejFolder card) {
-        share = presenter.controller.getFolder(card.event.data.folder) != null;
+        share = mPresenter.controller.getFolder(card.event.data.folder) != null;
         if (share) {
             title.setText(R.string.share_this_folder);
             btnAdd.setText(R.string.share);
@@ -102,7 +107,7 @@ public class NotifCardRejFolderView extends ExpandableCardViewWrapper<NotifCardR
             btnAdd.setText(R.string.add);
         }
         time.setText(card.event.time.toString("H:mm:ss"));
-        DeviceConfig device = presenter.controller.getDevice(card.event.data.device);
+        DeviceConfig device = mPresenter.controller.getDevice(card.event.data.device);
         if (device == null) {
             device = new DeviceConfig();
             device.deviceID = card.event.data.device;

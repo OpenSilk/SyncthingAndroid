@@ -15,35 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.login;
+package syncthing.api;
 
-import javax.inject.Inject;
-
+import dagger.Module;
+import dagger.Provides;
 import retrofit.Endpoint;
+import retrofit.RequestInterceptor;
+import syncthing.android.model.Credentials;
 
 /**
- * Created by drew on 3/12/15.
+ * Created by drew on 10/10/15.
  */
-@LoginScreenScope
-public class MovingEndpoint implements Endpoint {
+@Module
+public class SessionModule {
 
-    String url;
+    final Credentials credentials;
 
-    @Inject
-    public MovingEndpoint() {
+    public SessionModule(Credentials credentials) {
+        this.credentials = credentials;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    @Provides @SessionScope
+    public Credentials provideCredentials(){
+        return credentials;
     }
 
-    @Override
-    public String getUrl() {
-        return url;
+    @Provides @SessionScope
+    public Endpoint provideEnpoint() {
+        return credentials;
     }
 
-    @Override
-    public String getName() {
-        return "default";
+    @Provides @SessionScope
+    public RequestInterceptor provideRequestInterceptor() {
+        return credentials;
     }
 }

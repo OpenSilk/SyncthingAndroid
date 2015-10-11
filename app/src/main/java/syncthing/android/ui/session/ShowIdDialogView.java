@@ -50,7 +50,7 @@ public class ShowIdDialogView extends RelativeLayout {
     @InjectView(R.id.loading_progress) ProgressBar progress;
     @InjectView(R.id.btn_copy) Button copyButton;
 
-    final SessionPresenter presenter;
+    SessionPresenter mPresenter;
 
     String id;
     Subscription qrImageSubscription;
@@ -58,21 +58,27 @@ public class ShowIdDialogView extends RelativeLayout {
 
     public ShowIdDialogView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        DeviceConfig device = presenter.controller.getThisDevice();
+        if (isInEditMode()) {
+            return;
+        }
+        DeviceConfig device = mPresenter.controller.getThisDevice();
         if (device != null && !StringUtils.isEmpty(device.deviceID)) {
             id = device.deviceID;
             deviceId.setText(device.deviceID);
             if (!SyncthingUtils.isClipBoardSupported(getContext())) {
                 copyButton.setVisibility(View.INVISIBLE);
             }
-            qrImageSubscription = presenter.controller.getQRImage(device.deviceID)
+            qrImageSubscription = mPresenter.controller.getQRImage(device.deviceID)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             bitmap -> {

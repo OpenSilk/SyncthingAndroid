@@ -21,7 +21,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -52,15 +51,17 @@ public class LoginScreenView extends RelativeLayout {
     @InjectView(R.id.password) EditText userPass;
     @InjectView(R.id.use_tls) CheckBox useTls;
 
-    @Inject LoginPresenter presenter;
+    @Inject LoginPresenter mPresenter;
 
     ProgressDialog loadingProgress;
     AlertDialog errorDialog;
 
     public LoginScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (!isInEditMode())
-            DaggerService.<LoginComponent>getDaggerComponent(getContext()).inject(this);
+        if (!isInEditMode()) {
+            LoginComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -75,7 +76,7 @@ public class LoginScreenView extends RelativeLayout {
                     return true;
                 }
             });
-            presenter.takeView(this);
+            mPresenter.takeView(this);
         }
     }
 
@@ -90,7 +91,7 @@ public class LoginScreenView extends RelativeLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        presenter.dropView(this);
+        mPresenter.dropView(this);
         dismissError();
         dismissLoginProgress();
         dismissKeyboard();
@@ -109,7 +110,7 @@ public class LoginScreenView extends RelativeLayout {
         } else if (!LoginUtils.validatePort(port)) {
             showInputError("Invalid Port");
         } else {
-            presenter.fetchApiKey(alias, host, port, user, pass, tls);
+            mPresenter.fetchApiKey(alias, host, port, user, pass, tls);
             showLoginProgress();
             dismissKeyboard();
         }
@@ -117,7 +118,7 @@ public class LoginScreenView extends RelativeLayout {
 
     @OnClick(R.id.cancel)
     void cancel() {
-        presenter.exitCanceled();
+        mPresenter.exitCanceled();
     }
 
     void initWithCredentials(Credentials credentials) {
@@ -159,7 +160,7 @@ public class LoginScreenView extends RelativeLayout {
         loadingProgress.setButton(DialogInterface.BUTTON_NEGATIVE,
                 getContext().getString(android.R.string.cancel),
                 (DialogInterface dialog, int which) -> {
-                        presenter.cancelLogin();
+                        mPresenter.cancelLogin();
                 });
         loadingProgress.show();
     }

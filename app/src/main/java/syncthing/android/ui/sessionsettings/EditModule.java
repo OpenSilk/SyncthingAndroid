@@ -40,19 +40,13 @@ public class EditModule {
         this.isAdd = isAdd;
     }
 
-    @Provides @EditScope @Named("folderid")
-    public String provideFolderId() {
-        return folderId;
-    }
-
-    @Provides @EditScope @Named("deviceid")
-    public String provideDeviceId() {
-        return deviceId;
-    }
-
-    @Provides @EditScope @Named("isadd")
-    public boolean provideIsAdd() {
-        return isAdd;
+    @Provides
+    public EditPresenterConfig provideConfig() {
+        EditPresenterConfig config = new EditPresenterConfig();
+        config.folderId = folderId;
+        config.deviceId = deviceId;
+        config.isAdd = isAdd;
+        return config;
     }
 
 }

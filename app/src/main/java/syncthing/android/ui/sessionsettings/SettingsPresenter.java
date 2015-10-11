@@ -21,11 +21,13 @@ import android.os.Bundle;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.opensilk.common.core.dagger2.ScreenScope;
 
 import javax.inject.Inject;
 
 import syncthing.android.ui.session.SessionPresenter;
 import syncthing.api.SessionController;
+import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.GUIConfig;
 import syncthing.api.model.OptionsConfig;
@@ -33,7 +35,7 @@ import syncthing.api.model.OptionsConfig;
 /**
  * Created by drew on 3/17/15.
  */
-@EditScope
+@ScreenScope
 public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
 
     DeviceConfig thisDevice;
@@ -42,11 +44,10 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
 
     @Inject
     public SettingsPresenter(
-            SessionController controller,
-            EditFragmentPresenter editFragmentPresenter,
-            SessionPresenter sessionPresenter
+            SessionManager manager,
+            EditFragmentPresenter editFragmentPresenter
     ) {
-        super(controller, editFragmentPresenter, sessionPresenter, null, null, false);
+        super(manager, editFragmentPresenter, EditPresenterConfig.NONE);
     }
 
     @Override

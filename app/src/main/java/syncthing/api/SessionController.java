@@ -177,7 +177,7 @@ public class SessionController implements EventMonitor.EventListener {
         running = false;
     }
 
-    public void kill() {
+    /*package*/ void kill() {
         if (subspendSubscription != null) {
             subspendSubscription.unsubscribe();
         }

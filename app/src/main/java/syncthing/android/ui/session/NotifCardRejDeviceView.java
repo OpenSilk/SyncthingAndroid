@@ -28,6 +28,8 @@ import org.opensilk.common.core.mortar.DaggerService;
 
 import java.util.Collections;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -47,13 +49,16 @@ public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardR
     @InjectView(R.id.time) TextView time;
     @InjectView(R.id.message) TextView message;
 
-    final SessionPresenter presenter;
+    @Inject SessionPresenter mPresenter;
 
     Subscription identiconSubscription;
 
     public NotifCardRejDeviceView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -77,15 +82,15 @@ public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardR
     void addDevice() {
         DeviceConfig device = new DeviceConfig();
         device.deviceID = getCard().id;
-        presenter.showSavingDialog();
+        mPresenter.showSavingDialog();
         //TODO fix
-        presenter.controller.editDevice(device, Collections.emptyMap(),
+        mPresenter.controller.editDevice(device, Collections.emptyMap(),
                 t -> {
-                    presenter.showError("Save failed", t.getMessage());
+                    mPresenter.showError("Save failed", t.getMessage());
                 },
                 () -> {
-                    presenter.dismissSavingDialog();
-                    presenter.showSuccessMsg();
+                    mPresenter.dismissSavingDialog();
+                    mPresenter.showSuccessMsg();
                     dismissDevice();
                 }
         );
@@ -93,15 +98,15 @@ public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardR
 
     @OnClick(R.id.btn_ignore)
     void ignoreDevice() {
-        presenter.showSavingDialog();
+        mPresenter.showSavingDialog();
         //TODO fix
-        presenter.controller.ignoreDevice(getCard().id,
+        mPresenter.controller.ignoreDevice(getCard().id,
                 t -> {
-                    presenter.showError("Ignore failed", t.getMessage());
+                    mPresenter.showError("Ignore failed", t.getMessage());
                 },
                 () -> {
-                    presenter.dismissSavingDialog();
-                    presenter.showSuccessMsg();
+                    mPresenter.dismissSavingDialog();
+                    mPresenter.showSuccessMsg();
                     dismissDevice();
                 }
         );
@@ -109,7 +114,7 @@ public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardR
 
     @OnClick(R.id.btn_later)
     void dismissDevice() {
-        presenter.controller.removeDeviceRejection(getCard().id);
+        mPresenter.controller.removeDeviceRejection(getCard().id);
     }
 
     @Override
@@ -119,7 +124,7 @@ public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardR
                 card.id,
                 card.event.data.address
         ));
-        identiconSubscription = presenter.identiconGenerator.generateAsync(card.id)
+        identiconSubscription = mPresenter.identiconGenerator.generateAsync(card.id)
                 .subscribe(identicon::setImageBitmap);
     }
 

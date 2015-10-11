@@ -33,6 +33,8 @@ import org.opensilk.common.core.mortar.DaggerService;
 
 import java.text.DecimalFormat;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -63,7 +65,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     @InjectView(R.id.uptime) TextView uptime;
     @InjectView(R.id.version) TextView version;
 
-    final SessionPresenter presenter;
+    @Inject SessionPresenter mPresenter;
     final DecimalFormat cpuFormat;
     final PeriodFormatter uptimeFormatter;
 
@@ -74,11 +76,6 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     public MyDeviceCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         cpuFormat = new DecimalFormat("0.00");
-        if (isInEditMode()) {
-            presenter = null;
-        } else {
-            presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
-        }
         uptimeFormatter = new PeriodFormatterBuilder()
                 .appendDays()
                 .appendSuffix("d ")
@@ -89,6 +86,10 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
                 .appendSeconds()
                 .appendSuffix("s")
                 .toFormatter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -136,7 +137,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
         if (device == null) {
             return;
         }
-        identiconSubscription = presenter.identiconGenerator.generateAsync(device.deviceID)
+        identiconSubscription = mPresenter.identiconGenerator.generateAsync(device.deviceID)
                 .subscribe(new Action1<Bitmap>() {
                     @Override
                     public void call(Bitmap bitmap) {
@@ -200,7 +201,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
 
     void subscribeUpdates() {
         unsubscribeUpdates();
-        connectionSubscription = presenter.bus.subscribe(
+        connectionSubscription = mPresenter.bus.subscribe(
                 new Action1<Update.ConnectionInfo>() {
                     @Override
                     public void call(Update.ConnectionInfo conn) {
@@ -213,7 +214,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
                 },
                 Update.ConnectionInfo.class
         );
-        systemInfoSubscription = presenter.bus.subscribe(
+        systemInfoSubscription = mPresenter.bus.subscribe(
                 new Action1<SystemInfo>() {
                     @Override
                     public void call(SystemInfo sys) {

@@ -17,25 +17,30 @@
 
 package syncthing.android.ui.login;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import dagger.Component;
 import rx.functions.Func1;
+import syncthing.android.ui.ManageActivityComponent;
 
 /**
  * Created by drew on 3/15/15.
  */
-@ManageScreenScope
+@ScreenScope
 @Component(
-        dependencies = LoginActivityComponent.class
+        dependencies = ManageActivityComponent.class
 )
 public interface ManageComponent {
-    Func1<LoginActivityComponent, ManageComponent> FACTORY =
-            new Func1<LoginActivityComponent, ManageComponent>() {
+    Func1<ManageActivityComponent, ManageComponent> FACTORY =
+            new Func1<ManageActivityComponent, ManageComponent>() {
                 @Override
-                public ManageComponent call(LoginActivityComponent loginActivityComponent) {
+                public ManageComponent call(ManageActivityComponent loginActivityComponent) {
                     return DaggerManageComponent.builder()
-                            .loginActivityComponent(loginActivityComponent)
+                            .manageActivityComponent(loginActivityComponent)
                             .build();
                 }
             };
     ManagePresenter presenter();
+    void inject(ManageDeviceCardView view);
+    void inject(ManageScreenView view);
 }

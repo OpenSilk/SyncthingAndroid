@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.login;
+package syncthing.android.ui;
 
 import org.opensilk.common.core.dagger2.ActivityScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
@@ -37,16 +37,16 @@ import syncthing.android.AppComponent;
                 PauseAndResumeModule.class
         }
 )
-public interface LoginActivityComponent extends MortarFragmentActivityComponent, AppComponent {
-    Func1<AppComponent, LoginActivityComponent> FACTORY =
-            new Func1<AppComponent, LoginActivityComponent>() {
+public interface ManageActivityComponent extends MortarFragmentActivityComponent, AppComponent {
+    Func1<AppComponent, ManageActivityComponent> FACTORY =
+            new Func1<AppComponent, ManageActivityComponent>() {
                 @Override
-                public LoginActivityComponent call(AppComponent appComponent) {
-                    return DaggerLoginActivityComponent.builder()
+                public ManageActivityComponent call(AppComponent appComponent) {
+                    return DaggerManageActivityComponent.builder()
                             .appComponent(appComponent)
                             .build();
                 }
             };
-    void inject(LoginActivity activity);
+    void inject(ManageActivity activity);
     ActivityResultsController activityResultsController();
 }

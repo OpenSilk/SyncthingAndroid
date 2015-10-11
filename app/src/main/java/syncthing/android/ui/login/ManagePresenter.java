@@ -20,6 +20,7 @@ package syncthing.android.ui.login;
 import android.app.Activity;
 import android.os.Bundle;
 
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
@@ -35,7 +36,7 @@ import syncthing.android.model.Credentials;
 /**
  * Created by drew on 3/15/15.
  */
-@ManageScreenScope
+@ScreenScope
 public class ManagePresenter extends ViewPresenter<ManageScreenView> {
 
     final IdenticonGenerator identiconGenerator;
@@ -70,12 +71,12 @@ public class ManagePresenter extends ViewPresenter<ManageScreenView> {
 
     void openAddScreen() {
         LoginFragment f = LoginFragment.newInstance(null);
-        fragmentManagerOwner.replaceMainContent(f, "login", true);
+        fragmentManagerOwner.replaceMainContent(f, true);
     }
 
     void openEditScreen(Credentials credentials) {
         LoginFragment f = LoginFragment.newInstance(credentials);
-        fragmentManagerOwner.replaceMainContent(f, "login", true);
+        fragmentManagerOwner.replaceMainContent(f, true);
     }
 
     void removeDevice(Credentials credentials) {

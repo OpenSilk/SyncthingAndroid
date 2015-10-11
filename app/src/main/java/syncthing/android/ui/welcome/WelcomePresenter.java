@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
@@ -30,10 +29,10 @@ import android.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import java.io.Serializable;
-import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -42,16 +41,16 @@ import mortar.ViewPresenter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import syncthing.android.AppSettings;
 import syncthing.android.model.Credentials;
 import syncthing.android.service.ConfigXml;
-import syncthing.android.service.PRNGFixes;
 import syncthing.android.service.ServiceSettings;
 import syncthing.android.service.SyncthingUtils;
-import syncthing.android.ui.login.LoginActivity;
+import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.login.LoginUtils;
 import syncthing.api.OkClient;
+import syncthing.api.Session;
+import syncthing.api.SessionManager;
 import syncthing.api.SyncthingApi;
 import syncthing.api.SyncthingSSLSocketFactory;
 import syncthing.api.model.Config;
@@ -59,17 +58,14 @@ import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.Ok;
 import timber.log.Timber;
 
-@WelcomeScreenScope
+@ScreenScope
 public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
 
     final Context context;
     final AppSettings appSettings;
     final ActivityResultsController activityResultsController;
     final FragmentManager fragmentManager;
-    final SyncthingApi syncthingApi;
-    final MovingEndpoint endpoint;
-    final MovingRequestInterceptor interceptor;
-    final OkClient okClient;
+    final SessionManager manager;
 
     int page;
 
@@ -80,6 +76,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
     Credentials newCredentials;
     String error;
     TempCredStorage tmpCreds = new TempCredStorage();
+    Session session;
 
     static class TempCredStorage implements Serializable {
         private static final long serialVersionUID = 0L;
@@ -94,20 +91,14 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
             @ForApplication Context context,
             AppSettings appSettings,
             ActivityResultsController activityResultsController,
-            SyncthingApi syncthingApi,
-            MovingEndpoint endpoint,
-            MovingRequestInterceptor interceptor,
-            OkClient okClient,
-            FragmentManager fragmentManager
+            FragmentManager fragmentManager,
+            SessionManager manager
     ) {
         this.context = context;
         this.appSettings = appSettings;
         this.activityResultsController = activityResultsController;
-        this.syncthingApi = syncthingApi;
-        this.endpoint = endpoint;
-        this.interceptor = interceptor;
-        this.okClient = okClient;
         this.fragmentManager = fragmentManager;
+        this.manager = manager;
         this.page = 0;
         this.skipTutorial = appSettings.getSavedCredentials().size() > 0;
         if (!this.skipTutorial) {
@@ -194,10 +185,10 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
         String uri = LoginUtils.buildUri(url, port, true);
         tmpCreds.alias = alias;
         tmpCreds.url = uri;
-        endpoint.setUrl(uri);
-        subscription = syncthingApi.config()
+        session = manager.acquire(new Credentials(null, null, uri, null, null));
+        subscription = session.api().config()
                 .retryWhen(WelcomePresenter::retryObservable)
-                .zipWith(syncthingApi.system(),
+                .zipWith(session.api().system(),
                         (config, system) -> {
                             TempCredStorage tmp = new TempCredStorage();
                             tmp.key = config.gui.apiKey;
@@ -207,7 +198,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
                                     tmp.alias = SyncthingUtils.getDisplayName(d);
                                 }
                             }
-                            interceptor.setApiKey(tmp.key);
+//                            interceptor.setApiKey(tmp.key);
                             Timber.d(ReflectionToStringBuilder.reflectionToString(tmp));
                             return new Pair<>(config, tmp);
                         })
@@ -220,7 +211,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
                             Config config = pair.first;
                             config.gui.user = username;
                             config.gui.password = password;
-                            return syncthingApi.updateConfig(config)
+                            return session.api().updateConfig(config)
                                     .retryWhen(WelcomePresenter::retryObservable)
                                     .zipWith(Observable.just(pair.second),
                                             (Config c, TempCredStorage t) -> t);
@@ -239,7 +230,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
                             appSettings.setDefaultCredentials(newCredentials);
                             Timber.d(ReflectionToStringBuilder.reflectionToString(newCredentials));
                             Timber.i("Restarting Syncthing");
-                            return syncthingApi.restart();
+                            return session.api().restart();
                         })
                 // Wait until Syncthing is ready
                 .delay(2, TimeUnit.SECONDS)
@@ -272,11 +263,11 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
         if (appSettings.getSavedCredentials().size() > 0) {
             finish(null);
         } else if (t.getMessage().contains("Unauthorized") || t.getMessage().contains("Forbidden") || t.getMessage().contains("Untrusted Certificate")) {
-            ConfigXml configXml = ConfigXml.get(context);
-            interceptor.setApiKey(configXml.getApiKey());
-            okClient.setSslSocketFactory(
-                    SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(
-                            SyncthingUtils.getSyncthingCACert(context)));
+//            ConfigXml configXml = ConfigXml.get(context);
+//            interceptor.setApiKey(configXml.getApiKey());
+//            okClient.setSslSocketFactory(
+//                    SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(
+//                            SyncthingUtils.getSyncthingCACert(context)));
             waitForInitialisation();
         } else {
             notifyError(t);
@@ -295,13 +286,13 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
 
     void exitSuccess() {
         Intent intent = new Intent()
-                .putExtra(LoginActivity.EXTRA_CREDENTIALS, (Parcelable) newCredentials)
-                .putExtra(LoginActivity.EXTRA_FROM, LoginActivity.ACTION_WELCOME);
+                .putExtra(ManageActivity.EXTRA_CREDENTIALS, (Parcelable) newCredentials)
+                .putExtra(ManageActivity.EXTRA_FROM, ManageActivity.ACTION_WELCOME);
         activityResultsController.setResultAndFinish(Activity.RESULT_OK, intent);
     }
 
     void exitCanceled() {
-        Intent intent = new Intent().putExtra(LoginActivity.EXTRA_FROM, LoginActivity.ACTION_WELCOME);
+        Intent intent = new Intent().putExtra(ManageActivity.EXTRA_FROM, ManageActivity.ACTION_WELCOME);
         activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, intent);
     }
 }

@@ -25,6 +25,8 @@ import android.widget.TextView;
 
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -41,11 +43,14 @@ public class NotifCardRestartView extends ExpandableCardViewWrapper<NotifCardRes
     @InjectView(R.id.expand) ViewGroup expand;
     @InjectView(R.id.title) TextView title;
 
-    final SessionController controller;
+    @Inject SessionPresenter mPresenter;
 
     public NotifCardRestartView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        controller = DaggerService.<SessionComponent>getDaggerComponent(getContext()).sessionController();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -61,7 +66,7 @@ public class NotifCardRestartView extends ExpandableCardViewWrapper<NotifCardRes
 
     @OnClick(R.id.btn_restart)
     void restartSyncthing() {
-        controller.restart();
+        mPresenter.controller.restart();
     }
 
     @Override

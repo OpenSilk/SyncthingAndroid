@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -64,7 +66,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     @InjectView(R.id.last_seen_container) ViewGroup lastSeenHider;
     @InjectView(R.id.last_seen) TextView lastSeen;
 
-    final SessionPresenter presenter;
+    @Inject SessionPresenter mPresenter;
     final DateTime epoch;
 
     Subscription identiconSubscription;
@@ -74,8 +76,11 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
 
     public DeviceCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
         epoch = new DateTime(1969);
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -102,7 +107,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
 
     @OnClick(R.id.btn_edit)
     void editDevice() {
-        presenter.openEditDeviceScreen(getCard().device.deviceID);
+        mPresenter.openEditDeviceScreen(getCard().device.deviceID);
     }
 
     public ViewGroup getExpandView() {
@@ -125,7 +130,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
 
     void updateDevice(DeviceConfig device) {
         //Timber.d("updateDevice(%s) cfg=%s", getCard().device.name, device);
-        identiconSubscription = presenter.identiconGenerator.generateAsync(device.deviceID)
+        identiconSubscription = mPresenter.identiconGenerator.generateAsync(device.deviceID)
                 .subscribe(identicon::setImageBitmap);
 
         name.setText(SyncthingUtils.getDisplayName(device));
@@ -203,7 +208,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
 
     void subscribeUpdates() {
         unsubscribeUpdates();
-        connectionSubscription = presenter.bus.subscribe(
+        connectionSubscription = mPresenter.bus.subscribe(
                 conn -> {
                     if (!StringUtils.equals(conn.id, getCard().device.deviceID)) {
                         return;
@@ -213,7 +218,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
                 },
                 Update.ConnectionInfo.class
         );
-        statsSubscription = presenter.bus.subscribe(
+        statsSubscription = mPresenter.bus.subscribe(
                 stats -> {
                     if (!StringUtils.equals(stats.id, getCard().device.deviceID)) {
                         return;
@@ -223,7 +228,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
                 },
                 Update.DeviceStats.class
         );
-        completionSubscription = presenter.bus.subscribe(
+        completionSubscription = mPresenter.bus.subscribe(
                 comp -> {
                     if (!StringUtils.equals(comp.id, getCard().device.deviceID)) {
                         return;

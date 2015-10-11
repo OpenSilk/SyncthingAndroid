@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -78,14 +80,17 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
     @InjectView(R.id.btn_override) Button btnOverride;
     @InjectView(R.id.btn_rescan) Button btnRescan;
 
-    final SessionPresenter presenter;
+    @Inject SessionPresenter mPresenter;
 
     Subscription modelSubscription;
     Subscription modelStateSubscription;
 
     public FolderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SessionComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -113,19 +118,19 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
     @OnClick(R.id.btn_override)
     void overrideChanges() {
         if (getCard() == null) return;
-        presenter.overrideChanges(getCard().folder.id);
+        mPresenter.overrideChanges(getCard().folder.id);
     }
 
     @OnClick(R.id.btn_rescan)
     void rescanFolder() {
         if (getCard() == null) return;
-        presenter.scanFolder(getCard().folder.id);
+        mPresenter.scanFolder(getCard().folder.id);
     }
 
     @OnClick(R.id.btn_edit)
     void addFolder() {
         if (getCard() == null) return;
-        presenter.openEditFolderScreen(getCard().folder.id);
+        mPresenter.openEditFolderScreen(getCard().folder.id);
     }
 
     void openFolder() {
@@ -179,8 +184,8 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
         List<String> sharedNames = new ArrayList<>();
         for (FolderDeviceConfig d : folder.devices) {
-            if (!StringUtils.equals(d.deviceID, presenter.getMyDeviceId())) {
-                DeviceConfig dev = presenter.controller.getDevice(d.deviceID);//TODO stop doing this
+            if (!StringUtils.equals(d.deviceID, mPresenter.getMyDeviceId())) {
+                DeviceConfig dev = mPresenter.controller.getDevice(d.deviceID);//TODO stop doing this
                 if (dev != null) {
                     sharedNames.add(SyncthingUtils.getDisplayName(dev));
                 }
@@ -271,7 +276,7 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
     void subscribe() {
         unsubscribe();
-        modelSubscription = presenter.bus.subscribe(
+        modelSubscription = mPresenter.bus.subscribe(
                 m -> {
                     if (!StringUtils.equals(m.id, getCard().folder.id)) {
                         return;
@@ -282,7 +287,7 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
                 },
                 Update.Model.class
         );
-        modelStateSubscription = presenter.bus.subscribe(
+        modelStateSubscription = mPresenter.bus.subscribe(
                 m -> {
                     if (!StringUtils.equals(m.id, getCard().folder.id)) {
                         return;
