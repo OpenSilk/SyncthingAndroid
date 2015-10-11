@@ -17,26 +17,46 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.content.res.Resources;
+
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ComponentFactory;
 import org.opensilk.common.ui.mortar.Layout;
 import org.opensilk.common.ui.mortar.Screen;
-import org.opensilk.common.ui.mortar.WithComponent;
+import org.opensilk.common.ui.mortar.WithComponentFactory;
 
+import mortar.MortarScope;
 import syncthing.android.R;
+import syncthing.android.model.Credentials;
+import syncthing.android.ui.ManageActivityComponent;
 
 /**
  * Created by drew on 3/23/15.
  */
 @Layout(R.layout.screen_edit_folder_ignores)
-@WithComponent(EditIgnoresComponent.class)
+@WithComponentFactory(EditIgnoresScreen.Factory.class)
 public class EditIgnoresScreen extends Screen {
+    final Credentials credentials;
     final String folderId;
 
-    public EditIgnoresScreen(String folderId) {
+    public EditIgnoresScreen(Credentials credentials, String folderId) {
+        this.credentials = credentials;
         this.folderId = folderId;
     }
 
     @Override
     public String getName() {
         return super.getName() + folderId;
+    }
+
+    public static class Factory extends ComponentFactory<EditIgnoresScreen> {
+        @Override
+        protected Object createDaggerComponent(Resources resources, MortarScope parentScope, EditIgnoresScreen screen) {
+            ManageActivityComponent cmp = DaggerService.getDaggerComponent(parentScope);
+            return DaggerEditIgnoresComponent.builder()
+                    .manageActivityComponent(cmp)
+                    .editIgnoresModule(new EditIgnoresModule(screen))
+                    .build();
+        }
     }
 }

@@ -27,8 +27,8 @@ import org.opensilk.common.ui.mortar.WithComponentFactory;
 
 import mortar.MortarScope;
 import syncthing.android.R;
+import syncthing.android.model.Credentials;
 import syncthing.android.ui.ManageActivityComponent;
-import syncthing.android.ui.session.SessionComponent;
 
 /**
  * Created by drew on 3/17/15.
@@ -36,11 +36,20 @@ import syncthing.android.ui.session.SessionComponent;
 @Layout(R.layout.screen_edit_settings)
 @WithComponentFactory(SettingsScreen.Factory.class)
 public class SettingsScreen extends Screen {
+    final Credentials credentials;
+
+    public SettingsScreen(Credentials credentials) {
+        this.credentials = credentials;
+    }
+
     public static class Factory extends ComponentFactory<SettingsScreen> {
         @Override
         protected Object createDaggerComponent(Resources resources, MortarScope parentScope, SettingsScreen screen) {
-            ManageActivityComponent component = DaggerService.getDaggerComponent(parentScope);
-            return SettingsComponent.FACTORY.call(component);
+            ManageActivityComponent cmp = DaggerService.getDaggerComponent(parentScope);
+            return DaggerSettingsComponent.builder()
+                    .manageActivityComponent(cmp)
+                    .settingsModule(new SettingsModule(screen))
+                    .build();
         }
     }
 }

@@ -15,35 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.login;
+package syncthing.android.ui.sessionsettings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import org.opensilk.common.ui.mortar.Screen;
-import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import syncthing.android.R;
+import syncthing.android.model.Credentials;
 
 /**
- * Created by drew on 3/15/15.
+ * Created by drew on 10/11/15.
  */
-public class ManageFragment extends MortarFragment {
-    public static final String NAME = ManageFragment.class.getName();
+public class EditDeviceFragment extends EditFragment2 {
+    public static final String NAME = EditDeviceFragment.class.getName();
 
-    public static ManageFragment newInstance() {
-        return new ManageFragment();
+    public static Bundle makeArgs(Credentials credentials, @Nullable String deviceId) {
+        Bundle b = putCredentials(credentials);
+        b.putInt("title", deviceId != null ? R.string.edit_device : R.string.add_device);
+        b.putString("device", deviceId);
+        return b;
     }
 
     @Override
     protected Screen newScreen() {
-        return new ManageScreen();
+        ensureCredentials();
+        String did = getArguments().getString("device");
+        if (did != null) {
+            return new EditDeviceScreen(mCredentials, did);//edit
+        } else {
+            return new EditDeviceScreen(mCredentials);//add
+        }
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.manage_devices);
-    }
-
 }

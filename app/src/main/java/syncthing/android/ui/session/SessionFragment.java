@@ -39,7 +39,7 @@ import syncthing.android.ui.LauncherActivityComponent;
 /**
  * Created by drew on 3/11/15.
  */
-public class SessionFragment extends MortarFragment implements SessionFragmentPresenter.Fragment {
+public class SessionFragment extends MortarFragment {
 
     public static SessionFragment newInstance(Credentials credentials) {
         SessionFragment f = new SessionFragment();
@@ -53,7 +53,6 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
     //Holding this reference is a hack to hook lifecycle
     //TODO add lifecycle hooks to fragmentPresenter and move actionbar stuff to SessionPresenter
     SessionPresenter mPresenter;
-    SessionFragmentPresenter mFragmentPresenter;
 
     @Override
     protected Screen newScreen() {
@@ -65,14 +64,6 @@ public class SessionFragment extends MortarFragment implements SessionFragmentPr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = DaggerService.<SessionComponent>getDaggerComponent(getScope()).presenter();
-        mFragmentPresenter = DaggerService.<SessionComponent>getDaggerComponent(getScope()).fragmentPresenter();
-        mFragmentPresenter.takeView(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        mFragmentPresenter.dropView(this);
-        super.onDestroy();
     }
 
     @Override

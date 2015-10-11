@@ -42,8 +42,11 @@ import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.ManageActivity;
+import syncthing.android.ui.login.LoginFragment;
+import syncthing.android.ui.login.ManageFragment;
 import syncthing.android.ui.session.SessionFragment;
 import syncthing.android.ui.settings.SettingsActivity;
+import syncthing.android.ui.welcome.WelcomeFragment;
 import timber.log.Timber;
 
 /**
@@ -119,14 +122,6 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
                 reload(false);
                 return true;
             }
-            // Cancel from welcome fragment opens login
-            if (data != null && data.hasExtra(ManageActivity.EXTRA_FROM) &&
-                    data.getStringExtra(ManageActivity.EXTRA_FROM).equals(ManageActivity.ACTION_WELCOME)) {
-                if (hasView())
-                    startLoginActivity();
-                reload(false);
-                return true;
-            }
 
             // Cancelled login
             if (hasView()) reload(true);
@@ -173,7 +168,8 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
 
     void startDeviceManageActivity() {
         drawerOwner.closeDrawer();
-        Intent intent = new Intent(appContext, ManageActivity.class).setAction(ManageActivity.ACTION_MANAGE);
+        Intent intent = new Intent(appContext, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, ManageFragment.NAME);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 
@@ -185,13 +181,16 @@ public class NavigationPresenter extends ViewPresenter<NavigationScreenView> imp
 
     void startLoginActivity() {
         drawerOwner.closeDrawer();
-        Intent intent = new Intent(appContext, ManageActivity.class);
+        Intent intent = new Intent(appContext, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, LoginFragment.NAME);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 
     void startWelcomeActivity() {
         drawerOwner.closeDrawer();
-        Intent intent = new Intent(appContext, ManageActivity.class).setAction(ManageActivity.ACTION_WELCOME);
+        Intent intent = new Intent(appContext, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, WelcomeFragment.NAME)
+                .putExtra(ManageActivity.EXTRA_DISABLE_BACK, true);
         activityResultsController.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 

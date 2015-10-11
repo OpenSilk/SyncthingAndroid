@@ -28,6 +28,8 @@ import android.widget.ScrollView;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -59,7 +61,7 @@ public class SettingsScreenView extends ScrollView {
     @InjectView(R.id.edit_apikey) EditText editApiKey;
     @InjectView(R.id.btn_copy_apikey) Button copyApiKeyButton;
 
-    final SettingsPresenter presenter;
+    @Inject SettingsPresenter mPresenter;
 
     DeviceConfig deviceConfig;
     GUIConfig guiConfig;
@@ -69,7 +71,10 @@ public class SettingsScreenView extends ScrollView {
 
     public SettingsScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<SettingsComponent>getDaggerComponent(getContext()).presenter();
+        if (!isInEditMode()) {
+            SettingsComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
@@ -80,14 +85,14 @@ public class SettingsScreenView extends ScrollView {
             copyApiKeyButton.setVisibility(View.INVISIBLE);
         }
         if (!isInEditMode()) {
-            presenter.takeView(this);
+            mPresenter.takeView(this);
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        presenter.dropView(this);
+        mPresenter.dropView(this);
     }
 
     @OnClick(R.id.btn_copy_apikey)
@@ -105,28 +110,28 @@ public class SettingsScreenView extends ScrollView {
 
     @OnClick(R.id.btn_cancel)
     void doCancel() {
-        presenter.dismissDialog();
+        mPresenter.dismissDialog();
     }
 
     @OnClick(R.id.btn_save)
     void doSave() {
         deviceConfig.name = editDeviceName.getText().toString();
-        if (!presenter.validateListenAddresses(editProtocolListenAddrs.getText().toString())) {
+        if (!mPresenter.validateListenAddresses(editProtocolListenAddrs.getText().toString())) {
             return;
         }
         options.listenAddress = SyncthingUtils.rollArray(editProtocolListenAddrs.getText().toString());
-        if (!presenter.validateMaxRecv(editIncomingRateLim.getText().toString())) {
+        if (!mPresenter.validateMaxRecv(editIncomingRateLim.getText().toString())) {
             return;
         }
         options.maxRecvKbps = Integer.valueOf(editIncomingRateLim.getText().toString());
-        if (!presenter.validateMaxSend(editOutgoingRateLim.getText().toString())) {
+        if (!mPresenter.validateMaxSend(editOutgoingRateLim.getText().toString())) {
             return;
         }
         options.maxSendKbps = Integer.valueOf(editOutgoingRateLim.getText().toString());
         options.upnpEnabled = enableUpnp.isChecked();
         options.globalAnnounceEnabled = enableGlobalDiscovr.isChecked();
         options.localAnnounceEnabled = enableLocalDiscovr.isChecked();
-        if (!presenter.validateGlobalDiscoveryServers(editGlobalDiscovrServr.getText().toString())) {
+        if (!mPresenter.validateGlobalDiscoveryServers(editGlobalDiscovrServr.getText().toString())) {
             return;
         }
         options.globalAnnounceServers = SyncthingUtils.rollArray(editGlobalDiscovrServr.getText().toString());
@@ -141,7 +146,7 @@ public class SettingsScreenView extends ScrollView {
         options.urAccepted = (enableUsageReporting.isChecked()) ? 1000 : -1;
         guiConfig.apiKey = editApiKey.getText().toString();
 
-        presenter.saveConfig(deviceConfig, options, guiConfig);
+        mPresenter.saveConfig(deviceConfig, options, guiConfig);
     }
 
     void initialize(DeviceConfig thisDevice, OptionsConfig options, GUIConfig guiConfig, boolean fromsavedstate) {

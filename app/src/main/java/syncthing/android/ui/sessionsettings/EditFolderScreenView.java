@@ -39,6 +39,8 @@ import org.opensilk.common.core.mortar.DaggerService;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -95,7 +97,7 @@ public class EditFolderScreenView extends ScrollView {
     @InjectView(R.id.btn_delete) Button deleteBtn;
     @InjectView(R.id.btn_ignore_ptrn) Button ignoresPattrnBtn;
 
-    final EditFolderPresenter presenter;
+    @Inject EditFolderPresenter presenter;
     final DirectoryAutoCompleteAdapter editFolderPathAdapter;
 
     boolean isAdd = false;
@@ -103,8 +105,11 @@ public class EditFolderScreenView extends ScrollView {
 
     public EditFolderScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<EditFolderComponent>getDaggerComponent(getContext()).presenter();
         editFolderPathAdapter = new DirectoryAutoCompleteAdapter(getContext());
+        if (!isInEditMode()) {
+            EditFolderComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override

@@ -27,17 +27,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Subscription;
-import syncthing.android.ui.session.SessionPresenter;
-import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
-import syncthing.api.model.Config;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
 
-import static syncthing.android.ui.sessionsettings.EditModule.INVALID_ID;
+import static syncthing.android.ui.sessionsettings.EditPresenterConfig.INVALID_ID;
 
 /**
  * Created by drew on 3/16/15.
@@ -52,10 +48,9 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     @Inject
     public EditFolderPresenter(
             SessionManager manager,
-            EditFragmentPresenter editFragmentPresenter,
             EditPresenterConfig config
     ) {
-        super(manager, editFragmentPresenter, config);
+        super(manager, config);
     }
 
     @Override

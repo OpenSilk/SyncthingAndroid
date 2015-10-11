@@ -49,7 +49,6 @@ public interface SessionComponent {
                 }
             };
     SessionPresenter presenter();
-    SessionFragmentPresenter fragmentPresenter();
     ActivityResultsController activityResultsController();
     void inject(DeviceCardView view);
     void inject(FolderCardView view);

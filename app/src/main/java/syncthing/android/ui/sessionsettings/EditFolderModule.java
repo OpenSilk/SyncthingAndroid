@@ -18,15 +18,27 @@
 package syncthing.android.ui.sessionsettings;
 
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * Created by drew on 3/16/15.
  */
 @Module
-public class EditFolderModule extends EditModule {
+public class EditFolderModule {
+
+    final EditFolderScreen screen;
 
     public EditFolderModule(EditFolderScreen screen) {
-        super(screen.folderId, screen.deviceId, screen.isAdd);
+        this.screen = screen;
+    }
+
+    @Provides
+    public EditPresenterConfig provideConfig() {
+        return EditPresenterConfig.builder()
+                .setFolderId(screen.folderId)
+                .setDeviceId(screen.deviceId)
+                .setIsAdd(screen.isAdd)
+                .build();
     }
 
 }

@@ -17,36 +17,27 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import javax.inject.Named;
+import org.opensilk.common.core.dagger2.ScreenScope;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by drew on 3/17/15.
+ * Created by drew on 10/11/15.
  */
 @Module
-public class EditModule {
-    //cause cant return nulls
-    public static final String INVALID_ID = "@@@INVALID@@@";
+public class SettingsModule {
+    final SettingsScreen screen;
 
-    final String folderId;
-    final String deviceId;
-    final boolean isAdd;
-
-    public EditModule(String folderId, String deviceId, boolean isAdd) {
-        this.folderId = folderId;
-        this.deviceId = deviceId;
-        this.isAdd = isAdd;
+    public SettingsModule(SettingsScreen screen) {
+        this.screen = screen;
     }
 
-    @Provides
+    @Provides @ScreenScope
     public EditPresenterConfig provideConfig() {
-        EditPresenterConfig config = new EditPresenterConfig();
-        config.folderId = folderId;
-        config.deviceId = deviceId;
-        config.isAdd = isAdd;
-        return config;
+        EditPresenterConfig c = EditPresenterConfig.builder()
+                .setCredentials(screen.credentials)
+                .build();
+        return c;
     }
-
 }

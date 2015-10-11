@@ -21,7 +21,6 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 
 import dagger.Component;
 import syncthing.android.ui.ManageActivityComponent;
-import syncthing.android.ui.session.SessionComponent;
 
 /**
  * Created by drew on 3/23/15.
@@ -31,7 +30,6 @@ import syncthing.android.ui.session.SessionComponent;
         dependencies = ManageActivityComponent.class,
         modules = EditIgnoresModule.class
 )
-//TODO this should really be a child of EditFolderComponent
-public interface EditIgnoresComponent extends EditFragmentComponent {
-    EditIgnoresPresenter presenter();
+public interface EditIgnoresComponent {
+    void inject(EditIgnoresScreenView viewe);
 }

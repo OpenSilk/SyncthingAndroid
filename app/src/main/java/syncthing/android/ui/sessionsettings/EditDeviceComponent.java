@@ -30,7 +30,6 @@ import syncthing.android.ui.ManageActivityComponent;
         dependencies = ManageActivityComponent.class,
         modules = EditDeviceModule.class
 )
-public interface EditDeviceComponent extends EditFragmentComponent {
-    EditDevicePresenter presenter();
+public interface EditDeviceComponent {
     void inject(EditDeviceScreenView view);
 }

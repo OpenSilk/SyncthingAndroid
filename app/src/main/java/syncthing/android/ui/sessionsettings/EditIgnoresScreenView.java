@@ -26,6 +26,8 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -42,42 +44,45 @@ public class EditIgnoresScreenView extends ScrollView {
     @InjectView(R.id.desc_filename) TextView descFilename;
     @InjectView(R.id.edit_ignores) EditText editIgnores;
 
-    final EditIgnoresPresenter presenter;
+    @Inject EditIgnoresPresenter mPresenter;
 
     public EditIgnoresScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        presenter = DaggerService.<EditIgnoresComponent>getDaggerComponent(context).presenter();
+        if (!isInEditMode()) {
+            EditIgnoresComponent cmp = DaggerService.getDaggerComponent(getContext());
+            cmp.inject(this);
+        }
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        presenter.takeView(this);
+        mPresenter.takeView(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        presenter.dropView(this);
+        mPresenter.dropView(this);
     }
 
     @OnClick(R.id.btn_help)
     void showHelp() {
-        presenter.openHelp();
+        mPresenter.openHelp();
     }
 
     @OnClick(R.id.btn_cancel)
     void doCancel() {
-        presenter.dismissDialog();
+        mPresenter.dismissDialog();
     }
 
     @OnClick(R.id.btn_save)
     void save() {
-        if (!presenter.validateIgnores(editIgnores.getText().toString())) {
+        if (!mPresenter.validateIgnores(editIgnores.getText().toString())) {
             return;
         }
-        presenter.saveIgnores(editIgnores.getText().toString());
+        mPresenter.saveIgnores(editIgnores.getText().toString());
     }
 
     void initialize(FolderConfig folder, SystemInfo system, Ignores ignores) {

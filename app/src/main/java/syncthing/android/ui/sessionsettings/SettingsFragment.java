@@ -17,19 +17,28 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
+import android.os.Bundle;
 
-import dagger.Component;
-import syncthing.android.ui.ManageActivityComponent;
-import syncthing.android.ui.session.SessionComponent;
+import org.opensilk.common.ui.mortar.Screen;
+
+import syncthing.android.R;
+import syncthing.android.model.Credentials;
 
 /**
- * Created by drew on 3/16/15.
+ * Created by drew on 10/11/15.
  */
-@ScreenScope
-@Component(
-        dependencies = ManageActivityComponent.class
-)
-public interface EditFragmentComponent {
-    EditFragmentPresenter fragmentPresenter();
+public class SettingsFragment extends EditFragment2 {
+    public static final String NAME = SettingsFragment.class.getName();
+
+    public static Bundle makeArgs(Credentials credentials) {
+        Bundle b = putCredentials(credentials);
+        b.putInt("title", R.string.settings);
+        return b;
+    }
+
+    @Override
+    protected Screen newScreen() {
+        ensureCredentials();
+        return new SettingsScreen(mCredentials);
+    }
 }

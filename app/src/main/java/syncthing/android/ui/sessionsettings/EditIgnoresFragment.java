@@ -17,34 +17,31 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
-import org.opensilk.common.core.mortar.HasScope;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 
-import javax.inject.Inject;
+import org.opensilk.common.ui.mortar.Screen;
 
-import mortar.Presenter;
-import mortar.bundler.BundleService;
+import syncthing.android.R;
+import syncthing.android.model.Credentials;
 
 /**
- * Created by drew on 3/16/15.
+ * Created by drew on 10/11/15.
  */
-@ScreenScope
-public class EditFragmentPresenter extends Presenter<EditFragmentPresenter.DialogOwner> {
+public class EditIgnoresFragment extends EditFragment2 {
+    public static final String NAME = EditIgnoresFragment.class.getName();
 
-    public interface DialogOwner extends HasScope {
-        void dismiss();
-    }
-
-    @Inject
-    public EditFragmentPresenter() {
+    public static Bundle makeArgs(Credentials credentials, @NonNull String folderID) {
+        Bundle b = putCredentials(credentials);
+        b.putString("folder", folderID);
+        b.putInt("title", R.string.ignore_patterns);
+        return b;
     }
 
     @Override
-    protected BundleService extractBundleService(DialogOwner view) {
-        return BundleService.getBundleService(view.getScope());
-    }
-
-    public void dismissDialog() {
-        if (hasView()) getView().dismiss();
+    protected Screen newScreen() {
+        ensureCredentials();
+        String fid = getArguments().getString("folder");
+        return new EditIgnoresScreen(mCredentials, fid); //ignores
     }
 }

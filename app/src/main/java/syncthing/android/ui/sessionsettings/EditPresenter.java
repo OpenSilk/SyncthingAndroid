@@ -21,8 +21,7 @@ import android.view.View;
 
 import mortar.ViewPresenter;
 import rx.Subscription;
-import syncthing.android.R;
-import syncthing.android.ui.session.SessionPresenter;
+import syncthing.api.Session;
 import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
 
@@ -33,24 +32,23 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
 
     protected final SessionManager manager;
     protected final SessionController controller;
-    protected final EditFragmentPresenter editFragmentPresenter;
     protected final String folderId;
     protected final String deviceId;
     protected final boolean isAdd;
+    protected final Session session;
 
     protected Subscription saveSubscription;
 
     public EditPresenter(
             SessionManager manager,
-            EditFragmentPresenter editFragmentPresenter,
             EditPresenterConfig config
     ) {
         this.manager = manager;
-        this.editFragmentPresenter = editFragmentPresenter;
+        this.session = manager.acquire(config.credentials);
+        this.controller = this.session.controller();
         this.folderId = config.folderId;
         this.deviceId = config.deviceId;
         this.isAdd = config.isAdd;
-        this.controller = null;//TODO
     }
 
     @Override
@@ -59,6 +57,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
         if (saveSubscription != null) {
             saveSubscription.unsubscribe();
         }
+        manager.release(session);
     }
 
     //TODO save saving state and restore
@@ -79,6 +78,6 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     }
 
     protected  void dismissDialog() {
-        editFragmentPresenter.dismissDialog();
+
     }
 }

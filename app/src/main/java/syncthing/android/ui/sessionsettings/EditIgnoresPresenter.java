@@ -27,12 +27,9 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Subscription;
 import syncthing.android.R;
-import syncthing.android.ui.session.SessionPresenter;
-import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.Ignores;
@@ -53,11 +50,10 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
     @Inject
     public EditIgnoresPresenter(
             SessionManager manager,
-            EditFragmentPresenter editFragmentPresenter,
             EditPresenterConfig config,
             ActivityResultsController activityResultsController
     ) {
-        super(manager, editFragmentPresenter, config);
+        super(manager, config);
         this.activityResultsController = activityResultsController;
     }
 

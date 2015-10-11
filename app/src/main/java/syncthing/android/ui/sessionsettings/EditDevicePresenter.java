@@ -31,14 +31,10 @@ import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import mortar.MortarScope;
 import rx.Subscription;
-import syncthing.android.R;
 import syncthing.android.ui.common.ActivityRequestCodes;
-import syncthing.android.ui.session.SessionPresenter;
-import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;
 
@@ -57,11 +53,10 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     @Inject
     public EditDevicePresenter(
             SessionManager manager,
-            EditFragmentPresenter editFragmentPresenter,
             EditPresenterConfig config,
             ActivityResultsController activityResultsController
     ) {
-        super(manager, editFragmentPresenter, config);
+        super(manager, config);
         this.activityResultsController = activityResultsController;
     }
 

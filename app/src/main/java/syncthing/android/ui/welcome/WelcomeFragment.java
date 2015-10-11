@@ -26,6 +26,7 @@ import org.opensilk.common.ui.mortarfragment.MortarFragment;
 import syncthing.android.R;
 
 public class WelcomeFragment extends MortarFragment {
+    public static String NAME = WelcomeFragment.class.getName();
 
     public static WelcomeFragment newInstance() {
         return new WelcomeFragment();

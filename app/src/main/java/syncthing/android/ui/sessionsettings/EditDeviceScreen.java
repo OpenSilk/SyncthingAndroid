@@ -17,32 +17,41 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.content.res.Resources;
+
+import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ComponentFactory;
 import org.opensilk.common.ui.mortar.Layout;
 import org.opensilk.common.ui.mortar.Screen;
-import org.opensilk.common.ui.mortar.WithComponent;
+import org.opensilk.common.ui.mortar.WithComponentFactory;
 
+import mortar.MortarScope;
 import syncthing.android.R;
+import syncthing.android.model.Credentials;
+import syncthing.android.ui.ManageActivityComponent;
 
-import static syncthing.android.ui.sessionsettings.EditModule.INVALID_ID;
+import static syncthing.android.ui.sessionsettings.EditPresenterConfig.INVALID_ID;
 
 /**
  * Created by drew on 3/16/15.
  */
 @Layout(R.layout.screen_edit_device)
-@WithComponent(EditDeviceComponent.class)
+@WithComponentFactory(EditDeviceScreen.Factory.class)
 public class EditDeviceScreen extends Screen {
+    final Credentials credentials;
     final String deviceId;
     final boolean isAdd;
 
-    public EditDeviceScreen() {
-        this(INVALID_ID, true);
+    public EditDeviceScreen(Credentials credentials) {
+        this(credentials, INVALID_ID, true);
     }
 
-    public EditDeviceScreen(String deviceId) {
-        this(deviceId, false);
+    public EditDeviceScreen(Credentials credentials, String deviceId) {
+        this(credentials, deviceId, false);
     }
 
-    public EditDeviceScreen(String deviceId, boolean isAdd) {
+    public EditDeviceScreen(Credentials credentials, String deviceId, boolean isAdd) {
+        this.credentials = credentials;
         this.deviceId = deviceId;
         this.isAdd = isAdd;
     }
@@ -50,5 +59,16 @@ public class EditDeviceScreen extends Screen {
     @Override
     public String getName() {
         return super.getName() + deviceId;
+    }
+
+    public static class Factory extends ComponentFactory<EditDeviceScreen> {
+        @Override
+        protected Object createDaggerComponent(Resources resources, MortarScope parentScope, EditDeviceScreen screen) {
+            ManageActivityComponent cmp = DaggerService.getDaggerComponent(parentScope);
+            return DaggerEditDeviceComponent.builder()
+                    .manageActivityComponent(cmp)
+                    .editDeviceModule(new EditDeviceModule(screen))
+                    .build();
+        }
     }
 }

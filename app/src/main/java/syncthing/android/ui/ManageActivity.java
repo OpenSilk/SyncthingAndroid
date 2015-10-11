@@ -25,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ActivityResultsActivity;
 import org.opensilk.common.ui.mortar.ActivityResultsOwner;
+import org.opensilk.common.ui.mortarfragment.MortarFragment;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import javax.inject.Inject;
@@ -38,22 +39,23 @@ import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.login.LoginFragment;
 import syncthing.android.ui.login.ManageFragment;
 import syncthing.android.ui.welcome.WelcomeFragment;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/10/15.
  */
 public class ManageActivity extends MortarFragmentActivity implements ActivityResultsActivity {
 
-    public static final String ACTION_MANAGE = "manage";
-    public static final String ACTION_WELCOME = "welcome";
-    public static final String EXTRA_CREDENTIALS = "creds";
-    public static final String EXTRA_FROM = "from";
+    public static final String EXTRA_CREDENTIALS = "credentials";
+    public static final String EXTRA_ARGS = "args";
+    public static final String EXTRA_FRAGMENT = "fragment";
+    public static final String EXTRA_DISABLE_BACK = "disableback";
 
     @Inject ActivityResultsOwner mActivityResultsOwner;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
 
-    boolean ignoreBackButton;
+    private boolean ignoreBackButton;
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
@@ -75,17 +77,14 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
         setResult(RESULT_CANCELED);
         mActivityResultsOwner.takeView(this);
         if (savedInstanceState == null) {
-            Fragment fragment;
-            if (ACTION_WELCOME.equals(getIntent().getAction())) {
-                fragment = WelcomeFragment.newInstance();
-                ignoreBackButton = true;
-            } else if (ACTION_MANAGE.equals(getIntent().getAction())) {
-                fragment = ManageFragment.newInstance();
-            } else {
-                getIntent().setExtrasClassLoader(getClass().getClassLoader());
-                fragment = LoginFragment.newInstance(getIntent().getParcelableExtra(EXTRA_CREDENTIALS));
+            MortarFragment fragment = MortarFragment.factory(this,
+                    getIntent().getStringExtra(EXTRA_FRAGMENT),
+                    getIntent().getBundleExtra(EXTRA_ARGS));
+            if (getIntent().getBundleExtra(EXTRA_ARGS) == null) {
+                Timber.e("bundle args were null");
             }
-            mFragmentManagerOwner.replaceMainContent(fragment, fragment.getClass().getName(), false);
+            ignoreBackButton = getIntent().getBooleanExtra(EXTRA_DISABLE_BACK, false);
+            mFragmentManagerOwner.replaceMainContent(fragment, false);
         }
     }
 
@@ -131,4 +130,5 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
         setResult(resultCode, data);
         finish();
     }
+
 }

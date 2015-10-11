@@ -15,35 +15,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.login;
+package syncthing.android.ui.sessionsettings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import org.opensilk.common.ui.mortar.Screen;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
-import syncthing.android.R;
+import syncthing.android.model.Credentials;
 
 /**
- * Created by drew on 3/15/15.
+ * Created by drew on 10/11/15.
  */
-public class ManageFragment extends MortarFragment {
-    public static final String NAME = ManageFragment.class.getName();
+public abstract class EditFragment2 extends MortarFragment {
 
-    public static ManageFragment newInstance() {
-        return new ManageFragment();
+    protected Credentials mCredentials;
+
+    protected static Bundle putCredentials(Credentials credentials) {
+        Bundle b = new Bundle();
+        b.putParcelable("creds", credentials);
+        return b;
     }
 
-    @Override
-    protected Screen newScreen() {
-        return new ManageScreen();
+    protected void ensureCredentials() {
+        if (mCredentials == null) {
+            getArguments().setClassLoader(getClass().getClassLoader());
+            mCredentials = getArguments().getParcelable("creds");
+        }
+        if (mCredentials == null) {
+            throw new NullPointerException("You forgot to supply credentials to the session");
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.manage_devices);
+        String title = getArguments().getString("title");
+        if (title != null) {
+            getActivity().setTitle(title);
+        }
     }
-
 }

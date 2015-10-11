@@ -31,6 +31,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,7 @@ import syncthing.android.model.Credentials;
 import syncthing.android.service.ServiceSettings;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.ManageActivity;
+import syncthing.android.ui.login.LoginFragment;
 import syncthing.android.ui.login.LoginUtils;
 import syncthing.api.Session;
 import syncthing.api.SessionManager;
@@ -60,7 +62,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
     final Context context;
     final AppSettings appSettings;
     final ActivityResultsController activityResultsController;
-    final FragmentManager fragmentManager;
+    final FragmentManagerOwner fragmentManager;
     final SessionManager manager;
 
     int page;
@@ -87,7 +89,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
             @ForApplication Context context,
             AppSettings appSettings,
             ActivityResultsController activityResultsController,
-            FragmentManager fragmentManager,
+            FragmentManagerOwner fragmentManager,
             SessionManager manager
     ) {
         this.context = context;
@@ -282,13 +284,12 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
 
     void exitSuccess() {
         Intent intent = new Intent()
-                .putExtra(ManageActivity.EXTRA_CREDENTIALS, (Parcelable) newCredentials)
-                .putExtra(ManageActivity.EXTRA_FROM, ManageActivity.ACTION_WELCOME);
+                .putExtra(ManageActivity.EXTRA_CREDENTIALS, (Parcelable) newCredentials);
         activityResultsController.setResultAndFinish(Activity.RESULT_OK, intent);
     }
 
     void exitCanceled() {
-        Intent intent = new Intent().putExtra(ManageActivity.EXTRA_FROM, ManageActivity.ACTION_WELCOME);
-        activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, intent);
+        fragmentManager.killBackStack();
+        fragmentManager.replaceMainContent(LoginFragment.newInstance(), false);
     }
 }

@@ -56,7 +56,7 @@ public class Credentials implements Parcelable {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Credentials implements Parcelable {
 
         @Override
         public Credentials[] newArray(int size) {
-            return new Credentials[0];
+            return new Credentials[size];
         }
     };
 }

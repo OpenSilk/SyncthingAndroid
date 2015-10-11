@@ -18,6 +18,7 @@
 package syncthing.android.ui.login;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.opensilk.common.ui.mortar.Screen;
@@ -31,11 +32,16 @@ import syncthing.android.ui.ManageActivity;
  * Created by drew on 3/10/15.
  */
 public class LoginFragment extends MortarFragment {
+    public static final String NAME = LoginFragment.class.getName();
 
-    public static LoginFragment newInstance(Credentials credentials) {
+    public static LoginFragment newInstance() {
+        return newInstance(Credentials.NONE);
+    }
+
+    public static LoginFragment newInstance(@NonNull Credentials credentials) {
         LoginFragment f = new LoginFragment();
         Bundle b = new Bundle();
-        b.putParcelable(ManageActivity.EXTRA_CREDENTIALS, credentials);
+        b.putParcelable("creds", credentials);
         f.setArguments(b);
         return f;
     }
@@ -55,8 +61,10 @@ public class LoginFragment extends MortarFragment {
     }
 
     void ensureCredentials() {
-        getArguments().setClassLoader(getClass().getClassLoader());
-        mCredentials = getArguments().getParcelable(ManageActivity.EXTRA_CREDENTIALS);
+        if (getArguments() != null) {
+            getArguments().setClassLoader(getClass().getClassLoader());
+            mCredentials = getArguments().getParcelable("creds");
+        }
         if (mCredentials == null) {
             mCredentials = Credentials.NONE;
         }

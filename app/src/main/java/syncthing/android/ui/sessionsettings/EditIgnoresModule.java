@@ -18,14 +18,25 @@
 package syncthing.android.ui.sessionsettings;
 
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * Created by drew on 3/23/15.
  */
 @Module
-public class EditIgnoresModule extends EditModule {
+public class EditIgnoresModule {
+
+    final EditIgnoresScreen screen;
 
     public EditIgnoresModule(EditIgnoresScreen screen) {
-        super(screen.folderId, INVALID_ID, false);
+        this.screen = screen;
+    }
+
+    @Provides
+    public EditPresenterConfig provideConfig() {
+        return EditPresenterConfig.builder()
+                .setFolderId(screen.folderId)
+                .setCredentials(screen.credentials)
+                .build();
     }
 }

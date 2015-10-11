@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.DialogFragment;
 
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
@@ -44,7 +43,10 @@ import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.common.ExpandableCard;
 import syncthing.android.ui.ManageActivity;
-import syncthing.android.ui.sessionsettings.EditFragment;
+import syncthing.android.ui.sessionsettings.EditDeviceFragment;
+import syncthing.android.ui.sessionsettings.EditFolderFragment;
+import syncthing.android.ui.sessionsettings.EditIgnoresFragment;
+import syncthing.android.ui.sessionsettings.SettingsFragment;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
@@ -52,7 +54,6 @@ import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import syncthing.api.model.event.DeviceRejected;
-import syncthing.api.model.event.Event;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.GuiError;
 import syncthing.api.model.Model;
@@ -71,7 +72,6 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     final FragmentManagerOwner fragmentManagerOwner;
     final IdenticonGenerator identiconGenerator;
     final ActivityResultsController activityResultsController;
-    final SessionFragmentPresenter fragmentPresenter;
     final Session session;
     final SessionManager manager;
 
@@ -86,15 +86,13 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
             SessionManager manager,
             FragmentManagerOwner fragmentManagerOwner,
             IdenticonGenerator identiconGenerator,
-            ActivityResultsController activityResultsController,
-            SessionFragmentPresenter fragmentPresenter
+            ActivityResultsController activityResultsController
     ) {
         this.appContext = appContext;
         this.credentials = credentials;
         this.fragmentManagerOwner = fragmentManagerOwner;
         this.identiconGenerator = identiconGenerator;
         this.activityResultsController = activityResultsController;
-        this.fragmentPresenter = fragmentPresenter;
         this.session = manager.acquire(credentials);
         this.manager = manager;
         this.controller = session.controller();
@@ -408,35 +406,46 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
     }
 
     void openAddDeviceScreen() {
-        doOpenScreen(EditFragment.newDeviceInstance(), "deviceadd");
+        openEditDeviceScreen(null);
     }
 
     void openEditDeviceScreen(String deviceId) {
-        doOpenScreen(EditFragment.newDeviceInstance(deviceId), "deviceedit" + deviceId);
+        openIntent(getEditIntent(EditDeviceFragment.NAME,
+                EditDeviceFragment.makeArgs(credentials, deviceId)));
     }
 
     void openAddFolderScreen() {
-        doOpenScreen(EditFragment.newFolderInstance(), "folderedit");
+        openEditFolderScreen(null, null);
     }
 
     void openEditFolderScreen(String folderId) {
-        doOpenScreen(EditFragment.newFolderInstance(folderId), "folderedit" + folderId);
+        openEditFolderScreen(folderId, null);
     }
 
     void openEditFolderScreen(String folderId, String deviceId) {
-        doOpenScreen(EditFragment.newFolderInstance(folderId, deviceId), "folderedit"+folderId);
+        openIntent(getEditIntent(EditFolderFragment.NAME,
+                EditFolderFragment.makeArgs(credentials, folderId, deviceId)));
     }
 
     public void openEditIgnoresScreen(String folderId) {
-        doOpenScreen(EditFragment.newFolderIgnoresInstance(folderId), "folderignores"+folderId);
+        openIntent(getEditIntent(EditIgnoresFragment.NAME,
+                EditIgnoresFragment.makeArgs(credentials, folderId)));
     }
 
     void openSettingsScreen() {
-        doOpenScreen(EditFragment.newSettingsInstance(), "settings");
+        openIntent(getEditIntent(SettingsFragment.NAME,
+                SettingsFragment.makeArgs(credentials)));
     }
 
-    void doOpenScreen(DialogFragment fragment, String tag) {
-        fragmentPresenter.openDialogFragment(fragment, tag);
+    private Intent getEditIntent(String name, Bundle args) {
+        Intent i = new Intent(appContext, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, name)
+                .putExtra(ManageActivity.EXTRA_ARGS, args);
+        return i;
+    }
+
+    private void openIntent(Intent i) {
+        activityResultsController.startActivityForResult(i, 2, null);
     }
 
 

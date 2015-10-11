@@ -25,8 +25,6 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 
 import javax.inject.Inject;
 
-import syncthing.android.ui.session.SessionPresenter;
-import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.GUIConfig;
@@ -45,9 +43,9 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
     @Inject
     public SettingsPresenter(
             SessionManager manager,
-            EditFragmentPresenter editFragmentPresenter
+            EditPresenterConfig config
     ) {
-        super(manager, editFragmentPresenter, EditPresenterConfig.NONE);
+        super(manager, config);
     }
 
     @Override

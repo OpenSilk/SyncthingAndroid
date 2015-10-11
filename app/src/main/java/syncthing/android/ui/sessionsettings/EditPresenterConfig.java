@@ -17,12 +17,61 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import org.opensilk.common.core.util.Preconditions;
+
+import syncthing.android.model.Credentials;
+
 /**
  * Created by drew on 10/10/15.
  */
 public class EditPresenterConfig {
-    public static final EditPresenterConfig NONE = new EditPresenterConfig();
-    String folderId;
-    String deviceId;
-    boolean isAdd;
+    public static final String INVALID_ID = "@@@INVALID@@@";
+    public final String folderId;
+    public final String deviceId;
+    public final boolean isAdd;
+    public final Credentials credentials;
+
+    private EditPresenterConfig(Builder builder) {
+        this.folderId = builder.folderId;
+        this.deviceId = builder.deviceId;
+        this.isAdd = builder.isAdd;
+        this.credentials = Preconditions.checkNotNull(builder.credentials, "Must set credentials");
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String folderId;
+        private String deviceId;
+        private boolean isAdd = false;
+        private Credentials credentials;
+
+        public Builder setFolderId(String folderId) {
+            this.folderId = folderId;
+            return this;
+        }
+
+        public Builder setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
+            return this;
+        }
+
+        public Builder setIsAdd(boolean isAdd) {
+            this.isAdd = isAdd;
+            return this;
+        }
+
+        public Builder setCredentials(Credentials credentials) {
+            this.credentials = credentials;
+            return this;
+        }
+
+        public EditPresenterConfig build() {
+            if (folderId == null) folderId = INVALID_ID;
+            if (deviceId == null) deviceId = INVALID_ID;
+            return new EditPresenterConfig(this);
+        }
+    }
 }
