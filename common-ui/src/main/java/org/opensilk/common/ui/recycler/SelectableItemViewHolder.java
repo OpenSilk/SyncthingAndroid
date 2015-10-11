@@ -15,20 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.opensilk.common.ui.mortar;
+package org.opensilk.common.ui.recycler;
 
-import org.opensilk.common.core.dagger2.ActivityScope;
-
-import dagger.Module;
-import dagger.Provides;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 /**
- * Created by drew on 10/15/14.
+ * Created by drew on 10/1/15.
  */
-@Module
-public class PauseAndResumeModule {
-    @Provides @ActivityScope
-    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
-    @Provides @ActivityScope
-    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
+public interface SelectableItemViewHolder {
+    /**
+     * Called when the {@link ItemTouchHelper} first registers an item as being moved or swiped.
+     * Implementations should update the item view to indicate it's active state.
+     */
+    void onItemSelected();
+
+
+    /**
+     * Called when the {@link ItemTouchHelper} has completed the move or swipe, and the active item
+     * state should be cleared.
+     */
+    void onItemClear();
 }

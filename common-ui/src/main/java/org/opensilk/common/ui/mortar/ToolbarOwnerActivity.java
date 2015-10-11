@@ -17,18 +17,19 @@
 
 package org.opensilk.common.ui.mortar;
 
-import org.opensilk.common.core.dagger2.ActivityScope;
+import android.support.v7.widget.Toolbar;
 
-import dagger.Module;
-import dagger.Provides;
+import org.opensilk.common.core.mortar.HasScope;
 
 /**
- * Created by drew on 10/15/14.
+ * Created by drew on 4/30/15.
  */
-@Module
-public class PauseAndResumeModule {
-    @Provides @ActivityScope
-    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
-    @Provides @ActivityScope
-    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
+public interface ToolbarOwnerActivity extends HasScope {
+    void setSupportActionBar(Toolbar toolbar);
+
+    void setToolbarMenu(ActionBarMenuHandler menuConfig);
+
+    void onToolbarAttached(Toolbar toolbar);
+
+    void onToolbarDetached(Toolbar toolbar);
 }

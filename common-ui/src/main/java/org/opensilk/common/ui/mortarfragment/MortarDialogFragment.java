@@ -90,7 +90,7 @@ public abstract class MortarDialogFragment extends DialogFragment {
         if (DEBUG_LIFECYCLE) Timber.v("<-onDestroy %s", getScopeName());
     }
 
-    protected MortarScope findOrMakeScope() {
+    private MortarScope findOrMakeScope() {
         MortarScope scope = MortarScope.findChild(getActivity(), getScopeName());
         if (scope != null) {
             Timber.d("Reusing fragment scope %s", getScopeName());

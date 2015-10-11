@@ -15,25 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.opensilk.common.ui.mortar;
+package org.opensilk.common.ui.mortarfragment;
 
-import org.opensilk.common.core.mortar.HasScope;
+import org.opensilk.common.core.dagger2.ScreenScope;
+import org.opensilk.common.ui.mortar.PauseAndResumePresenter;
+import org.opensilk.common.ui.mortar.PauseAndResumeRegistrar;
+
+import javax.inject.Named;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Created by drew on 4/30/15.
+ * Created by drew on 9/28/15.
  */
-public interface ActionBarOwnerActivity extends HasScope {
-    void setUpButtonEnabled(boolean enabled);
-
-    void setTitle(int titleRes);
-
-    void setTitle(CharSequence title);
-
-    void setSubtitle(int subTitleRes);
-
-    void setSubtitle(CharSequence title);
-
-    void setMenu(ActionBarMenuConfig menuConfig);
-
-    void setTransparentActionbar(boolean yes);
+@Module
+public class PauseAndResumeFragmentModule {
+    @Provides @ScreenScope @Named("fragment")
+    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
+    @Provides @ScreenScope @Named("fragment")
+    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
 }

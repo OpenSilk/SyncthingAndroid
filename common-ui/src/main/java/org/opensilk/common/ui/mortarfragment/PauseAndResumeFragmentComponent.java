@@ -15,20 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.opensilk.common.ui.mortar;
+package org.opensilk.common.ui.mortarfragment;
 
-import org.opensilk.common.core.dagger2.ActivityScope;
+import org.opensilk.common.ui.mortar.PauseAndResumePresenter;
+import org.opensilk.common.ui.mortar.PauseAndResumeRegistrar;
 
-import dagger.Module;
-import dagger.Provides;
+import javax.inject.Named;
 
 /**
- * Created by drew on 10/15/14.
+ * Created by drew on 9/28/15.
  */
-@Module
-public class PauseAndResumeModule {
-    @Provides @ActivityScope
-    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
-    @Provides @ActivityScope
-    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
+public interface PauseAndResumeFragmentComponent {
+    @Named("fragment") PauseAndResumePresenter pauseAndResumePresenter();
+    @Named("fragment") PauseAndResumeRegistrar pauseAndResumeRegistrar();
 }

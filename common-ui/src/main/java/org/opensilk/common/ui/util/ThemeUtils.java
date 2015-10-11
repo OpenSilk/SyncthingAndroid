@@ -28,6 +28,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.widget.ProgressBar;
@@ -106,7 +107,7 @@ public class ThemeUtils {
                         && sTypedValue.type <= TypedValue.TYPE_LAST_INT) {
                     return sTypedValue.data;
                 } else if (sTypedValue.type == TypedValue.TYPE_STRING) {
-                    return context.getResources().getColor(sTypedValue.resourceId);
+                    return ContextCompat.getColor(context, sTypedValue.resourceId);
                 }
             }
         }
@@ -182,19 +183,24 @@ public class ThemeUtils {
     }
 
     public static void themeSeekBar(SeekBar seekBar, int colorAttr) {
-        if (VersionUtils.hasLollipop()) return;
         themeSeekBar2(seekBar, getThemeAttrColor(seekBar.getContext(), colorAttr));
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void themeSeekBar2(SeekBar seekBar, int color) {
-        if (VersionUtils.hasLollipop()) return; //TODO
-        seekBar.getProgressDrawable().mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        if (VersionUtils.hasJellyBean()) {
-            seekBar.getThumb().mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        } else if (seekBar instanceof CompatSeekBar) {
-            Drawable thumb = ((CompatSeekBar) seekBar).getThumb();
-            if (thumb != null) thumb.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        if (VersionUtils.hasLollipop()) {
+            seekBar.getProgressDrawable().setTint(color);
+            seekBar.getThumb().setTint(color);
+        } else {
+            seekBar.getProgressDrawable().mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            if (VersionUtils.hasJellyBean()) {
+                seekBar.getThumb().mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            } else if (seekBar instanceof CompatSeekBar) {
+                Drawable thumb = ((CompatSeekBar) seekBar).getThumb();
+                if (thumb != null) {
+                    thumb.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                }
+            }
         }
     }
 

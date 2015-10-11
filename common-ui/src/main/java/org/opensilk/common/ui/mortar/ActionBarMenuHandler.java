@@ -17,18 +17,30 @@
 
 package org.opensilk.common.ui.mortar;
 
-import org.opensilk.common.core.dagger2.ActivityScope;
-
-import dagger.Module;
-import dagger.Provides;
+import android.content.Context;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
- * Created by drew on 10/15/14.
+ * Created by drew on 9/7/15.
  */
-@Module
-public class PauseAndResumeModule {
-    @Provides @ActivityScope
-    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
-    @Provides @ActivityScope
-    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
+public interface ActionBarMenuHandler {
+    /**
+     * Add items to menu
+     *
+     * @param menuInflater
+     * @param menu
+     * @return true if items added
+     */
+    boolean onBuildMenu(MenuInflater menuInflater, Menu menu);
+
+    /**
+     * Handle menu item clicks
+     *
+     * @param context
+     * @param menuItem
+     * @return true if click was handled
+     */
+    boolean onMenuItemClicked(Context context, MenuItem menuItem);
 }

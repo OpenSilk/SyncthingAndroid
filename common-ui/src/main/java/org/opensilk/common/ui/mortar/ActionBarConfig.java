@@ -21,12 +21,14 @@ package org.opensilk.common.ui.mortar;
  * Created by drew on 5/5/15.
  */
 public class ActionBarConfig {
+    @Deprecated
     public final boolean upButtonEnabled;
     public final int titleRes;
     public final CharSequence title;
     public final int subtitleRes;
     public final CharSequence subtitle;
-    public final ActionBarMenuConfig menuConfig;
+    public final ActionBarMenuHandler menuConfig;
+    @Deprecated
     public final boolean transparentBackground;
 
     private ActionBarConfig(
@@ -35,7 +37,7 @@ public class ActionBarConfig {
             CharSequence title,
             int subtitleRes,
             CharSequence subtitle,
-            ActionBarMenuConfig menuConfig,
+            ActionBarMenuHandler menuConfig,
             boolean transparentBackground
     ) {
         this.upButtonEnabled = upButtonEnabled;
@@ -61,7 +63,7 @@ public class ActionBarConfig {
         private CharSequence title = null;
         private int subtitleRes = -1;
         private CharSequence subtitle = null;
-        private ActionBarMenuConfig menuConfig = null;
+        private ActionBarMenuHandler menuConfig = null;
         private boolean trasparentBackground = false;
 
         private Builder() {
@@ -77,6 +79,7 @@ public class ActionBarConfig {
             trasparentBackground = config.transparentBackground;
         }
 
+        @Deprecated
         public Builder setUpButtonEnabled(boolean enabled) {
             setUpButtonEnabled = enabled;
             return this;
@@ -102,11 +105,20 @@ public class ActionBarConfig {
             return this;
         }
 
-        public Builder setMenuConfig(ActionBarMenuConfig menuConfig) {
+        public Builder clearTitle() {
+            title = null;
+            titleRes = -1;
+            subtitle = null;
+            subtitleRes = -1;
+            return this;
+        }
+
+        public Builder setMenuConfig(ActionBarMenuHandler menuConfig) {
             this.menuConfig = menuConfig;
             return this;
         }
 
+        @Deprecated
         public Builder setTransparentBackground(boolean yes) {
             this.trasparentBackground = yes;
             return this;

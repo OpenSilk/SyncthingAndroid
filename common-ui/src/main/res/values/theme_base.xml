@@ -30,13 +30,14 @@
     </style>
 
     <!-- Secondary middleware override this in the values-* dirs to change values for different configs-->
-    <style name="Theme.LightConfig" parent="Theme.LightParent">
+    <style name="Theme.LightConfig" parent="Theme.LightOverlay">
 
     </style>
 
     <!-- Base theme all variations descend from -->
     <style name="Theme.LightBase" parent="Theme.LightConfig">
         <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
+        <item name="appBarTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <!-- Default theme -->
@@ -59,6 +60,7 @@
 
     <style name="Theme.DarkBase" parent="Theme.DarkConfig">
         <item name="toolbarStyle">@style/Toolbar.Dark</item>
+        <item name="appBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
     <style name="Theme.Dark" parent="Theme.DarkBase">
@@ -69,21 +71,21 @@
 
     <!-- Base themes for dialog activities -->
 
-    <style name="Theme.Dialog.LightBase" parent="Theme.AppCompat.Light.DialogWhenLarge">
+    <style name="Theme.Dialog.LightBase" parent="Theme.AppCompat.Light.NoActionBar">
         <!--NoActionBar-->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
         <!--DarkActionBar-->
         <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
         <!--Light dark actionbar-->
-        <item name="colorPrimary">@color/primary_material_dark</item>
-        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+        <item name="colorPrimary">@color/grey_900</item>
+        <item name="colorPrimaryDark">@color/black</item>
     </style>
 
-    <style name="Theme.Dialog.DarkBase" parent="Theme.AppCompat.DialogWhenLarge">
+    <style name="Theme.Dialog.DarkBase" parent="Theme.AppCompat.Light.NoActionBar">
         <!--NoActionBar-->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
         <!--DarkActionBar-->
         <item name="toolbarStyle">@style/Toolbar.Dark</item>
     </style>
@@ -94,7 +96,7 @@
 
     <style name="Toolbar.Light" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?colorPrimary</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
@@ -105,7 +107,7 @@
 
     <style name="Toolbar.Dark" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?colorPrimary</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
     <style name="Toolbar.Dark.Transparent">

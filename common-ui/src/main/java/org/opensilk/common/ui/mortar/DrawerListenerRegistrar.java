@@ -17,18 +17,15 @@
 
 package org.opensilk.common.ui.mortar;
 
-import org.opensilk.common.core.dagger2.ActivityScope;
+import android.support.v4.widget.DrawerLayout;
 
-import dagger.Module;
-import dagger.Provides;
+import mortar.MortarScope;
 
 /**
- * Created by drew on 10/15/14.
+ * Allows presenters to register for drawer events
+ *
+ * Created by drew on 9/19/15.
  */
-@Module
-public class PauseAndResumeModule {
-    @Provides @ActivityScope
-    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
-    @Provides @ActivityScope
-    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
+public interface DrawerListenerRegistrar {
+    void register(MortarScope scope, DrawerLayout.DrawerListener listener);
 }

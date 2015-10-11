@@ -21,5 +21,5 @@ package org.opensilk.common.ui.mortar;
  * Created by drew on 5/5/15.
  */
 public interface HasOptionsMenu {
-    ActionBarMenuConfig getMenuConfig();
+    ActionBarMenuHandler getMenuConfig();
 }

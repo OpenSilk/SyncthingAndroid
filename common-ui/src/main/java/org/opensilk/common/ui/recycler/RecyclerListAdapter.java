@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -59,6 +60,14 @@ public abstract class RecyclerListAdapter<T, VH extends RecyclerView.ViewHolder>
         int start = items.size();
         if (items.addAll(collection)) {
             notifyItemRangeInserted(start, collection.size());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addAll(int pos, Collection<? extends T> collection) {
+        if (items.addAll(pos, collection)) {
+            notifyItemRangeInserted(pos, collection.size());
             return true;
         }
         return false;
@@ -105,6 +114,20 @@ public abstract class RecyclerListAdapter<T, VH extends RecyclerView.ViewHolder>
 
     public int indexOf(T item) {
         return items.indexOf(item);
+    }
+
+    public boolean swap(int pos1, int pos2) {
+        try {
+            Collections.swap(items, pos1, pos2);
+            notifyItemMoved(pos1, pos2);
+            return true;
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    public boolean swap(T item1, T item2) {
+        return swap(indexOf(item1), indexOf(item2));
     }
 
     public void clear() {

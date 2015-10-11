@@ -17,18 +17,14 @@
 
 package org.opensilk.common.ui.mortar;
 
-import org.opensilk.common.core.dagger2.ActivityScope;
+import android.support.v7.view.ActionMode;
 
-import dagger.Module;
-import dagger.Provides;
+import org.opensilk.common.core.mortar.HasScope;
 
 /**
- * Created by drew on 10/15/14.
+ * Created by drew on 10/1/15.
  */
-@Module
-public class PauseAndResumeModule {
-    @Provides @ActivityScope
-    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
-    @Provides @ActivityScope
-    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
+public interface ActionModeActivity extends HasScope {
+    ActionMode startSupportActionMode(ActionMode.Callback callback);
+    void cancelActionMode();
 }
