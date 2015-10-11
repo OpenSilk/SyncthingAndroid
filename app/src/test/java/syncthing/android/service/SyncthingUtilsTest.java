@@ -67,11 +67,6 @@ public class SyncthingUtilsTest {
         assertEquals("one,two,three", unrollArray(new String[] {"one", "two", "three"}));
     }
 
-    @Test
-    public void testRandomString() {
-        assertEquals(23, randomString(23).length());
-    }
-
 
     @Test
     public void testisNowBetweenRange() {

@@ -32,7 +32,7 @@ import syncthing.api.model.ConfigStats;
 import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceId;
 import syncthing.api.model.DeviceStatsMap;
-import syncthing.api.model.Event;
+import syncthing.api.model.event.Event;
 import syncthing.api.model.FolderStatsMap;
 import syncthing.api.model.GuiErrors;
 import syncthing.api.model.Ignores;

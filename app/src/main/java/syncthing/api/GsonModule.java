@@ -37,6 +37,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import syncthing.api.model.event.Event;
+import syncthing.api.model.event.EventDeserializer;
 
 /**
  * Created by drew on 3/8/15.
@@ -49,6 +51,7 @@ public class GsonModule {
         return new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
+                .registerTypeAdapter(Event.class, new EventDeserializer())
                 .create();
     }
 

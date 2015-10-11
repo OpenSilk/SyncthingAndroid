@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.api.model;
+package syncthing.api.model.event;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -40,5 +40,6 @@ public enum EventType {
     @SerializedName("DownloadProgress") DOWNLOAD_PROGRESS,
     @SerializedName("FolderSummary") FOLDER_SUMMARY,
     @SerializedName("FolderCompletion") FOLDER_COMPLETION,
-    @SerializedName("Unknown") UNKNOWN,
+    @SerializedName("FolderErrors") FOLDER_ERRORS,
+    UNKNOWN,
 }

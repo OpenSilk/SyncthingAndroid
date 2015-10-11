@@ -15,16 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.api.model;
+package syncthing.api.model.event;
 
 import org.joda.time.DateTime;
 
 /**
- * Created by drew on 3/2/15.
+ * Created by drew on 10/11/15.
  */
-public class Event {
-    public long id;
-    public DateTime time;
-    public EventType type;
-    public EventData data;
+public class FolderCompletion extends Event<FolderCompletion.Data> {
+    public FolderCompletion(long id, DateTime time, EventType type, Data data) {
+        super(id, time, type, data);
+    }
+
+    public static class Data {
+        public int completion;
+        public String device;
+        public String folder;
+    }
 }

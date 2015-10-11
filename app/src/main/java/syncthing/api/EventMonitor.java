@@ -32,8 +32,7 @@ import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.android.schedulers.HandlerScheduler;
-import rx.schedulers.Schedulers;
-import syncthing.api.model.Event;
+import syncthing.api.model.event.Event;
 import timber.log.Timber;
 
 /**

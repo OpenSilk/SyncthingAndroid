@@ -1,0 +1,64 @@
+[
+  {
+    "id" : 187,
+    "data" : null,
+    "type" : "Ping",
+    "time" : "2015-10-10T13:08:23.057151836-05:00"
+  },
+  {
+    "id" : 188,
+    "time" : "2015-10-10T13:09:08.966492458-05:00",
+    "type" : "DeviceDisconnected",
+    "data" : {
+      "error" : "read tcp 10.10.1.195:54913->10.10.1.136:22000: read: connection reset by peer",
+      "id" : "7SEHD6N-PQOCUJH-P73H6D3-7KOHTV3-V4Z38SQ-RYEAVMV-PYU6BW5-XHEB6QP"
+    }
+  },
+  {
+    "id" : 189,
+    "type" : "StateChanged",
+    "data" : {
+      "duration" : 3570.122889837,
+      "folder" : "motoe4g-screens",
+      "from" : "idle",
+      "to" : "syncing"
+    },
+    "time" : "2015-10-10T13:09:16.357916163-05:00"
+  },
+  {
+    "data" : {
+      "to" : "idle",
+      "folder" : "motoe4g-screens",
+      "duration" : 0.003821964,
+      "from" : "syncing"
+    },
+    "type" : "StateChanged",
+    "time" : "2015-10-10T13:09:16.36173862-05:00",
+    "id" : 190
+  },
+  {
+    "time" : "2015-10-10T13:09:16.369699876-05:00",
+    "data" : {
+      "summary" : {
+        "globalDeleted" : 0,
+        "ignorePatterns" : false,
+        "stateChanged" : "2015-10-10T13:09:16.361738217-05:00",
+        "globalFiles" : 12,
+        "state" : "idle",
+        "localFiles" : 12,
+        "globalBytes" : 927210,
+        "localDeleted" : 0,
+        "version" : 4726,
+        "inSyncBytes" : 927210,
+        "inSyncFiles" : 12,
+        "needBytes" : 0,
+        "localBytes" : 927210,
+        "needFiles" : 0,
+        "invalid" : ""
+      },
+      "folder" : "motoe4g-screens"
+    },
+    "type" : "FolderSummary",
+    "id" : 191
+  }
+]

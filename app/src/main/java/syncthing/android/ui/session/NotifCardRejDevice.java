@@ -18,14 +18,15 @@
 package syncthing.android.ui.session;
 
 import syncthing.android.R;
-import syncthing.api.model.Event;
+import syncthing.api.model.event.DeviceRejected;
+import syncthing.api.model.event.Event;
 
 /**
  * Created by drew on 3/6/15.
  */
-public class NotifCardRejDevice extends NotifCardRej {
+public class NotifCardRejDevice extends NotifCardRej<DeviceRejected> {
 
-    public NotifCardRejDevice(String id, Event event) {
+    public NotifCardRejDevice(String id, DeviceRejected event) {
         super(id, event);
     }
 

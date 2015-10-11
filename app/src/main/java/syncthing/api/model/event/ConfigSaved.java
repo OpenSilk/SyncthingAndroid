@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2015 OpenSilk Productions LLC
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package syncthing.api.model.event;
+
+import com.google.gson.annotations.SerializedName;
+
+import org.joda.time.DateTime;
+
+import java.util.Collections;
+import java.util.List;
+
+import syncthing.api.model.DeviceConfig;
+import syncthing.api.model.FolderConfig;
+import syncthing.api.model.GUIConfig;
+import syncthing.api.model.OptionsConfig;
+
+/**
+ * Created by drew on 10/11/15.
+ */
+public class ConfigSaved extends Event<ConfigSaved.Data> {
+
+    public ConfigSaved(long id, DateTime time, EventType type, Data data) {
+        super(id, time, type, data);
+    }
+
+    public static class Data {
+        @SerializedName("Version")
+        public int version;
+        @SerializedName("Folders")
+        public List<FolderConfig> folders = Collections.emptyList();
+        @SerializedName("Devices")
+        public List<DeviceConfig> devices = Collections.emptyList();
+        @SerializedName("GUI")
+        public GUIConfig gui;
+        @SerializedName("Options")
+        public OptionsConfig options;
+    }
+}

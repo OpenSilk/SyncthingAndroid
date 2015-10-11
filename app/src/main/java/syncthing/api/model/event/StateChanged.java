@@ -15,24 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.session;
+package syncthing.api.model.event;
 
-import syncthing.android.R;
-import syncthing.api.model.event.Event;
-import syncthing.api.model.event.FolderRejected;
+import org.joda.time.DateTime;
+
+import syncthing.api.model.ModelState;
 
 /**
- * Created by drew on 3/6/15.
+ * Created by drew on 10/11/15.
  */
-public class NotifCardRejFolder extends NotifCardRej<FolderRejected> {
-
-    public NotifCardRejFolder(String id, FolderRejected event) {
-        super(id, event);
+public class StateChanged extends Event<StateChanged.Data> {
+    public StateChanged(long id, DateTime time, EventType type, Data data) {
+        super(id, time, type, data);
     }
 
-    @Override
-    public int getLayout() {
-        return R.layout.session_notif_folder_rej;
+    public static class Data {
+        public String folder;
+        public ModelState from;
+        public ModelState to;
+        public double duration;
     }
-
 }

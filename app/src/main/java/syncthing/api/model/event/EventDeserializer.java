@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2015 OpenSilk Productions LLC
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package syncthing.api.model.event;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
+import org.joda.time.DateTime;
+
+import java.lang.reflect.Type;
+
+/**
+ * Created by drew on 10/11/15.
+ */
+public class EventDeserializer implements JsonDeserializer<Event> {
+    @Override
+    public Event deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        if (!json.isJsonObject()) {
+            throw new JsonParseException("Element was not an object");
+        }
+        JsonObject obj = json.getAsJsonObject();
+        long id = context.deserialize(obj.get("id"), long.class);
+        EventType type = context.deserialize(obj.get("type"), EventType.class);
+        DateTime time = context.deserialize(obj.get("time"), DateTime.class);
+        JsonElement data = obj.get("data");
+        if (type == null) {
+            type = EventType.UNKNOWN;
+        }
+        switch (type) {
+            case CONFIG_SAVED: {
+                return new ConfigSaved(id, time, type, context.deserialize(data, ConfigSaved.Data.class));
+            }
+            case DEVICE_CONNECTED: {
+                return new DeviceConnected(id, time, type, context.deserialize(data, DeviceConnected.Data.class));
+            }
+            case DEVICE_DISCONNECTED: {
+                return new DeviceDisconnected(id, time, type, context.deserialize(data, DeviceDisconnected.Data.class));
+            }
+            case DEVICE_DISCOVERED: {
+                return new DeviceDiscovered(id, time, type, context.deserialize(data, DeviceDiscovered.Data.class));
+            }
+            case DEVICE_REJECTED: {
+                return new DeviceRejected(id, time, type, context.deserialize(data, DeviceRejected.Data.class));
+            }
+            case DOWNLOAD_PROGRESS: {
+                return new DownloadProgress(id, time, type, new DownloadProgress.Data());//TODO
+            }
+            case FOLDER_COMPLETION: {
+                return new FolderCompletion(id, time, type, context.deserialize(data, FolderCompletion.Data.class));
+            }
+            case FOLDER_ERRORS: {
+                return new FolderErrors(id, time, type, context.deserialize(data, FolderErrors.Data.class));
+            }
+            case FOLDER_REJECTED: {
+                return new FolderRejected(id, time, type, context.deserialize(data, FolderRejected.Data.class));
+            }
+            case FOLDER_SUMMARY: {
+                return new FolderSummary(id, time, type, context.deserialize(data, FolderSummary.Data.class));
+            }
+            case ITEM_FINISHED: {
+                return new ItemFinished(id, time, type, context.deserialize(data, ItemFinished.Data.class));
+            }
+            case ITEM_STARTED: {
+                return new ItemStarted(id, time, type, context.deserialize(data, ItemStarted.Data.class));
+            }
+            case LOCAL_INDEX_UPDATED: {
+                return new LocalIndexUpdated(id, time, type, context.deserialize(data, LocalIndexUpdated.Data.class));
+            }
+            case PING: {
+                return new Ping(id, time, type);
+            }
+            case REMOTE_INDEX_UPDATED: {
+                return new RemoteIndexUpdated(id, time, type, context.deserialize(data, RemoteIndexUpdated.Data.class));
+            }
+            case STARTING: {
+                return new Starting(id, time, type, context.deserialize(data, Starting.Data.class));
+            }
+            case STARTUP_COMPLETE: {
+                return new StartupComplete(id, time, type);
+            }
+            case STATE_CHANGED: {
+                return new StateChanged(id, time, type, context.deserialize(data, StateChanged.Data.class));
+            }
+            default: {
+                return new UnknownEvent(id, time, obj.getAsString());
+            }
+        }
+    }
+}

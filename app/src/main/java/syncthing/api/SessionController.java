@@ -57,7 +57,8 @@ import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import syncthing.api.model.DeviceStatsMap;
-import syncthing.api.model.Event;
+import syncthing.api.model.event.DeviceRejected;
+import syncthing.api.model.event.Event;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.FolderStats;
@@ -71,6 +72,10 @@ import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
+import syncthing.api.model.event.FolderCompletion;
+import syncthing.api.model.event.FolderRejected;
+import syncthing.api.model.event.FolderSummary;
+import syncthing.api.model.event.StateChanged;
 import timber.log.Timber;
 
 /**
@@ -127,8 +132,8 @@ public class SessionController implements EventMonitor.EventListener {
     Map<String, FolderConfig> folders = new LinkedHashMap<>(10);
     List<DeviceConfig> devices = Collections.emptyList();
     Map<String, Map<String, Integer>> completion = new LinkedHashMap<>(10);
-    Map<String, Event> deviceRejections = new LinkedHashMap<>();
-    Map<String, Event> folderRejections = new LinkedHashMap<>();
+    Map<String, DeviceRejected> deviceRejections = new LinkedHashMap<>();
+    Map<String, FolderRejected> folderRejections = new LinkedHashMap<>();
     GuiErrors errorsList;
 
     long prevDate;
@@ -208,11 +213,12 @@ public class SessionController implements EventMonitor.EventListener {
             case STARTUP_COMPLETE: {
                 break;
             } case STATE_CHANGED: {
-                if (models.containsKey(e.data.folder)) {
-                    models.get(e.data.folder).state = e.data.to;
-                    postChange(Change.MODEL_STATE, e.data.folder);
+                StateChanged st = (StateChanged) e;
+                if (models.containsKey(st.data.folder)) {
+                    models.get(st.data.folder).state = st.data.to;
+                    postChange(Change.MODEL_STATE, st.data.folder);
                 } else {
-                    refreshFolder(e.data.folder);
+                    refreshFolder(st.data.folder);
                 }
                 break;
             } case LOCAL_INDEX_UPDATED: {
@@ -230,11 +236,13 @@ public class SessionController implements EventMonitor.EventListener {
                 refreshDeviceStats();
                 break;
             } case DEVICE_REJECTED: {
-                deviceRejections.put(e.data.device, e);
+                DeviceRejected dr = (DeviceRejected) e;
+                deviceRejections.put(dr.data.device, dr);
                 postChange(Change.DEVICE_REJECTED);
                 break;
             } case FOLDER_REJECTED: {
-                folderRejections.put(e.data.folder + "-" + e.data.device, e);
+                FolderRejected fr = (FolderRejected) e;
+                folderRejections.put(fr.data.folder + "-" + fr.data.device, fr);
                 postChange(Change.FOLDER_REJECTED);
                 break;
             } case CONFIG_SAVED: {
@@ -244,11 +252,13 @@ public class SessionController implements EventMonitor.EventListener {
                 //TODO
                 break;
             } case FOLDER_SUMMARY: {
-                updateModel(e.data.folder, e.data.summary);
-                postChange(Change.MODEL, e.data.folder);
+                FolderSummary fs = (FolderSummary) e;
+                updateModel(fs.data.folder, fs.data.summary);
+                postChange(Change.MODEL, fs.data.folder);
                 break;
             } case FOLDER_COMPLETION: {
-                updateCompletion(e.data.device, e.data.folder, new Completion(e.data.completion));
+                FolderCompletion fc = (FolderCompletion)e;
+                updateCompletion(fc.data.device, fc.data.folder, new Completion(fc.data.completion));
                 postChange(Change.COMPLETION);
                 break;
             } case PING: {
@@ -718,7 +728,7 @@ public class SessionController implements EventMonitor.EventListener {
         return completion.get(deviceId);
     }
 
-    public Set<Map.Entry<String, Event>> getDeviceRejections() {
+    public Set<Map.Entry<String, DeviceRejected>> getDeviceRejections() {
         return deviceRejections.entrySet();
     }
 
@@ -727,7 +737,7 @@ public class SessionController implements EventMonitor.EventListener {
         postChange(Change.DEVICE_REJECTED);
     }
 
-    public Set<Map.Entry<String, Event>> getFolderRejections() {
+    public Set<Map.Entry<String, FolderRejected>> getFolderRejections() {
         return folderRejections.entrySet();
     }
 

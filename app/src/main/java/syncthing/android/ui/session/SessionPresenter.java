@@ -51,10 +51,12 @@ import syncthing.api.SessionManager;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
-import syncthing.api.model.Event;
+import syncthing.api.model.event.DeviceRejected;
+import syncthing.api.model.event.Event;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.GuiError;
 import syncthing.api.model.Model;
+import syncthing.api.model.event.FolderRejected;
 import timber.log.Timber;
 
 /**
@@ -233,10 +235,10 @@ public class SessionPresenter extends ViewPresenter<SessionScreenView> {
         if (guiError != null) {
             notifs.add(new NotifCardError(guiError));
         }
-        for (Map.Entry<String, Event> e : controller.getDeviceRejections()) {
+        for (Map.Entry<String, DeviceRejected> e : controller.getDeviceRejections()) {
             notifs.add(new NotifCardRejDevice(e.getKey(), e.getValue()));
         }
-        for (Map.Entry<String, Event> e : controller.getFolderRejections()) {
+        for (Map.Entry<String, FolderRejected> e : controller.getFolderRejections()) {
             notifs.add(new NotifCardRejFolder(e.getKey(), e.getValue()));
         }
         return notifs;
