@@ -17,28 +17,14 @@
 
 package syncthing.api.model;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
-
-import syncthing.android.R;
 
 /**
 * Created by drew on 3/17/15.
 */
 public enum VersioningType {
-    @SerializedName("simple") SIMPLE(R.string.simple_file_versioning),
-    @SerializedName("staggered") STAGGERED(R.string.staggered_file_versioning),
-    @SerializedName("external") EXTERNAL(R.string.external_file_versioning),
-    @SerializedName("") NONE(R.string.no_file_versioning);
-
-    private int resource;
-
-    private VersioningType(int resource) {
-        this.resource = resource;
-    }
-
-    public CharSequence localizedString(Context context) {
-        return context.getString(resource);
-    }
+    @SerializedName("simple") SIMPLE,
+    @SerializedName("staggered") STAGGERED,
+    @SerializedName("external") EXTERNAL,
+    @SerializedName("") NONE,
 }
