@@ -17,6 +17,7 @@
 package org.opensilk.common.ui.recycler;
 
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -33,9 +34,8 @@ import butterknife.InjectView;
 /**
  * Created by drew on 11/24/14.
  */
-public class RecyclerListFrame extends FrameLayout {
+public class RecyclerListFrame extends CoordinatorLayout {
 
-    protected View mListContainer;
     protected RecyclerView mList;
     protected View mEmptyView;
     protected TextView mEmptyText;
@@ -52,7 +52,6 @@ public class RecyclerListFrame extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mListContainer = ButterKnife.findById(this, R.id.list_container);
         mList = ButterKnife.findById(this, R.id.recyclerview);
         mEmptyView = ButterKnife.findById(this, R.id.empty_view);
         mEmptyText = ButterKnife.findById(this, R.id.empty_text);
@@ -89,15 +88,15 @@ public class RecyclerListFrame extends FrameLayout {
         }
         mListShown = shown;
         if (animate) {
-            mListContainer.startAnimation(AnimationUtils.loadAnimation(
+            mList.startAnimation(AnimationUtils.loadAnimation(
                     getContext(), shown ? android.R.anim.fade_in : android.R.anim.fade_out));
         } else {
-            mListContainer.clearAnimation();
+            mList.clearAnimation();
         }
         if (shown) {
-            mListContainer.setVisibility(View.VISIBLE);
+            mList.setVisibility(View.VISIBLE);
         } else {
-            mListContainer.setVisibility(View.GONE);
+            mList.setVisibility(View.GONE);
         }
     }
 
@@ -121,7 +120,6 @@ public class RecyclerListFrame extends FrameLayout {
             } else {
                 mList.setVisibility(GONE);
                 mEmptyView.setVisibility(VISIBLE);
-                setListShown(true, animate);
             }
         } else {
             if (mListShown) {
@@ -137,7 +135,6 @@ public class RecyclerListFrame extends FrameLayout {
             } else {
                 mEmptyView.setVisibility(GONE);
                 mList.setVisibility(VISIBLE);
-                setListShown(true, animate);
             }
         }
     }
