@@ -136,7 +136,7 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
         name.setText(SyncthingUtils.getDisplayName(device));
 
         compressionHider.setVisibility(VISIBLE);
-        compression.setText(device.compression.localizedString(getContext()));
+//        compression.setText(device.compression.localizedString(getContext()));
         introducerHider.setVisibility(device.introducer ? VISIBLE : GONE);
     }
 
