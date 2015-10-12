@@ -51,6 +51,7 @@ public abstract class CardRecyclerAdapter extends RecyclerView.Adapter<CardViewH
 
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
+        holder.recycle();
         Card c = getItem(position);
         holder.bind(c, expandListener);
     }
