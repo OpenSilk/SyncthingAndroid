@@ -38,6 +38,7 @@ public class EditFolderModule {
                 .setFolderId(screen.folderId)
                 .setDeviceId(screen.deviceId)
                 .setIsAdd(screen.isAdd)
+                .setCredentials(screen.credentials)
                 .build();
     }
 
