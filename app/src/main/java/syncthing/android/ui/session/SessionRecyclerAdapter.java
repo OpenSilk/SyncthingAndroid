@@ -51,6 +51,11 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
         mPresenter = presenter;
     }
 
+    //for tests
+    SessionRecyclerAdapter() {
+        this(null);
+    }
+
     @Override
     public android.databinding.DataBindingComponent getBindingComponent() {
         return mPresenter;
