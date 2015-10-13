@@ -19,22 +19,25 @@ package syncthing.api.model.event;
 
 import com.google.gson.Gson;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
 import syncthing.api.GsonModule;
 import syncthing.api.model.ModelState;
+import syncthing.api.model.event.Event;
+import syncthing.api.model.event.EventType;
+import syncthing.api.model.event.FolderSummary;
+import syncthing.api.model.event.StateChanged;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by drew on 10/11/15.

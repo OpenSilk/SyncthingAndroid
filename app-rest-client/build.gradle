@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2015 OpenSilk Productions LLC
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile (group: 'com.google.dagger', name:'dagger', version: rootProject.ext.dagger2Version)
+    provided(group: 'com.google.dagger', name:'dagger-compiler', version: rootProject.ext.dagger2Version)
+    compile (group:'io.reactivex', name: 'rxjava', version: rootProject.ext.rxJavaVersion)
+    compile (group:'com.squareup.retrofit', name :'retrofit', version:rootProject.ext.retrofitVersion)
+    compile (group:'com.squareup.retrofit', name: 'adapter-rxjava', version:rootProject.ext.retrofitVersion)
+    compile (group:'com.squareup.retrofit', name: 'converter-gson', version:rootProject.ext.retrofitVersion)
+    compile (group:'com.squareup.okhttp', name: 'okhttp', version: rootProject.ext.okHttpVersion)
+    compile (group: 'com.google.code.gson', name: 'gson', version: rootProject.ext.gsonVersion)
+    compile 'joda-time:joda-time:2.7'
+    compile (group:'org.apache.commons', name: 'commons-lang3', version: rootProject.ext.commonsLangVersion)
+    compile 'javax.annotation:jsr250-api:1.0'
+
+    testCompile (group:"junit", name:"junit", version: rootProject.ext.testJunitVersion)
+    testCompile (group:"org.assertj", name:"assertj-core", version: rootProject.ext.testAssertJVersion)
+    testCompile (group:"org.robolectric", name:"robolectric", version : rootProject.ext.testRobolectricVersion)
+    testCompile (group:"org.mockito", name:"mockito-core", version: rootProject.ext.testMockitoVersion)
+    testCompile (group:'commons-io', name: 'commons-io', version: rootProject.ext.commonsIoVersion)
+    testCompile (group:'com.squareup.okhttp', name:'mockwebserver', version: rootProject.ext.okHttpVersion)
+}

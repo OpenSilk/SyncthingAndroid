@@ -19,12 +19,8 @@ package syncthing.api;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.ConnectionPool;
-import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
@@ -34,7 +30,6 @@ import dagger.Provides;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
-import syncthing.android.BuildConfig;
 
 /**
  * Created by drew on 4/11/15.

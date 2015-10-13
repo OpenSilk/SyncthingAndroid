@@ -17,11 +17,7 @@
 
 package syncthing.api.model.event;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.joda.time.DateTime;
-
-import java.util.Map;
 
 /**
  * Created by drew on 10/11/15.

@@ -32,7 +32,6 @@ import syncthing.api.model.ConfigStats;
 import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceId;
 import syncthing.api.model.DeviceStatsMap;
-import syncthing.api.model.event.Event;
 import syncthing.api.model.FolderStatsMap;
 import syncthing.api.model.GuiErrors;
 import syncthing.api.model.Ignores;
@@ -43,6 +42,7 @@ import syncthing.api.model.Ping;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
+import syncthing.api.model.event.Event;
 
 /**
  * Created by drew on 3/1/15.

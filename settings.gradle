@@ -1,2 +1,2 @@
-include ':app'
+include ':app', 'app-rest-client'
 include ':common-core', ':common-ui'

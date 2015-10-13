@@ -26,7 +26,7 @@ import java.util.List;
  * Created by drew on 10/11/15.
  */
 public class DeviceDiscovered extends Event<DeviceDiscovered.Data> {
-    public DeviceDiscovered(long id, DateTime time, EventType type, DeviceDiscovered.Data data) {
+    public DeviceDiscovered(long id, DateTime time, EventType type, Data data) {
         super(id, time, type, data);
     }
 
