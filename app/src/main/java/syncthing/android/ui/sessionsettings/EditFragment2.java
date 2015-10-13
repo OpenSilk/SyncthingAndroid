@@ -50,8 +50,8 @@ public abstract class EditFragment2 extends MortarFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String title = getArguments().getString("title");
-        if (title != null) {
+        int title = getArguments().getInt("title");
+        if (title != 0) {
             getActivity().setTitle(title);
         }
     }
