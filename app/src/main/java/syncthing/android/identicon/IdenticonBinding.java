@@ -15,27 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.common;
+package syncthing.android.identicon;
+
+import android.databinding.BindingAdapter;
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
+import rx.Subscriber;
 
 /**
- * Created by drew on 3/20/15.
+ * Created by drew on 10/13/15.
  */
-public abstract class ExpandableCard extends Card implements Expandable {
-
-    boolean expanded = false;
-
-    @Override
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
-    }
-
-    @Override
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    @Override
-    public boolean canExpand() {
-        return true;
+public class IdenticonBinding {
+    @BindingAdapter("identicon")
+    public static void loadIdenticon(IdenticonComponent cmp, ImageView imageView, String name) {
+        cmp.identiconGenerator().generateAsync(name)
+                .subscribe(imageView::setImageBitmap);
     }
 }

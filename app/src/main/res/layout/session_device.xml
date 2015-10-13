@@ -24,6 +24,7 @@
         <import type="android.view.View"/>
         <import type="syncthing.android.service.SyncthingUtils"/>
         <variable name="card" type="syncthing.android.ui.session.DeviceCard"/>
+        <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
     <syncthing.android.ui.session.DeviceCardView
         android:layout_width="match_parent"
@@ -36,6 +37,7 @@
 
             <FrameLayout
                 android:id="@+id/header"
+                android:onClick="@{expandHandler.onClick}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -47,6 +49,7 @@
                         android:id="@+id/identicon"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
+                        app:identicon="@{card.name}"
                         style="@style/session.RecyclerHeaderIcon"/>
 
                     <TextView

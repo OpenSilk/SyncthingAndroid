@@ -20,6 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data class="syncthing.android.ui.session.NotifCardRejFolderViewBinding">
         <variable name="card" type="syncthing.android.ui.session.NotifCardRejFolder"/>
+        <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
     <syncthing.android.ui.session.NotifCardRejFolderView
 
@@ -33,6 +34,7 @@
 
             <LinearLayout
                 android:id="@+id/header"
+                android:onClick="@{expandHandler.onClick}"
                 style="@style/session.RecyclerNotifHeader">
 
                 <ImageView

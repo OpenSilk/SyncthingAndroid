@@ -19,7 +19,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data class="syncthing.android.ui.session.NotifCardRestartViewBinding">
-
+        <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
     <syncthing.android.ui.session.NotifCardRestartView
 
@@ -35,6 +35,7 @@
 
             <LinearLayout
                 android:id="@+id/header"
+                android:onClick="@{expandHandler.onClick}"
                 style="@style/session.RecyclerNotifHeader">
 
                 <ImageView

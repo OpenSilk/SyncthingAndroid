@@ -66,11 +66,6 @@ public class NotifCardRejFolderView extends ExpandableCardViewWrapper<NotifCardR
         ButterKnife.inject(this);
     }
 
-    @OnClick(R.id.header)
-    void doExpandThing() {
-        toggleExpanded();
-    }
-
     @OnClick(R.id.btn_add)
     void addFolder() {
         if (share) {

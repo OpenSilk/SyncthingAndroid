@@ -73,11 +73,6 @@ public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardR
         unsubscribe();
     }
 
-    @OnClick(R.id.header)
-    void doExpandThing() {
-        toggleExpanded();
-    }
-
     @OnClick(R.id.btn_add)
     void addDevice() {
         DeviceConfig device = new DeviceConfig();

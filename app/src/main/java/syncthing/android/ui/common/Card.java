@@ -58,4 +58,8 @@ public abstract class Card implements android.databinding.Observable {
     protected void notifyChange(int val) {
         mRegistry.notifyChange(this, val);
     }
+
+    public boolean canExpand() {
+        return false;
+    }
 }

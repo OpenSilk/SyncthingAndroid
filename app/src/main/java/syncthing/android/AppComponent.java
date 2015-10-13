@@ -24,6 +24,7 @@ import org.opensilk.common.core.dagger2.ForApplication;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.identicon.IdenticonModule;
 import syncthing.api.GsonModule;
@@ -40,9 +41,8 @@ import syncthing.api.SessionManagerComponent;
                 IdenticonModule.class
         }
 )
-public interface AppComponent extends SessionManagerComponent {
+public interface AppComponent extends SessionManagerComponent, IdenticonComponent {
     String NAME = AppComponent.class.getName();
     @ForApplication Context appContext();
-    IdenticonGenerator identiconGenerator();
     AppSettings appSettings();
 }

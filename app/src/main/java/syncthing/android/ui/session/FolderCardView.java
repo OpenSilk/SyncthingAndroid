@@ -97,11 +97,6 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
         ButterKnife.inject(this);
     }
 
-    @OnClick(R.id.header)
-    void toggleExpand() {
-        toggleExpanded();
-    }
-
     @OnClick(R.id.btn_override)
     void overrideChanges() {
         if (getCard() == null) return;

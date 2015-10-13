@@ -47,6 +47,7 @@ import mortar.Presenter;
 import mortar.bundler.BundleService;
 import rx.Subscription;
 import syncthing.android.R;
+import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
@@ -76,7 +77,8 @@ import timber.log.Timber;
 * Created by drew on 3/11/15.
 */
 @ScreenScope
-public class SessionPresenter extends Presenter<ISessionScreenView> implements android.databinding.DataBindingComponent {
+public class SessionPresenter extends Presenter<ISessionScreenView> implements
+        android.databinding.DataBindingComponent, IdenticonComponent {
 
     final Context appContext;
     final Credentials credentials;
@@ -557,5 +559,8 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements a
         }
     }
 
-
+    @Override
+    public IdenticonGenerator identiconGenerator() {
+        return identiconGenerator;
+    }
 }

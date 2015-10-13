@@ -58,11 +58,6 @@ public class NotifCardErrorView extends ExpandableCardViewWrapper<NotifCardError
         ButterKnife.inject(this);
     }
 
-    @OnClick(R.id.header)
-    void doExpanding(){
-        toggleExpanded();
-    }
-
     @OnClick(R.id.btn_dismiss)
     void dismissErrors() {
         mPresenter.controller.clearErrors();

@@ -72,6 +72,7 @@ public abstract class CardRecyclerAdapter extends RecyclerView.Adapter<CardViewH
             viewHolder = new CardViewHolder(v);
         }
         if (viewHolder.getBinding() != null) {
+            //Trick from the databinding talk by google
             viewHolder.getBinding().addOnRebindCallback(new OnRebindCallback() {
                 @Override
                 public boolean onPreBind(ViewDataBinding binding) {
@@ -93,12 +94,14 @@ public abstract class CardRecyclerAdapter extends RecyclerView.Adapter<CardViewH
         return viewHolder;
     }
 
+    public void applyAdditionalBinding(Card card, CardViewHolder holder) {
+
+    }
+
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
         holder.recycle();
         Card c = getItem(position);
-        holder.getBinding().setVariable(syncthing.android.BR.card, c);
-        holder.getBinding().executePendingBindings();
         holder.bind(c, expandListener);
     }
 

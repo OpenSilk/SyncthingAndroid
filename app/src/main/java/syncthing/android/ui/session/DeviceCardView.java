@@ -87,12 +87,6 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
         ButterKnife.inject(this);
     }
 
-
-    @OnClick(R.id.header)
-    void toggleExpand() {
-        toggleExpanded();
-    }
-
     @OnClick(R.id.btn_edit)
     void editDevice() {
         mPresenter.openEditDeviceScreen(getCard().device.deviceID);
@@ -103,14 +97,6 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     }
 
     public void onBind(DeviceCard card) {
-        updateDevice(card.device);
     }
-
-    void updateDevice(DeviceConfig device) {
-        //Timber.d("updateDevice(%s) cfg=%s", getCard().device.name, device);
-        identiconSubscription = mPresenter.identiconGenerator.generateAsync(device.deviceID)
-                .subscribe(identicon::setImageBitmap);
-    }
-
 
 }

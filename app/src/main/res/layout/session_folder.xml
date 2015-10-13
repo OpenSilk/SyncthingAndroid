@@ -26,6 +26,7 @@
         <import type="syncthing.api.model.ModelState"/>
         <import type="syncthing.android.service.SyncthingUtils"/>
         <variable name="card" type="syncthing.android.ui.session.FolderCard"/>
+        <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
     <syncthing.android.ui.session.FolderCardView
         android:layout_width="match_parent"
@@ -38,6 +39,7 @@
 
             <LinearLayout
                 android:id="@+id/header"
+                android:onClick="@{expandHandler.onClick}"
                 style="@style/session.RecyclerHeader">
 
                 <ImageView

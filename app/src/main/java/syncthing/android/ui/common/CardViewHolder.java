@@ -47,15 +47,17 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     public void bind(Card card, CanExpand.OnExpandListener listener) {
         if (itemView instanceof BindsCard) {
             ((BindsCard) itemView).bind(card);
+            mBinding.setVariable(syncthing.android.BR.card, card);
         }
         if (itemView instanceof CanExpand) {
             CanExpand ce = (CanExpand) itemView;
             ce.setExpandListener(listener);
+            mBinding.setVariable(syncthing.android.BR.expandHandler, new ExpandHandler(ce));
         }
-        itemView.removeOnAttachStateChangeListener(mAttachListener);
-        itemView.addOnAttachStateChangeListener(mAttachListener);
+        mBinding.executePendingBindings();
     }
 
+    //TODO reset binding?
     public void recycle() {
         if (itemView instanceof BindsCard) {
             ((BindsCard) itemView).reset();
@@ -64,28 +66,6 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
             CanExpand ce = (CanExpand) itemView;
             ce.setExpandListener(null);
         }
-        unsubscribeUpdates();
-        itemView.removeOnAttachStateChangeListener(mAttachListener);
     }
 
-    protected void subscribeUpdates() {
-
-    }
-
-    protected void unsubscribeUpdates() {
-
-    }
-
-    protected final View.OnAttachStateChangeListener mAttachListener =
-            new View.OnAttachStateChangeListener() {
-        @Override
-        public void onViewAttachedToWindow(View v) {
-            subscribeUpdates();
-        }
-
-        @Override
-        public void onViewDetachedFromWindow(View v) {
-            unsubscribeUpdates();
-        }
-    };
 }

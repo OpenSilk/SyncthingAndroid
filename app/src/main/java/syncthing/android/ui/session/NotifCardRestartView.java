@@ -59,11 +59,6 @@ public class NotifCardRestartView extends ExpandableCardViewWrapper<NotifCardRes
         ButterKnife.inject(this);
     }
 
-    @OnClick(R.id.header)
-    void doExpandThing() {
-        toggleExpanded();
-    }
-
     @OnClick(R.id.btn_restart)
     void restartSyncthing() {
         mPresenter.controller.restart();

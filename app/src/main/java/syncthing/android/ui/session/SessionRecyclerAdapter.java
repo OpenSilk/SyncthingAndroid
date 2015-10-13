@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import rx.functions.Func1;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardRecyclerAdapter;
+import syncthing.android.ui.common.CardViewHolder;
 import syncthing.android.ui.common.ExpandableCard;
 
 /**
@@ -47,7 +48,7 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     List<DeviceCard> deviceItems = new LinkedList<>();
 
     public SessionRecyclerAdapter(SessionPresenter presenter) {
-        //setHasStableIds(true);
+        setHasStableIds(true);
         mPresenter = presenter;
     }
 
@@ -59,6 +60,11 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     @Override
     public android.databinding.DataBindingComponent getBindingComponent() {
         return mPresenter;
+    }
+
+    @Override
+    public void applyAdditionalBinding(Card card, CardViewHolder holder) {
+//        holder.getBinding().setVariable(syncthing.android.BR.clickHandler, this);
     }
 
     public void setNotifications(List<ExpandableCard> notifs, boolean notify) {
@@ -92,15 +98,6 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
         } else {
             int oldsize = lst1.size();
             int newsize = lst2.size();
-            //TODO be smarter here
-            for (T nc : lst2) {
-                for (T oc : lst1) {
-                    if (oc.isSame(nc)) {
-                        nc.setExpanded(oc.isExpanded());
-                        break;
-                    }
-                }
-            }
             lst1.clear();
             lst1.addAll(lst2);
             if (notify) {

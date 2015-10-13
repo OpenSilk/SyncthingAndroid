@@ -17,25 +17,19 @@
 
 package syncthing.android.ui.common;
 
+import android.view.View;
+
 /**
- * Created by drew on 3/20/15.
+ * Created by drew on 10/13/15.
  */
-public abstract class ExpandableCard extends Card implements Expandable {
+public class ExpandHandler {
+    final CanExpand cardView;
 
-    boolean expanded = false;
-
-    @Override
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
+    public ExpandHandler(CanExpand cardView) {
+        this.cardView = cardView;
     }
 
-    @Override
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    @Override
-    public boolean canExpand() {
-        return true;
+    public void onClick(View view) {
+        cardView.toggleExpanded();
     }
 }

@@ -15,27 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.common;
+package syncthing.android.ui.session;
+
+import android.view.View;
 
 /**
- * Created by drew on 3/20/15.
+ * Created by drew on 10/13/15.
  */
-public abstract class ExpandableCard extends Card implements Expandable {
-
-    boolean expanded = false;
-
-    @Override
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
-    }
-
-    @Override
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    @Override
-    public boolean canExpand() {
-        return true;
-    }
+public interface SessionItemClickHandler {
+    //Device card
+    void editDevice(View view, String device);
+    //Folder card
+    void overrideChanges(String folder);
+    void rescanFolder(String folder);
+    void editFolder(String folder);
+    //notif error
+    void dismissErrors();
+    //notif device rej
+    void addDevice(String device);
+    void ignoreDevice(String device);
+    void dismissDevice(String device);
+    //notif folder rej
+    void addFolder(String folder, String device);
+    void dismissFolder(String folder);
+    //notif restart
+    void restartSyncthing();
 }

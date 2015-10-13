@@ -15,27 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.common;
+package syncthing.android.identicon;
 
 /**
- * Created by drew on 3/20/15.
+ * Created by drew on 10/13/15.
  */
-public abstract class ExpandableCard extends Card implements Expandable {
-
-    boolean expanded = false;
-
-    @Override
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
-    }
-
-    @Override
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    @Override
-    public boolean canExpand() {
-        return true;
-    }
+public interface IdenticonComponent extends android.databinding.DataBindingComponent {
+    IdenticonGenerator identiconGenerator();
 }
