@@ -23,7 +23,7 @@ import syncthing.android.ui.common.ExpandableCard;
 /**
  * Created by drew on 3/6/15.
  */
-public class NotifCardRestart extends ExpandableCard {
+public class NotifCardRestart extends NotifCard {
     public static final NotifCardRestart INSTANCE = new NotifCardRestart();
 
     @Override
@@ -31,8 +31,4 @@ public class NotifCardRestart extends ExpandableCard {
         return R.layout.session_notif_restart;
     }
 
-    @Override
-    public int adapterId() {
-        return super.adapterId();
-    }
 }

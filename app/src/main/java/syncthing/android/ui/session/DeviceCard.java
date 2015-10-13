@@ -17,8 +17,19 @@
 
 package syncthing.android.ui.session;
 
+import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
+import android.support.v4.content.ContextCompat;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+
 import syncthing.android.R;
+import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.ExpandableCard;
+import syncthing.api.model.Compression;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
@@ -28,10 +39,14 @@ import syncthing.api.model.DeviceStats;
  */
 public class DeviceCard extends ExpandableCard {
 
-    protected final DeviceConfig device;
+    protected DeviceConfig device;
     protected ConnectionInfo connection;
     protected DeviceStats stats;
     protected int completion;
+
+    public DeviceCard(DeviceConfig device) {
+        this.device = device;
+    }
 
     public DeviceCard(DeviceConfig device, ConnectionInfo connection, DeviceStats stats, int completion) {
         this.device = device;
@@ -40,16 +55,28 @@ public class DeviceCard extends ExpandableCard {
         this.completion = completion;
     }
 
+    public void setDevice(DeviceConfig device) {
+        if (!StringUtils.equals(this.device.deviceID, device.deviceID)) {
+            throw new IllegalArgumentException("Tried binding a different device to this card " +
+                    device.deviceID +" != " + this.device.deviceID);
+        }
+        this.device = device;
+        notifyChange(syncthing.android.BR._all);//TODO only notify changed fields
+    }
+
     public void setConnectionInfo(ConnectionInfo connection) {
         this.connection = connection;
+        notifyChange(syncthing.android.BR._all);//TODO only notify changed fields
     }
 
     public void setDeviceStats(DeviceStats stats) {
         this.stats = stats;
+        notifyChange(syncthing.android.BR.lastSeen);
     }
 
     public void setCompletion(int completion) {
         this.completion = completion;
+        notifyChange(syncthing.android.BR.completion);
     }
 
     @Override
@@ -57,9 +84,97 @@ public class DeviceCard extends ExpandableCard {
         return R.layout.session_device;
     }
 
-    @Override
-    public int adapterId() {
-        return super.adapterId() ^ device.deviceID.hashCode();
+    @Bindable
+    public String getDeviceID() {
+        return device.deviceID;
+    }
+
+    @Bindable
+    public String getName() {
+        return SyncthingUtils.getDisplayName(device);
+    }
+
+    @Bindable
+    public DateTime getLastSeen() {
+        return stats != null ? stats.lastSeen : null;
+    }
+
+    @Bindable
+    public int getCompletion() {
+        return completion;
+    }
+
+    @Bindable
+    public Compression getCompression() {
+        return device.compression;
+    }
+
+    @Bindable
+    public boolean getIntroducer() {
+        return device.introducer;
+    }
+
+    @Bindable
+    public long getInbps() {
+        return connection != null ? connection.inbps : -1;
+    }
+
+    @Bindable
+    public long getInBytesTotal(){
+        return connection != null ? connection.inBytesTotal : -1;
+    }
+
+    @Bindable
+    public long getOutbps() {
+        return connection != null ? connection.outbps : -1;
+    }
+
+    @Bindable
+    public long getOutBytesTotal() {
+        return connection != null ? connection.outBytesTotal : -1;
+    }
+
+    @Bindable
+    public String getAddress() {
+        return connection != null ? connection.address : null;
+    }
+
+    @Bindable
+    public String getClientVersion() {
+        return connection != null ? connection.clientVersion : "?";
+    }
+
+    @Bindable
+    public boolean isConnected() {
+        return connection != null;
+    }
+
+    static final DateTime epoch = new DateTime(1969);
+    @BindingAdapter("deviceLastSeenText")
+    public static void deviceLastSeenText(TextView view, DateTime lastSeen) {
+        if (lastSeen == null) {
+            view.setText(R.string.unknown);
+        } else {
+            if (lastSeen.year().equals(epoch.year())) {
+                view.setText(R.string.never);
+            } else {
+                view.setText(lastSeen.toString("yyyy-MM-dd HH:mm"));
+            }
+        }
+    }
+
+    @BindingAdapter("deviceCompletion")
+    public static void deviceCompletion(TextView view, int completion) {
+        if (completion < 0) {
+            view.setText(R.string.disconnected);
+            view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.device_disconnected));
+        } else if (completion == 100) {
+            view.setText(R.string.up_to_date);
+            view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.device_idle));
+        } else {
+            view.setText(R.string.syncing);
+            view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.device_syncing));
+        }
     }
 
 }

@@ -16,221 +16,241 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<syncthing.android.ui.session.DeviceCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/session.RecyclerCard">
-
-    <RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="syncthing.android.ui.session.DeviceCardViewBinding">
+        <import type="org.apache.commons.lang3.StringUtils"/>
+        <import type="android.view.View"/>
+        <import type="syncthing.android.service.SyncthingUtils"/>
+        <variable name="card" type="syncthing.android.ui.session.DeviceCard"/>
+    </data>
+    <syncthing.android.ui.session.DeviceCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        style="@style/session.RecyclerCard">
 
-        <FrameLayout
-            android:id="@+id/header"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/header_texts"
-                style="@style/session.RecyclerHeader">
-
-                <org.opensilk.common.ui.widget.SquareImageView
-                    android:id="@+id/identicon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    style="@style/session.RecyclerHeaderIcon"/>
-
-                <TextView
-                    android:id="@+id/name"
-                    style="@style/session.RecyclerHeaderText"
-                    tools:text="folderid"/>
-
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    style="@style/session.RecyclerHeaderText"
-                    tools:text="Unknown"/>
-
-            </LinearLayout>
-
-            <ProgressBar
-                android:id="@+id/progress"
+            <FrameLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="-4dp"
-                android:layout_gravity="bottom"
-                android:visibility="gone"
-                android:max="100"
-                style="?android:progressBarStyleHorizontal"
-                tools:visibility="visible"
-                tools:progress="60"/>
+                android:layout_height="wrap_content">
 
-        </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/header_texts"
+                    style="@style/session.RecyclerHeader">
 
-        <LinearLayout
-            android:id="@+id/expand"
-            android:layout_below="@id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible"
-            style="@style/session.RecyclerExpand"
-            >
+                    <org.opensilk.common.ui.widget.SquareImageView
+                        android:id="@+id/identicon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        style="@style/session.RecyclerHeaderIcon"/>
 
-            <LinearLayout
-                android:id="@+id/download_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecyclerCardRow">
+                    <TextView
+                        android:id="@+id/name"
+                        android:text="@{card.name}"
+                        style="@style/session.RecyclerHeaderText"
+                        tools:text="folderid"/>
 
-                <TextView
-                    android:id="@+id/download_title"
-                    android:text="@string/download_rate"
-                    style="@style/session.RecyclerTextLeftColumn"
-                    />
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        app:deviceCompletion="@{card.completion}"
+                        style="@style/session.RecyclerHeaderText"
+                        tools:text="Unknown"/>
 
-                <TextView
-                    android:id="@+id/download"
-                    style="@style/session.RecyclerTextRightColumn"
-                    tools:text="0 b/s"/>
+                </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/upload_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecyclerCardRow">
-
-                <TextView
-                    android:id="@+id/upload_title"
-                    android:text="@string/upload_rate"
-                    style="@style/session.RecyclerTextLeftColumn"
-                    />
-
-                <TextView
-                    android:id="@+id/upload"
-                    style="@style/session.RecyclerTextRightColumn"
-                    tools:text="0 b/s"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/address_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecyclerCardRow">
-
-                <TextView
-                    android:id="@+id/address_title"
-                    android:text="@string/address"
-                    style="@style/session.RecyclerTextLeftColumn"
-                    />
-
-                <TextView
-                    android:id="@+id/address"
-                    style="@style/session.RecyclerTextRightColumn"
-                    tools:text="\?"/>
-
-             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/use_compression_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecyclerCardRow">
-
-                <TextView
-                    android:id="@+id/use_compression_title"
-                    android:text="@string/compression"
-                    style="@style/session.RecyclerTextLeftColumn"/>
-
-                <TextView
-                    android:id="@+id/compresion_type"
-                    tools:text="@string/yes"
-                    style="@style/session.RecyclerTextRightColumn"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/introducer_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecyclerCardRow">
-
-                <TextView
-                    android:id="@+id/introducer_title"
-                    android:text="@string/introducer"
-                    style="@style/session.RecyclerTextLeftColumn"/>
-
-                <TextView
-                    android:text="@string/yes"
-                    style="@style/session.RecyclerTextRightColumn"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/version_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecyclerCardRow">
-
-                <TextView
-                    android:id="@+id/version_title"
-                    android:text="@string/version"
-                    style="@style/session.RecyclerTextLeftColumn"
-                    />
-
-                <TextView
-                    android:id="@+id/version"
-                    tools:text="\?"
-                    style="@style/session.RecyclerTextRightColumn"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/last_seen_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecyclerCardRow">
-
-                <TextView
-                    android:id="@+id/last_seen_title"
-                    android:text="@string/last_seen"
-                    style="@style/session.RecyclerTextLeftColumn"/>
-
-                <TextView
-                    android:id="@+id/last_seen"
-                    tools:text="Long time"
-                    style="@style/session.RecyclerTextRightColumn"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                style="@style/mtrl.ButtonBar">
-
-                <Button
-                    android:id="@+id/btn_edit"
-                    android:layout_width="wrap_content"
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/edit"
-                    style="@style/mtrl.ButtonBarButton.Small"/>
+                    android:layout_marginBottom="-4dp"
+                    android:layout_gravity="bottom"
+                    android:visibility="@{(card.completion &lt; 0 || card.completion == 100) ? View.GONE : View.INVISIBLE}"
+                    android:progress="@{card.completion}"
+                    android:max="100"
+                    style="?android:progressBarStyleHorizontal"
+                    tools:visibility="visible"
+                    tools:progress="60"/>
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/expand"
+                android:layout_below="@id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible"
+                style="@style/session.RecyclerExpand"
+                >
+
+                <LinearLayout
+                    android:id="@+id/download_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{(card.inbps &lt; 0 || card.inBytesTotal &lt; 0) ? View.GONE : View.VISIBLE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/download_title"
+                        android:text="@string/download_rate"
+                        style="@style/session.RecyclerTextLeftColumn"
+                        />
+
+                    <TextView
+                        android:id="@+id/download"
+                        android:text="@{@string/transfer_rate_total(SyncthingUtils.humanReadableTransferRate(card.inbps), SyncthingUtils.humanReadableSize(card.inBytesTotal))}"
+                        style="@style/session.RecyclerTextRightColumn"
+                        tools:text="0 b/s"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/upload_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{(card.outbps &lt; 0 || card.outBytesTotal &lt; 0) ? View.GONE : View.VISIBLE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/upload_title"
+                        android:text="@string/upload_rate"
+                        style="@style/session.RecyclerTextLeftColumn"
+                        />
+
+                    <TextView
+                        android:id="@+id/upload"
+                        android:text="@{@string/transfer_rate_total(SyncthingUtils.humanReadableTransferRate(card.outbps), SyncthingUtils.humanReadableSize(card.outBytesTotal))}"
+                        style="@style/session.RecyclerTextRightColumn"
+                        tools:text="0 b/s"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/address_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{StringUtils.isEmpty(card.address) ? View.GONE : View.VISIBLE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/address_title"
+                        android:text="@string/address"
+                        style="@style/session.RecyclerTextLeftColumn"
+                        />
+
+                    <TextView
+                        android:id="@+id/address"
+                        android:text="@{card.address}"
+                        style="@style/session.RecyclerTextRightColumn"
+                        tools:text="\?"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/use_compression_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/use_compression_title"
+                        android:text="@string/compression"
+                        style="@style/session.RecyclerTextLeftColumn"/>
+
+                    <TextView
+                        android:id="@+id/compresion_type"
+                        app:compressionText="@{card.compression}"
+                        tools:text="@string/yes"
+                        style="@style/session.RecyclerTextRightColumn"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/introducer_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{card.introducer ? View.VISIBLE : View.GONE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/introducer_title"
+                        android:text="@string/introducer"
+                        style="@style/session.RecyclerTextLeftColumn"/>
+
+                    <TextView
+                        android:text="@string/yes"
+                        style="@style/session.RecyclerTextRightColumn"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/version_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/version_title"
+                        android:text="@string/version"
+                        style="@style/session.RecyclerTextLeftColumn"
+                        />
+
+                    <TextView
+                        android:id="@+id/version"
+                        android:text="@{card.clientVersion}"
+                        tools:text="\?"
+                        style="@style/session.RecyclerTextRightColumn"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/last_seen_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{card.connected ? View.GONE : View.VISIBLE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/last_seen_title"
+                        android:text="@string/last_seen"
+                        style="@style/session.RecyclerTextLeftColumn"/>
+
+                    <TextView
+                        android:id="@+id/last_seen"
+                        app:deviceLastSeenText="@{card.lastSeen}"
+                        tools:text="Long time"
+                        style="@style/session.RecyclerTextRightColumn"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    style="@style/mtrl.ButtonBar">
+
+                    <Button
+                        android:id="@+id/btn_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-    </RelativeLayout>
-
-</syncthing.android.ui.session.DeviceCardView>
+    </syncthing.android.ui.session.DeviceCardView>
+</layout>

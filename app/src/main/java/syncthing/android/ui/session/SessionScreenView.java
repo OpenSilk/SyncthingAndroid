@@ -67,21 +67,18 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        mListAdapter = new SessionRecyclerAdapter();
+        mListAdapter = new SessionRecyclerAdapter(mPresenter);
         mListAdapter.setExpandListener((CanExpand.OnExpandListener) mList);
         mList.setAdapter(mListAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         //((CardRecyclerView) mList).setWobbleOnExpand(false);
-        if (!isInEditMode()) {
-            mToolbarOwner.attachToolbar(mToolbar);
-            mPresenter.takeView(this);
-        }
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isInEditMode()) {
+            mToolbarOwner.attachToolbar(mToolbar);
             mPresenter.takeView(this);
         }
     }

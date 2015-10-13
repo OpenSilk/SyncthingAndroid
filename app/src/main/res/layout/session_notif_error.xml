@@ -15,82 +15,88 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<syncthing.android.ui.session.NotifCardErrorView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/session.RecyclerCard.Notif"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="syncthing.android.ui.session.NotifCardErrorViewBinding">
+        <variable name="card" type="syncthing.android.ui.session.NotifCardError"/>
+    </data>
+    <syncthing.android.ui.session.NotifCardErrorView
 
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/session.RecyclerCard.Notif"
         >
 
-        <LinearLayout
-            android:id="@+id/header"
-            style="@style/session.RecyclerNotifHeader">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_error_white_36dp"
-                style="@style/session.RecyclerNotifHeaderIcon"/>
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notice"
-                style="@style/session.RecyclerNotifHeaderText"/>
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="end"
-                style="@style/session.RecyclerNotifHeaderText.Time"
-                tools:text="1:22"/>
-
-        </LinearLayout>
-
         <RelativeLayout
-            android:id="@+id/expand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/header"
-            style="@style/session.RecyclerNotifExpand"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="Error msg"
-                style="@style/session.RecycleNotifMessageText"/>
+            >
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/message"
-                android:gravity="end"
-                style="@style/mtrl.ButtonBar">
+                android:id="@+id/header"
+                style="@style/session.RecyclerNotifHeader">
 
-                <Button
-                    android:id="@+id/btn_dismiss"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@android:string/ok"
-                    style="@style/mtrl.ButtonBarButton.Small"/>
+                    android:src="@drawable/ic_error_white_36dp"
+                    style="@style/session.RecyclerNotifHeaderIcon"/>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notice"
+                    style="@style/session.RecyclerNotifHeaderText"/>
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@{card.time}"
+                    style="@style/session.RecyclerNotifHeaderText.Time"
+                    tools:text="1:22"/>
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/expand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header"
+                style="@style/session.RecyclerNotifExpand"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{card.message}"
+                    tools:text="Error msg"
+                    style="@style/session.RecycleNotifMessageText"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/message"
+                    android:gravity="end"
+                    style="@style/mtrl.ButtonBar">
+
+                    <Button
+                        android:id="@+id/btn_dismiss"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@android:string/ok"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
-    </RelativeLayout>
-
-</syncthing.android.ui.session.NotifCardErrorView>
+    </syncthing.android.ui.session.NotifCardErrorView>
+</layout>

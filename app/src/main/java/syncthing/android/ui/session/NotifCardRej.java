@@ -23,7 +23,7 @@ import syncthing.api.model.event.Event;
 /**
  * Created by drew on 3/10/15.
  */
-public abstract class NotifCardRej<E extends Event> extends ExpandableCard {
+public abstract class NotifCardRej<E extends Event> extends NotifCard {
 
     final String id;
     final E event;
@@ -33,8 +33,4 @@ public abstract class NotifCardRej<E extends Event> extends ExpandableCard {
         this.event = event;
     }
 
-    @Override
-    public int adapterId() {
-        return super.adapterId() ^ id.hashCode();
-    }
 }

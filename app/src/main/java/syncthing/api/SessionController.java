@@ -106,15 +106,14 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     public static class ChangeEvent {
-        public static final String NONE = "";
+        public static final Object NONE = new Object();
         public final Change change;
-        // Id or name of object being effected
-        // mostly useful for model updates
-        public final String id;
+        //Event specific data
+        public final Object data;
 
-        public ChangeEvent(Change change, String id) {
+        public ChangeEvent(Change change, Object data) {
             this.change = change;
-            this.id = id == null ? NONE : id;
+            this.data = data == null ? NONE : data;
         }
 
     }
@@ -216,7 +215,7 @@ public class SessionController implements EventMonitor.EventListener {
                 StateChanged st = (StateChanged) e;
                 if (models.containsKey(st.data.folder)) {
                     models.get(st.data.folder).state = st.data.to;
-                    postChange(Change.MODEL_STATE, st.data.folder);
+                    postChange(Change.MODEL_STATE, st.data);
                 } else {
                     refreshFolder(st.data.folder);
                 }
@@ -234,6 +233,8 @@ public class SessionController implements EventMonitor.EventListener {
             } case DEVICE_DISCONNECTED: {
                 refreshConnections();
                 refreshDeviceStats();
+                break;
+            } case DEVICE_DISCOVERED: {
                 break;
             } case DEVICE_REJECTED: {
                 DeviceRejected dr = (DeviceRejected) e;
@@ -254,12 +255,18 @@ public class SessionController implements EventMonitor.EventListener {
             } case FOLDER_SUMMARY: {
                 FolderSummary fs = (FolderSummary) e;
                 updateModel(fs.data.folder, fs.data.summary);
-                postChange(Change.MODEL, fs.data.folder);
+                postChange(Change.MODEL, fs.data);
                 break;
             } case FOLDER_COMPLETION: {
-                FolderCompletion fc = (FolderCompletion)e;
+                FolderCompletion fc = (FolderCompletion) e;
                 updateCompletion(fc.data.device, fc.data.folder, new Completion(fc.data.completion));
-                postChange(Change.COMPLETION);
+                postChange(Change.COMPLETION, fc.data);
+                break;
+            } case FOLDER_ERRORS: {
+                break;
+            } case ITEM_FINISHED: {
+                break;
+            } case ITEM_STARTED: {
                 break;
             } case PING: {
                 //refreshSystem();
@@ -345,16 +352,16 @@ public class SessionController implements EventMonitor.EventListener {
         postChange(change, null);
     }
 
-    void postChange(Change change, String id) {
+    void postChange(Change change, Object data) {
         switch (change) {
             case OFFLINE:
             case NEED_LOGIN:
             case FAILURE:
-                sendChangeEvent(new ChangeEvent(change, id));
+                sendChangeEvent(new ChangeEvent(change, data));
                 return;
             default:
                 if (isOnline()) {
-                    sendChangeEvent(new ChangeEvent(change, id));
+                    sendChangeEvent(new ChangeEvent(change, data));
                 } else {
                     Timber.w("Dropping change %s while offline", change.toString());
                 }

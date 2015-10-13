@@ -17,6 +17,9 @@
 
 package syncthing.android.ui.common;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.databinding.adapters.ViewBindingAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -25,8 +28,20 @@ import android.view.View;
  */
 public class CardViewHolder extends RecyclerView.ViewHolder {
 
+    private ViewDataBinding mBinding;
+
     public CardViewHolder(View itemView) {
         super(itemView);
+        mBinding = DataBindingUtil.bind(itemView);
+    }
+
+    public CardViewHolder(View itemView, android.databinding.DataBindingComponent component) {
+        super(itemView);
+        mBinding = DataBindingUtil.bind(itemView, component);
+    }
+
+    public ViewDataBinding getBinding() {
+        return mBinding;
     }
 
     public void bind(Card card, CanExpand.OnExpandListener listener) {
@@ -37,6 +52,8 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
             CanExpand ce = (CanExpand) itemView;
             ce.setExpandListener(listener);
         }
+        itemView.removeOnAttachStateChangeListener(mAttachListener);
+        itemView.addOnAttachStateChangeListener(mAttachListener);
     }
 
     public void recycle() {
@@ -47,6 +64,28 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
             CanExpand ce = (CanExpand) itemView;
             ce.setExpandListener(null);
         }
+        unsubscribeUpdates();
+        itemView.removeOnAttachStateChangeListener(mAttachListener);
+    }
+
+    protected void subscribeUpdates() {
 
     }
+
+    protected void unsubscribeUpdates() {
+
+    }
+
+    protected final View.OnAttachStateChangeListener mAttachListener =
+            new View.OnAttachStateChangeListener() {
+        @Override
+        public void onViewAttachedToWindow(View v) {
+            subscribeUpdates();
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(View v) {
+            unsubscribeUpdates();
+        }
+    };
 }

@@ -106,7 +106,6 @@ public class NotifCardRejFolderView extends ExpandableCardViewWrapper<NotifCardR
             title.setText(R.string.add_new_folder);
             btnAdd.setText(R.string.add);
         }
-        time.setText(card.event.time.toString("H:mm:ss"));
         DeviceConfig device = mPresenter.controller.getDevice(card.event.data.device);
         if (device == null) {
             device = new DeviceConfig();

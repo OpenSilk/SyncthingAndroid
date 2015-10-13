@@ -70,8 +70,6 @@ public class NotifCardErrorView extends ExpandableCardViewWrapper<NotifCardError
 
     @Override
     public void onBind(NotifCardError card) {
-        time.setText(card.guiError.time.toString("H:mm:ss"));
-        message.setText(card.guiError.error);
     }
 
     @Override

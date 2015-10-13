@@ -23,6 +23,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import rx.functions.Func1;
 import syncthing.android.ui.common.Card;
@@ -34,6 +36,8 @@ import syncthing.android.ui.common.ExpandableCard;
  */
 public class SessionRecyclerAdapter extends CardRecyclerAdapter {
 
+    final SessionPresenter mPresenter;
+
     //order here is display order
     List<ExpandableCard> notifications = new LinkedList<>();
     HeaderCard folderHeader = HeaderCard.FOLDER;
@@ -42,15 +46,21 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     MyDeviceCard thisDevice;
     List<DeviceCard> deviceItems = new LinkedList<>();
 
-    public SessionRecyclerAdapter() {
+    public SessionRecyclerAdapter(SessionPresenter presenter) {
         //setHasStableIds(true);
+        mPresenter = presenter;
     }
 
-    public void setNotifications(Collection<ExpandableCard> notifs, boolean notify) {
+    @Override
+    public android.databinding.DataBindingComponent getBindingComponent() {
+        return mPresenter;
+    }
+
+    public void setNotifications(List<ExpandableCard> notifs, boolean notify) {
         updateList(notifications, notifs, this::findNotificationOffset, notify);
     }
 
-    public void setFolders(Collection<FolderCard> folders, boolean notify) {
+    public void setFolders(List<FolderCard> folders, boolean notify) {
         updateList(folderItems, folders, this::findFolderOffset, notify);
     }
 
@@ -66,11 +76,11 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
         }
     }
 
-    public void setDevices(Collection<DeviceCard> devices, boolean notify) {
+    public void setDevices(List<DeviceCard> devices, boolean notify) {
         updateList(deviceItems, devices, this::findDeviceOffset, notify);
     }
 
-    <T extends ExpandableCard> void  updateList(Collection<T> lst1, Collection<T> lst2, Func1<Integer, Integer> findFunc, boolean notify) {
+    <T extends ExpandableCard> void  updateList(List<T> lst1, List<T> lst2, Func1<Integer, Integer> findFunc, boolean notify) {
         if (lst1.isEmpty() && !lst2.isEmpty()) {
             lst1.addAll(lst2);
             if (notify) notifyItemRangeInserted(findFunc.call(0), lst2.size());

@@ -67,7 +67,6 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
     @InjectView(R.id.last_seen) TextView lastSeen;
 
     @Inject SessionPresenter mPresenter;
-    final DateTime epoch;
 
     Subscription identiconSubscription;
     Subscription connectionSubscription;
@@ -76,7 +75,6 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
 
     public DeviceCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        epoch = new DateTime(1969);
         if (!isInEditMode()) {
             SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
             cmp.inject(this);
@@ -89,16 +87,6 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
         ButterKnife.inject(this);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        unsubscribe();
-    }
 
     @OnClick(R.id.header)
     void toggleExpand() {
@@ -116,147 +104,13 @@ public class DeviceCardView extends ExpandableCardViewWrapper<DeviceCard> {
 
     public void onBind(DeviceCard card) {
         updateDevice(card.device);
-        updateConnection(card.connection);
-        updateStats(card.stats);
-        updateCompletion(card.completion);
-        subscribeUpdates();
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        unsubscribe();
     }
 
     void updateDevice(DeviceConfig device) {
         //Timber.d("updateDevice(%s) cfg=%s", getCard().device.name, device);
         identiconSubscription = mPresenter.identiconGenerator.generateAsync(device.deviceID)
                 .subscribe(identicon::setImageBitmap);
-
-        name.setText(SyncthingUtils.getDisplayName(device));
-
-        compressionHider.setVisibility(VISIBLE);
-//        compression.setText(device.compression.localizedString(getContext()));
-        introducerHider.setVisibility(device.introducer ? VISIBLE : GONE);
     }
 
-    void updateConnection(ConnectionInfo conn) {
-        //Timber.d("updateConnection(%s) conn=%s", getCard().device.name, conn);
-        if (conn == null) {
-            downloadHider.setVisibility(GONE);
-            uploadHider.setVisibility(GONE);
-            addressHider.setVisibility(GONE);
-            versionHider.setVisibility(GONE);
-            lastSeenHider.setVisibility(VISIBLE);
-        } else {
-            download.setText(getContext().getString(
-                    R.string.transfer_rate_total,
-                    SyncthingUtils.humanReadableTransferRate(conn.inbps),
-                    SyncthingUtils.humanReadableSize(conn.inBytesTotal)
-            ));
-            downloadHider.setVisibility(VISIBLE);
-
-            upload.setText(getContext().getString(
-                    R.string.transfer_rate_total,
-                    SyncthingUtils.humanReadableTransferRate(conn.outbps),
-                    SyncthingUtils.humanReadableSize(conn.outBytesTotal)
-            ));
-            uploadHider.setVisibility(VISIBLE);
-
-            address.setText(conn.address);
-            addressHider.setVisibility(VISIBLE);
-
-            version.setText(conn.clientVersion);
-            versionHider.setVisibility(VISIBLE);
-
-            lastSeenHider.setVisibility(GONE);
-        }
-    }
-
-    void updateStats(DeviceStats stats) {
-        //Timber.d("updateStats(%s) stats=%s", getCard().device.name, stats);
-        if (stats == null) {
-            lastSeen.setText(R.string.unknown);
-        } else {
-            if (stats.lastSeen.year().equals(epoch.year())) {
-                compressionHider.setVisibility(GONE);
-                lastSeen.setText(R.string.never);
-            } else {
-                lastSeen.setText(stats.lastSeen.toString("yyyy-MM-dd HH:mm"));
-            }
-        }
-    }
-
-    void updateCompletion(int completion) {
-        //Timber.d("updateCompletion(%s) comp=%d", getCard().device.name, completion);
-        Resources r = getContext().getResources();
-        if (completion < 0) {
-            status.setText(R.string.disconnected);
-            status.setTextColor(r.getColor(R.color.device_disconnected));
-            progress.setVisibility(GONE);
-        } else if (completion == 100) {
-            status.setText(R.string.up_to_date);
-            status.setTextColor(r.getColor(R.color.device_idle));
-            progress.setVisibility(GONE);
-        } else {
-            status.setText(R.string.syncing);
-            status.setTextColor(r.getColor(R.color.device_syncing));
-            progress.setVisibility(VISIBLE);
-            progress.setProgress(completion);
-        }
-    }
-
-    void subscribeUpdates() {
-        unsubscribeUpdates();
-        connectionSubscription = mPresenter.bus.subscribe(
-                conn -> {
-                    if (!StringUtils.equals(conn.id, getCard().device.deviceID)) {
-                        return;
-                    }
-                    getCard().setConnectionInfo(conn.conn);
-                    updateConnection(conn.conn);
-                },
-                Update.ConnectionInfo.class
-        );
-        statsSubscription = mPresenter.bus.subscribe(
-                stats -> {
-                    if (!StringUtils.equals(stats.id, getCard().device.deviceID)) {
-                        return;
-                    }
-                    getCard().setDeviceStats(stats.stats);
-                    updateStats(stats.stats);
-                },
-                Update.DeviceStats.class
-        );
-        completionSubscription = mPresenter.bus.subscribe(
-                comp -> {
-                    if (!StringUtils.equals(comp.id, getCard().device.deviceID)) {
-                        return;
-                    }
-                    getCard().setCompletion(comp.comp);
-                    updateCompletion(comp.comp);
-                },
-                Update.Completion.class
-        );
-    }
-
-    void unsubscribe() {
-        if (identiconSubscription != null) {
-            identiconSubscription.unsubscribe();
-        }
-        unsubscribeUpdates();
-    }
-
-    void unsubscribeUpdates() {
-        if (connectionSubscription != null) {
-            connectionSubscription.unsubscribe();
-        }
-        if (statsSubscription != null) {
-            statsSubscription.unsubscribe();
-        }
-        if (completionSubscription != null) {
-            completionSubscription.unsubscribe();
-        }
-    }
 
 }

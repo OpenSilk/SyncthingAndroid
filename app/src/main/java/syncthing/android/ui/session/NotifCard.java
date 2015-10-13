@@ -17,28 +17,10 @@
 
 package syncthing.android.ui.session;
 
-import android.databinding.Bindable;
-
-import syncthing.android.R;
-import syncthing.api.model.event.Event;
-import syncthing.api.model.event.FolderRejected;
+import syncthing.android.ui.common.ExpandableCard;
 
 /**
- * Created by drew on 3/6/15.
+ * Created by drew on 10/12/15.
  */
-public class NotifCardRejFolder extends NotifCardRej<FolderRejected> {
-
-    public NotifCardRejFolder(String id, FolderRejected event) {
-        super(id, event);
-    }
-
-    @Override
-    public int getLayout() {
-        return R.layout.session_notif_folder_rej;
-    }
-
-    @Bindable
-    public String getTime() {
-        return event.time.toString("H:mm:ss");
-    }
+public abstract class NotifCard extends ExpandableCard {
 }

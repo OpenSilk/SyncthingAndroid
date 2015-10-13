@@ -16,34 +16,39 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<syncthing.android.ui.login.ManageDeviceCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/mtrl.SingleLineListItemLinear">
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
 
-    <org.opensilk.common.ui.widget.SquareImageView
-        android:id="@+id/identicon"
-        style="@style/mtrl.SingleLineListItemLinearInner.Avatar"/>
+    </data>
+    <syncthing.android.ui.login.ManageDeviceCardView
 
-    <TextView
-        android:id="@+id/name"
-        style="@style/mtrl.SingleLineListItemLinearInner.Text"/>
-
-    <ImageView
-        android:id="@+id/check"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:src="@drawable/ic_check_grey600_24dp"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        style="@style/mtrl.SingleLineListItemLinear">
 
-    <ImageButton
-        android:id="@+id/overflow"
-        android:src="@drawable/ic_more_vert_grey600_24dp"
-        style="@style/mtrl.SingleLineListItemLinearInner.Icon"/>
+        <org.opensilk.common.ui.widget.SquareImageView
+            android:id="@+id/identicon"
+            style="@style/mtrl.SingleLineListItemLinearInner.Avatar"/>
 
-</syncthing.android.ui.login.ManageDeviceCardView>
+        <TextView
+            android:id="@+id/name"
+            style="@style/mtrl.SingleLineListItemLinearInner.Text"/>
+
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:src="@drawable/ic_check_grey600_24dp"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <ImageButton
+            android:id="@+id/overflow"
+            android:src="@drawable/ic_more_vert_grey600_24dp"
+            style="@style/mtrl.SingleLineListItemLinearInner.Icon"/>
+
+    </syncthing.android.ui.login.ManageDeviceCardView>
+</layout>

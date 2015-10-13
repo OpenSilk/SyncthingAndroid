@@ -119,11 +119,6 @@ public class NotifCardRejDeviceView extends ExpandableCardViewWrapper<NotifCardR
 
     @Override
     public void onBind(NotifCardRejDevice card) {
-        time.setText(card.event.time.toString("H:mm:ss"));
-        message.setText(getResources().getString(R.string.device_device_address_wants_to_connect_add_new_device,
-                card.id,
-                card.event.data.address
-        ));
         identiconSubscription = mPresenter.identiconGenerator.generateAsync(card.id)
                 .subscribe(identicon::setImageBitmap);
     }

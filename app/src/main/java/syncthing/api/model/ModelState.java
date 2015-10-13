@@ -17,29 +17,15 @@
 
 package syncthing.api.model;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
-
-import syncthing.android.R;
 
 /**
 * Created by drew on 3/17/15.
 */
 public enum ModelState {
-    @SerializedName("idle") IDLE(R.string.up_to_date),
-    @SerializedName("scanning") SCANNING(R.string.scanning),
-    @SerializedName("cleaning") CLEANING(R.string.cleaning),
-    @SerializedName("syncing") SYNCING(R.string.syncing),
-    @SerializedName("unknown") UNKNOWN(R.string.unknown);
-
-    private final int resource;
-
-    private ModelState(int resource) {
-        this.resource = resource;
-    }
-
-    public CharSequence localizedString(Context context) {
-        return context.getString(resource);
-    }
+    @SerializedName("idle") IDLE,
+    @SerializedName("scanning") SCANNING,
+    @SerializedName("cleaning") CLEANING,
+    @SerializedName("syncing") SYNCING,
+    @SerializedName("unknown") UNKNOWN,
 }

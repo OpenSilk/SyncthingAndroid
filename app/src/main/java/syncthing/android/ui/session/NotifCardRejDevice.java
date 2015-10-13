@@ -17,6 +17,8 @@
 
 package syncthing.android.ui.session;
 
+import android.databinding.Bindable;
+
 import syncthing.android.R;
 import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.Event;
@@ -35,4 +37,18 @@ public class NotifCardRejDevice extends NotifCardRej<DeviceRejected> {
         return R.layout.session_notif_device_rej;
     }
 
+    @Bindable
+    public String getTime() {
+        return event.time.toString("H:mm:ss");
+    }
+
+    @Bindable
+    public String getDevice() {
+        return event.data.device;
+    }
+
+    @Bindable
+    public String getAddress() {
+        return event.data.address;
+    }
 }

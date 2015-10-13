@@ -15,92 +15,97 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<syncthing.android.ui.session.NotifCardRejDeviceView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/session.RecyclerCard.Notif">
-
-    <RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="syncthing.android.ui.session.NotifCardRejDeviceViewBinding">
+        <variable name="card" type="syncthing.android.ui.session.NotifCardRejDevice"/>
+    </data>
+    <syncthing.android.ui.session.NotifCardRejDeviceView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/header"
-            style="@style/session.RecyclerNotifHeader">
-
-            <org.opensilk.common.ui.widget.SquareImageView
-                android:id="@+id/identicon"
-                style="@style/session.RecyclerNotifHeaderIcon"/>
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/new_device"
-                style="@style/session.RecyclerNotifHeaderText"/>
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="end"
-                style="@style/session.RecyclerNotifHeaderText.Time"
-                tools:text="1:22"/>
-
-        </LinearLayout>
+        android:layout_height="wrap_content"
+        style="@style/session.RecyclerCard.Notif">
 
         <RelativeLayout
-            android:id="@+id/expand"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/header"
-            style="@style/session.RecyclerNotifExpand"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/session.RecycleNotifMessageText"
-                tools:text="Message stoifo ysonito fasont"/>
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/message"
-                android:gravity="end"
-                style="@style/mtrl.ButtonBar">
+                android:id="@+id/header"
+                style="@style/session.RecyclerNotifHeader">
 
-                <Button
-                    android:id="@+id/btn_add"
+                <org.opensilk.common.ui.widget.SquareImageView
+                    android:id="@+id/identicon"
+                    style="@style/session.RecyclerNotifHeaderIcon"/>
+
+                <TextView
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/add"
-                    style="@style/mtrl.ButtonBarButton.Small"/>
+                    android:text="@string/new_device"
+                    style="@style/session.RecyclerNotifHeaderText"/>
 
-                <Button
-                    android:id="@+id/btn_ignore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ignore"
-                    style="@style/mtrl.ButtonBarButton.Small"/>
-
-                <Button
-                    android:id="@+id/btn_later"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/later"
-                    style="@style/mtrl.ButtonBarButton.Small"/>
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@{card.time}"
+                    style="@style/session.RecyclerNotifHeaderText.Time"
+                    tools:text="1:22"/>
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/expand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header"
+                style="@style/session.RecyclerNotifExpand"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/device_device_address_wants_to_connect_add_new_device(card.device,card.address)}"
+                    style="@style/session.RecycleNotifMessageText"
+                    tools:text="Message stoifo ysonito fasont"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/message"
+                    android:gravity="end"
+                    style="@style/mtrl.ButtonBar">
+
+                    <Button
+                        android:id="@+id/btn_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    <Button
+                        android:id="@+id/btn_ignore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ignore"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    <Button
+                        android:id="@+id/btn_later"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/later"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
-    </RelativeLayout>
-
-</syncthing.android.ui.session.NotifCardRejDeviceView>
+    </syncthing.android.ui.session.NotifCardRejDeviceView>
+</layout>

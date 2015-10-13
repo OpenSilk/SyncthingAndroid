@@ -20,6 +20,7 @@ package syncthing.android.ui.session;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
@@ -82,9 +83,6 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
     @Inject SessionPresenter mPresenter;
 
-    Subscription modelSubscription;
-    Subscription modelStateSubscription;
-
     public FolderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (!isInEditMode()) {
@@ -97,17 +95,6 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        unsubscribe();
     }
 
     @OnClick(R.id.header)
@@ -147,166 +134,6 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
     @Override
     public void onBind(FolderCard card) {
-        updateFolder(card.folder);
-        updateModel(card.model);
-        subscribe();
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        unsubscribe();
-    }
-
-    void updateFolder(FolderConfig folder) {
-
-        id.setText(folder.id);
-        directory.setText((folder.path));
-        error.setText(folder.invalid);
-        errorHider.setVisibility(StringUtils.isEmpty(folder.invalid) ? GONE : VISIBLE);
-        folderMasterHider.setVisibility(folder.readOnly ? VISIBLE : GONE);
-        ignorePermsHider.setVisibility(folder.ignorePerms ? VISIBLE : GONE);
-        rescanInterval.setText(String.valueOf(folder.rescanIntervalS));
-
-        pullOrder.setText(folder.order.localizedString(getContext()));
-        if (folder.order == PullOrder.RANDOM || folder.order == PullOrder.UNKNOWN) {
-            pullOrderHider.setVisibility(GONE);
-        } else {
-            pullOrderHider.setVisibility(VISIBLE);
-        }
-
-        if (folder.versioning.type != VersioningType.NONE) {
-            versioningHider.setVisibility(VISIBLE);
-            versioning.setText(folder.versioning.type.localizedString(getContext()));
-        } else {
-            versioningHider.setVisibility(GONE);
-        }
-
-        List<String> sharedNames = new ArrayList<>();
-        for (FolderDeviceConfig d : folder.devices) {
-            if (!StringUtils.equals(d.deviceID, mPresenter.getMyDeviceId())) {
-                DeviceConfig dev = mPresenter.controller.getDevice(d.deviceID);//TODO stop doing this
-                if (dev != null) {
-                    sharedNames.add(SyncthingUtils.getDisplayName(dev));
-                }
-            }
-        }
-        Collections.sort(sharedNames);
-        if (sharedNames.isEmpty()) {
-            sharedWith.setText("");
-        } else {
-            StringBuilder b = new StringBuilder();
-            for (int ii=0; ii<sharedNames.size(); ii++) {
-                b.append(sharedNames.get(ii));
-                if (ii+1 < sharedNames.size()) {
-                    b.append(", ");
-                }
-            }
-            sharedWith.setText(b.toString());
-        }
-
-    }
-
-    void updateModel(Model model) {
-        if (model == null) {
-            updateFolderStatus(null, 0);
-            return;
-        }
-
-        updateFolderStatus(model.state, calculateCompletion(model));
-
-        globalState.setText(getContext().getString(R.string.num_items_size,
-                        model.globalFiles,
-                        SyncthingUtils.humanReadableSize(model.globalBytes))
-        );
-
-        localState.setText(getContext().getString(R.string.num_items_size,
-                        model.localFiles,
-                        SyncthingUtils.humanReadableSize(model.localBytes))
-        );
-
-        if (model.needFiles > 0) {
-            needFilesHider.setVisibility(VISIBLE);
-            needFiles.setText(getContext().getString(R.string.num_items_size,
-                            model.needFiles,
-                            SyncthingUtils.humanReadableSize(model.needBytes))
-            );
-        } else {
-            needFilesHider.setVisibility(GONE);
-        }
-
-        ignorePatternsHider.setVisibility(model.ignorePatterns ? VISIBLE : GONE);
-
-        error.setText(model.invalid);
-        errorHider.setVisibility(StringUtils.isEmpty(model.invalid) ? GONE : VISIBLE);
-
-    }
-
-    void updateFolderStatus(ModelState status, int completion) {
-
-        if (status == null) {
-            state.setText(R.string.unknown);
-            state.setTextColor(getResources().getColor(R.color.folder_default));
-            btnRescan.setVisibility(VISIBLE);
-            btnOverride.setVisibility(getCard().folder.readOnly ? VISIBLE : GONE);
-            return;
-        }
-
-        btnRescan.setVisibility((status == ModelState.SCANNING) ? GONE : VISIBLE);
-        btnOverride.setVisibility((status == ModelState.SCANNING) ? GONE
-                : (getCard().folder.readOnly ? VISIBLE : GONE));
-
-        state.setText(getContext().getString(R.string.status_percent_complete,
-                        status.localizedString(getContext()), completion)
-        );
-
-        Resources res = getContext().getResources();
-        switch (status) {
-            case IDLE:
-                state.setTextColor(res.getColor(R.color.folder_idle));
-                break;
-            case SCANNING:
-            case SYNCING:
-                state.setTextColor(res.getColor(R.color.folder_scanning));
-                break;
-            default:
-                state.setTextColor(res.getColor(R.color.folder_default));
-        }
-    }
-
-    void subscribe() {
-        unsubscribe();
-        modelSubscription = mPresenter.bus.subscribe(
-                m -> {
-                    if (!StringUtils.equals(m.id, getCard().folder.id)) {
-                        return;
-                    }
-                    Timber.d("Update.Model(%s)", getCard().folder.id);
-                    getCard().setModel(m.model);
-                    updateModel(m.model);
-                },
-                Update.Model.class
-        );
-        modelStateSubscription = mPresenter.bus.subscribe(
-                m -> {
-                    if (!StringUtils.equals(m.id, getCard().folder.id)) {
-                        return;
-                    }
-                    Timber.d("Update.ModelState(%s)", getCard().folder.id);
-                    getCard().setModel(m.model);
-                    updateFolderStatus(m.model.state, calculateCompletion(m.model));
-                },
-                Update.ModelState.class
-        );
-    }
-
-    void unsubscribe() {
-        if (modelSubscription != null) {
-            modelSubscription.unsubscribe();
-        }
-        if (modelStateSubscription != null) {
-            modelStateSubscription.unsubscribe();
-        }
     }
 
     static int calculateCompletion(Model model) {

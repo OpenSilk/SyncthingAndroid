@@ -15,74 +15,78 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
-<syncthing.android.ui.session.NotifCardRestartView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/session.RecyclerCard.Notif"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="syncthing.android.ui.session.NotifCardRestartViewBinding">
 
-    <RelativeLayout
+    </data>
+    <syncthing.android.ui.session.NotifCardRestartView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/session.RecyclerCard.Notif"
         >
 
-        <LinearLayout
-            android:id="@+id/header"
-            style="@style/session.RecyclerNotifHeader">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_refresh_white_36dp"
-                style="@style/session.RecyclerNotifHeaderIcon"/>
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/restart_needed"
-                style="@style/session.RecyclerNotifHeaderText"/>
-
-        </LinearLayout>
-
         <RelativeLayout
-            android:id="@+id/expand"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/header"
-            style="@style/session.RecyclerNotifExpand"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration"
-                style="@style/session.RecycleNotifMessageText"/>
+            >
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/message"
-                android:gravity="end"
-                style="@style/mtrl.ButtonBar">
+                android:id="@+id/header"
+                style="@style/session.RecyclerNotifHeader">
 
-                <Button
-                    android:id="@+id/btn_restart"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/restart"
-                    style="@style/mtrl.ButtonBarButton.Small"/>
+                    android:src="@drawable/ic_refresh_white_36dp"
+                    style="@style/session.RecyclerNotifHeaderIcon"/>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/restart_needed"
+                    style="@style/session.RecyclerNotifHeaderText"/>
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/expand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header"
+                style="@style/session.RecyclerNotifExpand"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/the_configuration_has_been_saved_but_not_activated_syncthing_must_restart_to_activate_the_new_configuration"
+                    style="@style/session.RecycleNotifMessageText"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/message"
+                    android:gravity="end"
+                    style="@style/mtrl.ButtonBar">
+
+                    <Button
+                        android:id="@+id/btn_restart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/restart"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
-    </RelativeLayout>
-
-</syncthing.android.ui.session.NotifCardRestartView>
+    </syncthing.android.ui.session.NotifCardRestartView>
+</layout>

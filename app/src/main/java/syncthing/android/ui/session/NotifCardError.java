@@ -17,6 +17,8 @@
 
 package syncthing.android.ui.session;
 
+import android.databinding.Bindable;
+
 import syncthing.android.R;
 import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.GuiError;
@@ -24,7 +26,7 @@ import syncthing.api.model.GuiError;
 /**
  * Created by drew on 3/15/15.
  */
-public class NotifCardError extends ExpandableCard {
+public class NotifCardError extends NotifCard {
 
     final GuiError guiError;
 
@@ -37,8 +39,13 @@ public class NotifCardError extends ExpandableCard {
         return R.layout.session_notif_error;
     }
 
-    @Override
-    public int adapterId() {
-        return super.adapterId();
+    @Bindable
+    public String getTime() {
+        return guiError.time.toString("H:mm:ss");
+    }
+
+    @Bindable
+    public String getMessage() {
+        return guiError.error;
     }
 }

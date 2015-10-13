@@ -16,8 +16,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<syncthing.android.ui.session.HeaderCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/mtrl.SingleLineListItemTextView.Header"/>
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="syncthing.android.ui.session.HeaderCardViewBinding">
+
+    </data>
+    <syncthing.android.ui.session.HeaderCardView
+        style="@style/mtrl.SingleLineListItemTextView.Header"/>
+</layout>

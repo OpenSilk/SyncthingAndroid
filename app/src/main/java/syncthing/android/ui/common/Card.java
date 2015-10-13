@@ -17,17 +17,25 @@
 
 package syncthing.android.ui.common;
 
+import android.databinding.PropertyChangeRegistry;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Wrapper for recycler items to abstract adapter fuctionality
  *
  * Created by drew on 3/10/15.
  */
-public abstract class Card {
+public abstract class Card implements android.databinding.Observable {
+
+    private static final AtomicInteger idGenerator = new AtomicInteger(1);
+    protected PropertyChangeRegistry mRegistry = new PropertyChangeRegistry();
+    private final int adapterId = idGenerator.getAndIncrement();
 
     public abstract int getLayout();
 
     public int adapterId() {
-        return getLayout();
+        return adapterId;
     }
 
     public boolean isSame(Object o) {
@@ -35,5 +43,19 @@ public abstract class Card {
         if (o == null || getClass() != o.getClass()) return false;
         if (adapterId() != ((Card)o).adapterId()) return false;
         return true;
+    }
+
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        mRegistry.add(callback);
+    }
+
+    @Override
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        mRegistry.remove(callback);
+    }
+
+    protected void notifyChange(int val) {
+        mRegistry.notifyChange(this, val);
     }
 }
