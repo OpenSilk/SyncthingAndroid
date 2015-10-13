@@ -19,7 +19,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data class="syncthing.android.ui.session.MyDeviceCardViewBinding">
-
+        <import type="org.apache.commons.lang3.StringUtils"/>
+        <import type="android.view.View"/>
+        <import type="syncthing.android.service.SyncthingUtils"/>
+        <variable name="card" type="syncthing.android.ui.session.MyDeviceCard"/>
+        <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
     <syncthing.android.ui.session.MyDeviceCardView
         android:orientation="vertical"
@@ -33,15 +37,20 @@
 
             <LinearLayout
                 android:id="@+id/header"
+                android:onClick="@{expandHandler.onClick}"
                 style="@style/session.RecyclerHeader">
 
                 <org.opensilk.common.ui.widget.SquareImageView
                     android:id="@+id/identicon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:identicon="@{card.name}"
                     style="@style/session.RecyclerHeaderIcon"/>
 
                 <TextView
                     android:id="@+id/name"
                     style="@style/session.RecyclerHeaderText"
+                    android:text="@{card.name}"
                     tools:text="name"
                     />
 
@@ -61,6 +70,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="@{(card.inbps &lt; 0 || card.inBytesTotal &lt; 0) ? View.GONE : View.VISIBLE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -71,6 +81,7 @@
 
                     <TextView
                         android:id="@+id/download"
+                        android:text="@{@string/transfer_rate_total(SyncthingUtils.humanReadableTransferRate(card.inbps), SyncthingUtils.humanReadableSize(card.inBytesTotal))}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="0 b/s"/>
 
@@ -79,6 +90,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="@{(card.outbps &lt; 0 || card.outBytesTotal &lt; 0) ? View.GONE : View.VISIBLE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -89,6 +101,7 @@
 
                     <TextView
                         android:id="@+id/upload"
+                        android:text="@{@string/transfer_rate_total(SyncthingUtils.humanReadableTransferRate(card.outbps), SyncthingUtils.humanReadableSize(card.outBytesTotal))}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="0 b/s"/>
 
@@ -97,6 +110,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="@{card.hasSystemInfo ? View.VISIBLE : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -107,6 +121,7 @@
 
                     <TextView
                         android:id="@+id/mem_usage"
+                        android:text="@{SyncthingUtils.humanReadableSize(card.mem)}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="13 Mb"/>
 
@@ -115,6 +130,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="@{card.hasSystemInfo ? View.VISIBLE : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -125,6 +141,7 @@
 
                     <TextView
                         android:id="@+id/cpu_usage"
+                        android:text="@{@string/cpu_percent(card.cpuPercentText)}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="1%"/>
 
@@ -133,7 +150,8 @@
                 <LinearLayout
                     android:id="@+id/global_discovery_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="@{card.showGlobalAnnounce ? View.VISIBLE : View.GONE}">
 
                     <TextView
                         android:id="@+id/global_discovery_title"
@@ -143,6 +161,7 @@
 
                     <TextView
                         android:id="@+id/global_discovery"
+                        app:globalAnnounce="@{card.systemInfo}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="OK"/>
 
@@ -151,6 +170,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="@{card.hasSystemInfo ? View.VISIBLE : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -161,6 +181,7 @@
 
                     <TextView
                         android:id="@+id/uptime"
+                        android:text="@{card.uptimeText}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="v0.10"/>
 
@@ -179,6 +200,7 @@
 
                     <TextView
                         android:id="@+id/version"
+                        android:text="@{card.versionText}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="v0.10"/>
 

@@ -202,8 +202,7 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
 
     @Override
     public long getItemId(int position) {
-        return super.getItemId(position);
-        //return getItem(position).adapterId();
+        return getItem(position).adapterId();
     }
 
     String dump() {

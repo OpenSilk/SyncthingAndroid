@@ -20,6 +20,7 @@ package syncthing.android.ui.session;
 import android.view.View;
 
 /**
+ * https://code.google.com/p/android/issues/detail?id=185097
  * Created by drew on 10/13/15.
  */
 public interface SessionItemClickHandler {

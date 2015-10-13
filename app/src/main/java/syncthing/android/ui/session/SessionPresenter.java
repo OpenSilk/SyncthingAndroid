@@ -63,6 +63,8 @@ import syncthing.api.SessionManager;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
+import syncthing.api.model.SystemInfo;
+import syncthing.api.model.Version;
 import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.GuiError;
@@ -96,6 +98,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     final ArrayList<NotifCard> notifications = new ArrayList<>();
     final ArrayList<FolderCard> folders = new ArrayList<>();
     final ArrayList<DeviceCard> devices = new ArrayList<>();
+    MyDeviceCard myDevice;
 
     @Inject
     public SessionPresenter(
@@ -226,7 +229,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                 postDeviceStatsUpdate();
                 break;
             case SYSTEM:
-                postSystemInfoUpdate();
+                onSystemInfoUpdate();
                 break;
             case MODEL:
                 onFolderModelUpdate(e.data);
@@ -249,11 +252,12 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     void initializeView() {
         if (!hasView()) throw new IllegalStateException("initialize called without view");
         updateFolders();
+        updateThisDevice();
         updateDevices();
         getView().initialize(
                 getNotifications(),
                 folders,
-                getThisDevice(),
+                myDevice,
                 devices
         );
     }
@@ -320,13 +324,17 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         return null;
     }
 
-    MyDeviceCard getThisDevice() {
-        return new MyDeviceCard(
-                controller.getThisDevice(),
-                controller.getConnectionTotal(),
-                controller.getSystemInfo(),
-                controller.getVersion()
-        );
+    void updateThisDevice() {
+        DeviceConfig device = controller.getThisDevice();
+        ConnectionInfo conn = controller.getConnectionTotal();
+        SystemInfo sys = controller.getSystemInfo();
+        Version ver = controller.getVersion();
+        if (myDevice == null) {
+            myDevice = new MyDeviceCard(device, conn, sys, ver);
+        } else {
+            myDevice.setConnectionInfo(conn);
+            myDevice.setSystemInfo(sys);
+        }
     }
 
     void updateDevices() {
@@ -397,7 +405,11 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         }
         ConnectionInfo tConn = controller.getConnectionTotal();
         if (tConn != null) {
-            bus.post(new Update.ConnectionInfo(getMyDeviceId(), tConn));
+            if (myDevice != null) {
+                myDevice.setConnectionInfo(tConn);
+            } else {
+                updateThisDevice(); //Todo notify view
+            }
         }
     }
 
@@ -411,8 +423,12 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         }
     }
 
-    void postSystemInfoUpdate() {
-        bus.post(controller.getSystemInfo());
+    void onSystemInfoUpdate() {
+        if (myDevice != null) {
+            myDevice.setSystemInfo(controller.getSystemInfo());
+        } else {
+            updateThisDevice();//TODO notify view
+        }
     }
 
     void onFolderModelUpdate(Object o) {

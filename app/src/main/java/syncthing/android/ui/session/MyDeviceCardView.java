@@ -66,26 +66,9 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     @InjectView(R.id.version) TextView version;
 
     @Inject SessionPresenter mPresenter;
-    final DecimalFormat cpuFormat;
-    final PeriodFormatter uptimeFormatter;
-
-    Subscription identiconSubscription;
-    Subscription connectionSubscription;
-    Subscription systemInfoSubscription;
 
     public MyDeviceCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        cpuFormat = new DecimalFormat("0.00");
-        uptimeFormatter = new PeriodFormatterBuilder()
-                .appendDays()
-                .appendSuffix("d ")
-                .appendHours()
-                .appendSuffix("h ")
-                .appendMinutes()
-                .appendSuffix("m ")
-                .appendSeconds()
-                .appendSuffix("s")
-                .toFormatter();
         if (!isInEditMode()) {
             SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
             cmp.inject(this);
@@ -98,21 +81,6 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
         ButterKnife.inject(this);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        unsubscribe();
-    }
-
-    @OnClick(R.id.header)
-    void toggleExpand() {
-        toggleExpanded();
-    }
 
     @Override
     public View getExpandView() {
@@ -120,126 +88,7 @@ public class MyDeviceCardView extends ExpandableCardViewWrapper<MyDeviceCard> {
     }
 
     public void onBind(MyDeviceCard card) {
-        updateDevice(card.device);
-        updateConnection(card.connection);
-        updateSystem(card.system);
-        updateVersion(card.version);
-        subscribeUpdates();
-    }
 
-    @Override
-    public void reset() {
-        super.reset();
-        unsubscribe();
-    }
-
-    void updateDevice(DeviceConfig device) {
-        if (device == null) {
-            return;
-        }
-        identiconSubscription = mPresenter.identiconGenerator.generateAsync(device.deviceID)
-                .subscribe(new Action1<Bitmap>() {
-                    @Override
-                    public void call(Bitmap bitmap) {
-                        identicon.setImageBitmap(bitmap);
-                    }
-                });
-        name.setText(SyncthingUtils.getDisplayName(device));
-    }
-
-    public void updateConnection(ConnectionInfo conn) {
-        if (conn == null) {
-            download.setText(R.string.na);
-            upload.setText(R.string.na);
-            return;
-        }
-        download.setText(getContext().getString(
-                R.string.transfer_rate_total,
-                SyncthingUtils.humanReadableTransferRate(conn.inbps),
-                SyncthingUtils.humanReadableSize(conn.inBytesTotal)
-        ));
-        upload.setText(getContext().getString(
-                R.string.transfer_rate_total,
-                SyncthingUtils.humanReadableTransferRate(conn.outbps),
-                SyncthingUtils.humanReadableSize(conn.outBytesTotal)
-        ));
-    }
-
-    public void updateSystem(SystemInfo sys) {
-        //Timber.d("updateSystem(%s) sys=%s", getCard().device.name, sys);
-        if (sys == null) {
-            return;
-        }
-        memory.setText(SyncthingUtils.humanReadableSize(sys.sys));
-        cpu.setText(getResources().getString(R.string.cpu_percent, cpuFormat.format(sys.cpuPercent)));
-        uptime.setText(uptimeFormatter.print(Duration.standardSeconds(sys.uptime).toPeriod()));
-
-        if (sys.extAnnounceOK != null && sys.announceServersTotal > 0) {
-            globalDiscoveryHider.setVisibility(VISIBLE);
-            if (sys.announceServersFailed.isEmpty()) {
-                globalDiscovery.setText(android.R.string.ok);
-                globalDiscovery.setTextColor(getResources().getColor(R.color.announce_ok));
-            } else {
-                int failures = (sys.announceServersTotal - sys.announceServersFailed.size());
-                globalDiscovery.setText(getResources().getString(R.string.announce_failures,
-                        failures, sys.announceServersTotal
-                ));
-                globalDiscovery.setTextColor(getResources().getColor(
-                                failures == sys.announceServersTotal
-                                        ? R.color.announce_fail
-                                        : R.color.announce_ok
-                ));
-            }
-        } else {
-            globalDiscoveryHider.setVisibility(GONE);
-        }
-    }
-
-    void updateVersion(Version ver) {
-        version.setText(ver.toString());
-    }
-
-    void subscribeUpdates() {
-        unsubscribeUpdates();
-        connectionSubscription = mPresenter.bus.subscribe(
-                new Action1<Update.ConnectionInfo>() {
-                    @Override
-                    public void call(Update.ConnectionInfo conn) {
-                        if (!StringUtils.equals(conn.id, getCard().device.deviceID)) {
-                            return;
-                        }
-                        getCard().setConnectionInfo(conn.conn);
-                        updateConnection(conn.conn);
-                    }
-                },
-                Update.ConnectionInfo.class
-        );
-        systemInfoSubscription = mPresenter.bus.subscribe(
-                new Action1<SystemInfo>() {
-                    @Override
-                    public void call(SystemInfo sys) {
-                        getCard().setSystemInfo(sys);
-                        updateSystem(sys);
-                    }
-                },
-                SystemInfo.class
-        );
-    }
-
-    void unsubscribe() {
-        if (identiconSubscription != null) {
-            identiconSubscription.unsubscribe();
-        }
-        unsubscribeUpdates();
-    }
-
-    void unsubscribeUpdates() {
-        if (connectionSubscription != null) {
-            connectionSubscription.unsubscribe();
-        }
-        if (systemInfoSubscription != null) {
-            systemInfoSubscription.unsubscribe();
-        }
     }
 
 }
