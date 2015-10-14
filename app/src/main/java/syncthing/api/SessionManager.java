@@ -20,6 +20,7 @@ package syncthing.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.mortar.DaggerService;
 
@@ -46,24 +47,40 @@ public class SessionManager {
 
     final LinkedHashSet<Session> sessions = new LinkedHashSet<>();
 
-    public Session acquire(Credentials credentials) {
+    public Session acquire(@NonNull Credentials credentials) {
         for (Session session : sessions) {
-            if (session.credentials().equals(credentials)) {
+            if (credentials.equals(session.extras().getParcelable(Session.EXTRA_CREDENTIALS))) {
                 session.refs.incrementAndGet();
                 return session;
             }
         }
+        final SyncthingApiConfig config = SyncthingApiConfig.builder()
+                .forCredentials(credentials).build();
         final SessionComponent component = parent.newSession(
-                new SessionModule(new SyncthingApiConfig(credentials))
+                new SessionModule(config)
         );
-        final Session session = new Session(credentials, component);
+        final Session session = new Session(config, component);
+        session.extras().putParcelable(Session.EXTRA_CREDENTIALS, credentials);
         sessions.add(session);
+        return session;
+    }
+
+    /**
+     * Get a one off session that will be destroyed as soon as you release it
+     * Use for login
+     */
+    public Session acquire(@NonNull SyncthingApiConfig config) {
+        final SessionComponent component = parent.newSession(
+                new SessionModule(config)
+        );
+        final Session session = new Session(config, component);
+//        sessions.add(session);
         return session;
     }
 
     public void release(@NonNull Session session) {
         if (session.refs.decrementAndGet() == 0) {
-            Timber.d("Destroying session %s", session.credentials());
+            Timber.d("Destroying session %s", session.config().url);
             sessions.remove(session);
             session.destroy();
         }

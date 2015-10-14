@@ -40,11 +40,11 @@ public class SyncthingApiInterceptor implements Interceptor {
         Request request = chain.request();
         if (!StringUtils.isEmpty(config.getApiKey())) {
             request = request.newBuilder()
-                    .addHeader(SyncthingApi.HEADER_API_KEY, config.getApiKey())
+                    .addHeader(SyncthingApi.HEADER_API_KEY, StringUtils.trim(config.getApiKey()))
                     .build();
         } else if (!StringUtils.isEmpty(config.getAuth())) {
             request = request.newBuilder()
-                    .addHeader("Authorization", config.getApiKey())
+                    .addHeader("Authorization", StringUtils.trim(config.getAuth()))
                     .build();
         }
         return chain.proceed(request);

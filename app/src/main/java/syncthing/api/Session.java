@@ -18,22 +18,25 @@
 package syncthing.api;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import syncthing.android.model.Credentials;
+import syncthing.api.model.Config;
 
 /**
  * Created by drew on 10/10/15.
  */
 public class Session {
+    public static final String EXTRA_CREDENTIALS = "creds";
     /*package*/ final AtomicInteger refs = new AtomicInteger(1);
-    private final Credentials credentials;
+    private final SyncthingApiConfig config;
     private final SessionComponent component;
     private final Bundle extras = new Bundle();
 
-    public Session(Credentials credentials, SessionComponent component) {
-        this.credentials = credentials;
+    public Session(SyncthingApiConfig config, SessionComponent component) {
+        this.config = config;
         this.component = component;
     }
 
@@ -41,12 +44,16 @@ public class Session {
         return component.controller();
     }
 
-    public Credentials credentials() {
-        return credentials;
-    }
-
     public SyncthingApi api() {
         return component.syncthingApi();
+    }
+
+    SyncthingApiConfig config() {
+        return config;
+    }
+
+    public Bundle extras() {
+        return extras;
     }
 
     /*package*/ void destroy() {

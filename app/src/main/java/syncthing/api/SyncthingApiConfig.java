@@ -26,25 +26,74 @@ import syncthing.android.model.Credentials;
  */
 public class SyncthingApiConfig {
 
-    final Credentials credentials;
+    final String url;
+    final String caCert;
+    final String apiKey;
+    final String auth;
 
-    public SyncthingApiConfig(Credentials credentials) {
-        this.credentials = credentials;
+    private SyncthingApiConfig(Builder builder) {
+        this.url = builder.url;
+        this.caCert = builder.caCert;
+        this.apiKey = builder.apiKey;
+        this.auth = builder.auth;
     }
 
     public String getBaseUrl() {
-        return credentials.url;
+        return url;
     }
 
     public X509Certificate getCACert() {
-        return null;
+        return SyncthingSSLSocketFactory.makeCert(caCert);
     }
 
     public String getApiKey() {
-        return null;
+        return apiKey;
     }
 
     public String getAuth() {
-        return null;
+        return auth;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        String url;
+        String caCert;
+        String apiKey;
+        String auth;
+
+        public Builder forCredentials(Credentials credentials) {
+            this.url = credentials.url;
+            this.caCert = credentials.caCert;
+            this.apiKey = credentials.apiKey;
+            this.auth = null;
+            return this;
+        }
+
+        public Builder setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder setCaCert(String caCert) {
+            this.caCert = caCert;
+            return this;
+        }
+
+        public Builder setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+            return this;
+        }
+
+        public Builder setAuth(String auth) {
+            this.auth = auth;
+            return this;
+        }
+
+        public SyncthingApiConfig build() {
+            return new SyncthingApiConfig(this);
+        }
     }
 }
