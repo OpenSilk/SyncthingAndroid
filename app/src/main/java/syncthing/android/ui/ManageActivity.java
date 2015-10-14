@@ -50,6 +50,7 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
     public static final String EXTRA_ARGS = "args";
     public static final String EXTRA_FRAGMENT = "fragment";
     public static final String EXTRA_DISABLE_BACK = "disableback";
+    public static final String EDIT_STYLE = "edit_style";
 
     @Inject ActivityResultsOwner mActivityResultsOwner;
 
@@ -61,6 +62,13 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
     protected void onCreateScope(MortarScope.Builder builder) {
         AppComponent component = DaggerService.getDaggerComponent(getApplicationContext());
         builder.withService(DaggerService.DAGGER_SERVICE, ManageActivityComponent.FACTORY.call(component));
+    }
+
+    @Override
+    protected void onScopeCreated(MortarScope scope) {
+        if (getIntent() != null && getIntent().hasExtra(EDIT_STYLE)) {
+            setTheme(R.style.SessionEditDialogTheme_Edit);
+        }
     }
 
     @Override
