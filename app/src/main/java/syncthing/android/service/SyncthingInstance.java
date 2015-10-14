@@ -19,16 +19,20 @@ package syncthing.android.service;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.IBinder;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.core.mortar.MortarService;
+import org.opensilk.common.core.util.VersionUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -79,7 +83,7 @@ public class SyncthingInstance extends MortarService {
     public void onCreate() {
         super.onCreate();
         Timber.d("onCreate");
-        ensureBinary();
+        ensureBinaries();
         DaggerService.<SyncthingInstanceComponent>getDaggerComponent(this).inject(this);
     }
 
@@ -237,8 +241,29 @@ public class SyncthingInstance extends MortarService {
      * Initial setup
      */
 
+    void ensureBinaries() {
+        final String[] abis;
+        if (VersionUtils.hasLollipop()) {
+            abis = Build.SUPPORTED_ABIS;
+        } else {
+            abis = new String[]{Build.CPU_ABI, Build.CPU_ABI2};
+        }
+        String ext = null;
+        for (String abi: abis) {
+            if (StringUtils.startsWith(abi, "x86")) {
+                ext = "x86";
+                break;
+            } else if (StringUtils.startsWith(abi, "armeabi")) {
+                ext = "arm";
+                break;
+            }
+        }
+        if (ext == null) throw new RuntimeException("Unable to find supported arch in " + Arrays.toString(abis));
+        ensureBinary(ext);
+    }
+
     // From camlistore
-    void ensureBinary() {
+    void ensureBinary(String ext) {
         long myTime = getAPKModTime();
         String dstFile = SyncthingUtils.getSyncthingBinaryPath(this);
         File f = new File(dstFile);
@@ -252,7 +277,7 @@ public class SyncthingInstance extends MortarService {
         InputStream is = null;
         FileOutputStream fos = null;
         try {
-            is = getAssets().open("syncthing.arm");
+            is = getAssets().open("syncthing" + "." + ext);
             fos = getApplicationContext().openFileOutput("syncthing.bin.writing", MODE_PRIVATE);
             IOUtils.copy(is, fos);
             fos.flush();
@@ -272,10 +297,10 @@ public class SyncthingInstance extends MortarService {
             IOUtils.closeQuietly(is);
             IOUtils.closeQuietly(fos);
         }
-        ensureBinary2();
+        ensureBinary2(ext);
     }
 
-    void ensureBinary2() {
+    void ensureBinary2(String ext) {
         long myTime = getAPKModTime();
         String dstFile = SyncthingUtils.getSyncthingInotifyBinaryPath(this);
         File f = new File(dstFile);
@@ -289,7 +314,7 @@ public class SyncthingInstance extends MortarService {
         InputStream is = null;
         FileOutputStream fos = null;
         try {
-            is = getAssets().open("syncthing-inotify.arm");
+            is = getAssets().open("syncthing-inotify" + "." + ext);
             fos = getApplicationContext().openFileOutput("syncthing-inotify.bin.writing", MODE_PRIVATE);
             IOUtils.copy(is, fos);
             fos.flush();
