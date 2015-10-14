@@ -53,7 +53,7 @@ public class IdenticonGenerator {
 		int g = hash[1] & 255;
 		int b = hash[2] & 255;
 
-		int background = Color.parseColor("#f0f0f0");
+		int background = Color.TRANSPARENT;
 		int foreground = Color.argb(255, r, g, b);
 
 		for (int x = 0; x < width; x++) {
