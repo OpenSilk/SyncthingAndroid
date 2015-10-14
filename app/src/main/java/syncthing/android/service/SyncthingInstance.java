@@ -286,7 +286,7 @@ public class SyncthingInstance extends MortarService {
         String ext = null;
         for (String abi: abis) {
             if (StringUtils.startsWith(abi, "x86")) {
-                ext = "x86";
+                ext = "386";
                 break;
             } else if (StringUtils.startsWith(abi, "armeabi")) {
                 ext = "arm";

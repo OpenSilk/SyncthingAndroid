@@ -28,10 +28,13 @@ Syncthing runs with a number of custom settings to optimise your experience and 
 Requirements
 
 * You'll need build-essential or base-devel (including i386 support)
+
 ```bash
 sudo apt-get install libc6:i386 libstdc++6:i386 lib32z1 libsdl1.2debian:i386
 ```
+
 * Android sdk. Set `ANDROID_HOME`
+
 ```bash
 export ANDROID_HOME=/opt/android/sdk
 # Install Android SDK Tools
@@ -44,24 +47,35 @@ export ANDROID_HOME=/opt/android/sdk
 ```
 
 * Android ndk. Set `TOOLCHAIN_ROOT` or update scripts to point to yours
+
 ```bash
-# Create standalone ARM toolchain
-export NDK_ROOT=/opt/android/ndk/toolchain-arm
+# Create standalone ARM toolchain (x86 not working yet)
+export NDK_ROOT=/opt/android/ndk/toolchains
 export TOOLCHAIN_ROOT=$NDK_ROOT
-./android-ndk-r10d/build/tools/make-standalone-toolchain.sh --platform=android-21 --install-dir=$NDK_ROOT --arch=arm
+./android-ndk-r10d/build/tools/make-standalone-toolchain.sh --platform=android-21 --install-dir=$NDK_ROOT/arm --arch=arm
 ```
 
 * Building Syncthing
+
 ```bash
 # You only need to run these once (or whenever the submodules are updated)
+# If you are building for your self and know what arch you want you can omit
+# the other to reduce apk size (ie only build the arm versions)
 
-# Build go for android
-./make-go.bash
-# Build syncthing for android
-./make-syncthing.bash
+# Build go for android arm
+./make-go.bash arm
+# Build go for linux x86
+./make-go.bash x86
+# Build syncthing for android arm
+./make-syncthing.bash arm
+# Build syncthing for linux x86
+./make-syncthing.bash x86
+
+#Binaries will be installed to app/src/main/assets
+
 ```
 
-Alternatively use docker
+Alternatively use docker (This may be broken)
 
 ```bash
 #Make the image (only need to run once)
