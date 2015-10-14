@@ -21,17 +21,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.os.BatteryManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
@@ -42,7 +40,10 @@ import org.opensilk.common.ui.mortar.DrawerOwnerActivity;
 import org.opensilk.common.ui.mortar.DrawerOwnerDelegate;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortar.ToolbarOwnerDelegate;
+import org.opensilk.common.ui.mortarfragment.MortarFragment;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -51,11 +52,18 @@ import butterknife.InjectView;
 import butterknife.Optional;
 import mortar.MortarScope;
 import rx.Subscription;
-import rx.functions.Action1;
 import syncthing.android.AppComponent;
 import syncthing.android.AppSettings;
 import syncthing.android.R;
+import syncthing.android.identicon.IdenticonGenerator;
+import syncthing.android.model.Credentials;
 import syncthing.android.service.SyncthingUtils;
+import syncthing.android.ui.common.ActivityRequestCodes;
+import syncthing.android.ui.login.LoginFragment;
+import syncthing.android.ui.login.ManageFragment;
+import syncthing.android.ui.session.SessionFragment;
+import syncthing.android.ui.settings.SettingsActivity;
+import syncthing.android.ui.welcome.WelcomeFragment;
 import timber.log.Timber;
 
 /**
@@ -68,6 +76,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
     @Inject DrawerOwner mDrawerOwner;
     @Inject AppSettings mSettings;
     @Inject ActivityResultsOwner mActivityResultsOwner;
+    @Inject IdenticonGenerator mIdenticonGenerator;
 
     ActionBarDrawerToggle mDrawerToggle;
     protected DrawerOwnerDelegate<LauncherActivity> mDrawerOwnerDelegate;
@@ -75,7 +84,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
     Subscription mChargingSubscription;
 
     @InjectView(R.id.drawer_layout) @Optional DrawerLayout mDrawerLayout;
-    @InjectView(R.id.drawer) ViewGroup mDrawer;
+    @InjectView(R.id.navigation) NavigationView mNavigation;
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
@@ -112,6 +121,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
             subscribeChargingState();
         }
 
+        setupNavigation(savedInstanceState);
     }
 
     @Override
@@ -211,7 +221,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
      */
 
     private boolean isDrawerOpen() {
-        return mDrawer != null && mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mDrawer);
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
     /*
@@ -221,22 +231,6 @@ public class LauncherActivity extends MortarFragmentActivity implements
     @Override
     public int getContainerViewId() {
         return R.id.main;
-    }
-
-    class Toggle extends ActionBarDrawerToggle {
-        public Toggle(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar) {
-            super(activity, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
-        }
-
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            super.onDrawerOpened(drawerView);
-        }
-
-        @Override
-        public void onDrawerClosed(View view) {
-            super.onDrawerClosed(view);
-        }
     }
 
     /*
@@ -284,6 +278,118 @@ public class LauncherActivity extends MortarFragmentActivity implements
                            }
                 );
                 */
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Timber.d("onActivityResult(%d, %d, %s)", requestCode, resultCode, data);
+        if (requestCode == ActivityRequestCodes.LOGIN_ACTIVITY) {
+            // OK with credentials opens the device
+            if (resultCode == Activity.RESULT_OK && data != null && data.hasExtra(ManageActivity.EXTRA_CREDENTIALS)) {
+                data.setExtrasClassLoader(LauncherActivity.class.getClassLoader());
+                Credentials currentDevice = data.getParcelableExtra(ManageActivity.EXTRA_CREDENTIALS);
+                if (currentDevice != null) {
+                    populateNavigationMenu(currentDevice, true);
+                }
+            } else {
+                // Cancelled login
+                startWelcomeActivity();
+            }
+        } else if (requestCode == ActivityRequestCodes.MANAGE_ACTIVITY) {
+            if (mSettings.getSavedCredentials().isEmpty()) {
+                populateNavigationMenu(null, true);
+            }
+        }
+    }
+
+    void setupNavigation(Bundle savedInstanceState) {
+        mNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.manage_devices:
+                        closeDrawers();
+                        startDeviceManageActivity();
+                        return true;
+                    case R.id.app_settings:
+                        closeDrawers();
+                        startSettingsActivity();
+                        return true;
+                    default:
+                        break;
+                }
+                Intent intent = item.getIntent();
+                if (intent != null && intent.hasExtra(ManageActivity.EXTRA_CREDENTIALS)) {
+                    item.setChecked(true);
+                    closeDrawers();
+
+                    intent.setExtrasClassLoader(LauncherActivity.class.getClassLoader());
+                    Credentials credentials = intent.getParcelableExtra(ManageActivity.EXTRA_CREDENTIALS);
+                    openSession(credentials);
+                    return true;
+                }
+                return false;
+            }
+        });
+        Credentials current = mSettings.getDefaultCredentials();
+        populateNavigationMenu(current, savedInstanceState == null);
+    }
+
+    void populateNavigationMenu(Credentials current, boolean goToCurrent) {
+        List<Credentials> creds = mSettings.getSavedCredentialsSorted();
+        //TODO any way to just clear the devices group?
+        mNavigation.getMenu().clear();
+        mNavigation.inflateMenu(R.menu.navigation);
+        Menu menu = mNavigation.getMenu();
+        for (int ii=0; ii<creds.size();ii++) {
+            Credentials c = creds.get(ii);
+            MenuItem item = menu.add(R.id.nav_devices, Menu.NONE, ii+1, c.alias);
+            item.setIcon(new BitmapDrawable(getResources(), mIdenticonGenerator.generate(c.id)));
+            item.setIntent(new Intent().putExtra(ManageActivity.EXTRA_CREDENTIALS, c));
+            if (goToCurrent && c.equals(current)) {
+                item.setChecked(true);
+            }
+        }
+        if (goToCurrent) {
+            if (current == null) {
+                if (creds.isEmpty()) {
+                    startWelcomeActivity();
+                } else {
+                    startLoginActivity();
+                }
+            } else {
+                openSession(current);
+            }
+        }
+    }
+
+    void openSession(Credentials credentials) {
+        MortarFragment session = SessionFragment.newInstance(credentials);
+        mFragmentManagerOwner.replaceMainContent(session, false);
+    }
+
+    void startDeviceManageActivity() {
+        Intent intent = new Intent(this, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, ManageFragment.NAME);
+        startActivityForResult(intent, ActivityRequestCodes.MANAGE_ACTIVITY, null);
+    }
+
+    void startSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivityForResult(intent, 0, null);
+    }
+
+    void startLoginActivity() {
+        Intent intent = new Intent(this, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, LoginFragment.NAME);
+        startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
+    }
+
+    void startWelcomeActivity() {
+        Intent intent = new Intent(this, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, WelcomeFragment.NAME)
+                .putExtra(ManageActivity.EXTRA_DISABLE_BACK, true);
+        startActivityForResult(intent, ActivityRequestCodes.WELCOME_ACTIVITY, null);
     }
 
 }

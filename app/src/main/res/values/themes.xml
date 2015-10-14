@@ -48,11 +48,11 @@
         <item name="colorAccent">@color/color_accent</item>
         <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
         <item name="android:windowAnimationStyle">@style/DialogWindowAnimation</item>
-        <item name="android:windowSoftInputMode">stateVisible|adjustPan</item>
+        <item name="android:windowSoftInputMode">stateHidden|adjustPan</item>
     </style>
 
     <style name="SessionEditDialogTheme.Edit">
-        <item name="android:windowSoftInputMode">stateHidden|adjustPan</item>
+        <item name="android:windowSoftInputMode">stateVisible|adjustPan</item>
     </style>
 
     <style name="DialogWindowAnimation" parent="android:Animation.Dialog">

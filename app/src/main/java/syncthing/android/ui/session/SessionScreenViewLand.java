@@ -144,6 +144,7 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         refreshThisDevice(myDevice);
         refreshDevices(devices);
         refreshNotifications(notifs);
+        requestLayout();
     }
 
     public void refreshNotifications(List<NotifCard> notifs) {
