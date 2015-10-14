@@ -70,7 +70,7 @@ public class ManagePresenter extends ViewPresenter<ManageScreenView> {
     }
 
     void openAddScreen() {
-        LoginFragment f = LoginFragment.newInstance(null);
+        LoginFragment f = LoginFragment.newInstance(Credentials.NONE);
         fragmentManagerOwner.replaceMainContent(f, true);
     }
 
