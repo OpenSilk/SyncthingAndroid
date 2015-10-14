@@ -43,8 +43,8 @@ import syncthing.api.model.VersioningType;
  */
 public class FolderCard extends ExpandableCard {
 
-    FolderConfig folder;
-    Model model;
+    private FolderConfig folder;
+    private Model model;
 
     public FolderCard(FolderConfig folder, Model model) {
         this.folder = folder;
@@ -61,12 +61,52 @@ public class FolderCard extends ExpandableCard {
     }
 
     public void setModel(Model model) {
-        this.model = model;
-        notifyChange(syncthing.android.BR._all);//TODO only notify changed fields
+        if (this.model == null || model == null) {
+            this.model = model;
+            notifyChange(syncthing.android.BR._all);
+        } else {
+            if (!StringUtils.equals(this.model.invalid, model.invalid)) {
+                this.model.invalid = model.invalid;
+                notifyChange(syncthing.android.BR.invalid);
+            }
+            if (this.model.globalFiles != model.globalFiles) {
+                this.model.globalFiles = model.globalFiles;
+                notifyChange(syncthing.android.BR.globalFiles);
+            }
+            if (this.model.globalBytes != model.globalBytes) {
+                this.model.globalBytes = model.globalBytes;
+                notifyChange(syncthing.android.BR.globalBytes);
+                notifyChange(syncthing.android.BR.completion);
+            }
+            if (this.model.localFiles != model.localFiles) {
+                this.model.localFiles = model.localFiles;
+                notifyChange(syncthing.android.BR.localFiles);
+            }
+            if (this.model.localBytes != model.localBytes) {
+                this.model.localBytes = model.localBytes;
+                notifyChange(syncthing.android.BR.localBytes);
+            }
+            if (this.model.needFiles != model.needFiles) {
+                this.model.needFiles = model.needFiles;
+                notifyChange(syncthing.android.BR.needFiles);
+            }
+            if (this.model.needBytes != model.needBytes) {
+                this.model.needBytes = model.needBytes;
+                notifyChange(syncthing.android.BR.needBytes);
+            }
+            if (this.model.inSyncBytes != model.inSyncBytes) {
+                this.model.inSyncBytes = model.inSyncBytes;
+                notifyChange(syncthing.android.BR.completion);
+            }
+            if (this.model.ignorePatterns != model.ignorePatterns) {
+                this.model.ignorePatterns = model.ignorePatterns;
+                notifyChange(syncthing.android.BR.ignorePatterns);
+            }
+        }
     }
 
     public void setState(ModelState state) {
-        if (model != null) {
+        if (model != null && state != null) {
             model.state = state;
             notifyChange(syncthing.android.BR.state);
         }
@@ -152,6 +192,10 @@ public class FolderCard extends ExpandableCard {
         return model != null ? model.needBytes : 0;
     }
 
+    @Bindable
+    public int getCompletion() {
+        return model != null ? calculateCompletion(model) : -1;
+    }
 
     @Bindable
     public boolean getIgnorePatterns() {
@@ -189,16 +233,10 @@ public class FolderCard extends ExpandableCard {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FolderCard that = (FolderCard) o;
-        return !(folder != null ? !folder.equals(that.folder) : that.folder != null);
+    static int calculateCompletion(Model model) {
+        return (model.globalBytes != 0)
+                ? Math.min(100, Math.round(100f * model.inSyncBytes / model.globalBytes))
+                : 100;
     }
 
-    @Override
-    public int hashCode() {
-        return folder != null ? folder.hashCode() : 0;
-    }
 }

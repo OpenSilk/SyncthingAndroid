@@ -76,27 +76,29 @@ public class ExpandCollapseHelper {
 
 
         ValueAnimator animator = createHeightAnimator(expandingLayout, 0, expandingLayout.getMeasuredHeight());
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            final int listViewHeight = recyclerView.getHeight();
-            final int listViewBottomPadding = recyclerView.getPaddingBottom();
+        if (recyclerView != null) {
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                final int listViewHeight = recyclerView.getHeight();
+                final int listViewBottomPadding = recyclerView.getPaddingBottom();
 
-            final View v = findDirectChild(expandingLayout, recyclerView);
+                final View v = findDirectChild(expandingLayout, recyclerView);
 
-            @Override
-            public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-                if (recyclerView.getLayoutManager().canScrollVertically()) {
-                    final int bottom = v.getBottom();
-                    if (bottom > listViewHeight) {
-                        final int top = v.getTop();
-                        if (top > 0) {
-                            //recyclerView.scrollBy(0,Math.min(bottom - listViewHeight + listViewBottomPadding, top));
-                            recyclerView.smoothScrollBy(0,Math.min(bottom - listViewHeight + listViewBottomPadding + 4, top));
+                @Override
+                public void onAnimationUpdate(final ValueAnimator valueAnimator) {
+                    if (recyclerView.getLayoutManager().canScrollVertically()) {
+                        final int bottom = v.getBottom();
+                        if (bottom > listViewHeight) {
+                            final int top = v.getTop();
+                            if (top > 0) {
+                                //recyclerView.scrollBy(0,Math.min(bottom - listViewHeight + listViewBottomPadding, top));
+                                recyclerView.smoothScrollBy(0,Math.min(bottom - listViewHeight + listViewBottomPadding + 4, top));
 
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

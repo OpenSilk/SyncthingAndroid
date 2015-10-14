@@ -37,34 +37,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
+            <FrameLayout
                 android:id="@+id/header"
                 android:onClick="@{expandHandler.onClick}"
-                style="@style/session.RecyclerHeader">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/header_texts"
+                    style="@style/session.RecyclerHeader">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_folder_grey600_36dp"
+                        style="@style/session.RecyclerHeaderIcon"/>
+
+                    <TextView
+                        android:id="@+id/id"
+                        android:text="@{card.id}"
+                        style="@style/session.RecyclerHeaderText"
+                        tools:text="folderid"/>
+
+                    <TextView
+                        android:id="@+id/state"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        app:modelStateText="@{card.state}"
+                        app:modelStateTextColor="@{card.state}"
+                        style="@style/session.RecyclerHeaderText"
+                        tools:text="status (100%)"/>
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_folder_grey600_36dp"
-                    style="@style/session.RecyclerHeaderIcon"/>
+                    android:layout_marginBottom="-4dp"
+                    android:layout_gravity="bottom"
+                    android:visibility="@{(card.completion &lt; 0 || card.completion == 100) ? View.GONE : View.VISIBLE}"
+                    android:progress="@{card.completion}"
+                    android:max="100"
+                    style="?android:progressBarStyleHorizontal"
+                    tools:visibility="visible"
+                    tools:progress="60"/>
 
-                <TextView
-                    android:id="@+id/id"
-                    android:text="@{card.id}"
-                    style="@style/session.RecyclerHeaderText"
-                    tools:text="folderid"/>
-
-                <TextView
-                    android:id="@+id/state"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    app:modelStateText="@{card.state}"
-                    app:modelStateTextColor="@{card.state}"
-                    style="@style/session.RecyclerHeaderText"
-                    tools:text="status (100%)"/>
-
-            </LinearLayout>
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/expand"

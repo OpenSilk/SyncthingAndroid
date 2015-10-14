@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.common;
 
-import android.databinding.DataBindingUtil;
 import android.databinding.OnRebindCallback;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/10/15.
@@ -103,11 +104,13 @@ public abstract class CardRecyclerAdapter extends RecyclerView.Adapter<CardViewH
         holder.recycle();
         Card c = getItem(position);
         holder.bind(c, expandListener);
+        applyAdditionalBinding(c, holder);
     }
 
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position, List<Object> payloads) {
         if (isForDataBinding(payloads)) {
+            Timber.d("executing pending binding for %d", position);
             holder.getBinding().executePendingBindings();
         } else {
             super.onBindViewHolder(holder, position, payloads);

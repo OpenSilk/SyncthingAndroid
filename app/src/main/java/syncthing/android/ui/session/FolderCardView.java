@@ -100,24 +100,24 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
     @OnClick(R.id.btn_override)
     void overrideChanges() {
         if (getCard() == null) return;
-        mPresenter.overrideChanges(getCard().folder.id);
+        mPresenter.overrideChanges(getCard().getId());
     }
 
     @OnClick(R.id.btn_rescan)
     void rescanFolder() {
         if (getCard() == null) return;
-        mPresenter.scanFolder(getCard().folder.id);
+        mPresenter.scanFolder(getCard().getId());
     }
 
     @OnClick(R.id.btn_edit)
     void addFolder() {
         if (getCard() == null) return;
-        mPresenter.openEditFolderScreen(getCard().folder.id);
+        mPresenter.openEditFolderScreen(getCard().getId());
     }
 
     void openFolder() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = Uri.parse(getCard().folder.path);
+        Uri uri = Uri.parse(getCard().getId());
         intent.setDataAndType(uri, "*/*");
         getContext().startActivity(intent);
     }
@@ -129,12 +129,6 @@ public class FolderCardView extends ExpandableCardViewWrapper<FolderCard> {
 
     @Override
     public void onBind(FolderCard card) {
-    }
-
-    static int calculateCompletion(Model model) {
-        return (model.globalBytes != 0)
-                ? Math.min(100, Math.round(100f * model.inSyncBytes / model.globalBytes))
-                : 100;
     }
 
 }

@@ -22,6 +22,7 @@ import android.databinding.BindingAdapter;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
@@ -56,10 +57,10 @@ public class MyDeviceCard extends ExpandableCard {
                 .toFormatter();
     }
 
-    protected final DeviceConfig device;
+    protected DeviceConfig device;
     protected ConnectionInfo connection;
     protected SystemInfo system;
-    protected final Version version;
+    protected Version version;
 
     public MyDeviceCard(DeviceConfig device, ConnectionInfo connection, SystemInfo system, Version version) {
         this.device = device;
@@ -68,25 +69,80 @@ public class MyDeviceCard extends ExpandableCard {
         this.version = version;
     }
 
+    public void setDevice(DeviceConfig device) {
+        if (!StringUtils.equals(this.device.deviceID, device.deviceID)) {
+            throw new IllegalArgumentException("Tried binding a different device to this card " +
+                    device.deviceID +" != " + this.device.deviceID);
+        }
+        this.device = device;
+        notifyChange(syncthing.android.BR._all);//TODO only notify changed fields
+    }
+
     public void setConnectionInfo(ConnectionInfo connection) {
-        this.connection = connection;
-        notifyChange(syncthing.android.BR.inbps);
-        notifyChange(syncthing.android.BR.inBytesTotal);
-        notifyChange(syncthing.android.BR.outbps);
-        notifyChange(syncthing.android.BR.outBytesTotal);
+        if (this.connection == null || connection == null) {
+            this.connection = connection;
+            notifyChange(syncthing.android.BR.inbps);
+            notifyChange(syncthing.android.BR.inBytesTotal);
+            notifyChange(syncthing.android.BR.outbps);
+            notifyChange(syncthing.android.BR.outBytesTotal);
+        } else {
+            if (this.connection.inbps != connection.inbps) {
+                this.connection.inbps = connection.inbps;
+                notifyChange(syncthing.android.BR.inbps);
+            }
+            if (this.connection.inBytesTotal != connection.inBytesTotal) {
+                this.connection.inBytesTotal = connection.inBytesTotal;
+                notifyChange(syncthing.android.BR.inBytesTotal);
+            }
+            if (this.connection.outbps != connection.outbps) {
+                this.connection.outbps = connection.outbps;
+                notifyChange(syncthing.android.BR.inBytesTotal);
+            }
+            if (this.connection.outBytesTotal != connection.outBytesTotal) {
+                this.connection.outBytesTotal = connection.outBytesTotal;
+                notifyChange(syncthing.android.BR.inBytesTotal);
+            }
+        }
     }
 
     public void setSystemInfo(SystemInfo system) {
-        this.system = system;
-        notifyChange(syncthing.android.BR.mem);
-        notifyChange(syncthing.android.BR.cpuPercent);
-        notifyChange(syncthing.android.BR.cpuPercentText);
-        notifyChange(syncthing.android.BR.systemInfo);
-        notifyChange(syncthing.android.BR.showGlobalAnnounce);
-        notifyChange(syncthing.android.BR.hasSystemInfo);
-        notifyChange(syncthing.android.BR.uptime);
-        notifyChange(syncthing.android.BR.uptimeText);
+        if (this.system == null) {
+            this.system = system;
+            notifyChange(syncthing.android.BR.mem);
+            notifyChange(syncthing.android.BR.cpuPercent);
+            notifyChange(syncthing.android.BR.cpuPercentText);
+            notifyChange(syncthing.android.BR.systemInfo);
+            notifyChange(syncthing.android.BR.hasSystemInfo);
+            notifyChange(syncthing.android.BR.showGlobalAnnounce);
+            notifyChange(syncthing.android.BR.uptime);
+            notifyChange(syncthing.android.BR.uptimeText);
+        } else {
+            if (this.system.sys != system.sys) {
+                this.system.sys = system.sys;
+                notifyChange(syncthing.android.BR.mem);
+            }
+            if (this.system.cpuPercent != system.cpuPercent) {
+                this.system.cpuPercent = system.cpuPercent;
+                notifyChange(syncthing.android.BR.cpuPercent);
+                notifyChange(syncthing.android.BR.cpuPercentText);
+            }
+            if (this.system.uptime != system.uptime) {
+                this.system.uptime = system.uptime;
+                notifyChange(syncthing.android.BR.uptime);
+            }
+            //todo handle global announce better
+            if (this.system.announceServersFailed.size()
+                    != system.announceServersFailed.size()) {
+                this.system = system;
+                notifyChange(syncthing.android.BR.systemInfo);
+                notifyChange(syncthing.android.BR.showGlobalAnnounce);
+            }
+        }
+    }
 
+    public void setVersion(Version version) {
+        this.version = version;
+        notifyChange(syncthing.android.BR.versionText);
     }
 
     @Override

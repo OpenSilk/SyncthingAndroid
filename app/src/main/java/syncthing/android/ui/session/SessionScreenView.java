@@ -97,7 +97,7 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         mPresenter.retryConnection();
     }
 
-    public void initialize(List<ExpandableCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices) {
+    public void initialize(List<NotifCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices) {
         mListAdapter.setNotifications(notifs, false);
         mListAdapter.setFolders(folders, false);
         mListAdapter.setThisDevice(myDevice, false);
@@ -105,7 +105,7 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         mListAdapter.notifyDataSetChanged();
     }
 
-    public void refreshNotifications(List<ExpandableCard> notifs) {
+    public void refreshNotifications(List<NotifCard> notifs) {
         mListAdapter.setNotifications(notifs, true);
     }
 

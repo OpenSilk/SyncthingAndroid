@@ -92,8 +92,6 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     final SessionManager manager;
     final ToolbarOwner toolbarOwner;
 
-    final RxBus bus = new RxBus();
-
     Subscription changeSubscription;
     final ArrayList<NotifCard> notifications = new ArrayList<>();
     final ArrayList<FolderCard> folders = new ArrayList<>();
@@ -197,13 +195,15 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             case FOLDER_REJECTED:
             case NOTICE:
                 if (hasView()) {
-                    getView().refreshNotifications(getNotifications());
+                    updateNotifications();
+                    getView().refreshNotifications(notifications);
                 }
                 break;
             case CONFIG_UPDATE:
                 if (hasView()) {
                     if (!controller.isConfigInSync()) {
-                        getView().refreshNotifications(getNotifications());
+                        updateNotifications();
+                        getView().refreshNotifications(notifications);
                     }
                     updateFolders();
                     getView().refreshFolders(folders);
@@ -251,33 +251,63 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
 
     void initializeView() {
         if (!hasView()) throw new IllegalStateException("initialize called without view");
+        updateNotifications();
         updateFolders();
         updateThisDevice();
         updateDevices();
         getView().initialize(
-                getNotifications(),
+                notifications,
                 folders,
                 myDevice,
                 devices
         );
     }
 
-    List<ExpandableCard> getNotifications() {
-        List<ExpandableCard> notifs = new ArrayList<>();
+    void updateNotifications() {
+        /*todo compare device/foler rej and update
         if (!controller.isConfigInSync()) {
-            notifs.add(NotifCardRestart.INSTANCE);
+            if (notifications.indexOf(NotifCardRestart.INSTANCE) == -1) {
+                notifications.add(0, NotifCardRestart.INSTANCE);
+            }
+        } else {
+            int idx;
+            if ((idx = notifications.indexOf(NotifCardRestart.INSTANCE)) != -1) {
+                notifications.remove(idx);
+            }
         }
         GuiError guiError = controller.getLatestError();
         if (guiError != null) {
-            notifs.add(new NotifCardError(guiError));
+            NotifCardError.INSTANCE.setError(guiError);
+            if (notifications.indexOf(NotifCardError.INSTANCE) == -1) {
+                if (notifications.size() >= 1) {
+                    //we want to be second
+                    notifications.add(1, NotifCardError.INSTANCE);
+                } else {
+                    notifications.add(NotifCardError.INSTANCE);
+                }
+            }
+        } else {
+            int idx;
+            if ((idx = notifications.indexOf(NotifCardError.INSTANCE)) != -1) {
+                notifications.remove(idx);
+            }
+        }
+        */
+        notifications.clear();
+        if (!controller.isConfigInSync()) {
+            notifications.add(NotifCardRestart.INSTANCE);
+        }
+        GuiError guiError = controller.getLatestError();
+        if (guiError != null) {
+            NotifCardError.INSTANCE.setError(guiError);
+            notifications.add(NotifCardError.INSTANCE);
         }
         for (Map.Entry<String, DeviceRejected> e : controller.getDeviceRejections()) {
-            notifs.add(new NotifCardRejDevice(e.getKey(), e.getValue()));
+            notifications.add(new NotifCardRejDevice(e.getKey(), e.getValue()));
         }
         for (Map.Entry<String, FolderRejected> e : controller.getFolderRejections()) {
-            notifs.add(new NotifCardRejFolder(e.getKey(), e.getValue()));
+            notifications.add(new NotifCardRejFolder(e.getKey(), e.getValue()));
         }
-        return notifs;
     }
 
     void updateFolders() {
@@ -317,7 +347,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
 
     private FolderCard getFolderCard(String id) {
         for (FolderCard fc : folders) {
-            if (StringUtils.equals(fc.folder.id, id)) {
+            if (StringUtils.equals(fc.getId(), id)) {
                 return fc;
             }
         }

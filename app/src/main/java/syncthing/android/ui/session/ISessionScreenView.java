@@ -28,8 +28,8 @@ import syncthing.android.ui.common.ExpandableCard;
  */
 public interface ISessionScreenView {
     Context getContext();
-    void initialize(List<ExpandableCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices);
-    void refreshNotifications(List<ExpandableCard> notifs);
+    void initialize(List<NotifCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices);
+    void refreshNotifications(List<NotifCard> notifs);
     void refreshFolders(List<FolderCard> folders);
     void refreshThisDevice(MyDeviceCard myDevice);
     void refreshDevices(List<DeviceCard> devices);

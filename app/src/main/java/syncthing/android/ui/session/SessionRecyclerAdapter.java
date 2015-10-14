@@ -40,7 +40,7 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     final SessionPresenter mPresenter;
 
     //order here is display order
-    List<ExpandableCard> notifications = new LinkedList<>();
+    List<NotifCard> notifications = new LinkedList<>();
     HeaderCard folderHeader = HeaderCard.FOLDER;
     List<FolderCard> folderItems = new LinkedList<>();
     HeaderCard deviceHeader = HeaderCard.DEVICE;
@@ -67,7 +67,7 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
 //        holder.getBinding().setVariable(syncthing.android.BR.clickHandler, this);
     }
 
-    public void setNotifications(List<ExpandableCard> notifs, boolean notify) {
+    public void setNotifications(List<NotifCard> notifs, boolean notify) {
         updateList(notifications, notifs, this::findNotificationOffset, notify);
     }
 

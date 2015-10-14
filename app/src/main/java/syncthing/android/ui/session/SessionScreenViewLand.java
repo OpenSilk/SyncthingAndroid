@@ -50,6 +50,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
 import syncthing.android.ui.common.CardViewHolder;
@@ -76,8 +77,9 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
     @InjectView(R.id.loading_progress) ProgressBar mLoadingProgress;
     @InjectView(R.id.folders_header) HeaderCardView mFoldersHeader;
     @InjectView(R.id.devices_header) HeaderCardView mDevicesHeader;
+    @InjectView(R.id.devices_wrappeer) ViewGroup mDevicesWrapper;
 
-    HashMap<ExpandableCard, CardViewHolder> mNotifications = new LinkedHashMap<>();
+    HashMap<NotifCard, CardViewHolder> mNotifications = new LinkedHashMap<>();
     HashMap<FolderCard, CardViewHolder> mFolders = new LinkedHashMap<>();
     HashMap<DeviceCard, CardViewHolder> mDevices = new LinkedHashMap<>();
     CardViewHolder mMyDeviceVH;
@@ -137,90 +139,73 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         mPresenter.retryConnection();
     }
 
-    public void initialize(List<ExpandableCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices) {
+    public void initialize(List<NotifCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices) {
         refreshFolders(folders);
         refreshThisDevice(myDevice);
         refreshDevices(devices);
         refreshNotifications(notifs);
     }
 
-    public void refreshNotifications(List<ExpandableCard> notifs) {
-        if (notifs.isEmpty()) {
-            mNotifList.removeAllViews();
-            mNotifications.clear();
-            return;
-        }
-        if (mNotifList.getChildCount() == 0) {
-            for (ExpandableCard c : notifs) {
-                addNotificaion(c);
-            }
-        } else {
-            //clear old notifications
-            Iterator<Map.Entry<ExpandableCard, CardViewHolder>> iter =
-                    mNotifications.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry<ExpandableCard, CardViewHolder> e = iter.next();
-                if (!notifs.contains(e.getKey())) {
-                    e.getValue().recycle();
-                    iter.remove();
-                }
-            }
-            //remove views for old notifications
-            for (int ii=mNotifList.getChildCount()-1; ii>=0; ii--) {
-                View v = mNotifList.getChildAt(ii);
-                if (!mNotifications.containsValue((CardViewHolder) v.getTag())) {
-                    mNotifList.removeViewAt(ii);
-                }
-            }
-            //add or update the notifications
-            for (ExpandableCard c : notifs) {
-                CardViewHolder vh = mNotifications.get(c);
-                if (vh != null && mNotifList.findViewWithTag(vh) != null) {
-                    vh.recycle();
-                    vh.bind(c, this);
-                } else {
-                    addNotificaion(c);
-                }
-            }
-        }
-    }
-
-    private void addNotificaion(ExpandableCard c) {
-        View v = ViewUtils.inflate(getContext(), c.getLayout(), mNotifList, false);
-        CardViewHolder vh = new CardViewHolder(v);
-        vh.bind(c, this);
-        v.setTag(vh);
-        mNotifications.put(c, vh);
-        mNotifList.addView(v);
+    public void refreshNotifications(List<NotifCard> notifs) {
+        refreshList(notifs, mNotifList, mNotifications);
     }
 
     public void refreshFolders(List<FolderCard> folders) {
-        if (folders.isEmpty()) {
-            mFoldersList.removeAllViews();
-            mFolders.clear();
+        refreshList(folders, mFoldersList, mFolders);
+    }
+
+    public void refreshThisDevice(MyDeviceCard myDevice) {
+        if (myDevice != null) {
+            int idx;
+            if (mMyDeviceVH != null && (idx = mDevicesWrapper.indexOfChild(mMyDeviceVH.itemView)) != -1) {
+                mMyDeviceVH.bind(myDevice, this);
+            } else {
+                myDevice.setExpanded(true);
+                View v = ViewUtils.inflate(getContext(), myDevice.getLayout(), mDevicesWrapper, false);
+                mMyDeviceVH = new CardViewHolder(v, mPresenter);
+                mMyDeviceVH.bind(myDevice, this);
+                mDevicesWrapper.addView(v, 0);
+            }
+        }
+    }
+
+    public void refreshDevices(List<DeviceCard> devices) {
+        refreshList(devices, mDevicesList, mDevices);
+    }
+
+    <T extends ExpandableCard>  void refreshList(List<T> list, ViewGroup viewList, Map<T, CardViewHolder> map) {
+        if (list == null || list.isEmpty()) {
+            viewList.removeAllViews();
+            map.clear();
             return;
         }
-        if (mFoldersList.getChildCount() == 0) {
+        if (viewList.getChildCount() == 0) {
             //add all folders to map
-            for (FolderCard c : folders) {
-                addFolder(c);
+            for (T c : list) {
+                View v = ViewUtils.inflate(getContext(), c.getLayout(), viewList, false);
+                CardViewHolder vh = new CardViewHolder(v, mPresenter);
+                vh.bind(c, this);
+                map.put(c, vh);
             }
         } else {
             //clear old folders
-            Iterator<Map.Entry<FolderCard, CardViewHolder>> iter =
-                    mFolders.entrySet().iterator();
+            Iterator<Map.Entry<T, CardViewHolder>> iter =
+                   map.entrySet().iterator();
             while (iter.hasNext()) {
-                Map.Entry<FolderCard, CardViewHolder> e = iter.next();
-                if (!folders.contains(e.getKey())) {
+                Map.Entry<T, CardViewHolder> e = iter.next();
+                if (!list.contains(e.getKey())) {
                     e.getValue().recycle();
                     iter.remove();
                 }
             }
             //add new ones
-            for (FolderCard c : folders) {
-                CardViewHolder vh = mFolders.get(c);
+            for (T c : list) {
+                CardViewHolder vh = map.get(c);
                 if (vh == null) {
-                    addFolder(c);
+                    View v = ViewUtils.inflate(getContext(), c.getLayout(), viewList, false);
+                    vh = new CardViewHolder(v, mPresenter);
+                    vh.bind(c, this);
+                    map.put(c, vh);
                 } else {
                     vh.recycle();
                     vh.bind(c, this);
@@ -229,63 +214,26 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         }
         //add or update the folders
         int ii=0;
-        Iterator<FolderCard> itc = folders.iterator();
+        Iterator<T> itc = list.iterator();
         //we first loop through
-        while (itc.hasNext() && ii<mFoldersList.getChildCount()) {
-            CardViewHolder vh = mFolders.get(itc.next());
+        while (itc.hasNext() && ii<viewList.getChildCount()) {
+            CardViewHolder vh = map.get(itc.next());
             //until we find a view out of order
-            if (mFoldersList.getChildAt(ii) != vh.itemView) {
+            if (viewList.getChildAt(ii) != vh.itemView) {
                 //remove all the remaining views
-                for (int jj=mFoldersList.getChildCount()-1; jj>=ii; jj--) {
-                    mFoldersList.removeViewAt(jj);
+                for (int jj=viewList.getChildCount()-1; jj>=ii; jj--) {
+                    viewList.removeViewAt(jj);
                 }
                 //add the ii'th view so we dont have to rewind iterator
-                mFoldersList.addView(vh.itemView);
+                viewList.addView(vh.itemView);
                 break;
             }
             ii++;
         }
         //then add all the remaining views
         while (itc.hasNext()) {
-            CardViewHolder vh = mFolders.get(itc.next());
-            mFoldersList.addView(vh.itemView);
-        }
-    }
-
-    private void addFolder(FolderCard c) {
-        View v = ViewUtils.inflate(getContext(), c.getLayout(), mFoldersList, false);
-        CardViewHolder vh = new CardViewHolder(v);
-        vh.bind(c, this);
-        v.setTag(vh);
-        mFolders.put(c, vh);
-    }
-
-    public void refreshThisDevice(MyDeviceCard myDevice) {
-        if (myDevice != null) {
-            View v = mDevicesList.findViewWithTag(myDevice.getLayout());
-            CardViewHolder vh;
-            if (v == null) {
-                v = ViewUtils.inflate(getContext(), myDevice.getLayout(), mDevicesList, false);
-                vh = new CardViewHolder(v);
-            } else {
-                mDevicesList.removeView(v);
-                vh = (CardViewHolder) v.getTag();
-                vh.recycle();
-            }
-            vh.bind(myDevice, this);
-            v.setTag(myDevice.getLayout(), v);
-            mDevicesList.addView(v, 0);
-        }
-    }
-
-    public void refreshDevices(List<DeviceCard> devices) {
-        mDevicesList.removeAllViews();
-        for (DeviceCard c : devices) {
-            View v = ViewUtils.inflate(getContext(), c.getLayout(), mDevicesList, false);
-            CardViewHolder vh = new CardViewHolder(v);
-            vh.bind(c, this);
-            v.setTag(vh);
-            mDevicesList.addView(v);
+            CardViewHolder vh = map.get(itc.next());
+            viewList.addView(vh.itemView);
         }
     }
 
@@ -348,14 +296,14 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
 
     @Override
     public void setListShown(boolean show, boolean animate) {
-        mListContainer.setVisibility(show ? VISIBLE : GONE);
+        mListContainer.setVisibility(VISIBLE);
         mEmptyView.setVisibility(show ? GONE : VISIBLE);
         mLoadingProgress.setVisibility(GONE);
     }
 
     @Override
     public void setLoading(boolean loading) {
-        mListContainer.setVisibility(loading ? GONE : VISIBLE);
+        mListContainer.setVisibility(VISIBLE);
         mEmptyView.setVisibility(GONE);
         mLoadingProgress.setVisibility(loading ? VISIBLE : GONE);
     }

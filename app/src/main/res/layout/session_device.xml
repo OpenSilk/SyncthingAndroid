@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="-4dp"
                     android:layout_gravity="bottom"
-                    android:visibility="@{(card.completion &lt; 0 || card.completion == 100) ? View.GONE : View.INVISIBLE}"
+                    android:visibility="@{(card.completion &lt; 0 || card.completion == 100) ? View.GONE : View.VISIBLE}"
                     android:progress="@{card.completion}"
                     android:max="100"
                     style="?android:progressBarStyleHorizontal"

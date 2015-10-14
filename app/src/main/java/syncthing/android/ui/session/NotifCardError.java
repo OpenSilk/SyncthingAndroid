@@ -19,6 +19,8 @@ package syncthing.android.ui.session;
 
 import android.databinding.Bindable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import syncthing.android.R;
 import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.GuiError;
@@ -28,15 +30,34 @@ import syncthing.api.model.GuiError;
  */
 public class NotifCardError extends NotifCard {
 
-    final GuiError guiError;
+    public static final NotifCardError INSTANCE = new NotifCardError();
 
-    public NotifCardError(GuiError guiError) {
-        this.guiError = guiError;
+    private GuiError guiError;
+
+    private NotifCardError() {
     }
 
     @Override
     public int getLayout() {
         return R.layout.session_notif_error;
+    }
+
+    public void setError(GuiError error) {
+        if (error == null) {
+            throw new IllegalArgumentException("Tried setting null error");
+        } else if (this.guiError == null) {
+            this.guiError = error;
+            notifyChange(syncthing.android.BR._all);
+        } else {
+            if (!StringUtils.equals(this.guiError.error, error.error)) {
+                this.guiError.error = error.error;
+                notifyChange(syncthing.android.BR.message);
+            }
+            if (!this.guiError.time.equals(error.time)) {
+                this.guiError.time = error.time;
+                notifyChange(syncthing.android.BR.time);
+            }
+        }
     }
 
     @Bindable

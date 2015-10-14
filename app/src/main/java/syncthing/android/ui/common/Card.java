@@ -62,4 +62,17 @@ public abstract class Card implements android.databinding.Observable {
     public boolean canExpand() {
         return false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return adapterId == card.adapterId;
+    }
+
+    @Override
+    public int hashCode() {
+        return adapterId;
+    }
 }

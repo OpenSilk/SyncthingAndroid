@@ -65,8 +65,31 @@ public class DeviceCard extends ExpandableCard {
     }
 
     public void setConnectionInfo(ConnectionInfo connection) {
-        this.connection = connection;
-        notifyChange(syncthing.android.BR._all);//TODO only notify changed fields
+        if (this.connection == null || connection == null) {
+            this.connection = connection;
+            notifyChange(syncthing.android.BR.inbps);
+            notifyChange(syncthing.android.BR.inBytesTotal);
+            notifyChange(syncthing.android.BR.outbps);
+            notifyChange(syncthing.android.BR.outBytesTotal);
+            notifyChange(syncthing.android.BR.connected);
+        } else {
+            if (this.connection.inbps != connection.inbps) {
+                this.connection.inbps = connection.inbps;
+                notifyChange(syncthing.android.BR.inbps);
+            }
+            if (this.connection.inBytesTotal != connection.inBytesTotal) {
+                this.connection.inBytesTotal = connection.inBytesTotal;
+                notifyChange(syncthing.android.BR.inBytesTotal);
+            }
+            if (this.connection.outbps != connection.outbps) {
+                this.connection.outbps = connection.outbps;
+                notifyChange(syncthing.android.BR.inBytesTotal);
+            }
+            if (this.connection.outBytesTotal != connection.outBytesTotal) {
+                this.connection.outBytesTotal = connection.outBytesTotal;
+                notifyChange(syncthing.android.BR.inBytesTotal);
+            }
+        }
     }
 
     public void setDeviceStats(DeviceStats stats) {
