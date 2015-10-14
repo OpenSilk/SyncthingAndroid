@@ -18,6 +18,7 @@
 package syncthing.android;
 
 import android.content.Context;
+import android.net.wifi.WifiManager;
 
 import org.opensilk.common.core.dagger2.ForApplication;
 
@@ -27,6 +28,8 @@ import dagger.Component;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.identicon.IdenticonModule;
+import syncthing.android.service.ServiceSettings;
+import syncthing.android.service.ServiceSettingsModule;
 import syncthing.api.GsonModule;
 import syncthing.api.SessionManagerComponent;
 
@@ -38,11 +41,14 @@ import syncthing.api.SessionManagerComponent;
         modules = {
                 AppModule.class,
                 GsonModule.class,
-                IdenticonModule.class
+                IdenticonModule.class,
+                ServiceSettingsModule.class
         }
 )
 public interface AppComponent extends SessionManagerComponent, IdenticonComponent {
     String NAME = AppComponent.class.getName();
     @ForApplication Context appContext();
     AppSettings appSettings();
+    ServiceSettings serviceSettings();
+    WifiManager wifimanager();
 }

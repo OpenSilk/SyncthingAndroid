@@ -38,9 +38,13 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.core.util.VersionUtils;
 
 import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import syncthing.android.R;
@@ -51,48 +55,77 @@ import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.ActivityRequestCodes;
 
 /**
- * TODO inject ServiceSettings and wifiService, and probably RecieverHelper
  * Created by drew on 3/21/15.
  */
 public class ServiceSettingsFragment extends PreferenceFragment implements
         Preference.OnPreferenceClickListener,
         Preference.OnPreferenceChangeListener {
 
-    ReceiverHelper receiverHelper;
-
     ListPreference runWhen;
+    CheckBoxPreference onlyOnWifi;
     MultiSelectListPreference wifiNetwork;
     CheckBoxPreference onlyCharging;
+    TimePreference scheduleStart;
+    TimePreference scheduleEnd;
 
     PreferenceCategory catBetween;
 
     Preference exportConfig;
     Preference importConfig;
 
+    @Inject WifiManager mWifimanager;
+    @Inject ServiceSettings mSettings;
+    ReceiverHelper mReceiverHelper;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SettingsActivityComponent cmp = DaggerService.getDaggerComponent(getActivity());
+        cmp.inject(this);
+
         getPreferenceManager().setSharedPreferencesName(ServiceSettings.FILE_NAME);
         getPreferenceManager().setSharedPreferencesMode(Context.MODE_MULTI_PROCESS);
 
         addPreferencesFromResource(R.xml.prefs_service);
 
-        receiverHelper = new ReceiverHelper(getActivity());
+        mReceiverHelper = new ReceiverHelper(getActivity());
 
         runWhen = (ListPreference) findPreference(ServiceSettings.RUN_WHEN);
+        runWhen.setPersistent(false);
+        runWhen.setValue(mSettings.runWhen());
         runWhen.setOnPreferenceChangeListener(this);
 
+        onlyOnWifi = (CheckBoxPreference) findPreference(ServiceSettings.ONLY_WIFI);
+        onlyOnWifi.setPersistent(false);
+        onlyOnWifi.setChecked(mSettings.onlyOnWifi());
+        onlyOnWifi.setOnPreferenceChangeListener(this);
+
         wifiNetwork = (MultiSelectListPreference) findPreference(ServiceSettings.WIFI_NETWORKS);
+        wifiNetwork.setPersistent(false);
         String[] ssids = getWifiNetworks();
         wifiNetwork.setEntries(ssids);
         wifiNetwork.setEntryValues(ssids);
+        wifiNetwork.setValues(mSettings.allowedWifiNetworks());
+        wifiNetwork.setOnPreferenceChangeListener(this);
 
         onlyCharging = (CheckBoxPreference) findPreference(ServiceSettings.ONLY_CHARGING);
+        onlyCharging.setPersistent(false);
+        onlyCharging.setChecked(mSettings.onlyWhenCharging());
         onlyCharging.setOnPreferenceChangeListener(this);
 
         catBetween = (PreferenceCategory) findPreference("cat_between");
-        hideShowRunWhenCategories(getPreferenceManager().getSharedPreferences()
-                .getString(ServiceSettings.RUN_WHEN, ServiceSettings.WHEN_OPEN));
+        hideShowRunWhenCategories(mSettings.runWhen());
+
+        scheduleStart = (TimePreference) findPreference(ServiceSettings.RANGE_START);
+        scheduleStart.setPersistent(false);
+        scheduleStart.setValue(mSettings.getScheduledStartTime());
+        scheduleStart.setOnPreferenceChangeListener(this);
+
+        scheduleEnd = (TimePreference) findPreference(ServiceSettings.RANGE_END);
+        scheduleEnd.setPersistent(false);
+        scheduleEnd.setValue(mSettings.getScheduledEndTime());
+        scheduleEnd.setOnPreferenceChangeListener(this);
 
         exportConfig = findPreference("export");
         exportConfig.setOnPreferenceClickListener(this);
@@ -103,6 +136,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mSettings.release();
         getActivity().startService(new Intent(getActivity(), SyncthingInstance.class).setAction(SyncthingInstance.REEVALUATE));
     }
 
@@ -161,6 +195,17 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference == runWhen) {
             hideShowRunWhenCategories((String) newValue);
+            mSettings.setRunWhen((String) newValue);
+        } else if (preference == onlyOnWifi) {
+            mSettings.setOnlyOnWifi((Boolean) newValue);
+        } else if (preference == wifiNetwork) {
+            mSettings.setAllowedWifiNetworks((Set<String>) newValue);
+        } else if (preference == onlyCharging) {
+            mSettings.setOnlyWhenCharging((Boolean) newValue);
+        } else if (preference == scheduleStart) {
+            mSettings.setScheduledStartTime((String) newValue);
+        } else if (preference == scheduleEnd) {
+            mSettings.setScheduledEndTime((String) newValue);
         }
         getView().post(new Runnable() {
             @Override
@@ -193,16 +238,16 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
     }
 
     boolean isEnabled() {
-        return getPreferenceManager().getSharedPreferences().getBoolean(ServiceSettings.ENABLED, true);
+        return !mSettings.isDisabled();
     }
 
     void setEnabled(boolean enabled) {
-        getPreferenceManager().getSharedPreferences().edit().putBoolean(ServiceSettings.ENABLED, enabled).commit();
+        mSettings.setEnabled(enabled);
         getActivity().startService(new Intent(getActivity(), SyncthingInstance.class).setAction(SyncthingInstance.REEVALUATE));
     }
 
     String[] getWifiNetworks() {
-        List<WifiConfiguration> networks = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE)).getConfiguredNetworks();
+        List<WifiConfiguration> networks = mWifimanager.getConfiguredNetworks();
         if (networks == null) {
             return new String[0];
         }
@@ -216,15 +261,15 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
     void updateReceievers() {
         boolean enabled = isEnabled();
         if (!enabled) {
-            receiverHelper.setBootReceiverEnabled(false);
-            receiverHelper.setChargingReceiverEnabled(false);
-            receiverHelper.setConnectivityReceiverEnabled(false);
+            mReceiverHelper.setBootReceiverEnabled(false);
+            mReceiverHelper.setChargingReceiverEnabled(false);
+            mReceiverHelper.setConnectivityReceiverEnabled(false);
         } else {
             //Dont care if not allowed to run in background
-            receiverHelper.setBootReceiverEnabled(!ServiceSettings.WHEN_OPEN.equals(runWhen.getValue()));
+            mReceiverHelper.setBootReceiverEnabled(!ServiceSettings.WHEN_OPEN.equals(runWhen.getValue()));
             //dont care if we can run whenever
-            receiverHelper.setChargingReceiverEnabled(onlyCharging.isChecked());
-            receiverHelper.setConnectivityReceiverEnabled(true);
+            mReceiverHelper.setChargingReceiverEnabled(onlyCharging.isChecked());
+            mReceiverHelper.setConnectivityReceiverEnabled(true);
         }
     }
 }

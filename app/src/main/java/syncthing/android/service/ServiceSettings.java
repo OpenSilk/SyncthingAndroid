@@ -17,35 +17,42 @@
 
 package syncthing.android.service;
 
+import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
+import android.os.RemoteException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.opensilk.common.core.app.PreferencesWrapper;
 import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.core.util.BundleHelper;
+import org.opensilk.common.core.util.VersionUtils;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
-import syncthing.android.AppSettings;
 import timber.log.Timber;
 
 /**
  * Created by drew on 3/21/15.
  */
 @Singleton
-public class ServiceSettings extends PreferencesWrapper {
+public class ServiceSettings {
 
     public static final String FILE_NAME = "service";
 
@@ -67,39 +74,149 @@ public class ServiceSettings extends PreferencesWrapper {
     final Context appContext;
     final ConnectivityManager cm;
     final WifiManager wm;
+    final Uri callUri;
+
+    ContentProviderClient client;
 
     @Inject
     public ServiceSettings(
             @ForApplication Context appContext,
             ConnectivityManager cm,
-            WifiManager wm
+            WifiManager wm,
+            @Named("settingsAuthority") String authority
     ) {
         this.appContext = appContext;
         this.cm = cm;
         this.wm = wm;
+        this.callUri = new Uri.Builder()
+                .scheme(ContentResolver.SCHEME_CONTENT).authority(authority).build();
     }
 
-    protected SharedPreferences getPrefs() {
-        //must reaquire everytime since prefs are modified in another process
-        return appContext.getSharedPreferences(FILE_NAME, Context.MODE_MULTI_PROCESS);
+    private Bundle getCall(String pref, Bundle extras) {
+        return makeCall("get_settings", pref, extras, true);
     }
 
-    boolean isDisabled() {
-        return !getPrefs().getBoolean(ENABLED, true);
+    private Bundle putCall(String pref, Bundle extras) {
+        return makeCall("put_settings", pref, extras, true);
     }
 
-    boolean isInitialised() {
-        boolean upgradeOldVersion = false;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
-        String defaultCreds = prefs.getString(AppSettings.DEFAULT_CREDENTIALS, null);
-        if (defaultCreds != null) {
-            upgradeOldVersion = true;
+    private Bundle makeCall(String method, String pref, Bundle extras, boolean retry) {
+        if (VersionUtils.hasApi17()) {
+            if (client == null) {
+                synchronized (this) {
+                    if (client == null) {
+                        //clients dramatically improve performance and is what
+                        //content resolver does under the hood anyway.
+                        client = appContext.getContentResolver()
+                                .acquireUnstableContentProviderClient(callUri);
+                    }
+                }
+            }
+            if (client == null) {
+                throw new RuntimeException("Unable to connect to our *own* content provider !!!!");
+            }
+            try {
+                return client.call(method, pref, extras);
+            } catch (RemoteException e) {
+                release();
+                if (retry) {
+                    return makeCall(method, pref, extras, false);
+                } else {
+                    return extras;//return defaults
+                }
+            }
+        } else {
+            return appContext.getContentResolver().call(callUri, method, pref, extras);
         }
-        return getPrefs().getBoolean(INITIALISED, upgradeOldVersion);
+    }
+
+    public void release() {
+        synchronized (this) {
+            if (client != null) {
+                client.release();
+                client = null;
+            }
+        }
+    }
+
+    public boolean isDisabled() {
+        return !isEnabled();
+    }
+
+    public boolean isEnabled() {
+        Bundle reply = getCall(ENABLED, BundleHelper.b().putInt(0).get());
+        return BundleHelper.getInt(reply) == 1;
+    }
+
+    public void setEnabled(boolean enabled) {
+        Bundle reply = putCall(ENABLED, BundleHelper.b().putInt(enabled ? 1 : 0).get());
+    }
+
+    public boolean isInitialised() {
+        Bundle reply = getCall(INITIALISED, BundleHelper.b().putInt(0).get());
+        return BundleHelper.getInt(reply) == 1;
+    }
+
+    public void setInitialized(boolean initialized) {
+        Bundle reply = putCall(INITIALISED, BundleHelper.b().putInt(initialized ? 1 : 0).get());
     }
 
     public String runWhen() {
-        return getPrefs().getString(RUN_WHEN, WHEN_OPEN);
+        Bundle reply = getCall(RUN_WHEN, BundleHelper.b().putString(ALWAYS).get());
+        return BundleHelper.getString(reply);
+    }
+
+    public void setRunWhen(String runWhen) {
+        Bundle reply = putCall(RUN_WHEN, BundleHelper.b().putString(runWhen).get());
+    }
+
+    public boolean onlyWhenCharging() {
+        Bundle reply = getCall(ONLY_CHARGING, BundleHelper.b().putInt(0).get());
+        return BundleHelper.getInt(reply) == 1;
+    }
+
+    public void setOnlyWhenCharging(boolean onlyWhenCharging) {
+        Bundle reply = putCall(ONLY_CHARGING, BundleHelper.b().putInt(onlyWhenCharging ? 1 : 0).get());
+    }
+
+    public String getScheduledStartTime() {
+        Bundle reply = getCall(RANGE_START, BundleHelper.b().putString("00:00").get());
+        return BundleHelper.getString(reply);
+    }
+
+    public void setScheduledStartTime(String time) {
+        Bundle reply = putCall(RANGE_START, BundleHelper.b().putString(time).get());
+    }
+
+    public String getScheduledEndTime() {
+        Bundle reply = getCall(RANGE_END, BundleHelper.b().putString("00:00").get());
+        return BundleHelper.getString(reply);
+    }
+
+    public void setScheduledEndTime(String time) {
+        Bundle reply = putCall(RANGE_END, BundleHelper.b().putString(time).get());
+    }
+
+    public boolean onlyOnWifi() {
+        Bundle reply = getCall(ONLY_WIFI, BundleHelper.b().putInt(0).get());
+        return BundleHelper.getInt(reply) == 1;
+    }
+
+    public void setOnlyOnWifi(boolean onlyOnWifi) {
+        Bundle reply = putCall(ONLY_WIFI, BundleHelper.b().putInt(onlyOnWifi ? 1 : 0).get());
+    }
+
+    public Set<String> allowedWifiNetworks() {
+        Bundle reply = getCall(WIFI_NETWORKS, null);
+        if (reply != null) {
+            return unrollWifiNetworks(BundleHelper.getString(reply));
+        } else {
+            return Collections.emptySet();
+        }
+    }
+
+    public void setAllowedWifiNetworks(Set<String> networks) {
+        Bundle reply = putCall(WIFI_NETWORKS, BundleHelper.b().putString(rollWifiNetworks(networks)).get());
     }
 
     boolean isAllowedToRun() {
@@ -111,7 +228,7 @@ public class ServiceSettings extends PreferencesWrapper {
             Timber.d("isAllowedToRun(): SyncthingInstance initiating credentials");
             return true;
         }
-        boolean chargingOnly = getPrefs().getBoolean(ONLY_CHARGING, false);
+        boolean chargingOnly = onlyWhenCharging();
         if (chargingOnly && !isCharging()) {
             Timber.d("isAllowedToRun(): chargingOnly=true and not charging... rejecting");
             return false;
@@ -125,8 +242,8 @@ public class ServiceSettings extends PreferencesWrapper {
                 Timber.d("isAllowedToRun(): nope!");
                 return false;
             case SCHEDULED:
-                long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
-                long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
+                long start = SyncthingUtils.parseTime(getScheduledStartTime());
+                long end = SyncthingUtils.parseTime(getScheduledEndTime());
                 boolean can = SyncthingUtils.isNowBetweenRange(start, end);
                 Timber.d("isAllowedToRun(): is now a good time? %s", can);
                 return can;
@@ -150,7 +267,7 @@ public class ServiceSettings extends PreferencesWrapper {
             Timber.d("Not connected to any networks");
             return false;
         }
-        boolean wifiOnly = getPrefs().getBoolean(ONLY_WIFI, false);
+        boolean wifiOnly = onlyOnWifi();
         if (wifiOnly && !isWifiOrEthernet(info.getType())) {
             Timber.d("Connection is not wifi network and wifiOnly=true");
             return false;
@@ -168,7 +285,7 @@ public class ServiceSettings extends PreferencesWrapper {
     }
 
     boolean isConnectedToWhitelistedNetwork() {
-        Set<String> whitelist = getPrefs().getStringSet(WIFI_NETWORKS, null);
+        Set<String> whitelist = allowedWifiNetworks();
         if (whitelist == null || whitelist.isEmpty()) {
             Timber.d("No whitelist found");
             return true;
@@ -196,8 +313,8 @@ public class ServiceSettings extends PreferencesWrapper {
     }
 
     long getNextScheduledEndTime() {
-        long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
-        long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
+        long start = SyncthingUtils.parseTime(getScheduledStartTime());
+        long end = SyncthingUtils.parseTime(getScheduledEndTime());
         DateTime now = DateTime.now();
         Interval interval = SyncthingUtils.getIntervalForRange(now, start, end);
         if (interval.contains(now)) {
@@ -210,8 +327,8 @@ public class ServiceSettings extends PreferencesWrapper {
     }
 
     long getNextScheduledStartTime() {
-        long start = SyncthingUtils.parseTime(getPrefs().getString(RANGE_START, "00:00"));
-        long end = SyncthingUtils.parseTime(getPrefs().getString(RANGE_END, "00:00"));
+        long start = SyncthingUtils.parseTime(getScheduledStartTime());
+        long end = SyncthingUtils.parseTime(getScheduledEndTime());
         DateTime now = DateTime.now();
         Interval interval = SyncthingUtils.getIntervalForRange(now, start, end);
         if (interval.isBefore(now)) {
@@ -222,5 +339,23 @@ public class ServiceSettings extends PreferencesWrapper {
             return interval.getStart().plusDays(1).getMillis();
         }
     }
+
+    static String rollWifiNetworks(Set<String> networks) {
+        if (networks == null || networks.isEmpty()) {
+            return "";
+        }
+        return StringUtils.join(networks, sep);
+    }
+
+    static Set<String> unrollWifiNetworks(String networks) {
+        Set<String> set = new HashSet<>();
+        String[] n = StringUtils.split(networks, sep);
+        if (n != null && n.length > 0) {
+            Collections.addAll(set, n);
+        }
+        return set;
+    }
+
+    private static final char sep = '★';//commas are boring
 
 }

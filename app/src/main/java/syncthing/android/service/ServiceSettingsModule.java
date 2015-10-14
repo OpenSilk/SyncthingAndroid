@@ -17,29 +17,23 @@
 
 package syncthing.android.service;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
+import android.content.Context;
 
+import org.opensilk.common.core.dagger2.ForApplication;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
-import dagger.Component;
-import syncthing.android.AppModule;
-import syncthing.api.GsonModule;
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Created by drew on 3/21/15.
+ * Created by drew on 10/13/15.
  */
-@Singleton
-@Component(
-        modules = {
-                AppModule.class,
-                GsonModule.class,
-                ServiceSettingsModule.class
-        }
-)
-public interface ServiceComponent {
-    NotificationManager notificationManager();
-    AlarmManager alarmManager();
-    ServiceSettings settings();
-    void inject(ServiceSettingsProvider provider);
+@Module
+public class ServiceSettingsModule {
+    @Provides @Singleton @Named("settingsAuthority")
+    public String provideSettingsAuthority(@ForApplication Context context) {
+        return context.getPackageName() + ".provider.settings";
+    }
 }

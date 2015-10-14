@@ -15,31 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.service;
+package syncthing.android.ui.settings;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-
-import javax.inject.Singleton;
+import org.opensilk.common.core.dagger2.ActivityScope;
 
 import dagger.Component;
-import syncthing.android.AppModule;
-import syncthing.api.GsonModule;
+import syncthing.android.AppComponent;
 
 /**
- * Created by drew on 3/21/15.
+ * Created by drew on 10/13/15.
  */
-@Singleton
+@ActivityScope
 @Component(
-        modules = {
-                AppModule.class,
-                GsonModule.class,
-                ServiceSettingsModule.class
+        dependencies = {
+                AppComponent.class,
         }
 )
-public interface ServiceComponent {
-    NotificationManager notificationManager();
-    AlarmManager alarmManager();
-    ServiceSettings settings();
-    void inject(ServiceSettingsProvider provider);
+public interface SettingsActivityComponent {
+    void inject(ServiceSettingsFragment fragment);
 }

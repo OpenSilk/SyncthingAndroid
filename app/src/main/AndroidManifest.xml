@@ -60,6 +60,12 @@
             android:name=".service.SyncthingInstance"
             android:process=":service"/>
 
+        <provider
+            android:authorities="${applicationId}.provider.settings"
+            android:name=".service.ServiceSettingsProvider"
+            android:process=":service"
+            android:exported="false"/>
+
         <receiver
             android:name=".service.BootReceiver"
             android:process=":service"

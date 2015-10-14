@@ -86,4 +86,9 @@ public class TimePreference extends DialogPreference {
         lastHour=getHour(time);
         lastMinute=getMinute(time);
     }
+
+    public void setValue(String value) {
+        lastHour = getHour(value);
+        lastMinute =getMinute(value);
+    }
 }
