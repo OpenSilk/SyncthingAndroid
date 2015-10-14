@@ -17,14 +17,9 @@
 
 package syncthing.android.service;
 
-import android.content.Intent;
-import android.os.Environment;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicReference;
 
 import timber.log.Timber;
@@ -46,12 +41,9 @@ public class SyncthingInotifyThread extends Thread {
     @Override
     public void run() {
         android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
-        ConfigXml configXml = ConfigXml.get(mService);
-        while (configXml == null) {
-            Timber.d("Syncthing config does not exist yet, retrying in 30 seconds...");
-            try { Thread.sleep(30000);
-            } catch (InterruptedException e) {}
-            configXml = ConfigXml.get(mService);
+        if (!mService.getSettings().isInitialised()) {
+            Timber.w("Syncthing not initialized yet... Quiting");
+            return;
         }
         realRun();
     }

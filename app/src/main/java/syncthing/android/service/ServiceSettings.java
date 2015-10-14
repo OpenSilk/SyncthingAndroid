@@ -159,6 +159,9 @@ public class ServiceSettings {
 
     public void setInitialized(boolean initialized) {
         Bundle reply = putCall(INITIALISED, BundleHelper.b().putInt(initialized ? 1 : 0).get());
+        if (initialized && "ok".equals(BundleHelper.getString(reply))) {
+            appContext.getContentResolver().notifyChange(callUri.buildUpon().appendPath("instanceInitialized").build(), null);
+        }
     }
 
     public String runWhen() {

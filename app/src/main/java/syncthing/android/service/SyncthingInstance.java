@@ -19,8 +19,11 @@ package syncthing.android.service;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.ContentObserver;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -69,6 +73,8 @@ public class SyncthingInstance extends MortarService {
     SyncthingThread mSyncthingThread;
     SyncthingInotifyThread mSyncthingInotifyThread;
 
+    ContentObserver initializedObserver;
+
     int mConnectedClients = 0;
     boolean mAnyActivityInForeground;
 
@@ -94,6 +100,10 @@ public class SyncthingInstance extends MortarService {
         ensureSyncthingKilled();
         mAlarmManagerHelper.cancelDelayedShutdown();
         mAlarmManagerHelper.scheduleWakeup();
+        mSettings.release();
+        if (initializedObserver != null) {
+            getContentResolver().unregisterContentObserver(initializedObserver);
+        }
     }
 
     @Override
@@ -216,6 +226,23 @@ public class SyncthingInstance extends MortarService {
     void startSyncthing() {
         mSyncthingThread = new SyncthingThread(this);
         mSyncthingThread.start();
+        if (mSettings.isInitialised()) {
+            startInotify();
+        } else if (initializedObserver == null) {
+            //register listener and wait for notify
+            initializedObserver = new InitializedListener(this);
+            getContentResolver().registerContentObserver(
+                    mSettings.callUri.buildUpon().appendPath("instanceInitialized").build(),
+                    false, initializedObserver);
+        } //else already listening
+    }
+
+    void safeStartInotify() {
+        ensureInotifyKilled();
+        startInotify();
+    }
+
+    void startInotify() {
         mSyncthingInotifyThread = new SyncthingInotifyThread(this);
         mSyncthingInotifyThread.start();
     }
@@ -231,10 +258,18 @@ public class SyncthingInstance extends MortarService {
             mSyncthingThread.kill();
             mSyncthingThread = null;
         }
+        ensureInotifyKilled();
+    }
+
+    void ensureInotifyKilled() {
         if (mSyncthingInotifyThread != null) {
             mSyncthingInotifyThread.kill();
             mSyncthingInotifyThread = null;
         }
+    }
+
+    public ServiceSettings getSettings() {
+        return mSettings;
     }
 
     /*
@@ -341,6 +376,22 @@ public class SyncthingInstance extends MortarService {
             return getPackageManager().getPackageInfo(getPackageName(), 0).lastUpdateTime;
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    static class InitializedListener extends ContentObserver {
+        WeakReference<SyncthingInstance> mService;
+        public InitializedListener(SyncthingInstance service) {
+            super(new Handler(Looper.getMainLooper()));
+            mService = new WeakReference<SyncthingInstance>(service);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            SyncthingInstance s = mService.get();
+            if (s != null && s.mSettings.isInitialised()) {
+                s.safeStartInotify();
+            }
         }
     }
 

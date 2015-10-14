@@ -61,6 +61,7 @@ public class SyncthingThread extends Thread {
             configXml.changeDefaultGUIAddress();
             configXml.changeDefaultFolder();
             configXml.changeDefaultDeviceName();
+            mService.getSettings().setInitialized(true);
         }
         configXml.updateIfNeeded();
         realRun(false);
