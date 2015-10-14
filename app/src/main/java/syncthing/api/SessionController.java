@@ -19,12 +19,14 @@ package syncthing.api;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,17 +34,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
+import rx.Scheduler;
+import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -118,23 +125,35 @@ public class SessionController implements EventMonitor.EventListener {
 
     }
 
-    SystemInfo systemInfo;
-    String myID;
-    Config config;
-    boolean configInSync;
-    Connections connections = new Connections();
-    DeviceStatsMap deviceStats = DeviceStatsMap.EMPTY;
-    FolderStatsMap folderStats = FolderStatsMap.EMPTY;
-    Version version;
-    Report report;
-    Map<String, Model> models = new LinkedHashMap<>(10);
-    Map<String, FolderConfig> folders = new LinkedHashMap<>(10);
-    List<DeviceConfig> devices = Collections.emptyList();
-    Map<String, Map<String, Integer>> completion = new LinkedHashMap<>(10);
-    Map<String, DeviceRejected> deviceRejections = new LinkedHashMap<>();
-    Map<String, FolderRejected> folderRejections = new LinkedHashMap<>();
-    GuiErrors errorsList;
+    final AtomicReference<SystemInfo> systemInfo = new AtomicReference<>();
+    final AtomicReference<String> myId = new AtomicReference<>();
+    final AtomicReference<Config> config = new AtomicReference<>();
+    final AtomicBoolean configInSync = new AtomicBoolean();
+    //synchronize on self
+    final Connections connections = new Connections();
+    //synchronize on self
+    final DeviceStatsMap deviceStats = new DeviceStatsMap();
+    //synchronize on self
+    final FolderStatsMap folderStats = new FolderStatsMap();
+    final AtomicReference<Version> version = new AtomicReference<>();
+    final AtomicReference<Report> report = new AtomicReference<>();
+    //synchronize on self
+    final Map<String, Model> models = new LinkedHashMap<>(10);
+    //synchronize on self
+    final Map<String, FolderConfig> folders = new LinkedHashMap<>(10);
+    //synchronize on self
+    final List<DeviceConfig> devices = new LinkedList<>();
+    //synchronize on self TODO a map of a map? really???
+    final Map<String, Map<String, Integer>> completion = new LinkedHashMap<>(10);
+    //synchronize on self
+    final Map<String, DeviceRejected> deviceRejections = new LinkedHashMap<>();
+    //synchronize on self
+    final Map<String, FolderRejected> folderRejections = new LinkedHashMap<>();
+    //synchronize on self
+    final AtomicReference<GuiErrors> errorsList = new AtomicReference<>();
 
+    //Following synchronized by lock
+    private final Object lock = new Object();
     long prevDate;
     boolean online;
     boolean restarting;
@@ -144,6 +163,7 @@ public class SessionController implements EventMonitor.EventListener {
     Subscription periodicRefreshSubscription;
     Subscription onLocalIndexUpdatedSubscription;
 
+    final Scheduler subscribeOn;
     final SyncthingApi restApi;
     final EventMonitor eventMonitor;
     final BehaviorSubject<ChangeEvent> changeBus = BehaviorSubject.create();
@@ -151,49 +171,70 @@ public class SessionController implements EventMonitor.EventListener {
     @Inject
     public SessionController(SyncthingApi restApi, @Named("longpoll") SyncthingApi longpollRestApi) {
         Timber.i("new SessionController");
-        this.restApi = SynchingApiWrapper.wrap(restApi, Schedulers.io());
+        this.subscribeOn = Schedulers.io();//TODO allow configure
+        this.restApi = SynchingApiWrapper.wrap(restApi, subscribeOn);
         this.eventMonitor = new EventMonitor(longpollRestApi, this);
     }
 
     public void init() {
-        if (subspendSubscription != null
-                && !subspendSubscription.isUnsubscribed()) {
-            subspendSubscription.unsubscribe();
-        } else if (!eventMonitor.isRunning()) {
-            eventMonitor.start();
+        synchronized (lock) {
+            if (subspendSubscription != null
+                    && !subspendSubscription.isUnsubscribed()) {
+                subspendSubscription.unsubscribe();
+            } else if (!eventMonitor.isRunning()) {
+                eventMonitor.start();
+            }
+            if (online) {
+                setupPeriodicRefresh();
+            }
+            running = true;
         }
-        if (isOnline()) {
-            setupPeriodicRefresh();
-        }
-        running = true;
     }
 
     public void suspend() {
-        if (subspendSubscription != null) {
-            subspendSubscription.unsubscribe();
+        synchronized (lock) {
+            if (running) {
+                if (subspendSubscription != null) {
+                    subspendSubscription.unsubscribe();
+                }
+                // add delay to allow for configuration changes
+                subspendSubscription = Observable.timer(30, TimeUnit.SECONDS, subscribeOn)
+                        .subscribe(ii -> {
+                            if (eventMonitor.isRunning()) {
+                                eventMonitor.stop();
+                            }
+                        });
+                cancelPeriodicRefresh();
+                running = false;
+            }
         }
-        // add delay to allow for configuration changes
-        subspendSubscription = Observable.timer(30, TimeUnit.SECONDS)
-                .subscribe(ii -> {
-                    if (eventMonitor.isRunning()) {
-                        eventMonitor.stop();
-                    }
-                });
-        cancelPeriodicRefresh();
-        running = false;
     }
 
+    //Called by main thread, must push to background to stop event monitor
     /*package*/ void kill() {
-        if (subspendSubscription != null) {
-            subspendSubscription.unsubscribe();
-        }
-        eventMonitor.stop();
-        cancelPeriodicRefresh();
-        running = false;
+        final Scheduler.Worker worker = subscribeOn.createWorker();
+        worker.schedule(new Action0() {
+            @Override
+            public void call() {
+                synchronized (lock) {
+                    if (running) {
+                        if (subspendSubscription != null) {
+                            subspendSubscription.unsubscribe();
+                        }
+                        eventMonitor.stop();
+                        cancelPeriodicRefresh();
+                        running = false;
+                    }
+                }
+                worker.unsubscribe();
+            }
+        });
     }
 
     public boolean isRunning() {
-        return running;
+        synchronized (lock) {
+            return running;
+        }
     }
 
     public void handleEvent(Event e) {
@@ -213,8 +254,14 @@ public class SessionController implements EventMonitor.EventListener {
                 break;
             } case STATE_CHANGED: {
                 StateChanged st = (StateChanged) e;
-                if (models.containsKey(st.data.folder)) {
-                    models.get(st.data.folder).state = st.data.to;
+                boolean incremental = false;
+                synchronized (models) {
+                    if (models.containsKey(st.data.folder)) {
+                        models.get(st.data.folder).state = st.data.to;
+                        incremental = true;
+                    }
+                }
+                if (incremental) {
                     postChange(Change.MODEL_STATE, st.data);
                 } else {
                     refreshFolder(st.data.folder);
@@ -238,12 +285,16 @@ public class SessionController implements EventMonitor.EventListener {
                 break;
             } case DEVICE_REJECTED: {
                 DeviceRejected dr = (DeviceRejected) e;
-                deviceRejections.put(dr.data.device, dr);
+                synchronized (deviceRejections) {
+                    deviceRejections.put(dr.data.device, dr);
+                }
                 postChange(Change.DEVICE_REJECTED);
                 break;
             } case FOLDER_REJECTED: {
                 FolderRejected fr = (FolderRejected) e;
-                folderRejections.put(fr.data.folder + "-" + fr.data.device, fr);
+                synchronized (folderRejections) {
+                    folderRejections.put(fr.data.folder + "-" + fr.data.device, fr);
+                }
                 postChange(Change.FOLDER_REJECTED);
                 break;
             } case CONFIG_SAVED: {
@@ -297,55 +348,60 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     boolean updateState(boolean online) {
-        //No state change dont eat event;
-        if (this.online == online) return false;
-        //New event came in while we are initializing, eat it
-        if (online && onlineSub != null && !onlineSub.isUnsubscribed()) return true;
-        if (online) {
-            this.restarting = false;
-            //Our online state depends on all these items
-            //so we merge them together so we can defer
-            //posting the ONLINE status until we have set
-            //all the values, the extra toMap step
-            //is to prevent sideeffects and synchronization errors
-            onlineSub = Observable.merge(
-                    restApi.system(),
-                    restApi.config(),
-                    restApi.configStatus(),
-                    restApi.connections(),
-                    restApi.deviceStats(),
-                    restApi.folderStats(),
-                    restApi.version(),
-                    restApi.report()
-            ).toMap(
-                    Object::getClass
-            ).observeOn(
-                    AndroidSchedulers.mainThread()
-            ).subscribe(
-                    (map) -> {
-                        updateSystemInfo((SystemInfo) map.get(SystemInfo.class));
-                        updateConfig((Config) map.get(Config.class));
-                        updateConfigStats((ConfigStats) map.get(ConfigStats.class));
-                        updateConnections((Connections) map.get(Connections.class));
-                        setDeviceStats((DeviceStatsMap) map.get(DeviceStatsMap.class));
-                        updateFolderStats((FolderStatsMap) map.get(FolderStatsMap.class));
-                        setVersion((Version) map.get(Version.class));
-                        setReport((Report) map.get(Report.class));
-                        this.online = true;
-                    },
-                    this::logException,
-                    () -> {
-                        setupPeriodicRefresh();
-                        postChange(Change.ONLINE);
-                    }
-            );
-        } else {
-            this.online = false;
-            if (onlineSub != null) onlineSub.unsubscribe();
-            cancelPeriodicRefresh();
-            postChange(Change.OFFLINE);
+        synchronized (lock) {
+            //No state change dont eat event;
+            if (this.online == online) return false;
+            //New event came in while we are initializing, eat it
+            if (online && onlineSub != null && !onlineSub.isUnsubscribed()) return true;
+            if (online) {
+                this.restarting = false;
+                //Our online state depends on all these items
+                //so we merge them together so we can defer
+                //posting the ONLINE status until we have set
+                //all the values, the extra toMap step
+                //is to prevent sideeffects and synchronization errors
+                onlineSub = Observable.merge(
+                        restApi.system(),
+                        restApi.config(),
+                        restApi.configStatus(),
+                        restApi.connections(),
+                        restApi.deviceStats(),
+                        restApi.folderStats(),
+                        restApi.version(),
+                        restApi.report()
+                ).toMap(
+                        Object::getClass
+                ).subscribe(
+                        (map) -> {
+                            updateSystemInfo((SystemInfo) map.get(SystemInfo.class));
+                            updateConfig((Config) map.get(Config.class));
+                            updateConfigStats((ConfigStats) map.get(ConfigStats.class));
+                            updateConnections((Connections) map.get(Connections.class));
+                            setDeviceStats((DeviceStatsMap) map.get(DeviceStatsMap.class));
+                            setFolderStats((FolderStatsMap) map.get(FolderStatsMap.class));
+                            setVersion((Version) map.get(Version.class));
+                            setReport((Report) map.get(Report.class));
+                            synchronized (lock) {
+                                this.online = true;
+                            }
+                        },
+                        this::logException,
+                        () -> {
+                            setupPeriodicRefresh();
+                            postChange(Change.ONLINE);
+                            synchronized (lock) {
+                                onlineSub = null;
+                            }
+                        }
+                );
+            } else {
+                this.online = false;
+                if (onlineSub != null) onlineSub.unsubscribe();
+                cancelPeriodicRefresh();
+                postChange(Change.OFFLINE);
+            }
+            return true;
         }
-        return true;
     }
 
     void postChange(Change change) {
@@ -374,7 +430,6 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void refreshSystem() {
         Subscription s = restApi.system()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::updateSystemInfo,
                         this::logException,
@@ -388,8 +443,6 @@ public class SessionController implements EventMonitor.EventListener {
                 restApi.configStatus()
         ).toMap(
                 Object::getClass
-        ).observeOn(
-                AndroidSchedulers.mainThread()
         ).subscribe(
                 map -> {
                     updateConfig((Config) map.get(Config.class));
@@ -406,7 +459,6 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void refreshConnections(boolean update) {
         Subscription s = restApi.connections()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         this::updateConnections,
                         this::logException,
@@ -415,9 +467,8 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void refreshDeviceStats() {
         Subscription s = restApi.deviceStats()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        stats -> this.deviceStats = stats,
+                        this::setDeviceStats,
                         this::logException,
                         () -> postChange(Change.DEVICE_STATS)
                 );
@@ -425,9 +476,8 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void refreshFolderStats() {
         Subscription s = restApi.folderStats()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        stats -> this.folderStats = stats,
+                        this::setFolderStats,
                         this::logException,
                         () -> postChange(Change.FOLDER_STATS)
                 );
@@ -435,22 +485,19 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void refreshVersion() {
         Subscription s = restApi.version()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setVersion, this::logException);
     }
 
     public void refreshReport() {
         Subscription s = restApi.report()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setReport, this::logException);
     }
 
     public void refreshFolder(String name) {
         Timber.d("refreshFolder(%s)", name);
         Subscription s = restApi.model(name)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        model -> models.put(name, model),
+                        model -> updateModel(name, model),
                         this::logException,
                         () -> postChange(Change.MODEL)
                 );
@@ -466,12 +513,11 @@ public class SessionController implements EventMonitor.EventListener {
         //mutliple MODEL changes
         List<Observable<Map.Entry<String, Model>>> observables = new LinkedList<>();
         for (String name: names) {
-            observables.add(Observable.zip(Observable.just(name), restApi.model(name), Pair::of));
+            observables.add(Observable.zip(Observable.just(name), restApi.model(name).first(), Pair::of));
         }
         Subscription s = Observable.merge(observables)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        entry -> models.put(entry.getKey(), entry.getValue()),
+                        entry -> updateModel(entry.getKey(), entry.getValue()),
                         this::logException,
                         () -> postChange(Change.MODEL)
                 );
@@ -479,7 +525,6 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void refreshCompletion(String device, String folder) {
         Subscription s = restApi.completion(device, folder)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (comp) -> {
                             updateCompletion(device, folder, comp);
@@ -489,22 +534,24 @@ public class SessionController implements EventMonitor.EventListener {
                 );
     }
 
-    public void refreshCompletions(Collection<Map.Entry<String, String>> refreshers) {
+    //Device,Folder pair
+    public void refreshCompletions(Collection<Pair<String, String>> refreshers) {
         if (refreshers.isEmpty()) {
             return;
         }
-        //Same as refreshFolders but hella ridiculous since we need too keep track
-        //of both device and folder
-        List<Observable<Map.Entry<Map.Entry<String, String>, Completion>>> observables = new LinkedList<>();
-        for (Map.Entry<String, String> refresh : refreshers) {
-            observables.add(Observable.zip(Observable.just(refresh),
-                    restApi.completion(refresh.getKey(), refresh.getValue()), Pair::of));
+        //Same as refreshFolders but we need to keep track of folders and devices
+        List<Observable<Triple<String, String, Completion>>> observables = new ArrayList<>();
+        for (Pair<String, String> refresh : refreshers) {
+            observables.add(Observable.zip(
+                    Observable.just(refresh.getLeft()),//device
+                    Observable.just(refresh.getRight()),//folder
+                    restApi.completion(refresh.getLeft(), refresh.getRight()).first(),
+                    Triple::of)
+            );
         }
         Subscription s = Observable.merge(observables)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (nestedentry) -> updateCompletion(nestedentry.getKey().getKey(),
-                                nestedentry.getKey().getValue(), nestedentry.getValue()),
+                        (triple) -> updateCompletion(triple.getLeft(), triple.getMiddle(), triple.getRight()),
                         this::logException,
                         () -> postChange(Change.COMPLETION)
                 );
@@ -512,173 +559,227 @@ public class SessionController implements EventMonitor.EventListener {
 
 
     void onLocalIndexUpdated(Event e) {
-        if (onLocalIndexUpdatedSubscription != null &&
-                !onLocalIndexUpdatedSubscription.isUnsubscribed()) {
-            Timber.i("Ignoring LocalIndexUpdate... refresh in progress");
-            return;
+        synchronized (lock) {
+            if (onLocalIndexUpdatedSubscription != null &&
+                    !onLocalIndexUpdatedSubscription.isUnsubscribed()) {
+                Timber.i("Ignoring LocalIndexUpdate... refresh in progress");
+                return;
+            }
+            onLocalIndexUpdatedSubscription = Observable.timer(500, TimeUnit.MILLISECONDS, subscribeOn)
+                    .subscribe(
+                            ii -> refreshFolderStats(),
+                            this::logException
+                    );
         }
-        onLocalIndexUpdatedSubscription = Observable.timer(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                .subscribe(
-                        ii -> refreshFolderStats(),
-                        this::logException
-                );
     }
 
     public boolean isOnline() {
-        return online;
+        synchronized (lock) {
+            return online;
+        }
     }
 
     public boolean isRestarting() {
-        return restarting;
+        synchronized (lock) {
+            return restarting;
+        }
     }
 
     public SystemInfo getSystemInfo() {
-        return systemInfo;
+        return systemInfo.get();
     }
 
     public String getMyID() {
-        return myID;
+        return myId.get();
     }
 
     public int getAnnounceServersTotal() {
-        return systemInfo.announceServersTotal;
+        return systemInfo.get().announceServersTotal;
     }
 
     public List<String> getAnnounceServersFailed() {
-        return systemInfo.announceServersFailed;
+        return systemInfo.get().announceServersFailed;
     }
 
     void updateSystemInfo(SystemInfo systemInfo) {
-        this.myID = systemInfo.myID;
-        this.systemInfo = systemInfo;
-        this.systemInfo.announceServersTotal = 0;
-        this.systemInfo.announceServersFailed.clear();
+        systemInfo.announceServersTotal = 0;
+        systemInfo.announceServersFailed.clear();
         if (systemInfo.extAnnounceOK != null) {
-            this.systemInfo.announceServersTotal = systemInfo.extAnnounceOK.size();
+            systemInfo.announceServersTotal = systemInfo.extAnnounceOK.size();
             for (String server : systemInfo.extAnnounceOK.keySet()) {
                 if (!systemInfo.extAnnounceOK.get(server)) {
-                    this.systemInfo.announceServersFailed.add(server);
+                    systemInfo.announceServersFailed.add(server);
                 }
             }
         }
+        this.myId.set(systemInfo.myID);
+        this.systemInfo.set(systemInfo);
     }
 
     public Config getConfig() {
-        return config;
+        return config.get();
     }
 
     void updateConfig(Config config) {
-        this.config = config;
-        folders.clear();
-        for (FolderConfig f : config.folders) {
-            folders.put(f.id, f);
+        synchronized (folders) {
+            folders.clear();
+            for (FolderConfig f : config.folders) {
+                folders.put(f.id, f);
+            }
         }
-        devices = config.devices;
-        //TODO clear out device/folder rejections if found in config
+        synchronized (devices) {
+            devices.clear();
+            devices.addAll(config.devices);
+        }
+        synchronized (folderRejections) {
+            //remove any stale rejections
+            Iterator<Map.Entry<String, FolderRejected>> ii = folderRejections.entrySet().iterator();
+            while (ii.hasNext()) {
+                if (getFolder(ii.next().getKey()) != null) {
+                    ii.remove();
+                }
+            }
+        }
+        synchronized (deviceRejections) {
+            //remove any stale rejections
+            Iterator<Map.Entry<String, FolderRejected>> ii = folderRejections.entrySet().iterator();
+            while (ii.hasNext()) {
+                if (getDevice(ii.next().getKey()) != null) {
+                    ii.remove();
+                }
+            }
+        }
+        this.config.set(config);
     }
 
     public boolean isConfigInSync() {
-        return configInSync;
+        return configInSync.get();
     }
 
     void updateConfigStats(ConfigStats configStats) {
-        this.configInSync = configStats.configInSync;
+        this.configInSync.set(configStats.configInSync);
     }
 
     public ConnectionInfo getConnection(String id) {
-        return connections.connections.get(id);
+        synchronized (connections) {
+            return connections.connections.get(id);
+        }
     }
 
     public ConnectionInfo getConnectionTotal() {
-        return connections.total;
+        synchronized (connections) {
+            return connections.total;
+        }
     }
 
     void updateConnections(Connections conns) {
         long now = System.currentTimeMillis();
-        for (String key : conns.connections.keySet()) {
-            ConnectionInfo newC = conns.connections.get(key);
-            newC.deviceId = key;
-            newC.lastUpdate = now;
-            if (connections.connections.containsKey(key)) {
-                ConnectionInfo oldC = connections.connections.get(key);
-                long td = (now - oldC.lastUpdate) / 1000;
-                if (td > 0) {
-                    newC.inbps = Math.max(0, (newC.inBytesTotal - oldC.inBytesTotal) / td);
-                    newC.outbps = Math.max(0, (newC.outBytesTotal - oldC.outBytesTotal) / td);
+        synchronized (connections) {
+            for (String key : conns.connections.keySet()) {
+                ConnectionInfo newC = conns.connections.get(key);
+                newC.deviceId = key;
+                newC.lastUpdate = now;
+                if (connections.connections.containsKey(key)) {
+                    ConnectionInfo oldC = connections.connections.get(key);
+                    long td = (now - oldC.lastUpdate) / 1000;
+                    if (td > 0) {
+                        newC.inbps = Math.max(0, (newC.inBytesTotal - oldC.inBytesTotal) / td);
+                        newC.outbps = Math.max(0, (newC.outBytesTotal - oldC.outBytesTotal) / td);
+                    }
+                }
+                //also update completion
+                if (!StringUtils.equals("total", key)) {
+                    updateCompletionTotal(key, 100);
                 }
             }
-            //also update completion
-            if (!StringUtils.equals("total", key)) {
-                if (!completion.containsKey(key)) {
-                    completion.put(key, new HashMap<String, Integer>());
-                }
-                completion.get(key).put("_total", 100);
-            }
+            connections.connections.clear();
+            connections.connections.putAll(conns.connections);
+            connections.total = conns.total;
         }
-        connections = conns;
     }
 
     public DeviceStats getDeviceStats(String id) {
-        return deviceStats.get(id);
+        synchronized (deviceStats) {
+            return deviceStats.get(id);
+        }
     }
 
     void setDeviceStats(DeviceStatsMap deviceStats) {
-        this.deviceStats = deviceStats;
+        synchronized (this.deviceStats) {
+            this.deviceStats.clear();
+            this.deviceStats.putAll(deviceStats);
+        }
     }
 
     public FolderStats getFolderStats(String name) {
-        return folderStats.get(name);
+        synchronized (folderStats) {
+            return folderStats.get(name);
+        }
     }
 
-    void updateFolderStats(FolderStatsMap folderStats) {
-        this.folderStats = folderStats;
+    void setFolderStats(FolderStatsMap folderStats) {
+        synchronized (this.folderStats) {
+            this.folderStats.clear();
+            this.folderStats.putAll(folderStats);
+        }
     }
 
     public Version getVersion() {
-        return version;
+        return version.get();
     }
 
     void setVersion(Version version) {
-        this.version = version;
+        this.version.set(version);
     }
 
     public Report getReport() {
-        return report;
+        return report.get();
     }
 
     void setReport(Report report) {
-        this.report = report;
+        this.report.set(report);
     }
 
     @Nullable
     public Model getModel(String folderName) {
-        return models.get(folderName);
+        synchronized (models) {
+            return models.get(folderName);
+        }
     }
 
     void updateModel(String folderName, Model model) {
         Timber.d("updateModel(%s) m=%s", folderName, model);
-        if (models.containsKey(folderName)) {
-            models.remove(folderName);
+        synchronized (models) {
+            if (models.containsKey(folderName)) {
+                models.remove(folderName);
+            }
+            models.put(folderName, model);
         }
-        models.put(folderName, model);
     }
 
     public FolderConfig getFolder(String name) {
-        return folders.get(name);
+        synchronized (folders) {
+            return folders.get(name);
+        }
     }
 
     public Collection<FolderConfig> getFolders() {
-        return folders.values();
+        synchronized (folders) {
+            return new ArrayList<>(folders.values());
+        }
     }
 
     public List<DeviceConfig> getDevices() {
-        return devices;
+        synchronized (devices) {
+            return new ArrayList<>(devices);
+        }
     }
 
     @Nullable
     public DeviceConfig getThisDevice() {
+        final String myid = myId.get();
         for (DeviceConfig d : getDevices()) {
-            if (StringUtils.equals(d.deviceID, myID)){
+            if (StringUtils.equals(d.deviceID, myid)){
                 return d;
             }
         }
@@ -687,9 +788,10 @@ public class SessionController implements EventMonitor.EventListener {
 
     @NonNull
     public List<DeviceConfig> getRemoteDevices() {
+        final String myid = myId.get();
         List<DeviceConfig> dvs = new ArrayList<>();
         for (DeviceConfig d : getDevices()) {
-            if (!StringUtils.equals(d.deviceID, myID)) {
+            if (!StringUtils.equals(d.deviceID, myid)) {
                 dvs.add(d);
             }
         }
@@ -708,56 +810,78 @@ public class SessionController implements EventMonitor.EventListener {
 
     void updateCompletion(String device, String folder, Completion comp) {
         Timber.d("Updating completion for %s", device);
-        if (!completion.containsKey(device)) {
-            completion.put(device, new HashMap<String, Integer>());
+        synchronized (completion) {
+            if (!completion.containsKey(device)) {
+                completion.put(device, new HashMap<String, Integer>());
+            }
+            completion.get(device).put(folder, Math.round(comp.completion));
+            float tot = 0;
+            int cnt = 0;
+            for (String key : completion.get(device).keySet()) {
+                if ("_total".equals(key)) continue;
+                tot += completion.get(device).get(key);
+                cnt++;
+            }
+            completion.get(device).put("_total", Math.min(100, Math.round(tot / cnt)));
         }
-        completion.get(device).put(folder, Math.round(comp.completion));
-        float tot = 0;
-        int cnt = 0;
-        for (String key : completion.get(device).keySet()) {
-            if ("_total".equals(key)) continue;
-            tot += completion.get(device).get(key);
-            cnt++;
+    }
+
+    void updateCompletionTotal(String deviceId, int comp) {
+        synchronized (completion) {
+            if (!completion.containsKey(deviceId)) {
+                completion.put(deviceId, new HashMap<String, Integer>());
+            }
+            completion.get(deviceId).put("_total", comp);
         }
-        completion.get(device).put("_total", Math.min(100, Math.round(tot / cnt)));
     }
 
     public int getCompletionTotal(String deviceId) {
-        if (completion.containsKey(deviceId)) {
-            return completion.get(deviceId).get("_total");
-        } else {
-            return -1;
+        synchronized (completion) {
+            if (completion.containsKey(deviceId)) {
+                return completion.get(deviceId).get("_total");
+            } else {
+                return -1;
+            }
         }
     }
 
     @Nullable
     public Map<String, Integer> getCompletionStats(String deviceId) {
-        return completion.get(deviceId);
+        synchronized (completion) {
+            return Collections.unmodifiableMap(completion.get(deviceId));
+        }
     }
 
     public Set<Map.Entry<String, DeviceRejected>> getDeviceRejections() {
-        return deviceRejections.entrySet();
+        synchronized (deviceRejections) {
+            return Collections.unmodifiableSet(deviceRejections.entrySet());
+        }
     }
 
     public void removeDeviceRejection(String key) {
-        deviceRejections.remove(key);
+        synchronized (deviceRejections) {
+            deviceRejections.remove(key);
+        }
         postChange(Change.DEVICE_REJECTED);
     }
 
     public Set<Map.Entry<String, FolderRejected>> getFolderRejections() {
-        return folderRejections.entrySet();
+        synchronized (folderRejections) {
+            return Collections.unmodifiableSet(folderRejections.entrySet());
+        }
     }
 
     public void removeFolderRejection(String key) {
-        folderRejections.remove(key);
+        synchronized (folderRejections) {
+            folderRejections.remove(key);
+        }
         postChange(Change.FOLDER_REJECTED);
     }
 
     public void refreshErrors() {
         Subscription s = restApi.errors()
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        errors -> errorsList = errors,
+                        errorsList::set,
                         this::logException,
                         () -> postChange(Change.NOTICE)
                 );
@@ -765,22 +889,23 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void clearErrors() {
         restApi.clearErrors().subscribe(
-                v -> {},
+                v -> {
+                },
                 this::logException,
                 () -> {
-                    errorsList = null;
+                    errorsList.set(null);
                     postChange(Change.NOTICE);
                 });
     }
 
     @Nullable
     public GuiError getLatestError() {
-        if (errorsList != null
-                && errorsList.errors != null
-                && !errorsList.errors.isEmpty()) {
-            return errorsList.errors.get(errorsList.errors.size()-1);
+        List<GuiError> errors = errorsList.get() != null ? errorsList.get().errors : null;
+        if (errors != null && errors.size() > 0) {
+            return errors.get(errors.size() - 1);
+        } else {
+            return null;
         }
-        return null;
     }
 
     public Subscription editFolder(FolderConfig folder, Action1<Throwable> onError, Action0 onComplete) {
@@ -987,24 +1112,39 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     public void restart() {
-        restarting = true;
-        eventMonitor.resetCounter();
-        updateState(false);
-        restApi.restart().subscribe(v -> {}, this::logException);
+        synchronized (lock) {
+            restarting = true;
+            eventMonitor.resetCounter();
+            updateState(false);
+        }
+        restApi.restart().subscribe(v -> {
+        }, this::logException);
     }
 
     public void shutdown() {
-        restarting = false;
-        eventMonitor.stop();
-        updateState(false);
-        restApi.shutdown().subscribe(v -> {}, this::logException);
+        //push to worker thread so we can stop event monitor
+        final Scheduler.Worker worker = subscribeOn.createWorker();
+        worker.schedule(new Action0() {
+            @Override
+            public void call() {
+                synchronized (lock) {
+                    restarting = false;
+                    eventMonitor.stop();
+                    updateState(false);
+                }
+                restApi.shutdown().subscribe(v -> {}, SessionController.this::logException);
+                worker.unsubscribe();
+            }
+        });
     }
 
     public Observable<List<String>> getAutoCompleteDirectoryList(String current) {
+        //intentionally not setting observeOn
         return restApi.autocompleteDirectory(current);
     }
 
     public Observable<Bitmap> getQRImage(String deviceId) {
+        //intentionally not setting observeOn
         return restApi.qr(deviceId)
                 .map(resp -> {
                     InputStream in = null;
@@ -1021,68 +1161,73 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     public Subscription overrideChanges(String id, Action1<Throwable> onError) {
-        return restApi.override(id).subscribe(
-                (v) -> {},
-                onError
-        );
+        return restApi.override(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (v) -> {},
+                        onError
+                );
     }
 
     public Subscription scanFolder(String id, Action1<Throwable> onError) {
-        return restApi.scan(id).subscribe(
-                (v) -> {},
-                onError
-        );
+        return restApi.scan(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (v) -> {
+                        },
+                        onError
+                );
     }
 
     public Subscription getIgnores(String id, Action1<Ignores> onNext, Action1<Throwable> onError) {
-        return restApi.ignores(id).subscribe(
-                onNext,
-                onError
-        );
+        return restApi.ignores(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        onNext,
+                        onError
+                );
     }
 
     public Subscription editIgnores(String id, Ignores ignores, Action1<Ignores> onNext, Action1<Throwable> onError, Action0 onComplete) {
-        return restApi.updateIgnores(id, ignores).subscribe(
-                onNext,
-                onError,
-                onComplete
-        );
+        return restApi.updateIgnores(id, ignores)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        onNext,
+                        onError,
+                        onComplete
+                );
     }
 
     void setupPeriodicRefresh() {
-        cancelPeriodicRefresh();
-        periodicRefreshSubscription = Observable.interval(30, TimeUnit.SECONDS)
-                .subscribe(ii -> {
-                    refreshSystem();
-                    refreshConnections(true);
-                    refreshErrors();
-                });
+        synchronized (lock) {
+            cancelPeriodicRefresh();
+            periodicRefreshSubscription = Observable.interval(30, TimeUnit.SECONDS, subscribeOn)
+                    .subscribe(ii -> {
+                        refreshSystem();
+                        refreshConnections(true);
+                        refreshErrors();
+                    });
+        }
     }
 
     void cancelPeriodicRefresh() {
-        if (periodicRefreshSubscription != null) {
-            periodicRefreshSubscription.unsubscribe();
+        synchronized (lock) {
+            if (periodicRefreshSubscription != null) {
+                periodicRefreshSubscription.unsubscribe();
+            }
         }
     }
 
     void logException(Throwable e) {
         Timber.e("%s: %s", e.getClass().getSimpleName(), e.getMessage(), e);
-//        if (e instanceof RetrofitError) {
-//            RetrofitError re = (RetrofitError)e;
-//            int status = re.getResponse().getStatus();
-//            if (status >= 400 && status <= 599) {
-//                updateState(false);
-//                //TODO notify offline
-//            }
-//        }
     }
 
     public Subscription subscribeChanges(Action1<ChangeEvent> onNext, Change... changes) {
         Observable<ChangeEvent> o;
         if (changes.length == 0) {
-            o = changeBus.asObservable().subscribeOn(AndroidSchedulers.mainThread());
+            o = changeBus.asObservable();
         } else {
-            o = changeBus.asObservable().subscribeOn(AndroidSchedulers.mainThread())
+            o = changeBus.asObservable()
                     .filter(c -> {
                         for (Change cc : changes) {
                             if (c.change == cc) return true;
@@ -1090,8 +1235,9 @@ public class SessionController implements EventMonitor.EventListener {
                         return false;
                     });
         }
+        //always post online event for new subscribers
         onNext.call(new ChangeEvent(online ? Change.ONLINE : Change.OFFLINE, null));
-        return o.subscribe(onNext);
+        return o.observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
     }
 
 }

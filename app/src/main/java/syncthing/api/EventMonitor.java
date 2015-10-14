@@ -19,6 +19,7 @@ package syncthing.api;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -33,6 +34,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.android.schedulers.HandlerScheduler;
 import syncthing.api.model.event.Event;
+import syncthing.api.model.event.EventType;
 import timber.log.Timber;
 
 /**
@@ -114,11 +116,11 @@ public class EventMonitor {
                     }
                 })
                 // drop unknown events
-                .filter(event -> event.type != null)
+                .filter(event -> (event.type != null && event.type != EventType.UNKNOWN))
                 //drop duplicate events some events like INDEX_UPDATED or STATE_CHANGED will flood
                 .distinctUntilChanged(event -> event.type)
                 //.debounce(50, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
+//                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         event -> {
                             listener.handleEvent(event);
