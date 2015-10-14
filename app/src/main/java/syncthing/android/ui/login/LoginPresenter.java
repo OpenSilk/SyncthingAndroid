@@ -35,15 +35,20 @@ import javax.inject.Inject;
 
 import mortar.MortarScope;
 import mortar.ViewPresenter;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 import syncthing.android.AppSettings;
 import syncthing.android.model.Credentials;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.ManageActivity;
 import syncthing.api.Session;
 import syncthing.api.SessionManager;
+import syncthing.api.SynchingApiWrapper;
 import syncthing.api.SyncthingApi;
+import syncthing.api.SyncthingApiConfig;
 import syncthing.api.model.DeviceConfig;
 import timber.log.Timber;
 
@@ -65,6 +70,7 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
     String error;
     TempCredStorage tmpCreds = new TempCredStorage();
     Session session;
+    SyncthingApiConfig.Builder configBuilder = SyncthingApiConfig.builder();
 
     static class TempCredStorage implements Serializable {
         private static final long serialVersionUID = 0L;
@@ -87,6 +93,9 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
         this.activityResultsController = activityResultsController;
         this.settings = settings;
         this.manager = manager;
+        if (initialCredentials != Credentials.NONE) {
+            configBuilder.forCredentials(initialCredentials);
+        }
     }
 
     @Override
@@ -141,13 +150,20 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
 
     void fetchApiKey(String alias, String url, String port, String user, String pass, boolean tls) {
         if (!hasView()) return;
-        String uri = LoginUtils.buildUri(url, port, tls);
-        String auth = LoginUtils.buildAuthorization(user, pass);
-        session = manager.acquire(new Credentials(null, null, uri, null, null));
         tmpCreds.alias = alias;
+        String uri = LoginUtils.buildUri(url, port, tls);
         tmpCreds.url = uri;
+        configBuilder.setUrl(uri);
+        String auth = LoginUtils.buildAuthorization(user, pass);
+        configBuilder.setAuth(auth);
+        if (session != null) {
+            manager.release(session);
+        }
+        session = manager.acquire(configBuilder.build());
+        final SyncthingApi api = SynchingApiWrapper.wrap(session.api(), Schedulers.io());
         isloading = true;
-        subscription = session.api().config().zipWith(session.api().system(),
+        subscription = api.config()
+                .zipWith(api.system(),
                 (config, system) -> {
                     TempCredStorage tmp = new TempCredStorage();
                     tmp.key = config.gui.apiKey;
@@ -176,7 +192,16 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
 
     void cancelLogin() {
         if (subscription != null) {
-            subscription.unsubscribe();
+            final Subscription s = subscription;
+            subscription = null;
+            final Scheduler.Worker worker = Schedulers.io().createWorker();
+            worker.schedule(new Action0() {
+                @Override
+                public void call() {
+                    s.unsubscribe();
+                    worker.unsubscribe();
+                }
+            });
         }
         getView().dismissLoginProgress();
     }
