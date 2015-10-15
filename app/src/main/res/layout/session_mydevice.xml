@@ -107,6 +107,28 @@
 
                 </LinearLayout>
 
+                <!-- TODO
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{(card.outbps &lt; 0 || card.outBytesTotal &lt; 0) ? View.GONE : View.VISIBLE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/local_state_title"
+                        android:text="@string/local_state_total"
+                        style="@style/session.RecyclerTextLeftColumn"
+                        />
+
+                    <TextView
+                        android:id="@+id/local_state"
+                        android:text="@{@string/num_items_size(card.localFiles,SyncthingUtils.humanReadableSize(card.localBytes))}"
+                        style="@style/session.RecyclerTextRightColumn"
+                        tools:text="0 b/s"/>
+
+                </LinearLayout>
+                -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
