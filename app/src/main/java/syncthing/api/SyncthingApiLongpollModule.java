@@ -49,7 +49,6 @@ public class SyncthingApiLongpollModule {
         OkHttpClient client = okClient.clone();
         client.setConnectTimeout(LONGPOLL_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
         client.setReadTimeout(LONGPOLL_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-        client.setConnectionPool(new ConnectionPool(LONGPOLL_MAX_IDLE_CONNECTIONS, LONGPOLL_KEEP_ALIVE_DURATION_MS));
         client.setSslSocketFactory(SyncthingSSLSocketFactory.create(config.getCACert()));
         client.setHostnameVerifier(new NullHostNameVerifier());
         client.interceptors().add(new SyncthingApiInterceptor(config));
