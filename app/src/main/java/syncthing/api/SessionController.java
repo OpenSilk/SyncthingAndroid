@@ -24,6 +24,8 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -388,16 +390,14 @@ public class SessionController implements EventMonitor.EventListener {
                             setFolderStats((FolderStatsMap) map.get(FolderStatsMap.class));
                             setVersion((Version) map.get(Version.class));
                             setReport((Report) map.get(Report.class));
-                            synchronized (lock) {
-                                this.online = true;
-                            }
                         },
                         this::logException,
                         () -> {
-                            postChange(Change.ONLINE);
                             synchronized (lock) {
+                                this.online = true;
                                 onlineSub = null;
                             }
+                            postChange(Change.ONLINE);
                         }
                 );
             } else {
@@ -665,7 +665,7 @@ public class SessionController implements EventMonitor.EventListener {
         this.configInSync.set(configStats.configInSync);
     }
 
-    public ConnectionInfo getConnection(String id) {
+    public @Nullable ConnectionInfo getConnection(String id) {
         synchronized (connections) {
             return connections.connections.get(id);
         }
@@ -697,8 +697,7 @@ public class SessionController implements EventMonitor.EventListener {
                     updateCompletionTotal(key, 100);
                 }
             }
-            connections.connections.clear();
-            connections.connections.putAll(conns.connections);
+            connections.connections = conns.connections;
             connections.total = conns.total;
         }
     }
