@@ -17,13 +17,8 @@
 
 package syncthing.android.ui.welcome;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-
 import org.opensilk.common.ui.mortar.Screen;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
-
-import syncthing.android.R;
 
 public class WelcomeFragment extends MortarFragment {
     public static String NAME = WelcomeFragment.class.getName();

@@ -24,8 +24,7 @@ import syncthing.android.ui.ManageActivityComponent;
 
 @ScreenScope
 @dagger.Component(
-        dependencies = ManageActivityComponent.class,
-        modules = WelcomeModule.class
+        dependencies = ManageActivityComponent.class
 )
 public interface WelcomeComponent {
     Func2<ManageActivityComponent, WelcomeScreen, WelcomeComponent> FACTORY =
@@ -34,7 +33,6 @@ public interface WelcomeComponent {
                 public WelcomeComponent call(ManageActivityComponent loginActivityComponent, WelcomeScreen welcomeScreen) {
                     return DaggerWelcomeComponent.builder()
                             .manageActivityComponent(loginActivityComponent)
-                            .welcomeModule(new WelcomeModule(welcomeScreen))
                             .build();
                 }
             };
