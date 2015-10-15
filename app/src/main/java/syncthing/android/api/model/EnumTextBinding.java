@@ -34,6 +34,7 @@ import syncthing.api.model.VersioningType;
 public class EnumTextBinding {
     @BindingAdapter("compressionText")
     public static void setCompressionText(TextView view, Compression compression) {
+        if (compression == null) compression = Compression.UNKNOWN;
         switch (compression) {
             case ALWAYS:
                 view.setText(R.string.all_data);
@@ -51,6 +52,7 @@ public class EnumTextBinding {
     }
     @BindingAdapter("pullOrderText")
     public static void pullOrderText(TextView view, PullOrder order) {
+        if (order == null) order = PullOrder.UNKNOWN;
         switch (order) {
             case RANDOM:
                 view.setText(R.string.random);
@@ -78,6 +80,7 @@ public class EnumTextBinding {
     }
     @BindingAdapter("versioningTypeText")
     public static void versioningTypeText(TextView view, VersioningType type) {
+        if (type == null) type = VersioningType.NONE;
         switch (type) {
             case SIMPLE:
                 view.setText(R.string.simple_file_versioning);
@@ -96,6 +99,7 @@ public class EnumTextBinding {
     }
     @BindingAdapter("modelStateText")
     public static void modelStatText(TextView view, ModelState state) {
+        if (state == null) state = ModelState.UNKNOWN;
         switch (state) {
             case IDLE:
                 view.setText(R.string.up_to_date);
@@ -117,6 +121,7 @@ public class EnumTextBinding {
     }
     @BindingAdapter("modelStateTextColor")
     public static void modelStatTextColor(TextView view, ModelState state) {
+        if (state == null) state = ModelState.UNKNOWN;
         switch (state) {
             case IDLE:
                 view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.folder_idle));

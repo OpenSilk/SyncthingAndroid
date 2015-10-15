@@ -26,4 +26,5 @@ public enum Compression {
     @SerializedName("always") ALWAYS,
     @SerializedName("metadata") METADATA,
     @SerializedName("never") NEVER,
+    UNKNOWN,
 }
