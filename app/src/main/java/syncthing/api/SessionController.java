@@ -19,7 +19,6 @@ package syncthing.api;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -49,7 +48,6 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Scheduler;
-import rx.Single;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -96,21 +94,32 @@ public class SessionController implements EventMonitor.EventListener {
         ONLINE,
         OFFLINE,
         FAILURE,
-        MODEL,
-        MODEL_STATE,
         COMPLETION,
         FOLDER_STATS,
         DEVICE_STATS,
         CONNECTIONS_UPDATE,
         CONNECTIONS_CHANGE,
-        DEVICE_REJECTED,
-        FOLDER_REJECTED,
         CONFIG_UPDATE,
         SYSTEM,
         NOTICE,
         //EventMonitor
         NEED_LOGIN,
 
+        DEVICE_DISCOVERED,
+        DEVICE_CONNECTED,
+        DEVICE_DISCONNECTED,
+        DEVICE_REJECTED,
+        LOCAL_INDEX_UPDATED,
+        REMOTE_INDEX_UPDATED,
+        ITEM_STARTED,
+        ITEM_FINISHED,
+        STATE_CHANGED,
+        FOLDER_REJECTED,
+        CONFIG_SAVED,
+        DOWNLOAD_PROGRESS,
+        FOLDER_COMPLETION,
+        FOLDER_SUMMARY,
+        FOLDER_ERRORS,
     }
 
     public static class ChangeEvent {
@@ -161,7 +170,6 @@ public class SessionController implements EventMonitor.EventListener {
     boolean running;
     Subscription onlineSub;
     Subscription subspendSubscription;
-    Subscription periodicRefreshSubscription;
     Subscription onLocalIndexUpdatedSubscription;
 
     final Scheduler subscribeOn;
@@ -186,9 +194,6 @@ public class SessionController implements EventMonitor.EventListener {
             } else if (!eventMonitor.isRunning()) {
                 eventMonitor.start();
             }
-            if (online) {
-                setupPeriodicRefresh();
-            }
             running = true;
         }
     }
@@ -206,7 +211,6 @@ public class SessionController implements EventMonitor.EventListener {
                                 eventMonitor.stop();
                             }
                         });
-                cancelPeriodicRefresh();
                 running = false;
             }
         }
@@ -224,7 +228,6 @@ public class SessionController implements EventMonitor.EventListener {
                             subspendSubscription.unsubscribe();
                         }
                         eventMonitor.stop();
-                        cancelPeriodicRefresh();
                         running = false;
                     }
                 }
@@ -264,7 +267,7 @@ public class SessionController implements EventMonitor.EventListener {
                     }
                 }
                 if (incremental) {
-                    postChange(Change.MODEL_STATE, st.data);
+                    postChange(Change.STATE_CHANGED, st.data);
                 } else {
                     refreshFolder(st.data.folder);
                 }
@@ -308,7 +311,7 @@ public class SessionController implements EventMonitor.EventListener {
             } case FOLDER_SUMMARY: {
                 FolderSummary fs = (FolderSummary) e;
                 updateModel(fs.data.folder, fs.data.summary);
-                postChange(Change.MODEL, fs.data);
+                postChange(Change.FOLDER_SUMMARY, fs.data);
                 break;
             } case FOLDER_COMPLETION: {
                 FolderCompletion fc = (FolderCompletion) e;
@@ -322,7 +325,9 @@ public class SessionController implements EventMonitor.EventListener {
             } case ITEM_STARTED: {
                 break;
             } case PING: {
-                //refreshSystem();
+                refreshSystem();
+                refreshConnections(true);
+                refreshErrors();
                 break;
             } default: {
                 break;
@@ -389,7 +394,6 @@ public class SessionController implements EventMonitor.EventListener {
                         },
                         this::logException,
                         () -> {
-                            setupPeriodicRefresh();
                             postChange(Change.ONLINE);
                             synchronized (lock) {
                                 onlineSub = null;
@@ -399,7 +403,6 @@ public class SessionController implements EventMonitor.EventListener {
             } else {
                 this.online = false;
                 if (onlineSub != null) onlineSub.unsubscribe();
-                cancelPeriodicRefresh();
                 postChange(Change.OFFLINE);
             }
             return true;
@@ -501,7 +504,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .subscribe(
                         model -> updateModel(name, model),
                         this::logException,
-                        () -> postChange(Change.MODEL)
+                        () -> postChange(Change.FOLDER_SUMMARY)
                 );
     }
 
@@ -512,7 +515,7 @@ public class SessionController implements EventMonitor.EventListener {
         }
         //Group all the network calls so we only receive one completion
         //event this will prevent change observers from receiving
-        //mutliple MODEL changes
+        //mutliple FOLDER_SUMMARY changes
         List<Observable<Map.Entry<String, Model>>> observables = new LinkedList<>();
         for (String name: names) {
             observables.add(Observable.zip(Observable.just(name), restApi.model(name).first(), Pair::of));
@@ -521,7 +524,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .subscribe(
                         entry -> updateModel(entry.getKey(), entry.getValue()),
                         this::logException,
-                        () -> postChange(Change.MODEL)
+                        () -> postChange(Change.FOLDER_SUMMARY)
                 );
     }
 
@@ -1198,26 +1201,6 @@ public class SessionController implements EventMonitor.EventListener {
                         onError,
                         onComplete
                 );
-    }
-
-    void setupPeriodicRefresh() {
-        synchronized (lock) {
-            cancelPeriodicRefresh();
-            periodicRefreshSubscription = Observable.interval(30, TimeUnit.SECONDS, subscribeOn)
-                    .subscribe(ii -> {
-                        refreshSystem();
-                        refreshConnections(true);
-                        refreshErrors();
-                    });
-        }
-    }
-
-    void cancelPeriodicRefresh() {
-        synchronized (lock) {
-            if (periodicRefreshSubscription != null) {
-                periodicRefreshSubscription.unsubscribe();
-            }
-        }
     }
 
     void logException(Throwable e) {
