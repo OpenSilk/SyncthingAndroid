@@ -20,6 +20,7 @@ package syncthing.android.ui;
 import org.opensilk.common.core.dagger2.ActivityScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsOwnerModule;
+import org.opensilk.common.ui.mortar.DialogPresenter;
 import org.opensilk.common.ui.mortar.PauseAndResumeModule;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivityComponent;
 
@@ -49,4 +50,5 @@ public interface ManageActivityComponent extends MortarFragmentActivityComponent
             };
     void inject(ManageActivity activity);
     ActivityResultsController activityResultsController();
+    DialogPresenter dialogPresenter();
 }

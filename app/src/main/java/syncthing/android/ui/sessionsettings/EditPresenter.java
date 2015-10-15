@@ -17,10 +17,22 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Toast;
+
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.DialogFactory;
+import org.opensilk.common.ui.mortar.DialogPresenter;
 
 import mortar.ViewPresenter;
 import rx.Subscription;
+import syncthing.android.R;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
@@ -36,14 +48,20 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     protected final String deviceId;
     protected final boolean isAdd;
     protected final Session session;
+    protected final DialogPresenter dialogPresenter;
+    protected final ActivityResultsController activityResultsController;
 
     protected Subscription saveSubscription;
 
     public EditPresenter(
             SessionManager manager,
+            DialogPresenter dialogPresenter,
+            ActivityResultsController activityResultContoller,
             EditPresenterConfig config
     ) {
         this.manager = manager;
+        this.dialogPresenter = dialogPresenter;
+        this.activityResultsController = activityResultContoller;
         this.session = manager.acquire(config.credentials);
         this.controller = this.session.controller();
         this.folderId = config.folderId;
@@ -63,21 +81,42 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     //TODO save saving state and restore
 
     protected void onSaveStart() {
-//        sessionPresenter.showSavingDialog();
+        dialogPresenter.showDialog(
+                new DialogFactory() {
+                    @Override
+                    public Dialog call(Context context) {
+                        ProgressDialog mProgressDialog = new ProgressDialog(getView().getContext());
+                        mProgressDialog.setMessage(getView().getResources().getString(R.string.saving_config_dots));
+                        return mProgressDialog;
+                    }
+                }
+        );
     }
 
     protected void onSaveSuccessfull() {
-//        sessionPresenter.dismissSavingDialog();
-//        sessionPresenter.showSuccessMsg();
+        dialogPresenter.dismissDialog();
+        if (hasView()) {
+            Toast.makeText(getView().getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
+        }
         dismissDialog();
     }
 
     protected void onSavefailed(Throwable e) {
-//        sessionPresenter.dismissSavingDialog();
-//        sessionPresenter.showError(R.string.error, e.getMessage());
+        final String msg = e.getMessage();
+        dialogPresenter.showDialog(new DialogFactory() {
+            @Override
+            public Dialog call(Context context) {
+                AlertDialog mErrorDialog = new AlertDialog.Builder(context)
+                        .setTitle(R.string.error)
+                        .setMessage(msg)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .create();
+                return mErrorDialog;
+            }
+        });
     }
 
-    protected  void dismissDialog() {
-
+    protected void dismissDialog() {
+        activityResultsController.setResultAndFinish(Activity.RESULT_OK, null);
     }
 }

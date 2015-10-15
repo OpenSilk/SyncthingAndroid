@@ -31,6 +31,8 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -50,7 +52,7 @@ public class ShowIdDialogView extends RelativeLayout {
     @InjectView(R.id.loading_progress) ProgressBar progress;
     @InjectView(R.id.btn_copy) Button copyButton;
 
-    SessionPresenter mPresenter;
+    @Inject SessionPresenter mPresenter;
 
     String id;
     Subscription qrImageSubscription;

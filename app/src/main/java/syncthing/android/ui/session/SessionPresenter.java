@@ -600,7 +600,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         if (hasView()) {
             MortarScope myScope = MortarScope.getScope(getView().getContext());
             Context childContext = myScope.createContext(getView().getContext());
-            //TODO this could leak if not dismissed
+            //TODO this *will* leak if not dismissed
             new ShowIdDialog(childContext).show();
         }
     }

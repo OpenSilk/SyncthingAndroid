@@ -25,6 +25,7 @@ import android.os.Bundle;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.DialogPresenter;
 
 import javax.inject.Inject;
 
@@ -41,8 +42,6 @@ import syncthing.api.model.SystemInfo;
 @ScreenScope
 public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
 
-    final ActivityResultsController activityResultsController;
-
     Subscription initSubscription;
     boolean isInitialized;
     Ignores ignores;
@@ -50,11 +49,11 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
     @Inject
     public EditIgnoresPresenter(
             SessionManager manager,
-            EditPresenterConfig config,
-            ActivityResultsController activityResultsController
+            DialogPresenter dialogPresenter,
+            ActivityResultsController activityResultContoller,
+            EditPresenterConfig config
     ) {
-        super(manager, config);
-        this.activityResultsController = activityResultsController;
+        super(manager, dialogPresenter, activityResultContoller, config);
     }
 
     @Override

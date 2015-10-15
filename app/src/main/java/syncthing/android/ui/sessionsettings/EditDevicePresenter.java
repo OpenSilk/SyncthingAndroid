@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsListener;
+import org.opensilk.common.ui.mortar.DialogPresenter;
 
 import java.util.Map;
 
@@ -44,8 +45,6 @@ import syncthing.api.model.DeviceConfig;
 @ScreenScope
 public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> implements ActivityResultsListener {
 
-    final ActivityResultsController activityResultsController;
-
     DeviceConfig originalDevice;
 
     Subscription deleteSubscription;
@@ -53,11 +52,11 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     @Inject
     public EditDevicePresenter(
             SessionManager manager,
-            EditPresenterConfig config,
-            ActivityResultsController activityResultsController
+            DialogPresenter dialogPresenter,
+            ActivityResultsController activityResultContoller,
+            EditPresenterConfig config
     ) {
-        super(manager, config);
-        this.activityResultsController = activityResultsController;
+        super(manager, dialogPresenter, activityResultContoller, config);
     }
 
     @Override

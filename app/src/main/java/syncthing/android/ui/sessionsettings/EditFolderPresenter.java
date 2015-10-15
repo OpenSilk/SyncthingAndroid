@@ -22,6 +22,8 @@ import android.os.Bundle;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
+import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.DialogPresenter;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -48,9 +50,11 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     @Inject
     public EditFolderPresenter(
             SessionManager manager,
+            DialogPresenter dialogPresenter,
+            ActivityResultsController activityResultContoller,
             EditPresenterConfig config
     ) {
-        super(manager, config);
+        super(manager, dialogPresenter, activityResultContoller, config);
     }
 
     @Override

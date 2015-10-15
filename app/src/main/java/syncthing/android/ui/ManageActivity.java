@@ -17,6 +17,7 @@
 
 package syncthing.android.ui;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,9 @@ import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsActivity;
 import org.opensilk.common.ui.mortar.ActivityResultsOwner;
+import org.opensilk.common.ui.mortar.DialogFactory;
+import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortar.DialogPresenterActivity;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortar.ToolbarOwnerDelegate;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
@@ -49,7 +53,7 @@ import timber.log.Timber;
 /**
  * Created by drew on 3/10/15.
  */
-public class ManageActivity extends MortarFragmentActivity implements ActivityResultsActivity {
+public class ManageActivity extends MortarFragmentActivity implements ActivityResultsActivity, DialogPresenterActivity {
 
     public static final String EXTRA_CREDENTIALS = "credentials";
     public static final String EXTRA_ARGS = "args";
@@ -59,10 +63,12 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
     @Inject ActivityResultsOwner mActivityResultsOwner;
     @Inject ToolbarOwner mToolbarOwner;
     ToolbarOwnerDelegate<ManageActivity> mToolbarOwnerDelegate;
+    @Inject DialogPresenter mDialogPresenter;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
 
     private boolean ignoreBackButton;
+    private Dialog mActiveDialog;
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
@@ -101,6 +107,7 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
             ignoreBackButton = getIntent().getBooleanExtra(EXTRA_DISABLE_BACK, false);
             mFragmentManagerOwner.replaceMainContent(fragment, false);
         }
+        mDialogPresenter.takeView(this);
     }
 
     @Override
@@ -109,6 +116,11 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
         mActivityResultsOwner.dropView(this);
         mToolbarOwner.detachToolbar(mToolbar);
         mToolbarOwnerDelegate.onDestroy();
+        mDialogPresenter.dropView(this);
+        if (mActiveDialog != null) {
+            mActiveDialog.dismiss();
+            mActiveDialog =null;
+        }
     }
 
     @Override
@@ -163,4 +175,21 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
         finish();
     }
 
+    /*
+     * DialogActivity
+     */
+
+    @Override
+    public void showDialog(DialogFactory factory) {
+        dismissDialog();
+        mActiveDialog = factory.call(this);
+        mActiveDialog.show();
+    }
+
+    @Override
+    public void dismissDialog() {
+        if (mActiveDialog != null) {
+            mActiveDialog.dismiss();
+        }
+    }
 }

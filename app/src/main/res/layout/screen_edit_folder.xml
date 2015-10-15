@@ -443,33 +443,36 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:orientation="horizontal"
-            android:gravity="end"
             style="@style/mtrl.ButtonBar">
 
             <Button
                 android:id="@+id/btn_cancel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@android:string/cancel"
                 style="@style/mtrl.ButtonBarButton.Small"/>
 
             <Button
                 android:id="@+id/btn_delete"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/delete"
                 style="@style/mtrl.ButtonBarButton.Small"/>
 
             <Button
                 android:id="@+id/btn_ignore_ptrn"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/ignore_patterns"
                 style="@style/mtrl.ButtonBarButton.Small"/>
 
             <Button
                 android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
                 style="@style/mtrl.ButtonBarButton.Small"/>
