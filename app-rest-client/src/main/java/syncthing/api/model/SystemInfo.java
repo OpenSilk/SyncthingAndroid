@@ -34,7 +34,7 @@ public class SystemInfo {
     public String myID;
     public long sys;
     public String pathSeparator;
-    public int uptime;
+    public long uptime;
     public String tilde;
     public Map<String, Boolean> extAnnounceOK = Collections.emptyMap();
     //pojo
