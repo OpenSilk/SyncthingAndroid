@@ -210,13 +210,9 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                 onCompletionUpdate(e.data);
                 break;
             case CONNECTIONS_UPDATE:
+            case CONNECTIONS_CHANGE:
                 postConnectiosUpdate();
                 break;
-            case CONNECTIONS_CHANGE:
-                if (hasView()) {
-                    updateDevices();
-                    getView().refreshDevices(devices);
-                }
             case DEVICE_STATS:
                 postDeviceStatsUpdate();
                 break;
