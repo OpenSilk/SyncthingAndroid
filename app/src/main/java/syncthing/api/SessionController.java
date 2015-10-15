@@ -56,6 +56,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.SerializedSubject;
 import syncthing.api.model.Completion;
 import syncthing.api.model.Config;
 import syncthing.api.model.ConfigStats;
@@ -166,7 +167,8 @@ public class SessionController implements EventMonitor.EventListener {
     final Scheduler subscribeOn;
     final SyncthingApi restApi;
     final EventMonitor eventMonitor;
-    final BehaviorSubject<ChangeEvent> changeBus = BehaviorSubject.create();
+    final SerializedSubject<ChangeEvent, ChangeEvent> changeBus =
+            BehaviorSubject.<ChangeEvent>create(new ChangeEvent(Change.OFFLINE, null)).toSerialized();
 
     @Inject
     public SessionController(SyncthingApi restApi, @Named("longpoll") SyncthingApi longpollRestApi) {
@@ -1225,9 +1227,9 @@ public class SessionController implements EventMonitor.EventListener {
     public Subscription subscribeChanges(Action1<ChangeEvent> onNext, Change... changes) {
         Observable<ChangeEvent> o;
         if (changes.length == 0) {
-            o = changeBus.asObservable();
+            o = changeBus;
         } else {
-            o = changeBus.asObservable()
+            o = changeBus
                     .filter(c -> {
                         for (Change cc : changes) {
                             if (c.change == cc) return true;
@@ -1237,7 +1239,7 @@ public class SessionController implements EventMonitor.EventListener {
         }
         //always post online event for new subscribers
         onNext.call(new ChangeEvent(online ? Change.ONLINE : Change.OFFLINE, null));
-        return o.observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
+        return o.onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
     }
 
 }
