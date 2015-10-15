@@ -34,13 +34,6 @@ public class WelcomeFragment extends MortarFragment {
 
     @Override
     protected Screen newScreen() {
-        return new WelcomeScreen(this.getFragmentManager());
+        return new WelcomeScreen();
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.welcome_title);
-    }
-
 }

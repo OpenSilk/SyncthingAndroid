@@ -33,12 +33,6 @@ import syncthing.android.ui.ManageActivityComponent;
 @Layout(R.layout.screen_welcome)
 @WithComponentFactory(WelcomeScreen.Factory.class)
 public class WelcomeScreen extends Screen {
-    final FragmentManager fragmentManager;
-
-    public WelcomeScreen(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
-    }
-
     public static class Factory extends ComponentFactory<WelcomeScreen> {
         @Override
         protected Object createDaggerComponent(Resources resources, MortarScope parentScope, WelcomeScreen screen) {
