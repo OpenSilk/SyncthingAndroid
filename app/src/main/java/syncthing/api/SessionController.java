@@ -168,7 +168,7 @@ public class SessionController implements EventMonitor.EventListener {
     final SyncthingApi restApi;
     final EventMonitor eventMonitor;
     final SerializedSubject<ChangeEvent, ChangeEvent> changeBus =
-            BehaviorSubject.<ChangeEvent>create(new ChangeEvent(Change.OFFLINE, null)).toSerialized();
+            BehaviorSubject.<ChangeEvent>create().toSerialized();
 
     @Inject
     public SessionController(SyncthingApi restApi, @Named("longpoll") SyncthingApi longpollRestApi) {
