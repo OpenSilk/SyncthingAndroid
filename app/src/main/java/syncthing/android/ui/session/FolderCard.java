@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
@@ -65,41 +66,37 @@ public class FolderCard extends ExpandableCard {
             this.model = model;
             notifyChange(syncthing.android.BR._all);
         } else {
-            if (!StringUtils.equals(this.model.invalid, model.invalid)) {
-                this.model.invalid = model.invalid;
+            Model oldModel = this.model;
+            this.model = model;
+            if (oldModel.state != model.state) {
+                notifyChange(syncthing.android.BR.state);
+            }
+            if (!StringUtils.equals(oldModel.invalid, model.invalid)) {
                 notifyChange(syncthing.android.BR.invalid);
             }
-            if (this.model.globalFiles != model.globalFiles) {
-                this.model.globalFiles = model.globalFiles;
+            if (oldModel.globalFiles != model.globalFiles) {
                 notifyChange(syncthing.android.BR.globalFiles);
             }
-            if (this.model.globalBytes != model.globalBytes) {
-                this.model.globalBytes = model.globalBytes;
+            if (oldModel.globalBytes != model.globalBytes) {
                 notifyChange(syncthing.android.BR.globalBytes);
                 notifyChange(syncthing.android.BR.completion);
             }
-            if (this.model.localFiles != model.localFiles) {
-                this.model.localFiles = model.localFiles;
+            if (oldModel.localFiles != model.localFiles) {
                 notifyChange(syncthing.android.BR.localFiles);
             }
-            if (this.model.localBytes != model.localBytes) {
-                this.model.localBytes = model.localBytes;
+            if (oldModel.localBytes != model.localBytes) {
                 notifyChange(syncthing.android.BR.localBytes);
             }
-            if (this.model.needFiles != model.needFiles) {
-                this.model.needFiles = model.needFiles;
+            if (oldModel.needFiles != model.needFiles) {
                 notifyChange(syncthing.android.BR.needFiles);
             }
-            if (this.model.needBytes != model.needBytes) {
-                this.model.needBytes = model.needBytes;
+            if (oldModel.needBytes != model.needBytes) {
                 notifyChange(syncthing.android.BR.needBytes);
             }
-            if (this.model.inSyncBytes != model.inSyncBytes) {
-                this.model.inSyncBytes = model.inSyncBytes;
+            if (oldModel.inSyncBytes != model.inSyncBytes) {
                 notifyChange(syncthing.android.BR.completion);
             }
-            if (this.model.ignorePatterns != model.ignorePatterns) {
-                this.model.ignorePatterns = model.ignorePatterns;
+            if (oldModel.ignorePatterns != model.ignorePatterns) {
                 notifyChange(syncthing.android.BR.ignorePatterns);
             }
         }
@@ -222,12 +219,9 @@ public class FolderCard extends ExpandableCard {
         if (sharedNames.isEmpty()) {
             view.setText("");
         } else {
-            StringBuilder b = new StringBuilder();
-            for (int ii=0; ii<sharedNames.size(); ii++) {
-                b.append(sharedNames.get(ii));
-                if (ii+1 < sharedNames.size()) {
-                    b.append(", ");
-                }
+            StringBuilder b = new StringBuilder(sharedNames.get(0));
+            for (int ii=1; ii<sharedNames.size(); ii++) {
+                b.append(", ").append(sharedNames.get(ii));
             }
             view.setText(b.toString());
         }

@@ -86,21 +86,19 @@ public class MyDeviceCard extends ExpandableCard {
             notifyChange(syncthing.android.BR.outbps);
             notifyChange(syncthing.android.BR.outBytesTotal);
         } else {
-            if (this.connection.inbps != connection.inbps) {
-                this.connection.inbps = connection.inbps;
+            ConnectionInfo oldConnection = this.connection;
+            this.connection = connection;
+            if (oldConnection.inbps != connection.inbps) {
                 notifyChange(syncthing.android.BR.inbps);
             }
-            if (this.connection.inBytesTotal != connection.inBytesTotal) {
-                this.connection.inBytesTotal = connection.inBytesTotal;
+            if (oldConnection.inBytesTotal != connection.inBytesTotal) {
                 notifyChange(syncthing.android.BR.inBytesTotal);
             }
-            if (this.connection.outbps != connection.outbps) {
-                this.connection.outbps = connection.outbps;
-                notifyChange(syncthing.android.BR.inBytesTotal);
+            if (oldConnection.outbps != connection.outbps) {
+                notifyChange(syncthing.android.BR.outbps);
             }
-            if (this.connection.outBytesTotal != connection.outBytesTotal) {
-                this.connection.outBytesTotal = connection.outBytesTotal;
-                notifyChange(syncthing.android.BR.inBytesTotal);
+            if (oldConnection.outBytesTotal != connection.outBytesTotal) {
+                notifyChange(syncthing.android.BR.outBytesTotal);
             }
         }
     }
@@ -117,23 +115,21 @@ public class MyDeviceCard extends ExpandableCard {
             notifyChange(syncthing.android.BR.uptime);
             notifyChange(syncthing.android.BR.uptimeText);
         } else {
-            if (this.system.sys != system.sys) {
-                this.system.sys = system.sys;
+            SystemInfo oldSystem = this.system;
+            this.system = system;
+            if (oldSystem.sys != system.sys) {
                 notifyChange(syncthing.android.BR.mem);
             }
-            if (this.system.cpuPercent != system.cpuPercent) {
-                this.system.cpuPercent = system.cpuPercent;
+            if (oldSystem.cpuPercent != system.cpuPercent) {
                 notifyChange(syncthing.android.BR.cpuPercent);
                 notifyChange(syncthing.android.BR.cpuPercentText);
             }
-            if (this.system.uptime != system.uptime) {
-                this.system.uptime = system.uptime;
+            if (oldSystem.uptime != system.uptime) {
                 notifyChange(syncthing.android.BR.uptime);
             }
             //todo handle global announce better
-            if (this.system.announceServersFailed.size()
+            if (oldSystem.announceServersFailed.size()
                     != system.announceServersFailed.size()) {
-                this.system = system;
                 notifyChange(syncthing.android.BR.systemInfo);
                 notifyChange(syncthing.android.BR.showGlobalAnnounce);
             }
@@ -221,7 +217,6 @@ public class MyDeviceCard extends ExpandableCard {
         return uptimeFormatter.print(Duration.standardSeconds(getUptime()).toPeriod());
     }
 
-
     @Bindable
     public String getVersionText() {
         return version != null ? version.toString() : "?";
@@ -234,12 +229,12 @@ public class MyDeviceCard extends ExpandableCard {
                 view.setText(android.R.string.ok);
                 view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.announce_ok));
             } else {
-                int failures = (sys.announceServersTotal - sys.announceServersFailed.size());
+                int successes = (sys.announceServersTotal - sys.announceServersFailed.size());
                 view.setText(view.getResources().getString(R.string.announce_failures,
-                        failures, sys.announceServersTotal
+                        successes, sys.announceServersTotal
                 ));
                 view.setTextColor(ContextCompat.getColor(view.getContext(),
-                        failures == sys.announceServersTotal
+                                successes == 0
                                 ? R.color.announce_fail
                                 : R.color.announce_ok
                 ));

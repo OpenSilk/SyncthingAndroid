@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="-4dp"
                     android:layout_gravity="bottom"
-                    android:visibility="@{(card.completion &lt; 0 || card.completion == 100) ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{(card.completion &lt; 1 || card.completion == 100) ? View.GONE : View.VISIBLE}"
                     android:progress="@{card.completion}"
                     android:max="100"
                     style="?android:progressBarStyleHorizontal"
@@ -99,7 +99,7 @@
                     android:id="@+id/download_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{(card.inbps &lt; 0 || card.inBytesTotal &lt; 0) ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{card.connected ? View.VISIBLE : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -120,7 +120,7 @@
                     android:id="@+id/upload_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{(card.outbps &lt; 0 || card.outBytesTotal &lt; 0) ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{card.connected ? View.VISIBLE : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView

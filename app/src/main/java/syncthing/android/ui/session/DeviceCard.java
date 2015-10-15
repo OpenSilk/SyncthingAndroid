@@ -71,23 +71,29 @@ public class DeviceCard extends ExpandableCard {
             notifyChange(syncthing.android.BR.inBytesTotal);
             notifyChange(syncthing.android.BR.outbps);
             notifyChange(syncthing.android.BR.outBytesTotal);
+            notifyChange(syncthing.android.BR.address);
+            notifyChange(syncthing.android.BR.clientVersion);
             notifyChange(syncthing.android.BR.connected);
         } else {
-            if (this.connection.inbps != connection.inbps) {
-                this.connection.inbps = connection.inbps;
+            ConnectionInfo oldConnection = this.connection;
+            this.connection = connection;
+            if (oldConnection.inbps != connection.inbps) {
                 notifyChange(syncthing.android.BR.inbps);
             }
-            if (this.connection.inBytesTotal != connection.inBytesTotal) {
-                this.connection.inBytesTotal = connection.inBytesTotal;
+            if (oldConnection.inBytesTotal != connection.inBytesTotal) {
                 notifyChange(syncthing.android.BR.inBytesTotal);
             }
-            if (this.connection.outbps != connection.outbps) {
-                this.connection.outbps = connection.outbps;
-                notifyChange(syncthing.android.BR.inBytesTotal);
+            if (oldConnection.outbps != connection.outbps) {
+                notifyChange(syncthing.android.BR.outbps);
             }
-            if (this.connection.outBytesTotal != connection.outBytesTotal) {
-                this.connection.outBytesTotal = connection.outBytesTotal;
-                notifyChange(syncthing.android.BR.inBytesTotal);
+            if (oldConnection.outBytesTotal != connection.outBytesTotal) {
+                notifyChange(syncthing.android.BR.outBytesTotal);
+            }
+            if (!StringUtils.equals(oldConnection.address, connection.address)) {
+                notifyChange(syncthing.android.BR.address);
+            }
+            if (!StringUtils.equals(oldConnection.clientVersion, connection.clientVersion)) {
+                notifyChange(syncthing.android.BR.clientVersion);
             }
         }
     }
@@ -188,7 +194,7 @@ public class DeviceCard extends ExpandableCard {
 
     @BindingAdapter("deviceCompletion")
     public static void deviceCompletion(TextView view, int completion) {
-        if (completion < 0) {
+        if (completion < 1) {
             view.setText(R.string.disconnected);
             view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.device_disconnected));
         } else if (completion == 100) {
