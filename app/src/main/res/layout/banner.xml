@@ -23,5 +23,5 @@
     android:layout_height="100dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="32dp"
     android:src="@drawable/logo_text_256"/>
