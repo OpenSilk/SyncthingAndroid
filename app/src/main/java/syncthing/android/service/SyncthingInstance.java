@@ -237,6 +237,24 @@ public class SyncthingInstance extends MortarService {
         } //else already listening
     }
 
+    void maybeStartSyncthing() {
+        if (!isSyncthingRunning()) {
+            safeStartSyncthing();
+        }
+    }
+
+    void ensureSyncthingKilled() {
+        ensureInotifyKilled();
+        if (mSyncthingThread != null) {
+            mSyncthingThread.kill();
+            mSyncthingThread = null;
+        }
+    }
+
+    boolean isInotifyRunning() {
+        return mSyncthingInotifyThread != null && mSyncthingInotifyThread.isAlive();
+    }
+
     void safeStartInotify() {
         ensureInotifyKilled();
         startInotify();
@@ -247,18 +265,10 @@ public class SyncthingInstance extends MortarService {
         mSyncthingInotifyThread.start();
     }
 
-    void maybeStartSyncthing() {
-        if (!isSyncthingRunning()) {
-            safeStartSyncthing();
+    void maybeStartInotify() {
+        if (isSyncthingRunning() && !isInotifyRunning()) {
+            safeStartInotify();
         }
-    }
-
-    void ensureSyncthingKilled() {
-        if (mSyncthingThread != null) {
-            mSyncthingThread.kill();
-            mSyncthingThread = null;
-        }
-        ensureInotifyKilled();
     }
 
     void ensureInotifyKilled() {
@@ -390,7 +400,7 @@ public class SyncthingInstance extends MortarService {
         public void onChange(boolean selfChange) {
             SyncthingInstance s = mService.get();
             if (s != null && s.mSettings.isInitialised()) {
-                s.safeStartInotify();
+                s.maybeStartInotify();
             }
         }
     }
