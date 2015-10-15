@@ -30,5 +30,7 @@ public class DeviceConnected extends Event<DeviceConnected.Data> {
     public static class Data {
         public String addr;
         public String id;
+        public String clientName;
+        public String clientVersion;
     }
 }
