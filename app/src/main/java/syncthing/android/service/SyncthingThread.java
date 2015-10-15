@@ -64,6 +64,9 @@ public class SyncthingThread extends Thread {
             mService.getSettings().setInitialized(true);
         }
         configXml.updateIfNeeded();
+        if (!mService.getSettings().isInitialised()) {
+            mService.getSettings().setInitialized(true);
+        }
         realRun(false);
     }
 
