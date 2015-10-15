@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -293,6 +294,7 @@ public class LauncherActivity extends MortarFragmentActivity implements
         if (mActivityResultsOwner.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
+        final Handler handler = new Handler();
         switch (requestCode) {
             case ActivityRequestCodes.LOGIN_ACTIVITY:
             case ActivityRequestCodes.MANAGE_ACTIVITY:
@@ -304,16 +306,16 @@ public class LauncherActivity extends MortarFragmentActivity implements
                     final Credentials currentDevice = data.getParcelableExtra(ManageActivity.EXTRA_CREDENTIALS);
                     if (currentDevice != null) {
                         Timber.d("Found credentials in the intent");
-                        runOnUiThread(() -> populateNavigationMenu(currentDevice, true));
+                        handler.postDelayed(() -> populateNavigationMenu(currentDevice, true), 10);
                         return;
                     }
                 }
                 Timber.d("Result either canceled or missing credentials");
                 //IDK just open the drawer
-                runOnUiThread(() -> {
+                handler.postDelayed(() -> {
                     populateNavigationMenu(null, false);
                     openDrawer(GravityCompat.START);
-                });
+                }, 10);
                 break;
             }
             default:
