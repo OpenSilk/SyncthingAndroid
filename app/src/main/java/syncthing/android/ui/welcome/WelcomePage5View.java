@@ -67,6 +67,7 @@ public class WelcomePage5View extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mPresenter.setInitializedSubscriber(mSuccessSubscriber);
         switch (mPresenter.getState()) {
             case NONE:
                 goToState1();
