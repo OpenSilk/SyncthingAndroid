@@ -44,6 +44,7 @@ import org.opensilk.common.ui.mortarfragment.MortarFragment;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -99,13 +100,12 @@ public class LauncherActivity extends MortarFragmentActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.d("-> onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
         ButterKnife.inject(this);
 
         mActivityResultsOwner.takeView(this);
-
-        mActionBarOwner.setConfig(ActionBarConfig.builder().setTitle("").build());
 
         if (mDrawerLayout != null) {
             mDrawerOwnerDelegate = new DrawerOwnerDelegate<>(this, mDrawerOwner, mDrawerLayout,
@@ -122,10 +122,12 @@ public class LauncherActivity extends MortarFragmentActivity implements
         }
 
         setupNavigation(savedInstanceState);
+        Timber.d("<- onCreate()");
     }
 
     @Override
     protected void onDestroy() {
+        Timber.d("-> onDestroy()");
         super.onDestroy();
         mActivityResultsOwner.dropView(this);
         mActionBarOwnerDelegate.onDestroy();
@@ -133,18 +135,23 @@ public class LauncherActivity extends MortarFragmentActivity implements
         if (mChargingSubscription != null) {
             mChargingSubscription.unsubscribe();
         }
+        Timber.d("<- onDestroy()");
     }
 
     @Override
     protected void onStart() {
+        Timber.d("-> onStart()");
         super.onStart();
         SyncthingUtils.notifyForegroundStateChanged(this, true);
+        Timber.d("<- onStart()");
     }
 
     @Override
     protected void onStop() {
+        Timber.d("-> onStop");
         super.onStop();
         SyncthingUtils.notifyForegroundStateChanged(this, false);
+        Timber.d("<- onStop");
     }
 
     @Override
@@ -283,22 +290,36 @@ public class LauncherActivity extends MortarFragmentActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Timber.d("onActivityResult(%d, %d, %s)", requestCode, resultCode, data);
-        if (requestCode == ActivityRequestCodes.LOGIN_ACTIVITY) {
-            // OK with credentials opens the device
-            if (resultCode == Activity.RESULT_OK && data != null && data.hasExtra(ManageActivity.EXTRA_CREDENTIALS)) {
-                data.setExtrasClassLoader(LauncherActivity.class.getClassLoader());
-                Credentials currentDevice = data.getParcelableExtra(ManageActivity.EXTRA_CREDENTIALS);
-                if (currentDevice != null) {
-                    populateNavigationMenu(currentDevice, true);
+        if (mActivityResultsOwner.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        switch (requestCode) {
+            case ActivityRequestCodes.LOGIN_ACTIVITY:
+            case ActivityRequestCodes.MANAGE_ACTIVITY:
+            case ActivityRequestCodes.WELCOME_ACTIVITY: {
+                // OK with credentials opens the device
+                if (resultCode == Activity.RESULT_OK && data != null && data.hasExtra(ManageActivity.EXTRA_CREDENTIALS)) {
+                    Timber.d("Got Positive response");
+                    data.setExtrasClassLoader(LauncherActivity.class.getClassLoader());
+                    final Credentials currentDevice = data.getParcelableExtra(ManageActivity.EXTRA_CREDENTIALS);
+                    if (currentDevice != null) {
+                        Timber.d("Found credentials in the intent");
+                        runOnUiThread(() -> populateNavigationMenu(currentDevice, true));
+                        return;
+                    }
                 }
-            } else {
-                // Cancelled login
-                startWelcomeActivity();
+                Timber.d("Result either canceled or missing credentials");
+                //IDK just open the drawer
+                runOnUiThread(() -> {
+                    populateNavigationMenu(null, false);
+                    openDrawer(GravityCompat.START);
+                });
+                break;
             }
-        } else if (requestCode == ActivityRequestCodes.MANAGE_ACTIVITY) {
-            if (mSettings.getSavedCredentials().isEmpty()) {
-                populateNavigationMenu(null, true);
-            }
+            default:
+                Timber.d("Unknown request code");
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
         }
     }
 
@@ -351,45 +372,45 @@ public class LauncherActivity extends MortarFragmentActivity implements
             }
         }
         if (goToCurrent) {
-            if (current == null) {
-                if (creds.isEmpty()) {
-                    startWelcomeActivity();
-                } else {
-                    startLoginActivity();
-                }
-            } else {
+            if (current != null) {
                 openSession(current);
+            } else if (creds.isEmpty()) {
+                startWelcomeActivity();
+            } else {
+                //???
+                Timber.w("Ignoring goToCurrent");
             }
         }
     }
 
     void openSession(Credentials credentials) {
+        Timber.d("opening session %s", credentials.alias);
         MortarFragment session = SessionFragment.newInstance(credentials);
-        mFragmentManagerOwner.replaceMainContent(session, false);
+        int ret = mFragmentManagerOwner.replaceMainContent(session, false);
     }
 
     void startDeviceManageActivity() {
         Intent intent = new Intent(this, ManageActivity.class)
                 .putExtra(ManageActivity.EXTRA_FRAGMENT, ManageFragment.NAME);
-        startActivityForResult(intent, ActivityRequestCodes.MANAGE_ACTIVITY, null);
+        mActivityResultsOwner.startActivityForResult(intent, ActivityRequestCodes.MANAGE_ACTIVITY, null);
     }
 
     void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(intent, 0, null);
+        mActivityResultsOwner.startActivityForResult(intent, 0, null);
     }
 
     void startLoginActivity() {
         Intent intent = new Intent(this, ManageActivity.class)
                 .putExtra(ManageActivity.EXTRA_FRAGMENT, LoginFragment.NAME);
-        startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
+        mActivityResultsOwner.startActivityForResult(intent, ActivityRequestCodes.LOGIN_ACTIVITY, null);
     }
 
     void startWelcomeActivity() {
         Intent intent = new Intent(this, ManageActivity.class)
                 .putExtra(ManageActivity.EXTRA_FRAGMENT, WelcomeFragment.NAME)
                 .putExtra(ManageActivity.EXTRA_DISABLE_BACK, true);
-        startActivityForResult(intent, ActivityRequestCodes.WELCOME_ACTIVITY, null);
+        mActivityResultsOwner.startActivityForResult(intent, ActivityRequestCodes.WELCOME_ACTIVITY, null);
     }
 
 }

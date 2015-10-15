@@ -21,10 +21,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsActivity;
 import org.opensilk.common.ui.mortar.ActivityResultsOwner;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
+import org.opensilk.common.ui.mortar.ToolbarOwnerDelegate;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
@@ -50,9 +55,10 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
     public static final String EXTRA_ARGS = "args";
     public static final String EXTRA_FRAGMENT = "fragment";
     public static final String EXTRA_DISABLE_BACK = "disableback";
-    public static final String EDIT_STYLE = "edit_style";
 
     @Inject ActivityResultsOwner mActivityResultsOwner;
+    @Inject ToolbarOwner mToolbarOwner;
+    ToolbarOwnerDelegate<ManageActivity> mToolbarOwnerDelegate;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
 
@@ -66,9 +72,7 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
 
     @Override
     protected void onScopeCreated(MortarScope scope) {
-        if (getIntent() != null && getIntent().hasExtra(EDIT_STYLE)) {
-            setTheme(R.style.SessionEditDialogTheme_Edit);
-        }
+
     }
 
     @Override
@@ -81,9 +85,12 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
-        setSupportActionBar(mToolbar);
         setResult(RESULT_CANCELED);
         mActivityResultsOwner.takeView(this);
+        mToolbarOwnerDelegate = new ToolbarOwnerDelegate<ManageActivity>(this, mToolbarOwner, null);
+        mToolbarOwnerDelegate.onCreate();
+        mToolbarOwner.attachToolbar(mToolbar);
+        mToolbarOwner.setConfig(ActionBarConfig.builder().setTitle(R.string.welcome_title).build());
         if (savedInstanceState == null) {
             MortarFragment fragment = MortarFragment.factory(this,
                     getIntent().getStringExtra(EXTRA_FRAGMENT),
@@ -100,6 +107,8 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
     protected void onDestroy() {
         super.onDestroy();
         mActivityResultsOwner.dropView(this);
+        mToolbarOwner.detachToolbar(mToolbar);
+        mToolbarOwnerDelegate.onDestroy();
     }
 
     @Override
@@ -120,6 +129,21 @@ public class ManageActivity extends MortarFragmentActivity implements ActivityRe
             super.onBackPressed();
         }
     }
+
+    /*
+     * ToolbarOwner
+     */
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return mToolbarOwnerDelegate.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return mToolbarOwnerDelegate.onOptionsItemSelected(item);
+    }
+
     /*
      * FragmentManagerOwner Activity
      */

@@ -19,14 +19,7 @@ package syncthing.android.ui.welcome;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import org.opensilk.common.core.mortar.DaggerService;
@@ -35,8 +28,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
-import butterknife.OnPageChange;
 import syncthing.android.R;
 
 public class WelcomeScreenView extends RelativeLayout {
@@ -50,28 +41,24 @@ public class WelcomeScreenView extends RelativeLayout {
     public WelcomeScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        if (isInEditMode())
-            return;
-        DaggerService.<WelcomeComponent>getDaggerComponent(getContext()).inject(this);
+        if (!isInEditMode()) {
+            DaggerService.<WelcomeComponent>getDaggerComponent(getContext()).inject(this);
+        }
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        if (isInEditMode())
-            return;
-        ButterKnife.inject(this);
-        presenter.takeView(this);
+        if (!isInEditMode()) {
+            ButterKnife.inject(this);
+            presenter.takeView(this);
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         presenter.dropView(this);
-    }
-
-    public void reload() {
-        pageView.reload();
     }
 
     void showError(String error) {
@@ -89,8 +76,8 @@ public class WelcomeScreenView extends RelativeLayout {
         }
     }
 
-    public void setPage(int page, boolean reload) {
-        pageView.setPage(page, reload);
+    public void setPage(int page) {
+        pageView.setPage(page);
     }
 
     public void hideSplash() {

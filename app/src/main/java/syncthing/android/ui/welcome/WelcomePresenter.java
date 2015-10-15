@@ -20,10 +20,11 @@ package syncthing.android.ui.welcome;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentManager;
 import android.util.Pair;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,17 +41,25 @@ import javax.inject.Inject;
 
 import mortar.ViewPresenter;
 import rx.Observable;
+import rx.Scheduler;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import syncthing.android.AppSettings;
 import syncthing.android.model.Credentials;
+import syncthing.android.service.ConfigXml;
 import syncthing.android.service.ServiceSettings;
+import syncthing.android.service.SyncthingInstance;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.login.LoginFragment;
 import syncthing.android.ui.login.LoginUtils;
 import syncthing.api.Session;
 import syncthing.api.SessionManager;
+import syncthing.api.SynchingApiWrapper;
+import syncthing.api.SyncthingApi;
+import syncthing.api.SyncthingApiConfig;
 import syncthing.api.model.Config;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.Ok;
@@ -64,17 +73,19 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
     final ActivityResultsController activityResultsController;
     final FragmentManagerOwner fragmentManager;
     final SessionManager manager;
+    final ServiceSettings serviceSettings;
 
     int page;
 
     Subscription subscription;
     Subscription splashSubscription;
-    boolean skipTutorial;
-    boolean generating;
     Credentials newCredentials;
-    String error;
-    TempCredStorage tmpCreds = new TempCredStorage();
     Session session;
+    final TempCredStorage tmpCreds = new TempCredStorage();
+    final InitializedListener initializedListener = new InitializedListener(new Handler(Looper.getMainLooper()));
+    Subscriber<Boolean> initializedSubscriber;
+    final SyncthingApiConfig.Builder configBuilder = SyncthingApiConfig.builder();
+    State state = State.NONE;
 
     static class TempCredStorage implements Serializable {
         private static final long serialVersionUID = 0L;
@@ -84,24 +95,51 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
         String key;
     }
 
+    class InitializedListener extends ContentObserver {
+        public InitializedListener(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            onInstanceInitialized();
+        }
+    }
+
+    enum State {
+        NONE,
+        GENERATING,
+        SUCCESS,
+        ERROR,
+    }
+
     @Inject
     public WelcomePresenter(
             @ForApplication Context context,
             AppSettings appSettings,
             ActivityResultsController activityResultsController,
             FragmentManagerOwner fragmentManager,
-            SessionManager manager
+            SessionManager manager,
+            ServiceSettings serviceSettings
     ) {
         this.context = context;
         this.appSettings = appSettings;
         this.activityResultsController = activityResultsController;
         this.fragmentManager = fragmentManager;
         this.manager = manager;
+        this.serviceSettings = serviceSettings;
         this.page = 0;
-        this.skipTutorial = appSettings.getSavedCredentials().size() > 0;
-        if (!this.skipTutorial) {
-            this.generating = true;
-            waitForInitialisation();
+    }
+
+    @Override
+    protected void onExitScope() {
+        super.onExitScope();
+        context.getContentResolver().unregisterContentObserver(initializedListener);
+        if (splashSubscription != null) {
+            splashSubscription.unsubscribe();
+        }
+        if (subscription != null) {
+            subscription.unsubscribe();
         }
     }
 
@@ -115,11 +153,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
     void reload() {
         if (!hasView())
             return;
-        getView().setPage(page, true);
-    }
-
-    boolean isSuccess() {
-        return !generating && error == null;
+        getView().setPage(page);
     }
 
     void updatePage(int page) {
@@ -128,23 +162,11 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
     }
 
     void delayHideSplash() {
-        int splash;
-        if (this.generating)
-            splash = 3;
-        else
-            splash = 1;
-        splashSubscription = Observable.timer(splash, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber -> {
-                    hideSplash();
-                });
+        splashSubscription = Observable.timer(10, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(subscriber -> hideSplash());
     }
 
     void hideSplash() {
-        if (skipTutorial) {
-            exitSuccess();
-            return;
-        }
         if (page != 0)
             return;
         if (!hasView())
@@ -152,7 +174,9 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
         getView().hideSplash();
     }
 
+    //TODO this doesnt work retrofit observables seem to be a onshot deal
     public static Observable<?> retryObservable(Observable<?> attempts) {
+        Timber.d("retryObservable(%s)", attempts);
         final int retries = 6*30; // Wait up to 30 minutes
         return attempts
                 .zipWith(Observable.range(1, retries + 1),
@@ -167,26 +191,38 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
                                         !msg.contains("timeout") &&
                                         !msg.contains("Connection reset by peer")) {
                                     // Another service running, propagate error and show to user
+                                    Timber.d("Unknown error %s", msg);
                                     return Observable.error(pair.first);
                                 }
                             }
-                            if (pair.second > retries)
+                            if (pair.second > retries) {
+                                Timber.d("Timeout waiting for daemon");
                                 return Observable.error(new Exception("Timeout generating keys"));
+                            }
+                            Timber.d("Retrying it 10 seconds");
                             return Observable.timer((long) 10, TimeUnit.SECONDS);
                         });
     }
 
-    void waitForInitialisation() {
+    void acquireNewSession() {
+        if (session != null) {
+            manager.release(session);
+        }
+        session = manager.acquire(configBuilder.build());
+    }
+
+    void onInstanceInitialized() {
         String alias = SyncthingUtils.generateDeviceName(false);
+        tmpCreds.alias = alias;
         String url = "127.0.0.1";
         String port = "8385";
         String uri = LoginUtils.buildUri(url, port, true);
-        tmpCreds.alias = alias;
         tmpCreds.url = uri;
-        session = manager.acquire(new Credentials(null, null, uri, null, null));
-        subscription = session.api().config()
-                .retryWhen(WelcomePresenter::retryObservable)
-                .zipWith(session.api().system(),
+        configBuilder.setUrl(uri);
+        acquireNewSession();
+        final SyncthingApi api = SynchingApiWrapper.wrap(session.api(), Schedulers.io());
+        subscription = api.config()
+                .zipWith(api.system(),
                         (config, system) -> {
                             TempCredStorage tmp = new TempCredStorage();
                             tmp.key = config.gui.apiKey;
@@ -196,89 +232,145 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
                                     tmp.alias = SyncthingUtils.getDisplayName(d);
                                 }
                             }
-//                            interceptor.setApiKey(tmp.key);
                             Timber.d(ReflectionToStringBuilder.reflectionToString(tmp));
                             return new Pair<>(config, tmp);
                         })
-                .retryWhen(WelcomePresenter::retryObservable)
-                .flatMap( // Set username and password
-                        (Pair<Config, TempCredStorage> pair) -> {
-                            String username = SyncthingUtils.generateUsername();
-                            String password = SyncthingUtils.generatePassword();
-                            Timber.i("Generated GUI username and password (" + username + ", " + password + ")");
-                            Config config = pair.first;
-                            config.gui.user = username;
-                            config.gui.password = password;
-                            return session.api().updateConfig(config)
-                                    .retryWhen(WelcomePresenter::retryObservable)
-                                    .zipWith(Observable.just(pair.second),
-                                            (Config c, TempCredStorage t) -> t);
-                        })
-                .flatMap( // Store the credentials and restart Syncthing
-                        (TempCredStorage tmp) -> {
-                            tmpCreds.deviceId = tmp.deviceId;
-                            tmpCreds.key = tmp.key;
-                            if (StringUtils.isEmpty(tmpCreds.alias)) {
-                                tmpCreds.alias = tmp.alias;
-                            }
-                            newCredentials = new Credentials(
-                                    tmpCreds.alias, tmpCreds.deviceId,
-                                    tmpCreds.url, tmpCreds.key, SyncthingUtils.getSyncthingCACert(context));
-                            appSettings.saveCredentials(newCredentials);
-                            appSettings.setDefaultCredentials(newCredentials);
-                            Timber.d(ReflectionToStringBuilder.reflectionToString(newCredentials));
-                            Timber.i("Restarting Syncthing");
-                            return session.api().restart();
-                        })
-                // Wait until Syncthing is ready
-                .delay(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        this::finish,
-                        this::processError
-                );
+                .subscribe(new Subscriber<Pair<Config, TempCredStorage>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        processError(e);
+                    }
+
+                    @Override
+                    public void onNext(Pair<Config, TempCredStorage> configTempCredStoragePair) {
+                        updateInstanceDefaults(configTempCredStoragePair);
+                    }
+                });
+    }
+
+    void updateInstanceDefaults(Pair<Config, TempCredStorage> configTempCredStoragePair) {
+
+        TempCredStorage creds = configTempCredStoragePair.second;
+        tmpCreds.alias =creds.alias;
+        tmpCreds.deviceId = creds.deviceId;
+        tmpCreds.key = creds.key;
+
+        configBuilder.setApiKey(creds.key);
+
+        String username = SyncthingUtils.generateUsername();
+        String password = SyncthingUtils.generatePassword();
+        Timber.i("Generated GUI username and password (" + username + ", " + password + ")");
+        Config config = configTempCredStoragePair.first;
+        config.gui.user = username;
+        config.gui.password = password;
+
+        acquireNewSession();
+        final SyncthingApi api = SynchingApiWrapper.wrap(session.api(), Schedulers.io());
+        //send new config
+        subscription = api.updateConfig(config)
+                //restart
+                .flatMap(config1 -> api.restart())
+                // Wait until Syncthing is ready
+                .delay(5, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Ok>() {
+                    @Override public void onCompleted() { }
+
+                    @Override public void onError(Throwable e) {
+                        processError(e);
+                    }
+
+                    @Override public void onNext(Ok ok) {
+                        newCredentials = new Credentials(
+                                tmpCreds.alias, tmpCreds.deviceId,
+                                tmpCreds.url, tmpCreds.key,
+                                SyncthingUtils.getSyncthingCACert(context));
+                        appSettings.saveCredentials(newCredentials);
+                        appSettings.setDefaultCredentials(newCredentials);
+                        Timber.d(ReflectionToStringBuilder.reflectionToString(newCredentials));
+                        finish(ok);
+                    }
+                });
+    }
+
+    public void initializeInstance() {
+        state = State.GENERATING;
+        serviceSettings.setEnabled(true);
+        context.startService(new Intent(context, SyncthingInstance.class).setAction(SyncthingInstance.REEVALUATE));
+        context.getContentResolver().registerContentObserver(serviceSettings.getInitializedUri(), false, initializedListener);
+    }
+
+    public void setInitializedSubscriber(Subscriber<Boolean> subscription) {
+        initializedSubscriber = subscription;
     }
 
     void cancelGeneration() {
         if (subscription != null) {
-            subscription.unsubscribe();
+            final Subscription s = subscription;
+            final Scheduler.Worker worker = Schedulers.io().createWorker();
+            worker.schedule(() -> {
+                s.unsubscribe();
+                worker.unsubscribe();
+            });
         }
         exitCanceled();
     }
 
     void finish(Ok ok) {
-        generating = false;
-        error = null;
+        state = State.SUCCESS;
         Timber.d("Ready");
         if (page == 1)
             this.page = 5;
+        if (initializedSubscriber != null) {
+            initializedSubscriber.onNext(true);
+        }
         reload();
-        SharedPreferences servicePrefs = context.getSharedPreferences(ServiceSettings.FILE_NAME, Context.MODE_MULTI_PROCESS);
-        servicePrefs.edit().putBoolean(ServiceSettings.INITIALISED, true).apply();
     }
 
     void processError(Throwable t) {
+        Timber.d("processError(%s)", t.getMessage());
+        String msg = t.getMessage();
         if (appSettings.getSavedCredentials().size() > 0) {
             finish(null);
-        } else if (t.getMessage().contains("Unauthorized") || t.getMessage().contains("Forbidden") || t.getMessage().contains("Untrusted Certificate")) {
-//            ConfigXml configXml = ConfigXml.get(context);
-//            interceptor.setApiKey(configXml.getApiKey());
-//            okClient.setSslSocketFactory(
-//                    SyncthingSSLSocketFactory.createSyncthingSSLSocketFactory(
-//                            SyncthingUtils.getSyncthingCACert(context)));
-            waitForInitialisation();
+        } else if (msg != null && (msg.contains("ECONNREFUSED")
+                || msg.contains("EOFException")
+                || msg.contains("timeout")
+                || msg.contains("Connection reset by peer"))) {
+            Observable.timer(10, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                    .subscribe((i) -> onInstanceInitialized());
+        } else if (msg != null && (msg.contains("Unauthorized")
+                || msg.contains("Forbidden")
+                || msg.contains("Untrusted Certificate"))) {
+            ConfigXml configXml = ConfigXml.get(context);
+            if (configXml != null) {
+                configBuilder.setApiKey(configXml.getApiKey());
+                configBuilder.setCaCert(SyncthingUtils.getSyncthingCACert(context));
+                Observable.timer(10, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                        .subscribe((i) -> onInstanceInitialized());
+            } else if (!serviceSettings.isInitialised()) {
+                serviceSettings.setEnabled(false);
+                throw new RuntimeException("Daemon failed to start");
+            } else {
+                notifyError(t);
+            }
         } else {
             notifyError(t);
         }
     }
 
     void notifyError(Throwable t) {
-        generating = false;
-        error = t.getMessage();
-        Timber.d(error);
+        Timber.d("notifyError(%s)", t.getMessage());
+        state = State.ERROR;
         if (hasView()) {
-            getView().showError(error);
-            getView().reload();
+            getView().showError(t.getMessage());
+        }
+        if (initializedSubscriber != null) {
+            initializedSubscriber.onNext(false);
         }
     }
 
@@ -292,4 +384,13 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
         fragmentManager.killBackStack();
         fragmentManager.replaceMainContent(LoginFragment.newInstance(), false);
     }
+
+    public ServiceSettings getServiceSettings() {
+        return serviceSettings;
+    }
+
+    public State getState() {
+        return state;
+    }
+
 }

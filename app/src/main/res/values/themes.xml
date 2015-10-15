@@ -42,22 +42,4 @@
         <item name="android:displayOptions">homeAsUp|showTitle</item>
     </style>
 
-    <style name="SessionEditDialogTheme" parent="Theme.Dialog.LightBase">
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorAccent">@color/color_accent</item>
-        <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
-        <item name="android:windowAnimationStyle">@style/DialogWindowAnimation</item>
-        <item name="android:windowSoftInputMode">stateHidden|adjustPan</item>
-    </style>
-
-    <style name="SessionEditDialogTheme.Edit">
-        <item name="android:windowSoftInputMode">stateVisible|adjustPan</item>
-    </style>
-
-    <style name="DialogWindowAnimation" parent="android:Animation.Dialog">
-        <item name="android:windowEnterAnimation">@anim/grow_fade_in_from_bottom</item>
-        <!--<item name="android:windowExitAnimation">@anim/grow_fade_in_from_bottom</item>-->
-    </style>
-
 </resources>

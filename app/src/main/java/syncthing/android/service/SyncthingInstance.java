@@ -232,7 +232,7 @@ public class SyncthingInstance extends MortarService {
             //register listener and wait for notify
             initializedObserver = new InitializedListener(this);
             getContentResolver().registerContentObserver(
-                    mSettings.callUri.buildUpon().appendPath("instanceInitialized").build(),
+                    mSettings.getInitializedUri(),
                     false, initializedObserver);
         } //else already listening
     }

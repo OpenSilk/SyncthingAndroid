@@ -48,6 +48,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import syncthing.android.R;
+import syncthing.android.service.ConfigXml;
 import syncthing.android.service.ReceiverHelper;
 import syncthing.android.service.ServiceSettings;
 import syncthing.android.service.SyncthingInstance;
@@ -221,6 +222,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ActivityRequestCodes.IMPORT_CONFIG && resultCode == Activity.RESULT_OK) {
             SyncthingUtils.importConfig(getActivity(), data.getData(), false);
+            mSettings.setInitialized(ConfigXml.get(getActivity()) != null);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

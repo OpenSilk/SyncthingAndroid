@@ -160,7 +160,7 @@ public class ServiceSettings {
     public void setInitialized(boolean initialized) {
         Bundle reply = putCall(INITIALISED, BundleHelper.b().putInt(initialized ? 1 : 0).get());
         if (initialized && "ok".equals(BundleHelper.getString(reply))) {
-            appContext.getContentResolver().notifyChange(callUri.buildUpon().appendPath("instanceInitialized").build(), null);
+            appContext.getContentResolver().notifyChange(getInitializedUri(), null);
         }
     }
 
@@ -220,6 +220,10 @@ public class ServiceSettings {
 
     public void setAllowedWifiNetworks(Set<String> networks) {
         Bundle reply = putCall(WIFI_NETWORKS, BundleHelper.b().putString(rollWifiNetworks(networks)).get());
+    }
+
+    public Uri getInitializedUri() {
+        return callUri.buildUpon().appendPath("instanceInitialized").build();
     }
 
     boolean isAllowedToRun() {

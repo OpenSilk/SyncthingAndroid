@@ -31,6 +31,7 @@
     <string name="welcome_pl_cancel">Cancel generating secure keys</string>
     <string name="welcome_pl_generating_failed">Key generation failed, contact support</string>
     <string name="welcome_pl_remote">Connect to remote Syncthing</string>
+    <string name="welcome_pl_initialize_local_instance">Would you like to initialize the local Syncthing daemon?</string>
 
     <!--Messages-->
     <string name="input_error">Input Error</string>

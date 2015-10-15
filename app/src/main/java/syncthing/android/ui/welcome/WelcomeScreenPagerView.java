@@ -29,14 +29,12 @@ import butterknife.ButterKnife;
 
 public class WelcomeScreenPagerView extends ViewPager {
 
-    Context context;
     @Inject WelcomePresenter mPresenter;
     WelcomeScreenPagerAdapter adapter;
     boolean splash;
 
     public WelcomeScreenPagerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         if (!isInEditMode()) {
             WelcomeComponent cmp = DaggerService.getDaggerComponent(getContext());
             cmp.inject(this);
@@ -66,16 +64,8 @@ public class WelcomeScreenPagerView extends ViewPager {
         super.onDetachedFromWindow();
     }
 
-    public void reload() {
-        adapter.reload();
-    }
-
-    public void setPage(int page, boolean reload) {
-        if (getCurrentItem() == page) {
-            adapter.reload();
-        } else {
-            setCurrentItem(page);
-        }
+    public void setPage(int page) {
+        setCurrentItem(page, true);
     }
 
     public void hideSplash() {
@@ -86,7 +76,7 @@ public class WelcomeScreenPagerView extends ViewPager {
 
     public void nextPage() {
         if (getCurrentItem() < adapter.getCount()) {
-            setCurrentItem(getCurrentItem() + 1);
+            setPage(getCurrentItem() + 1);
         }
     }
 
