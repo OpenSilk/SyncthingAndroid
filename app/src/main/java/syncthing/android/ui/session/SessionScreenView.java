@@ -20,6 +20,7 @@ package syncthing.android.ui.session;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -72,6 +73,9 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         mList.setAdapter(mListAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
         //((CardRecyclerView) mList).setWobbleOnExpand(false);
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+        }
     }
 
     @Override
@@ -79,6 +83,7 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         super.onAttachedToWindow();
         if (!isInEditMode()) {
             mToolbarOwner.attachToolbar(mToolbar);
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
             mPresenter.takeView(this);
         }
     }

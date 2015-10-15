@@ -23,17 +23,20 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="224dp"
             app:contentScrim="?colorPrimary"
             app:expandedTitleMarginStart="116dp"
             app:expandedTitleMarginBottom="116dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            style="?appBarTheme">
+            app:toolbarId="@+id/toolbar"
+            style="?toolbarStyle">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -78,7 +81,8 @@
                         android:id="@+id/notifications_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical"
+                        android:animateLayoutChanges="true"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -112,20 +116,23 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        android:orientation="vertical"
+                        android:animateLayoutChanges="true"/>
 
                     <LinearLayout
                         android:id="@+id/devices_wrappeer"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:animateLayoutChanges="true">
 
                         <LinearLayout
                             android:id="@+id/devicess_container"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"/>
+                            android:orientation="vertical"
+                            android:animateLayoutChanges="true"/>
 
                     </LinearLayout>
 

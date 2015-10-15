@@ -20,6 +20,7 @@ package syncthing.android.ui.session;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -66,6 +67,7 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
     @Inject SessionPresenter mPresenter;
     @Inject ToolbarOwner mToolbarOwner;
 
+    @InjectView(R.id.appbar) AppBarLayout mAppbar;
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.scrollView) NestedScrollView mScrollView;
     @InjectView(R.id.lists_container) ViewGroup mListContainer;
@@ -100,7 +102,6 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         super.onFinishInflate();
         ButterKnife.inject(this);
         if (!isInEditMode()) {
-            mToolbarOwner.attachToolbar(mToolbar);
             mPresenter.takeView(this);
         }
         mFoldersHeader.bind(HeaderCard.FOLDER);
@@ -111,6 +112,8 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isInEditMode()) {
+            mToolbarOwner.attachToolbar(mToolbar);
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
             mPresenter.takeView(this);
         }
     }
@@ -144,7 +147,7 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         refreshThisDevice(myDevice);
         refreshDevices(devices);
         refreshNotifications(notifs);
-        requestLayout();
+        if (!isInLayout()) requestLayout();
     }
 
     public void refreshNotifications(List<NotifCard> notifs) {

@@ -25,10 +25,8 @@ import android.os.Parcelable;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
-import org.opensilk.common.rx.RxBus;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
-import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.ArrayList;
@@ -51,7 +49,6 @@ import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
-import syncthing.android.ui.common.ExpandableCard;
 import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.sessionsettings.EditDeviceFragment;
 import syncthing.android.ui.sessionsettings.EditFolderFragment;
@@ -90,7 +87,6 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     final ActivityResultsController activityResultsController;
     final Session session;
     final SessionManager manager;
-    final ToolbarOwner toolbarOwner;
 
     Subscription changeSubscription;
     final ArrayList<NotifCard> notifications = new ArrayList<>();
@@ -105,8 +101,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             SessionManager manager,
             FragmentManagerOwner fragmentManagerOwner,
             IdenticonGenerator identiconGenerator,
-            ActivityResultsController activityResultsController,
-            ToolbarOwner toolbarOwner
+            ActivityResultsController activityResultsController
     ) {
         this.appContext = appContext;
         this.credentials = credentials;
@@ -116,7 +111,6 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         this.session = manager.acquire(credentials);
         this.manager = manager;
         this.controller = session.controller();
-        this.toolbarOwner = toolbarOwner;
     }
 
     @Override
@@ -154,10 +148,6 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         } else /*offline*/ {
             getView().setLoading(true);
         }
-        toolbarOwner.setConfig(ActionBarConfig.builder()
-                .setTitle(credentials.alias)
-                .setMenuConfig(new SessionMenuHandler(this))
-                .build());
     }
 
     @Override
@@ -231,10 +221,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             case SYSTEM:
                 onSystemInfoUpdate();
                 break;
-            case MODEL:
+            case FOLDER_SUMMARY:
                 onFolderModelUpdate(e.data);
                 break;
-            case MODEL_STATE:
+            case STATE_CHANGED:
                 onFolderStateChange(e.data);
                 break;
             case FOLDER_STATS:
@@ -608,5 +598,12 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     @Override
     public IdenticonGenerator identiconGenerator() {
         return identiconGenerator;
+    }
+
+    ActionBarConfig getToolbarConfig() {
+        return ActionBarConfig.builder()
+                .setTitle(credentials.alias)
+                .setMenuConfig(new SessionMenuHandler(this))
+                .build();
     }
 }
