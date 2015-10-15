@@ -68,9 +68,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     @Override
     protected void onExitScope() {
         super.onExitScope();
-        if (deleteSubscription != null) {
-            deleteSubscription.unsubscribe();
-        }
+        unsubscribe(deleteSubscription);
     }
 
     @Override
@@ -110,9 +108,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     }
 
     void saveDevice(Map<String, Boolean> folders) {
-        if (saveSubscription != null) {
-            saveSubscription.unsubscribe();
-        }
+        unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editDevice(originalDevice, folders,
                 this::onSavefailed,
@@ -121,9 +117,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     }
 
     void deleteDevice() {
-        if (deleteSubscription != null) {
-            deleteSubscription.unsubscribe();
-        }
+        unsubscribe(deleteSubscription);
         onSaveStart();
         deleteSubscription = controller.deleteDevice(originalDevice,
                 this::onSavefailed,

@@ -31,7 +31,10 @@ import org.opensilk.common.ui.mortar.DialogFactory;
 import org.opensilk.common.ui.mortar.DialogPresenter;
 
 import mortar.ViewPresenter;
+import rx.Scheduler;
 import rx.Subscription;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 import syncthing.android.R;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
@@ -72,9 +75,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     @Override
     protected void onExitScope() {
         super.onExitScope();
-        if (saveSubscription != null) {
-            saveSubscription.unsubscribe();
-        }
+        unsubscribe(saveSubscription);
         manager.release(session);
     }
 
@@ -82,13 +83,10 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
 
     protected void onSaveStart() {
         dialogPresenter.showDialog(
-                new DialogFactory() {
-                    @Override
-                    public Dialog call(Context context) {
-                        ProgressDialog mProgressDialog = new ProgressDialog(getView().getContext());
-                        mProgressDialog.setMessage(getView().getResources().getString(R.string.saving_config_dots));
-                        return mProgressDialog;
-                    }
+                context -> {
+                    ProgressDialog mProgressDialog = new ProgressDialog(context);
+                    mProgressDialog.setMessage(context.getResources().getString(R.string.saving_config_dots));
+                    return mProgressDialog;
                 }
         );
     }
@@ -103,20 +101,25 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
 
     protected void onSavefailed(Throwable e) {
         final String msg = e.getMessage();
-        dialogPresenter.showDialog(new DialogFactory() {
-            @Override
-            public Dialog call(Context context) {
-                AlertDialog mErrorDialog = new AlertDialog.Builder(context)
-                        .setTitle(R.string.error)
-                        .setMessage(msg)
-                        .setPositiveButton(android.R.string.ok, null)
-                        .create();
-                return mErrorDialog;
-            }
-        });
+        dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                .setTitle(R.string.error)
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
+        );
     }
 
     protected void dismissDialog() {
         activityResultsController.setResultAndFinish(Activity.RESULT_OK, null);
+    }
+
+    protected void unsubscribe(final Subscription s) {
+        if (s != null) {
+            final Scheduler.Worker worker = Schedulers.io().createWorker();
+            worker.schedule(() -> {
+                s.unsubscribe();
+                worker.unsubscribe();
+            });
+        }
     }
 }

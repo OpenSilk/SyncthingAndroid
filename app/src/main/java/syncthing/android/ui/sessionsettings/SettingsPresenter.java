@@ -102,9 +102,7 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
     }
 
     void saveConfig(DeviceConfig device, OptionsConfig options, GUIConfig guiConfig) {
-        if (saveSubscription != null) {
-            saveSubscription.unsubscribe();
-        }
+        unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editSettings(device, options, guiConfig,
                 this::onSavefailed,

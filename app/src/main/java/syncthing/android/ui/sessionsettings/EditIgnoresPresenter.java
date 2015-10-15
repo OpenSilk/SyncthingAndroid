@@ -59,9 +59,7 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
     @Override
     protected void onExitScope() {
         super.onExitScope();
-        if (initSubscription != null) {
-            initSubscription.unsubscribe();
-        }
+        unsubscribe(initSubscription);
     }
 
     @Override
@@ -116,6 +114,7 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
     void saveIgnores(CharSequence raw) {
         Ignores i = new Ignores();
         i.ignore = StringUtils.split(raw.toString(), "\n");
+        unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editIgnores(folderId, i,
                 ignrs -> {},

@@ -60,9 +60,7 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     @Override
     protected void onExitScope() {
         super.onExitScope();
-        if (deleteSubscription != null) {
-            deleteSubscription.unsubscribe();
-        }
+        unsubscribe(deleteSubscription);
     }
 
     @Override
@@ -176,9 +174,7 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     }
 
     void saveFolder() {
-        if (saveSubscription != null) {
-            saveSubscription.unsubscribe();
-        }
+        unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editFolder(origFolder,
                 this::onSavefailed,
@@ -187,9 +183,7 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     }
 
     void deleteFolder() {
-        if (deleteSubscription != null) {
-            deleteSubscription.unsubscribe();
-        }
+        unsubscribe(deleteSubscription);
         onSaveStart();
         deleteSubscription = controller.deleteFolder(origFolder,
                 this::onSavefailed,
