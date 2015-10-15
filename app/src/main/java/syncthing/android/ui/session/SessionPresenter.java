@@ -199,6 +199,8 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                     getView().refreshFolders(folders);
                     updateDevices();
                     getView().refreshDevices(devices);
+                    updateThisDevice();
+                    getView().refreshThisDevice(myDevice);
                 }
                 break;
             case NEED_LOGIN:
@@ -409,7 +411,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (c != null) {
                 c.setCompletion(controller.getCompletionTotal(c.getDeviceID()));
             } else {
-                updateDevices();//TODO notify view
+                updateDevices();
+                if (hasView()) {
+                    getView().refreshDevices(devices);
+                }
             }
         }
 
@@ -428,7 +433,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (myDevice != null) {
                 myDevice.setConnectionInfo(tConn);
             } else {
-                updateThisDevice(); //Todo notify view
+                updateThisDevice();
+                if (hasView()) {
+                    getView().refreshThisDevice(myDevice);
+                }
             }
         }
     }
@@ -447,7 +455,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         if (myDevice != null) {
             myDevice.setSystemInfo(controller.getSystemInfo());
         } else {
-            updateThisDevice();//TODO notify view
+            updateThisDevice();
+            if (hasView()) {
+                getView().refreshThisDevice(myDevice);
+            }
         }
     }
 
@@ -460,7 +471,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (fc != null) {
                 fc.setModel(data.summary);
             } else {
-                updateFolders();//todo notify view
+                updateFolders();
+                if (hasView()) {
+                    getView().refreshFolders(folders);
+                }
             }
         }
     }
@@ -474,7 +488,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (fc != null) {
                 fc.setState(data.to);
             } else {
-                updateFolders(); //todo notify view
+                updateFolders();
+                if (hasView()) {
+                    getView().refreshFolders(folders);
+                }
             }
         }
 
