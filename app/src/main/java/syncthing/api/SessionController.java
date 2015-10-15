@@ -96,7 +96,7 @@ public class SessionController implements EventMonitor.EventListener {
         ONLINE,
         OFFLINE,
         FAILURE,
-        COMPLETION,
+        COMPLETION, //FolderCompletion.Data or none
         FOLDER_STATS,
         DEVICE_STATS,
         CONNECTIONS_UPDATE,
@@ -114,13 +114,13 @@ public class SessionController implements EventMonitor.EventListener {
         LOCAL_INDEX_UPDATED,
         REMOTE_INDEX_UPDATED,
         ITEM_STARTED,
-        ITEM_FINISHED,
-        STATE_CHANGED,
+        ITEM_FINISHED, //ItemFinished.Data
+        STATE_CHANGED, //StateChanged.Data
         FOLDER_REJECTED,
         CONFIG_SAVED,
         DOWNLOAD_PROGRESS,
         FOLDER_COMPLETION,
-        FOLDER_SUMMARY,
+        FOLDER_SUMMARY, //FolderSummary.Data
         FOLDER_ERRORS,
     }
 
@@ -323,6 +323,7 @@ public class SessionController implements EventMonitor.EventListener {
             } case FOLDER_ERRORS: {
                 break;
             } case ITEM_FINISHED: {
+                postChange(Change.ITEM_FINISHED, e.data);
                 break;
             } case ITEM_STARTED: {
                 break;

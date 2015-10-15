@@ -118,7 +118,8 @@ public class EventMonitor {
                 // drop unknown events
                 .filter(event -> (event.type != null && event.type != EventType.UNKNOWN))
                 //drop duplicate events some events like INDEX_UPDATED or STATE_CHANGED will flood
-                .distinctUntilChanged(event -> event.type)
+                        //TODO conditional distinctuntilchanged (will require custom operator)
+//                .distinctUntilChanged(event -> event.type)
                 //.debounce(50, TimeUnit.MILLISECONDS)
 //                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import syncthing.android.AppModule;
 import syncthing.api.GsonModule;
+import syncthing.api.SessionManagerComponent;
 
 /**
  * Created by drew on 3/21/15.
@@ -37,7 +38,7 @@ import syncthing.api.GsonModule;
                 ServiceSettingsModule.class
         }
 )
-public interface ServiceComponent {
+public interface ServiceComponent extends SessionManagerComponent {
     NotificationManager notificationManager();
     AlarmManager alarmManager();
     ServiceSettings settings();

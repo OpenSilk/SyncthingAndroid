@@ -9,6 +9,7 @@ package syncthing.android.service;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,7 +54,7 @@ public class ConfigXml {
         }
     }
 
-    public static ConfigXml get(Context context) {
+    public @Nullable static ConfigXml get(Context context) {
         File configfile = getConfigFile(context);
         if (!configfile.exists()) {
             return null;
@@ -158,6 +159,22 @@ public class ConfigXml {
                 .getElementsByTagName("gui").item(0);
         Element apiKey = (Element) options.getElementsByTagName("apikey").item(0);
         return apiKey.getTextContent();
+    }
+
+    /**
+     * Retrieve instance url
+     */
+    public String getUrl() {
+        Element options = (Element) mConfig.getDocumentElement()
+                .getElementsByTagName("gui").item(0);
+        boolean tls = false;
+        String tlsattr = options.getAttribute("tls");
+        if (tlsattr != null) {
+            tls = Boolean.parseBoolean(tlsattr);
+        }
+        Element address = (Element) options.getElementsByTagName("address").item(0);
+        String addr = address.getTextContent();
+        return tls ? "https://" + addr : "http://" + addr;
     }
 
     /**

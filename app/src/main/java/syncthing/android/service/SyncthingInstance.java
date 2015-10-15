@@ -20,10 +20,12 @@ package syncthing.android.service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.MediaStore;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +43,17 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import mortar.MortarScope;
+import rx.Subscription;
+import rx.functions.Action1;
 import syncthing.android.BuildConfig;
+import syncthing.api.Session;
+import syncthing.api.SessionController;
+import syncthing.api.SessionManager;
+import syncthing.api.SynchingApiWrapper;
+import syncthing.api.SyncthingApi;
+import syncthing.api.SyncthingApiConfig;
+import syncthing.api.model.FolderConfig;
+import syncthing.api.model.event.ItemFinished;
 import timber.log.Timber;
 
 /**
@@ -69,14 +81,26 @@ public class SyncthingInstance extends MortarService {
     @Inject ServiceSettings mSettings;
     @Inject NotificationHelper mNotificationHelper;
     @Inject AlarmManagerHelper mAlarmManagerHelper;
+    @Inject SessionManager mSessionManager;
 
     SyncthingThread mSyncthingThread;
     SyncthingInotifyThread mSyncthingInotifyThread;
 
     ContentObserver initializedObserver;
+    Session mSession;
+    final SessionHelper mSessionHelper = new SessionHelper();
 
     int mConnectedClients = 0;
     boolean mAnyActivityInForeground;
+
+    static class SessionHelper {
+        Subscription eventSubscripion;
+        void release() {
+            if (eventSubscripion != null) {
+                eventSubscripion.unsubscribe();
+            }
+        }
+    }
 
     @Override
     protected void onBuildScope(MortarScope.Builder builder) {
@@ -104,6 +128,10 @@ public class SyncthingInstance extends MortarService {
         if (initializedObserver != null) {
             getContentResolver().unregisterContentObserver(initializedObserver);
         }
+        if (mSession!=null) {
+            mSessionManager.release(mSession);
+        }
+        mSessionHelper.release();
     }
 
     @Override
@@ -263,6 +291,7 @@ public class SyncthingInstance extends MortarService {
     void startInotify() {
         mSyncthingInotifyThread = new SyncthingInotifyThread(this);
         mSyncthingInotifyThread.start();
+        acquireSession();
     }
 
     void maybeStartInotify() {
@@ -276,6 +305,67 @@ public class SyncthingInstance extends MortarService {
             mSyncthingInotifyThread.kill();
             mSyncthingInotifyThread = null;
         }
+    }
+
+    void acquireSession() {
+        SyncthingApiConfig.Builder bob = SyncthingApiConfig.builder();
+        ConfigXml config = ConfigXml.get(this);
+        //noinspection ConstantConditions
+        bob.setUrl(config.getUrl());
+        bob.setApiKey(config.getApiKey());
+        bob.setCaCert(SyncthingUtils.getSyncthingCACert(this));
+        if (mSession != null) {
+            mSessionManager.release(mSession);
+            mSession = null;
+        }
+        mSessionHelper.release();
+        mSession = mSessionManager.acquire(bob.build());
+        final SessionController controller = mSession.controller();
+        controller.init();
+        mSessionHelper.eventSubscripion =
+        controller.subscribeChanges(new Action1<SessionController.ChangeEvent>() {
+            @Override
+            public void call(SessionController.ChangeEvent changeEvent) {
+                switch (changeEvent.change) {
+                    case ONLINE: {
+                        break;
+                    }
+                    case ITEM_FINISHED: {
+                        ItemFinished.Data data = (ItemFinished.Data) changeEvent.data;
+                        switch (data.action) {
+                            case UPDATE: {
+                                FolderConfig folder = controller.getFolder(data.folder);
+                                if (folder != null) {
+                                    File file = new File(folder.path, data.item);
+                                    Timber.d("Item finished update for %s", file.getAbsolutePath());
+                                    if (file.exists()) {
+                                        MediaScannerConnection.scanFile(SyncthingInstance.this,
+                                                new String[]{file.getAbsolutePath()}, null, null);
+                                    }
+                                }
+                                break;
+                            }
+                            case DELETE: {
+                                FolderConfig folder = controller.getFolder(data.folder);
+                                if (folder != null) {
+                                    File file = new File(folder.path, data.item);
+                                    Timber.d("Item finished delete for %s", file.getAbsolutePath());
+                                    if (!file.exists()) {
+                                        final String where = MediaStore.Files.FileColumns.DATA + "=?";
+                                        int count = getContentResolver().delete(MediaStore.Files.getContentUri("external"),
+                                            where, new String[] {file.getAbsolutePath()});
+                                        Timber.i("Removed %d items from mediastore for path %s",
+                                                count, file.getAbsolutePath());
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }, SessionController.Change.ONLINE, SessionController.Change.ITEM_FINISHED);
     }
 
     public ServiceSettings getSettings() {
