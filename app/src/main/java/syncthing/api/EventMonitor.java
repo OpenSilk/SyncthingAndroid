@@ -108,6 +108,10 @@ public class EventMonitor {
                         }
                         lastEvent = events[events.length - 1].id;
                         Timber.d("Dropped %d events", events.length - topass.size());
+                        if (topass.isEmpty()) {
+                            //pass at least one event for online change
+                            topass.add(events[events.length - 1]);
+                        }
                         return Observable.from(topass);
                     } else {
                         lastEvent = events[events.length - 1].id;
