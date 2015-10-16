@@ -79,8 +79,6 @@ public class EventMonitor {
         if (handlerThread == null) {
             handlerThread = new HandlerThread("EventMonitor");
             handlerThread.start();
-        }
-        if (scheduler == null) {
             scheduler = HandlerScheduler.from(new Handler(handlerThread.getLooper()));
         }
         //TODO check connectivity and fail fast
