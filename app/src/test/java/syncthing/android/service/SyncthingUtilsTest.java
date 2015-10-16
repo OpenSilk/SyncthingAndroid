@@ -2,6 +2,7 @@ package syncthing.android.service;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
+import org.joda.time.Interval;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,5 +95,41 @@ public class SyncthingUtilsTest {
         DateTimeUtils.setCurrentMillisFixed(now);
         // 8am > 6am so false
         assertEquals(isNowBetweenRange(start, end), false);
+    }
+
+    @Test
+    public void testgetNextIntervalforRange() {
+        DateTime now = DateTime.parse("2015-03-21T14:12:00"); //2:12pm
+
+        // start < end uses same day
+
+        // can only run between 3 and 4 pm
+
+        long start = parseTime("15:12"); //3:12pm
+        long end = parseTime("16:12");//4:12pm
+        Interval interval = getIntervalForRange(now, start, end);
+        assertEquals(interval.getStartMillis(), DateTime.parse("2015-03-21T15:12:00").getMillis());
+        assertEquals(interval.getEndMillis(), DateTime.parse("2015-03-21T16:12:00").getMillis());
+
+        //inside interval with start > end rolls end to next day
+
+        //cannot run between 12 and 1 pm
+
+        start = parseTime("13:12"); //1:12pm
+        end = parseTime("12:12");//12:12pm
+        interval = getIntervalForRange(now, start, end);
+        assertEquals(interval.getStartMillis(), DateTime.parse("2015-03-21T13:12:00").getMillis());
+        assertEquals(interval.getEndMillis(), DateTime.parse("2015-03-22T12:12:00").getMillis());
+
+        //outside interval with start > end rolls start to previous day
+
+        //cannot run between 10am and 3pm
+
+        start = parseTime("15:12");//3:12pm
+        end = parseTime("10:12"); //10:12am
+        interval = getIntervalForRange(now, start, end);
+        assertEquals(interval.getStartMillis(), DateTime.parse("2015-03-20T15:12:00").getMillis());
+        assertEquals(interval.getEndMillis(), DateTime.parse("2015-03-21T10:12:00").getMillis());
+
     }
 }

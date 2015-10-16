@@ -123,15 +123,11 @@ public class SyncthingInstance extends MortarService {
         Timber.d("onDestroy");
         ensureSyncthingKilled();
         mAlarmManagerHelper.cancelDelayedShutdown();
-        mAlarmManagerHelper.scheduleWakeup();
         mSettings.release();
         if (initializedObserver != null) {
             getContentResolver().unregisterContentObserver(initializedObserver);
         }
-        if (mSession!=null) {
-            mSessionManager.release(mSession);
-        }
-        mSessionHelper.release();
+        releaseSession();
     }
 
     @Override
@@ -203,6 +199,7 @@ public class SyncthingInstance extends MortarService {
                 maybeStartSyncthing(); //as you were
                 if (mSettings.isOnSchedule()) {
                     mAlarmManagerHelper.scheduleDelayedShutdown();
+                    mAlarmManagerHelper.scheduleWakeup();
                 } else /*always run*/ {
                     mAlarmManagerHelper.cancelDelayedShutdown();
                 }
@@ -210,6 +207,9 @@ public class SyncthingInstance extends MortarService {
                 ensureSyncthingKilled();
                 //dont shutdown right away in case circumstances change
                 mAlarmManagerHelper.scheduleDelayedShutdown();
+                if (mSettings.isOnSchedule()) {
+                    mAlarmManagerHelper.scheduleWakeup();
+                }
             }
         }
         updateForegroundState();
@@ -272,6 +272,7 @@ public class SyncthingInstance extends MortarService {
     }
 
     void ensureSyncthingKilled() {
+        releaseSession();
         ensureInotifyKilled();
         if (mSyncthingThread != null) {
             mSyncthingThread.kill();
@@ -305,6 +306,13 @@ public class SyncthingInstance extends MortarService {
             mSyncthingInotifyThread.kill();
             mSyncthingInotifyThread = null;
         }
+    }
+
+    void releaseSession() {
+        if (mSession != null) {
+            mSessionManager.release(mSession);
+        }
+        mSessionHelper.release();
     }
 
     void acquireSession() {

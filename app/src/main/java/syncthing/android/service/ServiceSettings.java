@@ -332,13 +332,19 @@ public class ServiceSettings {
     long getNextScheduledStartTime() {
         long start = SyncthingUtils.parseTime(getScheduledStartTime());
         long end = SyncthingUtils.parseTime(getScheduledEndTime());
+        return getNextNextStartTimeFor(start, end);
+    }
+
+    static long getNextNextStartTimeFor(long start, long end) {
         DateTime now = DateTime.now();
         Interval interval = SyncthingUtils.getIntervalForRange(now, start, end);
-        if (interval.isBefore(now)) {
+        if (interval.isAfter(now)) {
             //Interval hasnt started yet
             return interval.getStartMillis();
         } else {
             //were either inside the interval or past it, get the next days start
+            //XXX we count inside interval as next day so if user
+            //    explicitly shuts us down we dont just start again
             return interval.getStart().plusDays(1).getMillis();
         }
     }
