@@ -75,6 +75,7 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
     HashMap<FolderCard, CardViewHolder> mFolders = new LinkedHashMap<>();
     HashMap<DeviceCard, CardViewHolder> mDevices = new LinkedHashMap<>();
     CardViewHolder mMyDeviceVH;
+    boolean toolbarAttached;
 
     public SessionScreenViewLand(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -100,6 +101,7 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         super.onAttachedToWindow();
         if (!isInEditMode()) {
             mToolbarOwner.attachToolbar(mToolbar);
+            toolbarAttached = true;
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
             mPresenter.takeView(this);
         }
@@ -110,6 +112,7 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
         mToolbarOwner.detachToolbar(mToolbar);
+        toolbarAttached = false;
     }
 
     @Override
@@ -245,5 +248,12 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         mListContainer.setVisibility(VISIBLE);
         mEmptyView.setVisibility(GONE);
         mLoadingProgress.setVisibility(loading ? VISIBLE : GONE);
+    }
+
+    @Override
+    public void updateToolbarState(boolean show) {
+        if (toolbarAttached) {
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        }
     }
 }

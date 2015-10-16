@@ -34,4 +34,5 @@ public interface ISessionScreenView {
     void setListEmpty(boolean show, boolean animate);
     void setListShown(boolean show, boolean animate);
     void setLoading(boolean loading);
+    void updateToolbarState(boolean show);
 }

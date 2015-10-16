@@ -47,6 +47,7 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
     @InjectView(R.id.toolbar) Toolbar mToolbar;
 
     SessionRecyclerAdapter mListAdapter;
+    boolean toolbarAttached;
 
     public SessionScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -75,6 +76,7 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         super.onAttachedToWindow();
         if (!isInEditMode()) {
             mToolbarOwner.attachToolbar(mToolbar);
+            toolbarAttached = true;
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
             mPresenter.takeView(this);
         }
@@ -85,6 +87,7 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
         mToolbarOwner.detachToolbar(mToolbar);
+        toolbarAttached = false;
     }
 
     @OnClick(R.id.btn_retry)
@@ -116,4 +119,10 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         mListAdapter.setDevices(devices, true);
     }
 
+    @Override
+    public void updateToolbarState(boolean show) {
+        if (toolbarAttached) {
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        }
+    }
 }

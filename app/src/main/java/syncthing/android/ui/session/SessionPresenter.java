@@ -172,13 +172,17 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                     getView().setListEmpty(false, true);
                     getView().setListShown(true, true);
                     dismissRestartingDialog();
+                    getView().updateToolbarState(true);
                 }
                 break;
             case OFFLINE:
-                if (controller.isRestarting()) {
-                    showRestartingDialog();
-                } else if (hasView()) {
-                    getView().setListShown(false, true);
+                if (hasView()) {
+                    if (controller.isRestarting()) {
+                        showRestartingDialog();
+                    } else {
+                        getView().setListShown(false, true);
+                    }
+                    getView().updateToolbarState(false);
                 }
                 break;
             case FAILURE:
@@ -639,9 +643,12 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     }
 
     ActionBarConfig getToolbarConfig() {
-        return ActionBarConfig.builder()
+        ActionBarConfig.Builder bob = ActionBarConfig.builder()
                 .setTitle(credentials.alias)
-                .setMenuConfig(new SessionMenuHandler(this))
-                .build();
+                ;
+        if (controller.isOnline()) {
+            bob.setMenuConfig(new SessionMenuHandler(this));
+        }
+        return bob.build();
     }
 }
