@@ -18,12 +18,16 @@
 package syncthing.android.ui;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import org.opensilk.common.ui.mortar.ActivityResultsActivity;
 import org.opensilk.common.ui.mortar.ActivityResultsOwner;
@@ -36,7 +40,6 @@ import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
 import syncthing.android.AppSettings;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
@@ -54,7 +57,6 @@ public abstract class SyncthingActivity extends MortarFragmentActivity implement
     @Inject DialogPresenter mDialogPresenter;
 
     protected ToolbarOwnerDelegate<SyncthingActivity> mActionBarOwnerDelegate;
-    Subscription mChargingSubscription;
     private Dialog mActiveDialog;
 
 
@@ -63,10 +65,6 @@ public abstract class SyncthingActivity extends MortarFragmentActivity implement
         super.onCreate(savedInstanceState);
         mActivityResultsOwner.takeView(this);
         mDialogPresenter.takeView(this);
-
-        if (mSettings.keepScreenOn()) {
-            subscribeChargingState();
-        }
     }
 
     @Override
@@ -76,9 +74,6 @@ public abstract class SyncthingActivity extends MortarFragmentActivity implement
         mActionBarOwnerDelegate.onDestroy();
         mDialogPresenter.dropView(this);
         dismissDialog();
-        if (mChargingSubscription != null) {
-            mChargingSubscription.unsubscribe();
-        }
     }
 
     @Override
@@ -86,6 +81,9 @@ public abstract class SyncthingActivity extends MortarFragmentActivity implement
         Timber.d("-> onStart()");
         super.onStart();
         SyncthingUtils.notifyForegroundStateChanged(this, true);
+        if (mSettings.keepScreenOn()) {
+            subscribeChargingState();
+        }
         Timber.d("<- onStart()");
     }
 
@@ -94,6 +92,7 @@ public abstract class SyncthingActivity extends MortarFragmentActivity implement
         Timber.d("-> onStop");
         super.onStop();
         SyncthingUtils.notifyForegroundStateChanged(this, false);
+        unsubscribeChargingState();
         Timber.d("<- onStop");
     }
 
@@ -171,23 +170,29 @@ public abstract class SyncthingActivity extends MortarFragmentActivity implement
      * Battery
      */
 
+    final BroadcastReceiver mChargingReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int status = intent != null ? intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) : 0;
+            Timber.d("received BATTERY_CHANGED plugged=%s", status != 0);
+            if (mSettings.keepScreenOn() && status != 0) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            } else {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        }
+    };
+
     void subscribeChargingState() {
         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        /*TODO fix this
-        mChargingSubscription = AndroidObservable.bindActivity(this,AndroidObservable.fromBroadcast(this, filter))
-                .subscribe(new Action1<Intent>() {
-                               @Override
-                               public void call(Intent intent) {
-                                   int status = intent != null ? intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) : 0;
-                                   Timber.d("received BATTERY_CHANGED plugged=%s", status != 0);
-                                   if (mSettings.keepScreenOn() && status != 0) {
-                                       getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                   } else {
-                                       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                   }
-                               }
-                           }
-                );
-                */
+        registerReceiver(mChargingReceiver, filter);
+    }
+
+    void unsubscribeChargingState() {
+        try {
+            unregisterReceiver(mChargingReceiver);
+        } catch (Exception e) {//i think its illegal state but cant remember (and dont care)
+            //pass
+        }
     }
 }
