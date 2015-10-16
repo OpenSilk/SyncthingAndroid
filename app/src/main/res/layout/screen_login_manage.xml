@@ -23,6 +23,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        style="?toolbarStyle"/>
+
     <LinearLayout
         android:id="@+id/btn_bar"
         android:layout_width="match_parent"
@@ -55,6 +61,7 @@
         android:layout_above="@id/btn_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         style="@style/mtrl.List"/>
 
 </syncthing.android.ui.login.ManageScreenView>

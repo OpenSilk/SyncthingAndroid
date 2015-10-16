@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -30,6 +31,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import javax.inject.Inject;
 
@@ -44,6 +47,7 @@ import syncthing.android.model.Credentials;
  */
 public class LoginScreenView extends RelativeLayout {
 
+    @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.alias) EditText serverAlias;
     @InjectView(R.id.server_url) EditText serverUrl;
     @InjectView(R.id.server_port) EditText serverPort;
@@ -51,6 +55,7 @@ public class LoginScreenView extends RelativeLayout {
     @InjectView(R.id.password) EditText userPass;
     @InjectView(R.id.use_tls) CheckBox useTls;
 
+    @Inject ToolbarOwner mToolbarOwner;
     @Inject LoginPresenter mPresenter;
 
     ProgressDialog loadingProgress;
@@ -84,6 +89,8 @@ public class LoginScreenView extends RelativeLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isInEditMode()) {
+            mToolbarOwner.attachToolbar(toolbar);
+            mToolbarOwner.setConfig(ActionBarConfig.builder().setTitle(R.string.login).build());
             serverUrl.requestFocus();
         }
     }
@@ -91,6 +98,7 @@ public class LoginScreenView extends RelativeLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        mToolbarOwner.detachToolbar(toolbar);
         mPresenter.dropView(this);
         dismissError();
         dismissLoginProgress();

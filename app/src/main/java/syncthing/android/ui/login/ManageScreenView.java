@@ -19,10 +19,13 @@ package syncthing.android.ui.login;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.List;
 
@@ -40,9 +43,11 @@ import syncthing.android.ui.common.CardRecyclerView;
  */
 public class ManageScreenView extends RelativeLayout {
 
+    @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.recyclerview) CardRecyclerView list;
 
     final ManageScreenAdapter adapter = new ManageScreenAdapter();
+    @Inject ToolbarOwner mToolbarOwner;
     @Inject ManagePresenter mPresenter;
 
     public ManageScreenView(Context context, AttributeSet attrs) {
@@ -65,8 +70,16 @@ public class ManageScreenView extends RelativeLayout {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mToolbarOwner.attachToolbar(toolbar);
+        mToolbarOwner.setConfig(ActionBarConfig.builder().setTitle(R.string.manage_devices).build());
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        mToolbarOwner.detachToolbar(toolbar);
         mPresenter.dropView(this);
     }
 
