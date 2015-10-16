@@ -17,16 +17,20 @@
 
 package syncthing.android.ui.session;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.DialogPresenter;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.ArrayList;
@@ -48,8 +52,8 @@ import syncthing.android.R;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
-import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.ManageActivity;
+import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.sessionsettings.EditDeviceFragment;
 import syncthing.android.ui.sessionsettings.EditFolderFragment;
 import syncthing.android.ui.sessionsettings.EditIgnoresFragment;
@@ -60,12 +64,12 @@ import syncthing.api.SessionManager;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
-import syncthing.api.model.SystemInfo;
-import syncthing.api.model.Version;
-import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.GuiError;
 import syncthing.api.model.Model;
+import syncthing.api.model.SystemInfo;
+import syncthing.api.model.Version;
+import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.FolderCompletion;
 import syncthing.api.model.event.FolderRejected;
 import syncthing.api.model.event.FolderSummary;
@@ -87,6 +91,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     final ActivityResultsController activityResultsController;
     final Session session;
     final SessionManager manager;
+    final DialogPresenter dialogPresenter;
 
     Subscription changeSubscription;
     final ArrayList<NotifCard> notifications = new ArrayList<>();
@@ -101,7 +106,8 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             SessionManager manager,
             FragmentManagerOwner fragmentManagerOwner,
             IdenticonGenerator identiconGenerator,
-            ActivityResultsController activityResultsController
+            ActivityResultsController activityResultsController,
+            DialogPresenter dialogPresenter
     ) {
         this.appContext = appContext;
         this.credentials = credentials;
@@ -111,6 +117,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         this.session = manager.acquire(credentials);
         this.manager = manager;
         this.controller = session.controller();
+        this.dialogPresenter = dialogPresenter;
     }
 
     @Override
@@ -494,35 +501,53 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     }
 
     public void showSavingDialog() {
-        if (hasView()) getView().showSavingDialog();
+        dialogPresenter.showDialog(context -> {
+            ProgressDialog mProgressDialog = new ProgressDialog(context);
+            mProgressDialog.setMessage(context.getResources().getString(R.string.saving_config_dots));
+            return mProgressDialog;
+        });
     }
 
     public void dismissSavingDialog() {
-        if (hasView()) getView().dismissSavingDialog();
+        dialogPresenter.dismissDialog();
     }
 
     void showRestartingDialog() {
-        if (hasView()) getView().showRestartDialog();
+        dialogPresenter.showDialog(context -> {
+            ProgressDialog mProgressDialog = new ProgressDialog(context);
+            mProgressDialog.setMessage(context.getResources().getString(R.string.syncthing_is_restarting));
+            return mProgressDialog;
+        });
     }
 
     void dismissRestartingDialog() {
-        if (hasView()) getView().dismissRestartDialog();
+        dialogPresenter.dismissDialog();
     }
 
     public void showError(String title, String msg) {
-        if (hasView()) getView().showErrorDialog(title, msg);
+        dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.ok, null)
+                .create());
     }
 
     public void showError(int res, String msg) {
-        if (hasView()) getView().showErrorDialog(getView().getContext().getString(res), msg);
+        dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                .setTitle(res)
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.ok, null)
+                .create());
     }
 
     public void dismissError() {
-        if (hasView()) getView().dismissErrorDialog();
+        dialogPresenter.dismissDialog();
     }
 
     public void showSuccessMsg() {
-        if (hasView()) getView().showConfigSaved();
+        if (hasView()) {
+            Toast.makeText(getView().getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public String getMyDeviceId() {

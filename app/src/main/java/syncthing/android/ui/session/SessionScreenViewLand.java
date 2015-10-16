@@ -17,23 +17,16 @@
 
 package syncthing.android.ui.session;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.util.SparseArray;
-import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
@@ -44,20 +37,17 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
 import syncthing.android.ui.common.CardViewHolder;
 import syncthing.android.ui.common.ExpandCollapseHelper;
 import syncthing.android.ui.common.ExpandableCard;
-import timber.log.Timber;
 
 /**
  * Created by drew on 10/11/15.
@@ -85,9 +75,6 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
     HashMap<FolderCard, CardViewHolder> mFolders = new LinkedHashMap<>();
     HashMap<DeviceCard, CardViewHolder> mDevices = new LinkedHashMap<>();
     CardViewHolder mMyDeviceVH;
-
-    ProgressDialog mProgressDialog;
-    AlertDialog mErrorDialog;
 
     public SessionScreenViewLand(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -123,8 +110,6 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
         mToolbarOwner.detachToolbar(mToolbar);
-        dismissErrorDialog();
-        dismissProgressDialog();
     }
 
     @Override
@@ -239,56 +224,6 @@ public class SessionScreenViewLand extends CoordinatorLayout implements ISession
             CardViewHolder vh = map.get(itc.next());
             viewList.addView(vh.itemView);
         }
-    }
-
-    public void showSavingDialog() {
-        showProgressDialog(getResources().getString(R.string.saving_config_dots));
-    }
-
-    public void dismissSavingDialog() {
-        dismissProgressDialog();
-    }
-
-    public void showRestartDialog() {
-        showProgressDialog(getResources().getString(R.string.syncthing_is_restarting));
-    }
-
-    public void dismissRestartDialog() {
-        dismissProgressDialog();
-    }
-
-    public void showProgressDialog(String msg) {
-        dismissErrorDialog();
-        dismissProgressDialog();
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage(msg);
-        mProgressDialog.show();
-    }
-
-    public void dismissProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.cancel();
-        }
-    }
-
-    public void showErrorDialog(String title, String msg) {
-        dismissErrorDialog();
-        dismissProgressDialog();
-        mErrorDialog = new AlertDialog.Builder(getContext())
-                .setTitle(title)
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    public void dismissErrorDialog() {
-        if (mErrorDialog != null && mErrorDialog.isShowing()) {
-            mErrorDialog.dismiss();
-        }
-    }
-
-    public void showConfigSaved() {
-        Toast.makeText(getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
     }
 
     @Override

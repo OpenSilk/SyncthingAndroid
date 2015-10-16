@@ -21,8 +21,6 @@ import android.content.Context;
 
 import java.util.List;
 
-import syncthing.android.ui.common.ExpandableCard;
-
 /**
  * Created by drew on 10/11/15.
  */
@@ -33,15 +31,6 @@ public interface ISessionScreenView {
     void refreshFolders(List<FolderCard> folders);
     void refreshThisDevice(MyDeviceCard myDevice);
     void refreshDevices(List<DeviceCard> devices);
-    void showSavingDialog();
-    void dismissSavingDialog();
-    void showRestartDialog();
-    void dismissRestartDialog();
-    void showProgressDialog(String msg);
-    void dismissProgressDialog();
-    void showErrorDialog(String title, String msg);
-    void dismissErrorDialog();
-    void showConfigSaved();
     void setListEmpty(boolean show, boolean animate);
     void setListShown(boolean show, boolean animate);
     void setLoading(boolean loading);

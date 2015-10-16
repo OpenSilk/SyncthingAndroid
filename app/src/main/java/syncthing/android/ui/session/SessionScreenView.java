@@ -17,14 +17,10 @@
 
 package syncthing.android.ui.session;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.widget.Toast;
 
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
@@ -39,7 +35,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import syncthing.android.R;
 import syncthing.android.ui.common.CanExpand;
-import syncthing.android.ui.common.ExpandableCard;
 
 /**
  * Created by drew on 3/6/15.
@@ -52,9 +47,6 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
     @InjectView(R.id.toolbar) Toolbar mToolbar;
 
     SessionRecyclerAdapter mListAdapter;
-
-    ProgressDialog mProgressDialog;
-    AlertDialog mErrorDialog;
 
     public SessionScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -93,8 +85,6 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
         mToolbarOwner.detachToolbar(mToolbar);
-        dismissErrorDialog();
-        dismissProgressDialog();
     }
 
     @OnClick(R.id.btn_retry)
@@ -124,56 +114,6 @@ public class SessionScreenView extends RecyclerListFrame implements ISessionScre
 
     public void refreshDevices(List<DeviceCard> devices) {
         mListAdapter.setDevices(devices, true);
-    }
-
-    public void showSavingDialog() {
-        showProgressDialog(getResources().getString(R.string.saving_config_dots));
-    }
-
-    public void dismissSavingDialog() {
-        dismissProgressDialog();
-    }
-
-    public void showRestartDialog() {
-        showProgressDialog(getResources().getString(R.string.syncthing_is_restarting));
-    }
-
-    public void dismissRestartDialog() {
-        dismissProgressDialog();
-    }
-
-    public void showProgressDialog(String msg) {
-        dismissErrorDialog();
-        dismissProgressDialog();
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage(msg);
-        mProgressDialog.show();
-    }
-
-    public void dismissProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.cancel();
-        }
-    }
-
-    public void showErrorDialog(String title, String msg) {
-        dismissErrorDialog();
-        dismissProgressDialog();
-        mErrorDialog = new AlertDialog.Builder(getContext())
-                .setTitle(title)
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    public void dismissErrorDialog() {
-        if (mErrorDialog != null && mErrorDialog.isShowing()) {
-            mErrorDialog.dismiss();
-        }
-    }
-
-    public void showConfigSaved() {
-        Toast.makeText(getContext(), R.string.config_saved, Toast.LENGTH_SHORT).show();
     }
 
 }
