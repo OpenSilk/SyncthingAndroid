@@ -17,24 +17,12 @@
 
 package syncthing.android.ui.session;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
-import org.opensilk.common.core.mortar.DaggerService;
-import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.Screen;
-import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
-import syncthing.android.R;
 import syncthing.android.model.Credentials;
-import syncthing.android.ui.LauncherActivity;
-import syncthing.android.ui.LauncherActivityComponent;
 
 /**
  * Created by drew on 3/11/15.
@@ -50,32 +38,11 @@ public class SessionFragment extends MortarFragment {
     }
 
     Credentials mCredentials;
-    //Holding this reference is a hack to hook lifecycle
-    //TODO add lifecycle hooks to fragmentPresenter and move actionbar stuff to SessionPresenter
-    SessionPresenter mPresenter;
 
     @Override
     protected Screen newScreen() {
         ensureCredentials();
         return new SessionScreen(mCredentials);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPresenter = DaggerService.<SessionComponent>getDaggerComponent(getScope()).presenter();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPresenter.controller.init();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mPresenter.controller.suspend();
     }
 
     void ensureCredentials() {

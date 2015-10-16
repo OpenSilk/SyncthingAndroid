@@ -31,6 +31,8 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortar.Lifecycle;
+import org.opensilk.common.ui.mortar.LifecycleService;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ import mortar.MortarScope;
 import mortar.Presenter;
 import mortar.bundler.BundleService;
 import rx.Subscription;
+import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
@@ -98,6 +101,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     final ArrayList<FolderCard> folders = new ArrayList<>();
     final ArrayList<DeviceCard> devices = new ArrayList<>();
     MyDeviceCard myDevice;
+    Subscription lifecycleSubscription;
 
     @Inject
     public SessionPresenter(
@@ -130,6 +134,22 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         Timber.d("onEnterScope");
         super.onEnterScope(scope);
         changeSubscription = controller.subscribeChanges(this::onChange);
+        lifecycleSubscription = LifecycleService.getLifecycle(scope)
+                .subscribe(new Action1<Lifecycle>() {
+                    @Override
+                    public void call(Lifecycle lifecycle) {
+                        switch (lifecycle) {
+                            case RESUME:
+                                Timber.d("Initializing controller");
+                                controller.init();
+                                break;
+                            case PAUSE:
+                                Timber.d("Suspending controller");
+                                controller.suspend();
+                                break;
+                        }
+                    }
+                });
     }
 
     @Override
@@ -138,6 +158,9 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         super.onExitScope();
         if (changeSubscription != null) {
             changeSubscription.unsubscribe();
+        }
+        if (lifecycleSubscription != null) {
+            lifecycleSubscription.unsubscribe();
         }
         manager.release(session);
     }
