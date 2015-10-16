@@ -75,6 +75,7 @@ public class EventMonitor {
     }
 
     public synchronized void start(long delay) {
+        Timber.d("start(%d) lastEvent=%d", delay, lastEvent);
         if (handlerThread == null) {
             handlerThread = new HandlerThread("EventMonitor");
             handlerThread.start();
@@ -94,40 +95,34 @@ public class EventMonitor {
                         // we eat all the events to
                         // avoid flooding the clients
                         List<Event> topass = new ArrayList<>();
-                        int dispached = 0;
                         for (Event e : events) {
                             switch (e.type) {
                                 case STARTUP_COMPLETE:
                                 case DEVICE_REJECTED:
                                 case FOLDER_REJECTED:
-                                    dispached++;
                                     topass.add(e);
                                     break;
                                 default:
                                     break;
                             }
                         }
-                        if (dispached == 0) {
-                            topass.add(events[events.length - 1]);
-                        }
+                        lastEvent = events[events.length - 1].id;
+                        Timber.d("Dropped %d events", events.length - topass.size());
                         return Observable.from(topass);
                     } else {
+                        lastEvent = events[events.length - 1].id;
                         return Observable.from(events);
                     }
                 })
                 // drop unknown events
                 .filter(event -> (event.type != null && event.type != EventType.UNKNOWN))
-                //drop duplicate events some events like INDEX_UPDATED or STATE_CHANGED will flood
-                        //TODO conditional distinctuntilchanged (will require custom operator)
-//                .distinctUntilChanged(event -> event.type)
-                //.debounce(50, TimeUnit.MILLISECONDS)
-//                .observeOn(AndroidSchedulers.mainThread())
+                //drop selected duplicate events like PING
+                .lift(new OperatorEventsDistinctUntilChanged())
                 .subscribe(
                         event -> {
-                            listener.handleEvent(event);
-                            lastEvent = event.id;
                             unhandledErrorCount = 0;
                             connectExceptionCount = 0;
+                            listener.handleEvent(event);
                         },
                         t -> {
                             unhandledErrorCount--;//network errors handle themselves
