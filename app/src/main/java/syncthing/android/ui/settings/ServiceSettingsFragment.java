@@ -19,9 +19,12 @@ package syncthing.android.ui.settings;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -41,6 +44,7 @@ import android.widget.Toast;
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.core.util.VersionUtils;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -173,19 +177,34 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
             SyncthingUtils.exportConfig(getActivity());
             return true;
         } else if (preference == importConfig) {
-            Intent intent = new Intent();
-            intent.setType("application/zip");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            if (VersionUtils.hasKitkat()) {
-                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            final File[] availableExports = SyncthingUtils.listExportedConfigs(getActivity());
+            if (availableExports == null || availableExports.length == 0) {
+                showFilePicker();
             } else {
-                intent = Intent.createChooser(
-                        intent.setAction(Intent.ACTION_GET_CONTENT), "");
-            }
-            try {
-                startActivityForResult(intent, ActivityRequestCodes.IMPORT_CONFIG);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(getActivity(), R.string.no_file_picker_found, Toast.LENGTH_LONG).show();
+                String[] items = new String[availableExports.length];
+                for (int ii=0; ii<items.length; ii++) {
+                    items[ii] = availableExports[ii].getName();
+                }
+                AlertDialog.Builder bob = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.import_config)
+                        .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                File file = availableExports[which];
+                                if(file.exists()) {
+                                    SyncthingUtils.importConfig(getActivity(), Uri.fromFile(file), false);
+                                    mSettings.setInitialized(ConfigXml.get(getActivity()) != null);
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(R.string.show_file_picker, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                showFilePicker();
+                            }
+                        });
+                bob.show();
             }
             return true;
         }
@@ -272,6 +291,23 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
             //dont care if we can run whenever
             mReceiverHelper.setChargingReceiverEnabled(onlyCharging.isChecked());
             mReceiverHelper.setConnectivityReceiverEnabled(true);
+        }
+    }
+
+    void showFilePicker() {
+        Intent intent = new Intent();
+        intent.setType("application/zip");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (VersionUtils.hasKitkat()) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        } else {
+            intent = Intent.createChooser(
+                    intent.setAction(Intent.ACTION_GET_CONTENT), "");
+        }
+        try {
+            startActivityForResult(intent, ActivityRequestCodes.IMPORT_CONFIG);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity(), R.string.no_file_picker_found, Toast.LENGTH_LONG).show();
         }
     }
 }

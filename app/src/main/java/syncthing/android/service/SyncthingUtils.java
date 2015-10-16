@@ -43,6 +43,7 @@ import org.zeroturnaround.zip.ZipUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SecureRandom;
@@ -342,6 +343,12 @@ public class SyncthingUtils {
 
     public static long minutesToMillis(int minutes) {
         return (long) minutes * 60000L;
+    }
+
+    public static File[] listExportedConfigs(Context context) {
+        File root = Environment.getExternalStorageDirectory();
+        return root.listFiles((dir, filename) -> StringUtils.startsWith(filename, context.getPackageName() + "-export")
+                && StringUtils.endsWith(filename, ".zip"));
     }
 
     public static void exportConfig(Context context) {

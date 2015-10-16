@@ -88,6 +88,7 @@
     <string name="export_config">Export configuration</string>
     <string name="import_config">Import configuration</string>
     <string name="no_file_picker_found">No file picker found</string>
+    <string name="show_file_picker">Open file picker</string>
     <string name="archive_created">Archive created</string>
     <string name="archive_at_location">Archive at:\n%1$s</string>
     <string name="overwrite">Overwrite?</string>
