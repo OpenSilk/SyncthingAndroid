@@ -17,6 +17,7 @@
 package org.opensilk.common.ui.mortarfragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import org.opensilk.common.core.mortar.MortarActivity;
 import org.opensilk.common.ui.mortar.LayoutCreator;
@@ -48,54 +49,42 @@ public abstract class MortarFragmentActivity extends MortarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Timber.d("-> onCreate");
         super.onCreate(savedInstanceState);
         performInjection();
         mFragmentManagerOwner.takeView(this);
         mPausesAndResumesPresenter.takeView(this);
-        Timber.d("<- onCreate");
-    }
-
-    @Override
-    protected void onStart() {
-        Timber.d("-> onStart");
-        super.onStart();
-        mFragmentManagerOwner.takeView(this);
-        Timber.d("<- onStart");
     }
 
     @Override
     protected void onResume() {
-        Timber.d("-> onResume");
         super.onResume();
         mFragmentManagerOwner.takeView(this);
         mPausesAndResumesPresenter.activityResumed();
-        Timber.d("<- onResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mFragmentManagerOwner.takeView(this);
     }
 
     @Override
     protected void onPause() {
-        Timber.d("-> onPause");
         super.onPause();
         mPausesAndResumesPresenter.activityPaused();
-        Timber.d("<- onPause");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Timber.d("-> onSaveInstanceState");
         super.onSaveInstanceState(outState);
         mFragmentManagerOwner.dropView(this);
-        Timber.d("<- onSaveInstanceState");
     }
 
     @Override
     protected void onDestroy() {
-        Timber.d("-> onDestroy");
         super.onDestroy();
         mFragmentManagerOwner.dropView(this);
         mPausesAndResumesPresenter.dropView(this);
-        Timber.d("<- onDestroy");
     }
 
     @Override
