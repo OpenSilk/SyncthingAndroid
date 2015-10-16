@@ -49,15 +49,15 @@ ext.buildToolsVersion  = "23.0.1"
 // defaultConfig
 ext.targetSdkVersion = 22
 
-ext.supportLibVersion = "23.0.1"
-ext.dagger2Version = "2.0"
+ext.supportLibVersion = "23.1.0"
+ext.dagger2Version = "2.0.1"
 ext.rxJavaVersion = "1.0.14"
 ext.rxAndroidVersion = "1.0.1"
 ext.timberVersion = "2.5.0"
-ext.commonsLangVersion = "3.3.2"
-ext.butterKnifeVersion = "6.0.0"
+ext.commonsLangVersion = "3.4"
+ext.butterKnifeVersion = "6.1.0"
 ext.commonsIoVersion = "2.4"
-ext.gsonVersion = "2.3"
+ext.gsonVersion = "2.4"
 ext.okHttpVersion = "2.5.0"
 ext.retrofitVersion = "2.0.0-beta2"
 
