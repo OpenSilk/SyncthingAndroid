@@ -38,7 +38,7 @@ import syncthing.android.AppComponent;
                 PauseAndResumeModule.class
         }
 )
-public interface ManageActivityComponent extends MortarFragmentActivityComponent, AppComponent {
+public interface ManageActivityComponent extends SyncthingActivityComponent {
     Func1<AppComponent, ManageActivityComponent> FACTORY =
             new Func1<AppComponent, ManageActivityComponent>() {
                 @Override
@@ -49,6 +49,5 @@ public interface ManageActivityComponent extends MortarFragmentActivityComponent
                 }
             };
     void inject(ManageActivity activity);
-    ActivityResultsController activityResultsController();
-    DialogPresenter dialogPresenter();
+
 }

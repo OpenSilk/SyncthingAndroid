@@ -71,19 +71,14 @@ import timber.log.Timber;
 /**
  * Created by drew on 3/1/15.
  */
-public class LauncherActivity extends MortarFragmentActivity implements
-        DrawerOwnerActivity, ActivityResultsActivity, ToolbarOwnerDelegate.Callback {
+public class LauncherActivity extends SyncthingActivity implements
+        DrawerOwnerActivity {
 
-    @Inject ToolbarOwner mActionBarOwner;
     @Inject DrawerOwner mDrawerOwner;
-    @Inject AppSettings mSettings;
-    @Inject ActivityResultsOwner mActivityResultsOwner;
     @Inject IdenticonGenerator mIdenticonGenerator;
 
     ActionBarDrawerToggle mDrawerToggle;
     protected DrawerOwnerDelegate<LauncherActivity> mDrawerOwnerDelegate;
-    protected ToolbarOwnerDelegate<LauncherActivity> mActionBarOwnerDelegate;
-    Subscription mChargingSubscription;
 
     @InjectView(R.id.drawer_layout) @Optional DrawerLayout mDrawerLayout;
     @InjectView(R.id.navigation) NavigationView mNavigation;
@@ -106,7 +101,6 @@ public class LauncherActivity extends MortarFragmentActivity implements
         setContentView(R.layout.activity_launcher);
         ButterKnife.inject(this);
 
-        mActivityResultsOwner.takeView(this);
 
         if (mDrawerLayout != null) {
             mDrawerOwnerDelegate = new DrawerOwnerDelegate<>(this, mDrawerOwner, mDrawerLayout,
@@ -118,9 +112,6 @@ public class LauncherActivity extends MortarFragmentActivity implements
         }
         mActionBarOwnerDelegate.onCreate();
 
-        if (mSettings.keepScreenOn()) {
-            subscribeChargingState();
-        }
 
         setupNavigation(savedInstanceState);
         Timber.d("<- onCreate()");
@@ -130,29 +121,8 @@ public class LauncherActivity extends MortarFragmentActivity implements
     protected void onDestroy() {
         Timber.d("-> onDestroy()");
         super.onDestroy();
-        mActivityResultsOwner.dropView(this);
-        mActionBarOwnerDelegate.onDestroy();
         if (mDrawerOwnerDelegate != null) mDrawerOwnerDelegate.onDestroy();
-        if (mChargingSubscription != null) {
-            mChargingSubscription.unsubscribe();
-        }
         Timber.d("<- onDestroy()");
-    }
-
-    @Override
-    protected void onStart() {
-        Timber.d("-> onStart()");
-        super.onStart();
-        SyncthingUtils.notifyForegroundStateChanged(this, true);
-        Timber.d("<- onStart()");
-    }
-
-    @Override
-    protected void onStop() {
-        Timber.d("-> onStop");
-        super.onStop();
-        SyncthingUtils.notifyForegroundStateChanged(this, false);
-        Timber.d("<- onStop");
     }
 
     @Override
@@ -167,15 +137,10 @@ public class LauncherActivity extends MortarFragmentActivity implements
         if (mDrawerOwnerDelegate != null) mDrawerOwnerDelegate.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return mActionBarOwnerDelegate.onCreateOptionsMenu(menu) || super.onCreateOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return (mDrawerOwnerDelegate != null && mDrawerOwnerDelegate.onOptionsItemSelected(item))
-                || mActionBarOwnerDelegate.onOptionsItemSelected(item)
                 || super.onOptionsItemSelected(item);
     }
 
@@ -232,68 +197,9 @@ public class LauncherActivity extends MortarFragmentActivity implements
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
-    /*
-     * FragmentManagerOwner.Activity
-     */
-
-    @Override
-    public int getContainerViewId() {
-        return R.id.main;
-    }
-
-    /*
-     * ActivityResultsOwverActivity
-     */
-
-    @Override
-    public void setResultAndFinish(int resultCode, Intent data) {
-        setResult(resultCode, data);
-        finish();
-    }
-
-    /*
-     * Toolbar
-     */
-    @Override
-    public void onToolbarAttached(Toolbar toolbar) {
-
-    }
-
-    @Override
-    public void onToolbarDetached(Toolbar toolbar) {
-
-    }
-
-    /*
-     * Battery
-     */
-
-    void subscribeChargingState() {
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        /*TODO fix this
-        mChargingSubscription = AndroidObservable.bindActivity(this,AndroidObservable.fromBroadcast(this, filter))
-                .subscribe(new Action1<Intent>() {
-                               @Override
-                               public void call(Intent intent) {
-                                   int status = intent != null ? intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) : 0;
-                                   Timber.d("received BATTERY_CHANGED plugged=%s", status != 0);
-                                   if (mSettings.keepScreenOn() && status != 0) {
-                                       getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                   } else {
-                                       getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                                   }
-                               }
-                           }
-                );
-                */
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Timber.d("onActivityResult(%d, %d, %s)", requestCode, resultCode, data);
-        if (mActivityResultsOwner.onActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
         final Handler handler = new Handler();
         switch (requestCode) {
             case ActivityRequestCodes.LOGIN_ACTIVITY:
