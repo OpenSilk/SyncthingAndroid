@@ -37,7 +37,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testNotificationAdd() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, true);
@@ -46,11 +46,11 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testNotificationReplaceMore() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
-        List<ExpandableCard> notifs2 = new LinkedList<>();
+        List<NotifCard> notifs2 = new LinkedList<>();
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
@@ -62,7 +62,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testNotificationReplaceLess() {
-        List<ExpandableCard> notifs2 = new LinkedList<>();
+        List<NotifCard> notifs2 = new LinkedList<>();
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
@@ -71,7 +71,7 @@ public class SessionRecyclerAdapterTest {
         notifs2.add(NotifCardRestart.INSTANCE);
         notifs2.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs2, false);
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
@@ -82,7 +82,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFolderAdd() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
@@ -97,7 +97,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFolderReplaceMore() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
@@ -285,7 +285,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFindFolderOffset() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
@@ -295,7 +295,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testfindThisDevicePos() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
@@ -310,7 +310,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testFindDeviceOffset() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);
         notifs.add(NotifCardRestart.INSTANCE);
         adapter.setNotifications(notifs, false);
@@ -325,7 +325,7 @@ public class SessionRecyclerAdapterTest {
 
     @Test
     public void testgetItem() {
-        List<ExpandableCard> notifs = new LinkedList<>();
+        List<NotifCard> notifs = new LinkedList<>();
         notifs.add(NotifCardRestart.INSTANCE);//0
         notifs.add(NotifCardRestart.INSTANCE);//1
         adapter.setNotifications(notifs, false);
