@@ -29,8 +29,9 @@ import timber.log.Timber;
  */
 public final class OperatorEventsDistinctUntilChanged implements Operator<Event, Event> {
 
-    public OperatorEventsDistinctUntilChanged() {
-    }
+    public static final OperatorEventsDistinctUntilChanged INSTANCE = new OperatorEventsDistinctUntilChanged();
+
+    private OperatorEventsDistinctUntilChanged() {}
 
     @Override
     public Subscriber<? super Event> call(final Subscriber<? super Event> child) {
@@ -55,7 +56,7 @@ public final class OperatorEventsDistinctUntilChanged implements Operator<Event,
                             break;
                     }
                     if (canDrop && currentType == type) {
-                        Timber.e("Dropping event %s", type);
+                        Timber.i("Dropping event %s", type);
                         request(1);
                     } else {
                         child.onNext(e);

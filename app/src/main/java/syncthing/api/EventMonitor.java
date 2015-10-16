@@ -121,7 +121,7 @@ public class EventMonitor {
                 // drop unknown events
                 .filter(event -> (event.type != null && event.type != EventType.UNKNOWN))
                 //drop selected duplicate events like PING
-                .lift(new OperatorEventsDistinctUntilChanged())
+                .lift(OperatorEventsDistinctUntilChanged.INSTANCE)
                 .subscribe(
                         event -> {
                             unhandledErrorCount = 0;
