@@ -49,7 +49,10 @@
 
         <activity
             android:name=".ui.ManageActivity"
-            android:theme="@style/LoginTheme"/>
+            android:theme="@style/LoginTheme">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="syncthing.android.ui.LauncherActivity"/>
+        </activity>
 
         <activity
             android:name=".ui.settings.SettingsActivity"

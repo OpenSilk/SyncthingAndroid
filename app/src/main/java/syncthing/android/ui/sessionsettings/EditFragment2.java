@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
+import mortar.MortarScope;
 import syncthing.android.model.Credentials;
 
 /**
@@ -48,11 +49,19 @@ public abstract class EditFragment2 extends MortarFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        int title = getArguments().getInt("title");
-        if (title != 0) {
-            getActivity().setTitle(title);
+    protected Object[] getAdditionalServices() {
+        return new Object[] {
+                TitleService.TITLE_SERVICE,
+                getArguments().getInt("title")
+        };
+    }
+
+    //Hack cause im lazy and didn't want to add the title to all the screens
+    public static class TitleService {
+        public static final String TITLE_SERVICE = TitleService.class.getName();
+
+        public static int getTitle(MortarScope scope) {
+            return (int) scope.getService(TITLE_SERVICE);
         }
     }
 }

@@ -19,6 +19,8 @@ package syncthing.android.ui.sessionsettings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +32,11 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +60,9 @@ import syncthing.api.model.VersioningType;
 /**
  * Created by drew on 3/16/15.
  */
-public class EditFolderScreenView extends ScrollView {
+public class EditFolderScreenView extends CoordinatorLayout {
 
+    @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.edit_folder_id) EditText editFolderId;
     @InjectView(R.id.desc_folder_id) TextView descFolderId;
     @InjectView(R.id.error_folder_id_unique) TextView errorFolderIdUnique;
@@ -97,7 +100,8 @@ public class EditFolderScreenView extends ScrollView {
     @InjectView(R.id.btn_delete) Button deleteBtn;
     @InjectView(R.id.btn_ignore_ptrn) Button ignoresPattrnBtn;
 
-    @Inject EditFolderPresenter presenter;
+    @Inject ToolbarOwner mToolbarOwner;
+    @Inject EditFolderPresenter mPresenter;
     final DirectoryAutoCompleteAdapter editFolderPathAdapter;
 
     boolean isAdd = false;
@@ -117,41 +121,49 @@ public class EditFolderScreenView extends ScrollView {
         super.onFinishInflate();
         ButterKnife.inject(this);
         rdioVerGroup.setOnCheckedChangeListener(versioningChangeListener);
-        presenter.takeView(this);
+        mPresenter.takeView(this);
+    }
+
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mToolbarOwner.attachToolbar(toolbar);
+        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
     }
 
     @Override
-    protected void onDetachedFromWindow() {
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        presenter.dropView(this);
+        mPresenter.dropView(this);
     }
 
     @OnClick(R.id.btn_delete)
     void doDelete() {
-        presenter.deleteFolder();
+        mPresenter.deleteFolder();
     }
 
     @OnClick(R.id.btn_ignore_ptrn)
     void openIgnoresEditor() {
-        presenter.openIgnoresEditor();
+        mPresenter.openIgnoresEditor();
     }
 
     @OnClick(R.id.btn_cancel)
     void doCancel() {
-        presenter.dismissDialog();
+        mPresenter.dismissDialog();
     }
 
     @OnClick(R.id.btn_save)
     void doSave() {
-        if (isAdd && !presenter.validateFolderId(editFolderId.getText().toString())) {
+        if (isAdd && !mPresenter.validateFolderId(editFolderId.getText().toString())) {
             return;
         }
         folder.id = editFolderId.getText().toString();
-        if (isAdd && !presenter.validateFolderPath(editFolderPath.getText().toString())) {
+        if (isAdd && !mPresenter.validateFolderPath(editFolderPath.getText().toString())) {
             return;
         }
         folder.path = editFolderPath.getText().toString();
-        if (!presenter.validateRescanInterval(editRescanIntrvl.getText().toString())) {
+        if (!mPresenter.validateRescanInterval(editRescanIntrvl.getText().toString())) {
             return;
         }
         folder.rescanIntervalS = Integer.decode(editRescanIntrvl.getText().toString());
@@ -184,7 +196,7 @@ public class EditFolderScreenView extends ScrollView {
             case R.id.radio_simple_versioning:
                 folder.versioning = new VersioningConfig();
                 folder.versioning.type = VersioningType.SIMPLE;
-                if (!presenter.validateSimpleVersioningKeep(editSimpleVerKeep.getText().toString())) {
+                if (!mPresenter.validateSimpleVersioningKeep(editSimpleVerKeep.getText().toString())) {
                     return;
                 }
                 folder.versioning.params.keep = editSimpleVerKeep.getText().toString();
@@ -192,7 +204,7 @@ public class EditFolderScreenView extends ScrollView {
             case R.id.radio_staggered_versioning:
                 folder.versioning = new VersioningConfig();
                 folder.versioning.type = VersioningType.STAGGERED;
-                if (!presenter.validateStaggeredMaxAge(editStaggeredVerMaxAge.getText().toString())) {
+                if (!mPresenter.validateStaggeredMaxAge(editStaggeredVerMaxAge.getText().toString())) {
                     return;
                 }
                 folder.versioning.params.maxAge = SyncthingUtils.daysToSeconds(editStaggeredVerMaxAge.getText().toString());
@@ -203,7 +215,7 @@ public class EditFolderScreenView extends ScrollView {
             case R.id.radio_external_versioning:
                 folder.versioning = new VersioningConfig();
                 folder.versioning.type = VersioningType.EXTERNAL;
-                if (!presenter.validateExternalVersioningCmd(editExternalVerCmd.getText().toString())) {
+                if (!mPresenter.validateExternalVersioningCmd(editExternalVerCmd.getText().toString())) {
                     return;
                 }
                 folder.versioning.params.command = editExternalVerCmd.getText().toString();
@@ -226,7 +238,7 @@ public class EditFolderScreenView extends ScrollView {
         }
         folder.devices = devices;
 
-        presenter.saveFolder();
+        mPresenter.saveFolder();
 
     }
 
@@ -332,7 +344,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_folder_id)
     void onFolderIdChanged(CharSequence text) {
         if (isAdd && !StringUtils.isEmpty(text)) {
-            presenter.validateFolderId(text.toString());
+            mPresenter.validateFolderId(text.toString());
         }
     }
 
@@ -365,7 +377,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_rescan_interval)
     void onRescanIntrvlChanged(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            presenter.validateRescanInterval(text.toString());
+            mPresenter.validateRescanInterval(text.toString());
         }
     }
 
@@ -376,7 +388,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_simple_versioning_keep)
     void onSimpleVerKeepChanged(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            presenter.validateSimpleVersioningKeep(text.toString());
+            mPresenter.validateSimpleVersioningKeep(text.toString());
         }
     }
 
@@ -395,7 +407,7 @@ public class EditFolderScreenView extends ScrollView {
     @OnTextChanged(R.id.edit_staggered_max_age)
     void onStaggeredMaxAgeChange(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
-            presenter.validateStaggeredMaxAge(text.toString());
+            mPresenter.validateStaggeredMaxAge(text.toString());
         }
     }
 
@@ -406,7 +418,7 @@ public class EditFolderScreenView extends ScrollView {
 
     @OnTextChanged(R.id.edit_external_versioning_command)
     void onExternalVerCmdChange(CharSequence text) {
-        presenter.validateExternalVersioningCmd(text.toString());
+        mPresenter.validateExternalVersioningCmd(text.toString());
     }
 
     void notifyExternalVersioningCmdInvalid(boolean valid) {
@@ -455,7 +467,7 @@ public class EditFolderScreenView extends ScrollView {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
                     try {
-                        List<String> results = presenter.controller
+                        List<String> results = mPresenter.controller
                                 .getAutoCompleteDirectoryList(constraint.toString())
                                 .toBlocking().first();
                         FilterResults fr = new FilterResults();

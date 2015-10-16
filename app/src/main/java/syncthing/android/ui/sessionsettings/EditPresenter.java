@@ -26,10 +26,12 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
+import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogFactory;
 import org.opensilk.common.ui.mortar.DialogPresenter;
 
+import mortar.MortarScope;
 import mortar.ViewPresenter;
 import rx.Scheduler;
 import rx.Subscription;
@@ -57,6 +59,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     protected final Credentials credentials;
 
     protected Subscription saveSubscription;
+    protected int titleRes;
 
     public EditPresenter(
             SessionManager manager,
@@ -73,6 +76,11 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
         this.deviceId = config.deviceId;
         this.isAdd = config.isAdd;
         this.credentials = config.credentials;
+    }
+
+    @Override
+    protected void onEnterScope(MortarScope scope) {
+        titleRes = EditFragment2.TitleService.getTitle(scope);
     }
 
     @Override
@@ -105,10 +113,10 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     protected void onSavefailed(Throwable e) {
         final String msg = e.getMessage();
         dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
-                .setTitle(R.string.error)
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .create()
+                        .setTitle(R.string.error)
+                        .setMessage(msg)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .create()
         );
     }
 
@@ -124,5 +132,10 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
                 worker.unsubscribe();
             });
         }
+    }
+
+    public ActionBarConfig getToolbarConfig() {
+        return ActionBarConfig.builder()
+                .setTitle(titleRes).build();
     }
 }

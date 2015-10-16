@@ -24,202 +24,227 @@
               android:layout_height="match_parent"
               android:fillViewport="true">
 
-    <LinearLayout
-        android:orientation="vertical"
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/session.edit.Container">
+        android:fitsSystemWindows="true"
+        android:theme="?appBarTheme">
 
-        <TextView
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/device_id"
-            style="@style/session.edit.FieldHeader"/>
+            android:layout_height="?actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
+            style="?toolbarStyle"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            style="@style/session.edit.Container">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/device_id"
+                style="@style/session.edit.FieldHeader"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/edit_device_id"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    style="@style/session.edit.EditText"/>
+
+                <ImageButton
+                    android:id="@+id/btn_scanqr"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_qrcode"
+                    android:scaleType="fitCenter"
+                    android:padding="4dp"
+                    style="?android:borderlessButtonStyle"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/desc_device_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:id="@+id/desc_device_id2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/when_adding_a_new_device_keep_in_mind_that_this_device_must_be_added_on_the_other_side_too"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:id="@+id/error_device_id_blank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_device_id_cannot_be_blank"
+                style="@style/session.edit.FieldError"/>
+
+            <TextView
+                android:id="@+id/error_device_id_invalid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional"
+                style="@style/session.edit.FieldError"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/device_name"
+                style="@style/session.edit.FieldHeader"/>
 
             <EditText
-                android:id="@+id/edit_device_id"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:id="@+id/edit_device_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/session.edit.EditText"/>
 
-            <ImageButton
-                android:id="@+id/btn_scanqr"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_qrcode"
-                android:scaleType="fitCenter"
-                android:padding="4dp"
-                style="?android:borderlessButtonStyle"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/addresses"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_addresses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.edit.EditText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/compression"
+                style="@style/session.edit.FieldHeader"/>
+
+            <RadioGroup
+                android:id="@+id/radio_group_compression"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radio_meta_compression"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/metadata_only"
+                    style="@style/session.edit.RadioButton"/>
+
+                <RadioButton
+                    android:id="@+id/radio_all_compression"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_data"
+                    style="@style/session.edit.RadioButton"/>
+
+                <RadioButton
+                    android:id="@+id/radio_no_compression"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/off"
+                    style="@style/session.edit.RadioButton"/>
+
+            </RadioGroup>
+
+            <CheckBox
+                android:id="@+id/check_introducer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/introducer"
+                style="@style/session.edit.Checkbox"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/share_folders_with_device"
+                style="@style/session.edit.FieldHeader"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_the_folders_to_share_with_this_device"
+                style="@style/session.edit.FieldDescription"/>
+
+            <LinearLayout
+                android:id="@+id/share_folders_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="end"
+                style="@style/mtrl.ButtonBar">
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@android:string/cancel"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/desc_device_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored"
-            style="@style/session.edit.FieldDescription"/>
-
-        <TextView
-            android:id="@+id/desc_device_id2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/when_adding_a_new_device_keep_in_mind_that_this_device_must_be_added_on_the_other_side_too"
-            style="@style/session.edit.FieldDescription"/>
-
-        <TextView
-            android:id="@+id/error_device_id_blank"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/the_device_id_cannot_be_blank"
-            style="@style/session.edit.FieldError"/>
-
-        <TextView
-            android:id="@+id/error_device_id_invalid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional"
-            style="@style/session.edit.FieldError"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/device_name"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_device_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/session.edit.EditText"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty"
-            style="@style/session.edit.FieldDescription"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/addresses"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_addresses"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/session.edit.EditText"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address"
-            style="@style/session.edit.FieldDescription"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/compression"
-            style="@style/session.edit.FieldHeader"/>
-
-        <RadioGroup
-            android:id="@+id/radio_group_compression"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/radio_meta_compression"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/metadata_only"
-                style="@style/session.edit.RadioButton"/>
-
-            <RadioButton
-                android:id="@+id/radio_all_compression"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/all_data"
-                style="@style/session.edit.RadioButton"/>
-
-            <RadioButton
-                android:id="@+id/radio_no_compression"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/off"
-                style="@style/session.edit.RadioButton"/>
-
-        </RadioGroup>
-
-        <CheckBox
-            android:id="@+id/check_introducer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/introducer"
-            style="@style/session.edit.Checkbox"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well"
-            style="@style/session.edit.FieldDescription"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/share_folders_with_device"
-            style="@style/session.edit.FieldHeader"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/select_the_folders_to_share_with_this_device"
-            style="@style/session.edit.FieldDescription"/>
-
-        <LinearLayout
-            android:id="@+id/share_folders_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:orientation="horizontal"
-            android:gravity="end"
-            style="@style/mtrl.ButtonBar">
-
-            <Button
-                android:id="@+id/btn_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@android:string/cancel"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-            <Button
-                android:id="@+id/btn_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-            <Button
-                android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </syncthing.android.ui.sessionsettings.EditDeviceScreenView>

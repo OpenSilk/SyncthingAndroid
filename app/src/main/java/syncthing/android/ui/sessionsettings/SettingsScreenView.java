@@ -18,6 +18,8 @@
 package syncthing.android.ui.sessionsettings;
 
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +29,7 @@ import android.widget.ScrollView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import javax.inject.Inject;
 
@@ -42,8 +45,9 @@ import syncthing.api.model.OptionsConfig;
 /**
  * Created by drew on 3/17/15.
  */
-public class SettingsScreenView extends ScrollView {
+public class SettingsScreenView extends CoordinatorLayout {
 
+    @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.edit_device_name) EditText editDeviceName;
     @InjectView(R.id.edit_protocol_listen_addr) EditText editProtocolListenAddrs;
     @InjectView(R.id.edit_incoming_rate_limit) EditText editIncomingRateLim;
@@ -61,6 +65,7 @@ public class SettingsScreenView extends ScrollView {
     @InjectView(R.id.edit_apikey) EditText editApiKey;
     @InjectView(R.id.btn_copy_apikey) Button copyApiKeyButton;
 
+    @Inject ToolbarOwner mToolbarOwner;
     @Inject SettingsPresenter mPresenter;
 
     DeviceConfig deviceConfig;
@@ -90,7 +95,14 @@ public class SettingsScreenView extends ScrollView {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mToolbarOwner.attachToolbar(toolbar);
+        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
     }

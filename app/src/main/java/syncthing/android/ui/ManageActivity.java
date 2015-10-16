@@ -42,8 +42,6 @@ public class ManageActivity extends SyncthingActivity {
     public static final String EXTRA_FRAGMENT = "fragment";
     public static final String EXTRA_DISABLE_BACK = "disableback";
 
-    @InjectView(R.id.toolbar) Toolbar mToolbar;
-
     private boolean ignoreBackButton;
 
     @Override
@@ -63,10 +61,8 @@ public class ManageActivity extends SyncthingActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
         setResult(RESULT_CANCELED);
-        mActionBarOwnerDelegate = new ToolbarOwnerDelegate<>(this, mActionBarOwner, null);
+        mActionBarOwnerDelegate = new ToolbarOwnerDelegate<>(this, mActionBarOwner, this);
         mActionBarOwnerDelegate.onCreate();
-        mActionBarOwner.attachToolbar(mToolbar);
-        mActionBarOwner.setConfig(ActionBarConfig.builder().setTitle(R.string.welcome_title).build());
         if (savedInstanceState == null) {
             MortarFragment fragment = MortarFragment.factory(this,
                     getIntent().getStringExtra(EXTRA_FRAGMENT),
@@ -86,4 +82,10 @@ public class ManageActivity extends SyncthingActivity {
         }
     }
 
+    @Override
+    public void onToolbarAttached(Toolbar toolbar) {
+        if (!ignoreBackButton) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
 }

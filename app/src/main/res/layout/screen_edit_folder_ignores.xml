@@ -21,128 +21,151 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        style="@style/session.edit.Container">
+        android:fitsSystemWindows="true"
+        android:theme="?appBarTheme">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
+            style="?toolbarStyle"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            style="@style/session.edit.Container">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/editing"
-                style="@style/session.edit.FieldDescription"/>
-
-            <TextView
-                android:id="@+id/desc_filename"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/session.edit.TextCode"
-                tools:text="/sdcard/stuff"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/editing"
+                    style="@style/session.edit.FieldDescription"/>
+
+                <TextView
+                    android:id="@+id/desc_filename"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/session.edit.TextCode"
+                    tools:text="/sdcard/stuff"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_ignore_patterns_one_per_line"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_ignores"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="240dp"
+                style="@style/session.edit.EditTextMultiLine"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/quick_guide_to_supported_patterns"
+                style="@style/session.edit.FieldDescription"/>
+
+            <TableLayout
+                android:id="@+id/tips_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+                    <TextView
+                        android:text="@string/exclamation_point"
+                        style="@style/session.edit.TextCode"/>
+                    <TextView
+                        android:text="@string/inversion_of_the_given_condition_ie_do_not_exclude"
+                        style="@style/session.edit.FieldDescription"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:text="@string/star"
+                        style="@style/session.edit.TextCode"/>
+                    <TextView
+                        android:text="@string/single_level_wildcard_matches_within_a_directory_only"
+                        style="@style/session.edit.FieldDescription"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:text="@string/double_star"
+                        style="@style/session.edit.TextCode"/>
+                    <TextView
+                        android:text="@string/multi_level_wildcard_matches_multiple_directory_levels"
+                        style="@style/session.edit.FieldDescription"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:text="@string/double_slash"
+                        style="@style/session.edit.TextCode"/>
+                    <TextView
+                        android:text="@string/comment_when_used_at_the_start_of_a_line"
+                        style="@style/session.edit.FieldDescription"/>
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="end"
+                style="@style/mtrl.ButtonBar">
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@android:string/cancel"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+                <Button
+                    android:id="@+id/btn_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/help"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/enter_ignore_patterns_one_per_line"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_ignores"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="240dp"
-            style="@style/session.edit.EditTextMultiLine"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/quick_guide_to_supported_patterns"
-            style="@style/session.edit.FieldDescription"/>
-
-        <TableLayout
-            android:id="@+id/tips_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TableRow>
-                <TextView
-                    android:text="@string/exclamation_point"
-                    style="@style/session.edit.TextCode"/>
-                <TextView
-                    android:text="@string/inversion_of_the_given_condition_ie_do_not_exclude"
-                    style="@style/session.edit.FieldDescription"/>
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:text="@string/star"
-                    style="@style/session.edit.TextCode"/>
-                <TextView
-                    android:text="@string/single_level_wildcard_matches_within_a_directory_only"
-                    style="@style/session.edit.FieldDescription"/>
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:text="@string/double_star"
-                    style="@style/session.edit.TextCode"/>
-                <TextView
-                    android:text="@string/multi_level_wildcard_matches_multiple_directory_levels"
-                    style="@style/session.edit.FieldDescription"/>
-            </TableRow>
-
-            <TableRow>
-                <TextView
-                    android:text="@string/double_slash"
-                    style="@style/session.edit.TextCode"/>
-                <TextView
-                    android:text="@string/comment_when_used_at_the_start_of_a_line"
-                    style="@style/session.edit.FieldDescription"/>
-            </TableRow>
-        </TableLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:orientation="horizontal"
-            android:gravity="end"
-            style="@style/mtrl.ButtonBar">
-
-            <Button
-                android:id="@+id/btn_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@android:string/cancel"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-            <Button
-                android:id="@+id/btn_help"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/help"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-            <Button
-                android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </syncthing.android.ui.sessionsettings.EditIgnoresScreenView>

@@ -19,6 +19,8 @@ package syncthing.android.ui.sessionsettings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,8 +57,9 @@ import syncthing.api.model.FolderDeviceConfig;
 /**
  * Created by drew on 3/16/15.
  */
-public class EditDeviceScreenView extends ScrollView {
+public class EditDeviceScreenView extends CoordinatorLayout {
 
+    @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.edit_device_id) EditText editDeviceId;
     @InjectView(R.id.btn_scanqr) ImageButton btnScanQr;
     @InjectView(R.id.desc_device_id) TextView descDeviceId;
@@ -72,6 +76,7 @@ public class EditDeviceScreenView extends ScrollView {
     @InjectView(R.id.share_folders_container) ViewGroup shareFoldersContainer;
     @InjectView(R.id.btn_delete) Button btnDelete;
 
+    @Inject ToolbarOwner mToolbarOwner;
     @Inject EditDevicePresenter mPresenter;
 
     boolean isAdd;
@@ -94,7 +99,14 @@ public class EditDeviceScreenView extends ScrollView {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mToolbarOwner.attachToolbar(toolbar);
+        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
     }

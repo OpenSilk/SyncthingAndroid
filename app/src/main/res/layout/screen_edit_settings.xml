@@ -24,223 +24,247 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/session.edit.Container">
+        android:fitsSystemWindows="true"
+        android:theme="?appBarTheme">
 
-        <TextView
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/device_name"
-            style="@style/session.edit.FieldHeader"/>
-        
-        <EditText
-            android:id="@+id/edit_device_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/edit_protocol_listen_addr"
-            style="@style/session.edit.EditText"/>
+            android:layout_height="?actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
+            style="?toolbarStyle"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sync_protocol_listen_addresses"
-            style="@style/session.edit.FieldHeader"/>
+    </android.support.design.widget.AppBarLayout>
 
-        <EditText
-            android:id="@+id/edit_protocol_listen_addr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/edit_incoming_rate_limit"
-            style="@style/session.edit.EditText"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/incoming_rate_limit_kibs"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_incoming_rate_limit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/edit_outgoing_rate_limit"
-            style="@style/session.edit.EditText.Number"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/outgoing_rate_limit_kibs"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_outgoing_rate_limit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/edit_global_discovery_server"
-            style="@style/session.edit.EditText.Number"/>
-
-        <CheckBox
-            android:id="@+id/check_enable_upnp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/enable_upnp"
-            style="@style/session.edit.Checkbox"/>
-
-        <CheckBox
-            android:id="@+id/check_global_discovery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/global_discovery"
-            style="@style/session.edit.Checkbox"/>
-
-        <CheckBox
-            android:id="@+id/check_local_discovery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/local_discovery"
-            style="@style/session.edit.Checkbox"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/global_discovery_server"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_global_discovery_server"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/edit_gui_listen_addr"
-            style="@style/session.edit.EditText"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/gui_listen_addresses"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_gui_listen_addr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/edit_gui_user"
-            style="@style/session.edit.EditText"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/gui_authentication_user"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_gui_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/edit_gui_pass"
-            style="@style/session.edit.EditText"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/gui_authentication_password"
-            style="@style/session.edit.FieldHeader"/>
-
-        <EditText
-            android:id="@+id/edit_gui_pass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/session.edit.EditText.Password"/>
-
-        <CheckBox
-            android:id="@+id/check_use_https"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/use_https_for_gui"
-            style="@style/session.edit.Checkbox"/>
-
-        <CheckBox
-            android:id="@+id/check_start_browser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/start_browser"
-            style="@style/session.edit.Checkbox"/>
-
-        <CheckBox
-            android:id="@+id/check_usage_reporting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/anonymous_usage_reporting"
-            style="@style/session.edit.Checkbox"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/api_key"
-            style="@style/session.edit.FieldHeader"/>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            style="@style/session.edit.Container">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/device_name"
+                style="@style/session.edit.FieldHeader"/>
 
             <EditText
-                android:id="@+id/edit_apikey"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:id="@+id/edit_device_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_protocol_listen_addr"
                 style="@style/session.edit.EditText"/>
 
-            <Button
-                android:id="@+id/btn_copy_apikey"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/copy"
-                style="@style/mtrl.ButtonBarButton.Small"/>
+                android:text="@string/sync_protocol_listen_addresses"
+                style="@style/session.edit.FieldHeader"/>
 
-            <Button
-                android:id="@+id/btn_generate_apikey"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/edit_protocol_listen_addr"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/generate"
-                style="@style/mtrl.ButtonBarButton.Small"/>
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_incoming_rate_limit"
+                style="@style/session.edit.EditText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/incoming_rate_limit_kibs"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_incoming_rate_limit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_outgoing_rate_limit"
+                style="@style/session.edit.EditText.Number"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/outgoing_rate_limit_kibs"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_outgoing_rate_limit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_global_discovery_server"
+                style="@style/session.edit.EditText.Number"/>
+
+            <CheckBox
+                android:id="@+id/check_enable_upnp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enable_upnp"
+                style="@style/session.edit.Checkbox"/>
+
+            <CheckBox
+                android:id="@+id/check_global_discovery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/global_discovery"
+                style="@style/session.edit.Checkbox"/>
+
+            <CheckBox
+                android:id="@+id/check_local_discovery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/local_discovery"
+                style="@style/session.edit.Checkbox"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/global_discovery_server"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_global_discovery_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_gui_listen_addr"
+                style="@style/session.edit.EditText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gui_listen_addresses"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_gui_listen_addr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_gui_user"
+                style="@style/session.edit.EditText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gui_authentication_user"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_gui_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_gui_pass"
+                style="@style/session.edit.EditText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gui_authentication_password"
+                style="@style/session.edit.FieldHeader"/>
+
+            <EditText
+                android:id="@+id/edit_gui_pass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/session.edit.EditText.Password"/>
+
+            <CheckBox
+                android:id="@+id/check_use_https"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/use_https_for_gui"
+                style="@style/session.edit.Checkbox"/>
+
+            <CheckBox
+                android:id="@+id/check_start_browser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_browser"
+                style="@style/session.edit.Checkbox"/>
+
+            <CheckBox
+                android:id="@+id/check_usage_reporting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/anonymous_usage_reporting"
+                style="@style/session.edit.Checkbox"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/api_key"
+                style="@style/session.edit.FieldHeader"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edit_apikey"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    style="@style/session.edit.EditText"/>
+
+                <Button
+                    android:id="@+id/btn_copy_apikey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/copy"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+                <Button
+                    android:id="@+id/btn_generate_apikey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/generate"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="end"
+                style="@style/mtrl.ButtonBar">
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@android:string/cancel"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    style="@style/mtrl.ButtonBarButton.Small"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:orientation="horizontal"
-            android:gravity="end"
-            style="@style/mtrl.ButtonBar">
-
-            <Button
-                android:id="@+id/btn_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@android:string/cancel"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-            <Button
-                android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save"
-                style="@style/mtrl.ButtonBarButton.Small"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </syncthing.android.ui.sessionsettings.SettingsScreenView>

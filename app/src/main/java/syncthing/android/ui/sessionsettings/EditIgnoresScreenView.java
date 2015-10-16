@@ -18,6 +18,8 @@
 package syncthing.android.ui.sessionsettings;
 
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import javax.inject.Inject;
 
@@ -39,11 +42,13 @@ import syncthing.api.model.SystemInfo;
 /**
  * Created by drew on 3/23/15.
  */
-public class EditIgnoresScreenView extends ScrollView {
+public class EditIgnoresScreenView extends CoordinatorLayout {
 
+    @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.desc_filename) TextView descFilename;
     @InjectView(R.id.edit_ignores) EditText editIgnores;
 
+    @Inject ToolbarOwner mToolbarOwner;
     @Inject EditIgnoresPresenter mPresenter;
 
     public EditIgnoresScreenView(Context context, AttributeSet attrs) {
@@ -62,7 +67,14 @@ public class EditIgnoresScreenView extends ScrollView {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mToolbarOwner.attachToolbar(toolbar);
+        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
     }
