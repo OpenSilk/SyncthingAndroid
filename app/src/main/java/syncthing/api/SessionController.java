@@ -24,8 +24,6 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -65,8 +63,6 @@ import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import syncthing.api.model.DeviceStatsMap;
-import syncthing.api.model.event.DeviceRejected;
-import syncthing.api.model.event.Event;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.FolderStats;
@@ -80,6 +76,8 @@ import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
+import syncthing.api.model.event.DeviceRejected;
+import syncthing.api.model.event.Event;
 import syncthing.api.model.event.FolderCompletion;
 import syncthing.api.model.event.FolderRejected;
 import syncthing.api.model.event.FolderSummary;
@@ -292,17 +290,25 @@ public class SessionController implements EventMonitor.EventListener {
                 break;
             } case DEVICE_REJECTED: {
                 DeviceRejected dr = (DeviceRejected) e;
-                synchronized (deviceRejections) {
-                    deviceRejections.put(dr.data.device, dr);
+                if (getDevice(dr.data.device) == null) {
+                    synchronized (deviceRejections) {
+                        deviceRejections.put(dr.data.device, dr);
+                    }
+                    postChange(Change.DEVICE_REJECTED);
+                } else {
+                    Timber.w("Ignoring DEVICE_REJECTED for %s", dr.data.device);
                 }
-                postChange(Change.DEVICE_REJECTED);
                 break;
             } case FOLDER_REJECTED: {
                 FolderRejected fr = (FolderRejected) e;
-                synchronized (folderRejections) {
-                    folderRejections.put(fr.data.folder + "-" + fr.data.device, fr);
+                if (getFolder(fr.data.folder) == null) {
+                    synchronized (folderRejections) {
+                        folderRejections.put(fr.data.folder + "-" + fr.data.device, fr);
+                    }
+                    postChange(Change.FOLDER_REJECTED);
+                } else {
+                    Timber.w("Ignoring FOLDER_REJECTED for %s from %s", fr.data.folder, fr.data.device);
                 }
-                postChange(Change.FOLDER_REJECTED);
                 break;
             } case CONFIG_SAVED: {
                 refreshConfig();
@@ -637,7 +643,9 @@ public class SessionController implements EventMonitor.EventListener {
             devices.clear();
             devices.addAll(config.devices);
         }
+        int fold, fnew;
         synchronized (folderRejections) {
+            fold = folderRejections.size();
             //remove any stale rejections
             Iterator<Map.Entry<String, FolderRejected>> ii = folderRejections.entrySet().iterator();
             while (ii.hasNext()) {
@@ -645,15 +653,22 @@ public class SessionController implements EventMonitor.EventListener {
                     ii.remove();
                 }
             }
+            fnew = folderRejections.size();
         }
+        int dold, dnew;
         synchronized (deviceRejections) {
+            dold = deviceRejections.size();
             //remove any stale rejections
-            Iterator<Map.Entry<String, FolderRejected>> ii = folderRejections.entrySet().iterator();
+            Iterator<Map.Entry<String, DeviceRejected>> ii = deviceRejections.entrySet().iterator();
             while (ii.hasNext()) {
                 if (getDevice(ii.next().getKey()) != null) {
                     ii.remove();
                 }
             }
+            dnew = deviceRejections.size();
+        }
+        if (fold != fnew || dold != dnew) {
+            postChange(Change.NOTICE);
         }
         this.config.set(config);
     }
