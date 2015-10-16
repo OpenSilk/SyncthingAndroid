@@ -36,6 +36,7 @@ import rx.Subscription;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import syncthing.android.R;
+import syncthing.android.model.Credentials;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
@@ -53,6 +54,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     protected final Session session;
     protected final DialogPresenter dialogPresenter;
     protected final ActivityResultsController activityResultsController;
+    protected final Credentials credentials;
 
     protected Subscription saveSubscription;
 
@@ -70,6 +72,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
         this.folderId = config.folderId;
         this.deviceId = config.deviceId;
         this.isAdd = config.isAdd;
+        this.credentials = config.credentials;
     }
 
     @Override

@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.opensilk.common.core.app.PreferencesWrapper;
 import org.opensilk.common.core.dagger2.ForApplication;
@@ -81,13 +82,17 @@ public class AppSettings extends PreferencesWrapper {
         Set<Credentials> set = getSavedCredentials();
         List<Credentials> sorted = new ArrayList<>(set);
         Collections.sort(sorted, (lhs, rhs) -> lhs.alias.compareTo(rhs.alias));
-        //TODO remove
-        if (BuildConfig.DEBUG) {
-            for (Credentials creds : sorted) {
-                Timber.d(ReflectionToStringBuilder.reflectionToString(creds));
+        return sorted;
+    }
+
+    public @Nullable Credentials getSavedCredentials(String deviceId) {
+        List<Credentials> credentialses = getSavedCredentialsSorted();
+        for (Credentials credentials : credentialses) {
+            if (StringUtils.equalsIgnoreCase(credentials.id, deviceId)) {
+                return credentials;
             }
         }
-        return sorted;
+        return null;
     }
 
     public Set<Credentials> saveCredentials(Credentials creds) {

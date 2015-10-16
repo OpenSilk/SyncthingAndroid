@@ -25,8 +25,12 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogPresenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import syncthing.android.AppSettings;
+import syncthing.android.model.Credentials;
 import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.GUIConfig;
@@ -41,15 +45,18 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
     DeviceConfig thisDevice;
     OptionsConfig options;
     GUIConfig guiConfig;
+    final AppSettings appSettings;
 
     @Inject
     public SettingsPresenter(
             SessionManager manager,
             DialogPresenter dialogPresenter,
             ActivityResultsController activityResultContoller,
-            EditPresenterConfig config
+            EditPresenterConfig config,
+            AppSettings appSettings
     ) {
         super(manager, dialogPresenter, activityResultContoller, config);
+        this.appSettings = appSettings;
     }
 
     @Override
@@ -104,10 +111,22 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
     void saveConfig(DeviceConfig device, OptionsConfig options, GUIConfig guiConfig) {
         unsubscribe(saveSubscription);
         onSaveStart();
+        final String deviceName = device.name;
         saveSubscription = controller.editSettings(device, options, guiConfig,
                 this::onSavefailed,
-                this::onSaveSuccessfull
+                () -> {
+                    maybeUpdateAlias(deviceName);
+                    onSaveSuccessfull();
+                }
         );
+    }
+
+    void maybeUpdateAlias(String deviceName) {
+        if (!StringUtils.isEmpty(deviceName)
+                && !StringUtils.equalsIgnoreCase(credentials.alias, deviceName)) {
+            appSettings.saveCredentials(new Credentials(deviceName, credentials.id,
+                    credentials.url, credentials.apiKey, credentials.caCert));
+        }
     }
 
 }
