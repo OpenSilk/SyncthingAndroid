@@ -19,6 +19,8 @@ package syncthing.android.service;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 
 import javax.inject.Singleton;
 
@@ -41,6 +43,8 @@ import syncthing.api.SessionManagerComponent;
 public interface ServiceComponent extends SessionManagerComponent {
     NotificationManager notificationManager();
     AlarmManager alarmManager();
+    WifiManager wifiManager();
+    ConnectivityManager connectivityManager();
     ServiceSettings settings();
     void inject(ServiceSettingsProvider provider);
 }

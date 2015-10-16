@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -82,9 +84,13 @@ public class SyncthingInstance extends MortarService {
     @Inject NotificationHelper mNotificationHelper;
     @Inject AlarmManagerHelper mAlarmManagerHelper;
     @Inject SessionManager mSessionManager;
+    @Inject WifiManager mWifiManager;
+    @Inject ConnectivityManager mConnectivityManager;
 
     SyncthingThread mSyncthingThread;
     SyncthingInotifyThread mSyncthingInotifyThread;
+
+    WifiManager.WifiLock mWifiLock;
 
     ContentObserver initializedObserver;
     Session mSession;
@@ -128,6 +134,7 @@ public class SyncthingInstance extends MortarService {
             getContentResolver().unregisterContentObserver(initializedObserver);
         }
         releaseSession();
+        releaseWifiLock();
     }
 
     @Override
@@ -203,6 +210,11 @@ public class SyncthingInstance extends MortarService {
                 } else /*always run*/ {
                     mAlarmManagerHelper.cancelDelayedShutdown();
                 }
+                if (isConnectedToWifi()) {
+                    acquireWifiLock();
+                } else {
+                    releaseWifiLock();
+                }
             } else {
                 ensureSyncthingKilled();
                 //dont shutdown right away in case circumstances change
@@ -210,6 +222,7 @@ public class SyncthingInstance extends MortarService {
                 if (mSettings.isOnSchedule()) {
                     mAlarmManagerHelper.scheduleWakeup();
                 }
+                releaseWifiLock();
             }
         }
         updateForegroundState();
@@ -378,6 +391,23 @@ public class SyncthingInstance extends MortarService {
 
     public ServiceSettings getSettings() {
         return mSettings;
+    }
+
+    boolean isConnectedToWifi() {
+        return mConnectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    void acquireWifiLock() {
+        releaseWifiLock();
+        mWifiLock = mWifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, "SyncthingInstance");
+        mWifiLock.acquire();
+    }
+
+    void releaseWifiLock() {
+        if (mWifiLock != null && mWifiLock.isHeld()) {
+            mWifiLock.release();
+            mWifiLock = null;
+        }
     }
 
     /*
