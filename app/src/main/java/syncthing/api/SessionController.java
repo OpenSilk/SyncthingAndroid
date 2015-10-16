@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -72,6 +73,7 @@ import syncthing.api.model.GuiError;
 import syncthing.api.model.GuiErrors;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
+import syncthing.api.model.Ok;
 import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
@@ -159,8 +161,9 @@ public class SessionController implements EventMonitor.EventListener {
     final Map<String, DeviceRejected> deviceRejections = new LinkedHashMap<>();
     //synchronize on self
     final Map<String, FolderRejected> folderRejections = new LinkedHashMap<>();
-    //synchronize on self
     final AtomicReference<GuiErrors> errorsList = new AtomicReference<>();
+    //synchronize on self
+    final WeakHashMap<String, Subscription> activeSubscriptions = new WeakHashMap<>();
 
     //Following synchronized by lock
     private final Object lock = new Object();
@@ -170,7 +173,6 @@ public class SessionController implements EventMonitor.EventListener {
     boolean running;
     Subscription onlineSub;
     Subscription subspendSubscription;
-    Subscription onLocalIndexUpdatedSubscription;
 
     final Scheduler subscribeOn;
     final SyncthingApi restApi;
@@ -216,23 +218,18 @@ public class SessionController implements EventMonitor.EventListener {
         }
     }
 
-    //Called by main thread, must push to background to stop event monitor
     /*package*/ void kill() {
         final Scheduler.Worker worker = subscribeOn.createWorker();
-        worker.schedule(new Action0() {
-            @Override
-            public void call() {
-                synchronized (lock) {
-                    if (running) {
-                        if (subspendSubscription != null) {
-                            subspendSubscription.unsubscribe();
-                        }
-                        eventMonitor.stop();
-                        running = false;
-                    }
+        worker.schedule(() -> {
+            unsubscribeActiveSubscriptions();
+            synchronized (lock) {
+                if (subspendSubscription != null) {
+                    subspendSubscription.unsubscribe();
                 }
-                worker.unsubscribe();
+                eventMonitor.stop();
+                running = false;
             }
+            worker.unsubscribe();
         });
     }
 
@@ -440,16 +437,24 @@ public class SessionController implements EventMonitor.EventListener {
         changeBus.onNext(event);
     }
 
+    static final String refreshSystemKey = "refreshSystem";
     public void refreshSystem() {
+        if (hasActiveSubscription(refreshSystemKey)) return;
         Subscription s = restApi.system()
                 .subscribe(
                         this::updateSystemInfo,
-                        this::logException,
-                        () -> postChange(Change.SYSTEM)
+                        (t) -> logException(t, refreshSystemKey),
+                        () -> {
+                            postChange(Change.SYSTEM);
+                            removeSubscription(refreshSystemKey);
+                        }
                 );
+        addSubscription(refreshSystemKey, s);
     }
 
+    static final String refreshConfigKey = "refreshConfig";
     public void refreshConfig() {
+        if (hasActiveSubscription(refreshConfigKey)) return;
         Subscription s = Observable.merge(
                 restApi.config(),
                 restApi.configStatus()
@@ -460,39 +465,61 @@ public class SessionController implements EventMonitor.EventListener {
                     updateConfig((Config) map.get(Config.class));
                     updateConfigStats((ConfigStats) map.get(ConfigStats.class));
                 },
-                this::logException,
-                () -> postChange(Change.CONFIG_UPDATE)
+                (t) -> logException(t, refreshConfigKey),
+                () -> {
+                    postChange(Change.CONFIG_UPDATE);
+                    removeSubscription(refreshConfigKey);
+                }
         );
+        addSubscription(refreshConfigKey, s);
     }
 
     public void refreshConnections() {
         refreshConnections(false);
     }
 
+    static final String refreshConnectionsKey = "refreshConnections";
     public void refreshConnections(boolean update) {
+        if (hasActiveSubscription(refreshConnectionsKey)) return;
         Subscription s = restApi.connections()
                 .subscribe(
                         this::updateConnections,
-                        this::logException,
-                        () -> postChange(update ? Change.CONNECTIONS_UPDATE : Change.CONNECTIONS_CHANGE));
+                        (t) -> logException(t, refreshConnectionsKey),
+                        () -> {
+                            postChange(update ? Change.CONNECTIONS_UPDATE : Change.CONNECTIONS_CHANGE);
+                            removeSubscription(refreshConnectionsKey);
+                        });
+        addSubscription(refreshConnectionsKey, s);
     }
 
+    static final String refreshDeviceStatsKey = "refreshDeviceStats";
     public void refreshDeviceStats() {
+        if (hasActiveSubscription(refreshDeviceStatsKey)) return;
         Subscription s = restApi.deviceStats()
                 .subscribe(
                         this::setDeviceStats,
-                        this::logException,
-                        () -> postChange(Change.DEVICE_STATS)
+                        (t) -> logException(t, refreshDeviceStatsKey),
+                        () -> {
+                            postChange(Change.DEVICE_STATS);
+                            removeSubscription(refreshDeviceStatsKey);
+                        }
                 );
+        addSubscription(refreshDeviceStatsKey, s);
     }
 
+    static final String refreshFolderStatsKey = "refreshFolderStats";
     public void refreshFolderStats() {
+        if (hasActiveSubscription(refreshFolderStatsKey)) return;
         Subscription s = restApi.folderStats()
                 .subscribe(
                         this::setFolderStats,
-                        this::logException,
-                        () -> postChange(Change.FOLDER_STATS)
+                        (t) -> logException(t, refreshFolderStatsKey),
+                        () -> {
+                            postChange(Change.FOLDER_STATS);
+                            removeSubscription(refreshFolderStatsKey);
+                        }
                 );
+        addSubscription(refreshFolderStatsKey, s);
     }
 
     public void refreshVersion() {
@@ -506,17 +533,22 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     public void refreshFolder(String name) {
-        Timber.d("refreshFolder(%s)", name);
+        final String key = "refreshFolder+"+name;
+        if (hasActiveSubscription(key)) return;
         Subscription s = restApi.model(name)
                 .subscribe(
                         model -> updateModel(name, model),
-                        this::logException,
-                        () -> postChange(Change.FOLDER_SUMMARY)
+                        (t) -> logException(t, key),
+                        () -> {
+                            postChange(Change.FOLDER_SUMMARY);
+                            removeSubscription(key);
+                        }
                 );
+        addSubscription(key, s);
     }
 
+    //TODO how to make key?
     public void refreshFolders(Collection<String> names) {
-        Timber.d("refreshFolders()");
         if (names.isEmpty()) {
             return;
         }
@@ -546,7 +578,7 @@ public class SessionController implements EventMonitor.EventListener {
                 );
     }
 
-    //Device,Folder pair
+    //Wants Device,Folder pair
     public void refreshCompletions(Collection<Pair<String, String>> refreshers) {
         if (refreshers.isEmpty()) {
             return;
@@ -570,19 +602,16 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
 
+    static final String localIndexUpdatedKey = "localIndexUpdated";
     void onLocalIndexUpdated(Event e) {
-        synchronized (lock) {
-            if (onLocalIndexUpdatedSubscription != null &&
-                    !onLocalIndexUpdatedSubscription.isUnsubscribed()) {
-                Timber.i("Ignoring LocalIndexUpdate... refresh in progress");
-                return;
-            }
-            onLocalIndexUpdatedSubscription = Observable.timer(500, TimeUnit.MILLISECONDS, subscribeOn)
-                    .subscribe(
-                            ii -> refreshFolderStats(),
-                            this::logException
-                    );
-        }
+        if (hasActiveSubscription(localIndexUpdatedKey)) return;
+        Subscription s = Observable.timer(500, TimeUnit.MILLISECONDS, subscribeOn)
+                .subscribe(
+                        ii -> refreshFolderStats(),
+                        (t) -> logException(t, localIndexUpdatedKey),
+                        () -> removeSubscription(localIndexUpdatedKey)
+                );
+        addSubscription(localIndexUpdatedKey, s);
     }
 
     public boolean isOnline() {
@@ -865,8 +894,7 @@ public class SessionController implements EventMonitor.EventListener {
         }
     }
 
-    @Nullable
-    public Map<String, Integer> getCompletionStats(String deviceId) {
+    public @Nullable Map<String, Integer> getCompletionStats(String deviceId) {
         synchronized (completion) {
             return Collections.unmodifiableMap(completion.get(deviceId));
         }
@@ -898,24 +926,34 @@ public class SessionController implements EventMonitor.EventListener {
         postChange(Change.FOLDER_REJECTED);
     }
 
+    static final String refreshErrorsKey = "refreshErrors";
     public void refreshErrors() {
+        if (hasActiveSubscription(refreshErrorsKey)) return;
         Subscription s = restApi.errors()
                 .subscribe(
                         errorsList::set,
-                        this::logException,
-                        () -> postChange(Change.NOTICE)
+                        (t) -> logException(t, refreshErrorsKey),
+                        () -> {
+                            postChange(Change.NOTICE);
+                            removeSubscription(refreshErrorsKey);
+                        }
                 );
+        addSubscription(refreshErrorsKey, s);
     }
 
+    static final String clearErrorsKey = "clearErrors";
     public void clearErrors() {
-        restApi.clearErrors().subscribe(
+        if (hasActiveSubscription(clearErrorsKey)) return;
+        Subscription s = restApi.clearErrors().subscribe(
                 v -> {
                 },
-                this::logException,
+                (t) -> logException(t, clearErrorsKey),
                 () -> {
                     errorsList.set(null);
+                    removeSubscription(clearErrorsKey);
                     postChange(Change.NOTICE);
                 });
+        addSubscription(clearErrorsKey, s);
     }
 
     @Nullable
@@ -970,8 +1008,8 @@ public class SessionController implements EventMonitor.EventListener {
                 );
     }
 
-    public void shareFolder(String name, String devId, Action1<Throwable> onError, Action0 onComplete) {
-        restApi.config().zipWith(restApi.deviceId(devId),
+    public Subscription shareFolder(String name, String devId, Action1<Throwable> onError, Action0 onComplete) {
+        return restApi.config().zipWith(restApi.deviceId(devId),
                 (config, deviceId) -> {
                     if (deviceId.id == null) {
                         throw new NullPointerException(deviceId.error);
@@ -1092,8 +1130,8 @@ public class SessionController implements EventMonitor.EventListener {
                 );
     }
 
-    public void ignoreDevice(String id, Action1<Throwable> onError, Action0 onComplete) {
-        restApi.deviceId(id)
+    public Subscription ignoreDevice(String id, Action1<Throwable> onError, Action0 onComplete) {
+        return restApi.deviceId(id)
                 .zipWith(restApi.config(), (deviceId, config) -> {
                     if (deviceId.id == null) {
                         throw new NullPointerException(deviceId.error);
@@ -1125,34 +1163,47 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {},
+                        v -> {
+                        },
                         onError,
                         onComplete
                 );
     }
 
     public void restart() {
-        synchronized (lock) {
-            restarting = true;
-            eventMonitor.resetCounter();
-            updateState(false);
-        }
-        restApi.restart().subscribe(v -> {
-        }, this::logException);
+        final Scheduler.Worker worker = subscribeOn.createWorker();
+        worker.schedule(() -> {
+            synchronized (lock) {
+                restarting = true;
+                eventMonitor.resetCounter();
+                updateState(false);
+            }
+            unsubscribeActiveSubscriptions();
+            try {
+                Ok ok= restApi.restart().toBlocking().first();
+            } catch (RuntimeException e) {
+                logException(e);
+            } finally {
+                worker.unsubscribe();
+            }
+        });
     }
 
     public void shutdown() {
         //push to worker thread so we can stop event monitor
         final Scheduler.Worker worker = subscribeOn.createWorker();
-        worker.schedule(new Action0() {
-            @Override
-            public void call() {
-                synchronized (lock) {
-                    restarting = false;
-                    eventMonitor.stop();
-                    updateState(false);
-                }
-                restApi.shutdown().subscribe(v -> {}, SessionController.this::logException);
+        worker.schedule(() -> {
+            synchronized (lock) {
+                restarting = false;
+                eventMonitor.stop();
+                updateState(false);
+            }
+            unsubscribeActiveSubscriptions();
+            try {
+                Ok ok = restApi.shutdown().toBlocking().first();
+            } catch (RuntimeException e) {
+                logException(e);
+            } finally {
                 worker.unsubscribe();
             }
         });
@@ -1184,7 +1235,8 @@ public class SessionController implements EventMonitor.EventListener {
         return restApi.override(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (v) -> {},
+                        (v) -> {
+                        },
                         onError
                 );
     }
@@ -1220,6 +1272,38 @@ public class SessionController implements EventMonitor.EventListener {
 
     void logException(Throwable e) {
         Timber.e("%s: %s", e.getClass().getSimpleName(), e.getMessage(), e);
+    }
+
+    void logException(Throwable e, String key) {
+        logException(e);
+        removeSubscription(key);
+    }
+
+    void addSubscription(String key, Subscription subscription) {
+        synchronized (activeSubscriptions) {
+            activeSubscriptions.put(key, subscription);
+        }
+    }
+
+    void removeSubscription(String key) {
+        synchronized (activeSubscriptions) {
+            activeSubscriptions.remove(key);
+        }
+    }
+
+    boolean hasActiveSubscription(String key) {
+        synchronized (activeSubscriptions) {
+            return activeSubscriptions.containsKey(key);
+        }
+    }
+
+    void unsubscribeActiveSubscriptions() {
+        synchronized (activeSubscriptions) {
+            for (Subscription s : activeSubscriptions.values()) {
+                if (s != null) s.unsubscribe();
+            }
+            activeSubscriptions.clear();
+        }
     }
 
     public Subscription subscribeChanges(Action1<ChangeEvent> onNext, Change... changes) {
