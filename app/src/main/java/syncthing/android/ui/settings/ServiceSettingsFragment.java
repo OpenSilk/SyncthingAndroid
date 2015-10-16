@@ -268,7 +268,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
             mReceiverHelper.setConnectivityReceiverEnabled(false);
         } else {
             //Dont care if not allowed to run in background
-            mReceiverHelper.setBootReceiverEnabled(!ServiceSettings.WHEN_OPEN.equals(runWhen.getValue()));
+            mReceiverHelper.setBootReceiverEnabled(true);
             //dont care if we can run whenever
             mReceiverHelper.setChargingReceiverEnabled(onlyCharging.isChecked());
             mReceiverHelper.setConnectivityReceiverEnabled(true);

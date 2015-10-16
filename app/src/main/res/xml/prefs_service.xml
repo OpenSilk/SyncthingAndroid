@@ -23,7 +23,7 @@
         android:title="@string/when_to_run"
         android:entries="@array/when_to_run_entries"
         android:entryValues="@array/when_to_run_values"
-        android:defaultValue="when_open"/>
+        android:defaultValue="always"/>
 
     <PreferenceCategory
         android:title="@string/overrides">
@@ -53,7 +53,7 @@
 
     <PreferenceCategory
         android:key="cat_between"
-        android:title="@string/run_between_times">
+        android:title="@string/scheduled_period">
 
         <syncthing.android.ui.settings.TimePreference
             android:key="scheduled_start"

@@ -60,7 +60,6 @@ public class ServiceSettings {
     public static final String INITIALISED = "local_instance_initialised";
 
     public static final String RUN_WHEN = "run_when";
-    public static final String WHEN_OPEN = "when_open";
     public static final String ALWAYS = "always";
 
     public static final String SCHEDULED = "scheduled";
@@ -245,9 +244,6 @@ public class ServiceSettings {
             return false;
         }
         switch (runWhen()) {
-            case WHEN_OPEN:
-                Timber.d("isAllowedToRun(): nope!");
-                return false;
             case SCHEDULED:
                 long start = SyncthingUtils.parseTime(getScheduledStartTime());
                 long end = SyncthingUtils.parseTime(getScheduledEndTime());

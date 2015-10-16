@@ -71,11 +71,11 @@
     <string name="local_instance_disabled">Local Syncthing instance disabled</string>
     <string name="local_instance_enabled">Local Syncthing instance enabled</string>
 
-    <string name="when_to_run">When to run</string>
-    <string name="run_when_app_is_open">When app is open</string>
-    <string name="run_always">Always run</string>
+    <string name="when_to_run">Allow running in background</string>
+    <string name="run_always">Always</string>
 
-    <string name="run_between_times">Between scheduled times</string>
+    <string name="run_between_times">Only during scheduled period</string>
+    <string name="scheduled_period">Schedule period</string>
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
 
