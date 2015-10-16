@@ -29,6 +29,7 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="toolbarStyle">@style/Toolbar.Dark.WhiteOverflow</item>
+        <item name="android:windowSoftInputMode">stateHidden|adjustPan</item>
     </style>
 
     <style name="SettingsTheme" parent="android:Theme.DeviceDefault.Light">
