@@ -7,6 +7,7 @@ Secondary objectives include:
 * Showcase real world usage of:
   * [Mortar](https://github.com/square/mortar) + [Dagger2](https://github.com/google/dagger)
   * [RxJava](https://github.com/ReactiveX/RxJava) + [Retrolamba](https://github.com/orfjackal/retrolambda)
+  * The new [Data Binding Library](https://developer.android.com/tools/data-binding/guide.html)
 * CGO support for Syncthing on android.
 
 ###Custom Settings
@@ -50,9 +51,9 @@ export ANDROID_HOME=/opt/android/sdk
 
 ```bash
 # Create standalone ARM toolchain (x86 not working yet)
-export NDK_ROOT=/opt/android/ndk/toolchains
-export TOOLCHAIN_ROOT=$NDK_ROOT
-./android-ndk-r10d/build/tools/make-standalone-toolchain.sh --platform=android-21 --install-dir=$NDK_ROOT/arm --arch=arm
+# The build scripts expect TOOLCHAIN_ROOT set as defined here
+export TOOLCHAIN_ROOT=/opt/android/ndk/toolchains
+./android-ndk-r10d/build/tools/make-standalone-toolchain.sh --platform=android-19 --install-dir=$TOOLCHAIN_ROOT/arm --arch=arm
 ```
 
 * Building Syncthing
