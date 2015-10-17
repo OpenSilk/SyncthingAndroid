@@ -73,6 +73,10 @@ mkdir -p "$GOROOT_FINAL"
 
 pushd golang/go/src
 
+if [ $CGO_ENABLED -eq 0 ]; then
+    git am -3 ../../../patches/golang/netgohacks/*
+fi
+
 set +e
 ./clean.bash
 rm -r ../bin

@@ -76,6 +76,7 @@ public class SyncthingThread extends Thread {
         try {
             ProcessBuilder b = new ProcessBuilder();
             b.environment().put("HOME", Environment.getExternalStorageDirectory().getAbsolutePath());
+            b.environment().put("GODEBUG", "netdns=2");
             if (generate) {
                 b.command(SyncthingUtils.getSyncthingBinaryPath(mService),
                         "-home", SyncthingUtils.getConfigDirectory(mService).getAbsolutePath(),
