@@ -249,6 +249,7 @@ public class LauncherActivity extends SyncthingActivity implements
                 }
                 Intent intent = item.getIntent();
                 if (intent != null && intent.hasExtra(ManageActivity.EXTRA_CREDENTIALS)) {
+                    clearCheckedMenuItems();
                     item.setChecked(true);
                     closeDrawers();
 
@@ -288,6 +289,13 @@ public class LauncherActivity extends SyncthingActivity implements
                 //???
                 Timber.w("Ignoring goToCurrent");
             }
+        }
+    }
+
+    void clearCheckedMenuItems() {
+        Menu menu = mNavigation.getMenu();
+        for (int ii=0;ii<menu.size(); ii++) {
+            menu.getItem(ii).setChecked(false);
         }
     }
 
