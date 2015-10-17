@@ -17,7 +17,8 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/nav_devices">
+    <group android:id="@+id/nav_devices"
+        android:checkableBehavior="single">
         <!--devices added here-->
     </group>
     <item
