@@ -17,13 +17,8 @@
 
 package syncthing.android.ui.login;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-
 import org.opensilk.common.ui.mortar.Screen;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
-
-import syncthing.android.R;
 
 /**
  * Created by drew on 3/15/15.
@@ -38,12 +33,6 @@ public class ManageFragment extends MortarFragment {
     @Override
     protected Screen newScreen() {
         return new ManageScreen();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.manage_devices);
     }
 
 }
