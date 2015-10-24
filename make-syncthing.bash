@@ -2,6 +2,8 @@
 
 set -e
 
+RESET=1
+
 if [ -z "$TOOLCHAIN_ROOT" ]; then
     TOOLCHAIN_ROOT=/opt/android/ndk/toolchains/
 fi
@@ -45,7 +47,9 @@ if [ ! -x ${GOROOT}/bin/${GOOS}_${GOARCH}/go ]; then
     exit 1
 fi
 
-git submodule update --init syncthing/src/github.com/syncthing/syncthing
+if [ $RESET -eq 1 ]; then
+    git submodule update --init syncthing/src/github.com/syncthing/syncthing
+fi
 
 pushd syncthing/src/github.com/syncthing/syncthing
 
@@ -77,9 +81,15 @@ chmod 644 ${ASSETSDIR}/syncthing.${GOARCH}
 
 popd
 
+if [ $RESET -eq 1 ]; then
+    git submodule update --init syncthing/src/github.com/syncthing/syncthing
+fi
+
 #Build syncthing-inotify
 
-git submodule update --init syncthing/src/github.com/syncthing/syncthing-inotify
+if [ $RESET -eq 1 ]; then
+    git submodule update --init syncthing/src/github.com/syncthing/syncthing-inotify
+fi
 
 pushd syncthing/src/github.com/syncthing/syncthing-inotify
 
@@ -97,5 +107,11 @@ fi
 
 mv syncthing-inotify ${ASSETSDIR}/syncthing-inotify.${GOARCH}
 chmod 644 ${ASSETSDIR}/syncthing-inotify.${GOARCH}
+
+popd
+
+if [ $RESET -eq 1 ]; then
+    git submodule update --init syncthing/src/github.com/syncthing/syncthing-inotify
+fi
 
 echo "Build Complete"

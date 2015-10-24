@@ -2,6 +2,8 @@
 
 set -e
 
+RESET=1
+
 MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ -z "$TOOLCHAIN_ROOT" ]; then
@@ -36,8 +38,10 @@ case "$1" in
 esac
 
 #TODO figure out why --depth 1 never works right
-git submodule update --init golang/go1.4
-git submodule update --init golang/go
+if [ $RESET -eq 1 ]; then
+    git submodule update --init golang/go1.4
+    git submodule update --init golang/go
+fi
 
 unset GOPATH
 
@@ -53,7 +57,7 @@ rm -r ../pkg
 set -e
 ./make.bash
 
-if [ -e ./make.bash ]; then
+if [[ RESET -eq 1 && -e ./make.bash ]]; then
     git clean -f
 fi
 
@@ -87,6 +91,15 @@ cp -a ../bin "${GOROOT_FINAL}"/
 cp -a ../pkg "${GOROOT_FINAL}"/
 cp -a ../src "${GOROOT_FINAL}"/
 
+if [[ $RESET -eq 1 && -e ./make.bash ]]; then
+    git clean -f
+fi
+
 popd
+
+if [ $RESET -eq 1 ]; then
+    git submodule update --init golang/go1.4
+    git submodule update --init golang/go
+fi
 
 echo "Complete"
