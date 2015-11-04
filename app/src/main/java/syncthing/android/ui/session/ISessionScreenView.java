@@ -31,8 +31,8 @@ public interface ISessionScreenView {
     void refreshFolders(List<FolderCard> folders);
     void refreshThisDevice(MyDeviceCard myDevice);
     void refreshDevices(List<DeviceCard> devices);
-    void setListEmpty(boolean show, boolean animate);
-    void setListShown(boolean show, boolean animate);
-    void setLoading(boolean loading);
+    void showEmpty(boolean animate);
+    void showList(boolean animate);
+    void showLoading();
     void updateToolbarState(boolean show);
 }

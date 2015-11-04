@@ -18,12 +18,7 @@
 package syncthing.android.ui;
 
 import org.opensilk.common.core.dagger2.ActivityScope;
-import org.opensilk.common.ui.mortar.ActivityResultsController;
-import org.opensilk.common.ui.mortar.ActivityResultsOwnerModule;
 import org.opensilk.common.ui.mortar.DrawerOwner;
-import org.opensilk.common.ui.mortar.PauseAndResumeModule;
-import org.opensilk.common.ui.mortar.ToolbarOwner;
-import org.opensilk.common.ui.mortarfragment.MortarFragmentActivityComponent;
 
 import rx.functions.Func1;
 import syncthing.android.AppComponent;

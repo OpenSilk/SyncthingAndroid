@@ -24,7 +24,7 @@ import android.util.AttributeSet;
 
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
-import org.opensilk.common.ui.recycler.RecyclerListFrame;
+import org.opensilk.common.ui.recycler.RecyclerListCoordinator;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ import syncthing.android.ui.common.CanExpand;
 /**
  * Created by drew on 3/6/15.
  */
-public class SessionScreenView extends RecyclerListFrame implements ISessionScreenView {
+public class SessionScreenView extends RecyclerListCoordinator implements ISessionScreenView {
 
     @Inject SessionPresenter mPresenter;
     @Inject ToolbarOwner mToolbarOwner;

@@ -170,13 +170,12 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         super.onLoad(savedInstanceState);
         if (controller.isOnline()) {
             initializeView();
-            getView().setListEmpty(false, false);
-            getView().setListShown(true, false);
+            getView().showList(false);
             dismissRestartingDialog();
         } else if (controller.isRestarting()) {
             showRestartingDialog();
         } else /*offline*/ {
-            getView().setLoading(true);
+            getView().showLoading();
         }
     }
 
@@ -192,8 +191,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             case ONLINE:
                 if (hasView()) {
                     initializeView();
-                    getView().setListEmpty(false, true);
-                    getView().setListShown(true, true);
+                    getView().showList(true);
                     dismissRestartingDialog();
                     getView().updateToolbarState(true);
                 }
@@ -203,7 +201,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                     if (controller.isRestarting()) {
                         showRestartingDialog();
                     } else {
-                        getView().setListShown(false, true);
+                        getView().showEmpty(true);
                     }
                     getView().updateToolbarState(false);
                 }
@@ -211,7 +209,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             case FAILURE:
                 if (hasView()) {
                     //controller has given up
-                    getView().setListEmpty(true, true);
+                    getView().showEmpty(true);
                     dismissRestartingDialog();
                 }
                 break;
@@ -585,8 +583,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         if (!controller.isRunning()) {
             controller.init();
             if (hasView()) {
-                getView().setListEmpty(false, true);
-                getView().setLoading(true);
+                getView().showLoading();
             }
         }
     }

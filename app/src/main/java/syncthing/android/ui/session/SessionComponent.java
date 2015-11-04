@@ -59,6 +59,5 @@ public interface SessionComponent {
     void inject(NotifCardRejFolderView view);
     void inject(NotifCardRestartView view);
     void inject(SessionScreenView view);
-    void inject(SessionScreenViewLand view);
     void inject(ShowIdDialogView view);
 }
