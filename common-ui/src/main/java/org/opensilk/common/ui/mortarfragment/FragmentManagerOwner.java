@@ -52,6 +52,7 @@ public class FragmentManagerOwner extends Presenter<FragmentManagerOwnerActivity
         return BundleService.getBundleService(view.getScope());
     }
 
+    @SuppressLint("CommitTransaction")
     public FragmentTransaction newTrasaction() {
         if (hasView()) {
             return getView().getSupportFragmentManager().beginTransaction();
@@ -62,6 +63,16 @@ public class FragmentManagerOwner extends Presenter<FragmentManagerOwnerActivity
     public void showDialog(MortarDialogFragment f) {
         if (hasView()) {
             f.show(getView().getSupportFragmentManager(), f.getScopeName());
+        }
+    }
+
+    public void dismissDialog(String scopeName) {
+        if (hasView()) {
+            MortarDialogFragment f = (MortarDialogFragment) getView()
+                    .getSupportFragmentManager().findFragmentByTag(scopeName);
+            if (f != null) {
+                f.dismiss();
+            }
         }
     }
 

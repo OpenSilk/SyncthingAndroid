@@ -17,13 +17,12 @@
 
 package org.opensilk.common.ui.mortar;
 
-import android.app.Dialog;
-import android.content.Context;
-
-import rx.functions.Func1;
+import org.opensilk.common.core.mortar.HasScope;
 
 /**
  * Created by drew on 10/15/15.
  */
-public interface DialogFactory extends Func1<Context, Dialog> {
+public interface DialogPresenterActivity extends HasScope {
+    void showDialog(DialogFactory factory);
+    void dismissDialog();
 }

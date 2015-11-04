@@ -22,18 +22,8 @@
         <attr name="android:foregroundInsidePadding" />
         <attr name="android:foregroundGravity" />
     </declare-styleable>
-    <declare-styleable name="SlidingTabLayout">
-        <attr name="invertedTabBar" format="boolean"/>
-    </declare-styleable>
     <declare-styleable name="TintImageButton">
         <attr name="tibTint" format="color"/>
-    </declare-styleable>
-    <declare-styleable name="FloatingActionButton">
-        <attr name="fabColor" format="enum">
-            <enum name="accent" value="0"/>
-            <enum name="white" value="1"/>
-            <enum name="black" value="2"/>
-        </attr>
     </declare-styleable>
     <declare-styleable name="AppBar">
         <attr name="appBarTheme" format="reference"/>

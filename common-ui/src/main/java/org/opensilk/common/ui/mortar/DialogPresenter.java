@@ -17,8 +17,6 @@
 
 package org.opensilk.common.ui.mortar;
 
-import android.app.Dialog;
-
 import org.opensilk.common.core.dagger2.ActivityScope;
 
 import javax.inject.Inject;
@@ -56,4 +54,5 @@ public class DialogPresenter extends Presenter<DialogPresenterActivity> {
             getView().dismissDialog();
         }
     }
+
 }

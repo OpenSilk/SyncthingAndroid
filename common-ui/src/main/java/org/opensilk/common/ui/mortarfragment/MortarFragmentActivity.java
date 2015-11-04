@@ -17,34 +17,37 @@
 package org.opensilk.common.ui.mortarfragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import org.opensilk.common.core.mortar.MortarActivity;
 import org.opensilk.common.ui.mortar.LayoutCreator;
-import org.opensilk.common.ui.mortar.PauseAndResumeActivity;
-import org.opensilk.common.ui.mortar.PauseAndResumePresenter;
+import org.opensilk.common.ui.mortar.Lifecycle;
+import org.opensilk.common.ui.mortar.LifecycleService;
 import org.opensilk.common.ui.mortar.ScreenScoper;
 
 import javax.inject.Inject;
 
 import mortar.MortarScope;
-import timber.log.Timber;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Created by drew on 3/10/15.
  */
 public abstract class MortarFragmentActivity extends MortarActivity
-        implements FragmentManagerOwnerActivity, PauseAndResumeActivity {
+        implements FragmentManagerOwnerActivity {
 
     @Inject protected FragmentManagerOwner mFragmentManagerOwner;
-    @Inject protected PauseAndResumePresenter mPausesAndResumesPresenter;
+
+    private final BehaviorSubject<Lifecycle> mLifecycleSubject = BehaviorSubject.create();
 
     protected abstract void performInjection();
 
     @Override
     protected void onPreCreateScope(MortarScope.Builder buidler) {
+        super.onPreCreateScope(buidler);
         buidler.withService(ScreenScoper.SERVICE_NAME, new ScreenScoper())
-                .withService(LayoutCreator.SERVICE_NAME, new LayoutCreator());
+                .withService(LayoutCreator.SERVICE_NAME, new LayoutCreator())
+                .withService(LifecycleService.LIFECYCLE_SERVICE, mLifecycleSubject.asObservable())
+        ;
     }
 
     @Override
@@ -52,26 +55,26 @@ public abstract class MortarFragmentActivity extends MortarActivity
         super.onCreate(savedInstanceState);
         performInjection();
         mFragmentManagerOwner.takeView(this);
-        mPausesAndResumesPresenter.takeView(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mFragmentManagerOwner.takeView(this);
-        mPausesAndResumesPresenter.activityResumed();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mFragmentManagerOwner.takeView(this);
+        mLifecycleSubject.onNext(Lifecycle.START);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mFragmentManagerOwner.takeView(this);
+        mLifecycleSubject.onNext(Lifecycle.RESUME);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mPausesAndResumesPresenter.activityPaused();
+        mLifecycleSubject.onNext(Lifecycle.PAUSE);
     }
 
     @Override
@@ -81,10 +84,15 @@ public abstract class MortarFragmentActivity extends MortarActivity
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        mLifecycleSubject.onNext(Lifecycle.STOP);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mFragmentManagerOwner.dropView(this);
-        mPausesAndResumesPresenter.dropView(this);
     }
 
     @Override
@@ -94,8 +102,7 @@ public abstract class MortarFragmentActivity extends MortarActivity
         }
     }
 
-    @Override
-    public boolean isRunning() {
+    public final boolean isRunning() {
         return mIsResumed;
     }
 }

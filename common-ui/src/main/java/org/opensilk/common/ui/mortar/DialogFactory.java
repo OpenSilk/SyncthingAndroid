@@ -17,18 +17,15 @@
 
 package org.opensilk.common.ui.mortar;
 
-import org.opensilk.common.core.dagger2.ActivityScope;
+import android.app.Dialog;
+import android.content.Context;
 
-import dagger.Module;
-import dagger.Provides;
+import java.io.Serializable;
+
+import rx.functions.Func1;
 
 /**
- * Created by drew on 10/15/14.
+ * Created by drew on 10/15/15.
  */
-@Module
-public class PauseAndResumeModule {
-    @Provides @ActivityScope
-    PauseAndResumePresenter providePauseAndResumePresenter() { return new PauseAndResumePresenter(); }
-    @Provides @ActivityScope
-    PauseAndResumeRegistrar providePauseAndResumeRegistar(PauseAndResumePresenter presenter) { return presenter; }
+public interface DialogFactory extends Func1<Context, Dialog>, Serializable {
 }

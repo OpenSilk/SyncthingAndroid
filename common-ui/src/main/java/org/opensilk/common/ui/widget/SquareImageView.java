@@ -19,11 +19,12 @@ package org.opensilk.common.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 
 /**
  * Created by drew on 10/22/14.
  */
-public class SquareImageView extends AnimatedImageView  {
+public class SquareImageView extends ImageView {
 
     public SquareImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,9 +66,9 @@ public class SquareImageView extends AnimatedImageView  {
      * requestLayout() to its parent, taking advantage of knowing that image size
      * won't change once set.
      */
-    @Override
-    public void requestLayout() {
-        forceLayout();
-    }
+//    @Override
+//    public void requestLayout() {
+//        forceLayout();
+//    }
 
 }

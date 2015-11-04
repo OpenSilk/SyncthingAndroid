@@ -17,12 +17,10 @@
   -->
 
 <resources>
-    <!--FloatingActionButton-->
-    <dimen name="fab_size_normal">56dp</dimen>
-    <dimen name="fab_size_mini">40dp</dimen>
 
     <!--LetterTileDrawable-->
     <item name="letter_to_tile_ratio" type="fraction">67%</item>
+    <item name="letter_to_tile_ratio2" type="fraction">57%</item>
 
     <!-- navigation drawers -->
     <dimen name="drawer_width">240dp</dimen>

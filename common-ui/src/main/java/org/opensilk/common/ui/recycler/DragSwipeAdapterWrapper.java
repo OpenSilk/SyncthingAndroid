@@ -34,9 +34,9 @@ public class DragSwipeAdapterWrapper<VH extends RecyclerView.ViewHolder>
         void onChange();
     }
 
-    final RecyclerListAdapter<?, VH> wrappedAdapter;
-    final Listener listener;
-    ItemTouchHelper itemTouchHelper;
+    protected final RecyclerListAdapter<?, VH> wrappedAdapter;
+    protected final Listener listener;
+    protected ItemTouchHelper itemTouchHelper;
 
     public DragSwipeAdapterWrapper(RecyclerListAdapter<?, VH> wrappedAdapter, Listener listener) {
         super();
@@ -50,17 +50,19 @@ public class DragSwipeAdapterWrapper<VH extends RecyclerView.ViewHolder>
         super.onAttachedToRecyclerView(recyclerView);
         itemTouchHelper = new ItemTouchHelper(new SimpleItemTouchHelperCallback(this));
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        wrappedAdapter.onAttachedToRecyclerView(recyclerView);
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         itemTouchHelper = null;
+        wrappedAdapter.onDetachedFromRecyclerView(recyclerView);
     }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        boolean success = wrappedAdapter.swap(fromPosition, toPosition);
+        boolean success = wrappedAdapter.move(fromPosition, toPosition);
         if (success && listener != null) {
             listener.onChange();
         }
@@ -133,5 +135,11 @@ public class DragSwipeAdapterWrapper<VH extends RecyclerView.ViewHolder>
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             notifyItemMoved(fromPosition, toPosition);
         }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            notifyItemRangeChanged(positionStart, itemCount, payload);
+        }
+
     };
 }
