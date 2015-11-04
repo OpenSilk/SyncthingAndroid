@@ -33,10 +33,7 @@ import syncthing.android.AppComponent;
 @ActivityScope
 @dagger.Component(
         dependencies = AppComponent.class,
-        modules = {
-                ActivityResultsOwnerModule.class,
-                PauseAndResumeModule.class
-        }
+        modules = SyncthingActivityModule.class
 )
 public interface ManageActivityComponent extends SyncthingActivityComponent {
     Func1<AppComponent, ManageActivityComponent> FACTORY =

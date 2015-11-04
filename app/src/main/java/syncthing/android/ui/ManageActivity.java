@@ -41,8 +41,10 @@ public class ManageActivity extends SyncthingActivity {
     public static final String EXTRA_ARGS = "args";
     public static final String EXTRA_FRAGMENT = "fragment";
     public static final String EXTRA_DISABLE_BACK = "disableback";
+    public static final String EXTRA_UP_IS_BACK = "upisback";
 
     private boolean ignoreBackButton;
+    private boolean upIsBack;
 
     @Override
     protected void onCreateScope(MortarScope.Builder builder) {
@@ -59,7 +61,6 @@ public class ManageActivity extends SyncthingActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.inject(this);
         setResult(RESULT_CANCELED);
         mActionBarOwnerDelegate = new ToolbarOwnerDelegate<>(this, mActionBarOwner, this);
         mActionBarOwnerDelegate.onCreate();
@@ -70,8 +71,21 @@ public class ManageActivity extends SyncthingActivity {
             if (getIntent().getBundleExtra(EXTRA_ARGS) == null) {
                 Timber.e("bundle args were null");
             }
-            ignoreBackButton = getIntent().getBooleanExtra(EXTRA_DISABLE_BACK, false);
             mFragmentManagerOwner.replaceMainContent(fragment, false);
+        }
+        ignoreBackButton = getIntent().getBooleanExtra(EXTRA_DISABLE_BACK, false);
+        upIsBack = getIntent().getBooleanExtra(EXTRA_UP_IS_BACK, false);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (upIsBack) {
+            if (!mFragmentManagerOwner.goBack()) {
+                finish();
+            }
+            return true;
+        } else {
+            return super.onSupportNavigateUp();
         }
     }
 
