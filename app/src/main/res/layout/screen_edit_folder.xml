@@ -112,14 +112,34 @@
                 style="@style/session.edit.FieldHeader"/>
 
 
-            <AutoCompleteTextView
-                android:id="@+id/edit_folder_path"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:nextFocusDown="@+id/edit_rescan_interval"
-                style="@style/session.edit.EditText"
-                />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <AutoCompleteTextView
+                    android:id="@+id/edit_folder_path"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/edit_rescan_interval"
+                    style="@style/session.edit.EditText"
+                    />
+
+                <ImageButton
+                    android:id="@+id/edit_folder_path_picker_btn"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_folder_grey600_36dp"
+                    android:scaleType="centerInside"
+                    style="?android:borderlessButtonStyle"
+                    />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/desc_folder_path"

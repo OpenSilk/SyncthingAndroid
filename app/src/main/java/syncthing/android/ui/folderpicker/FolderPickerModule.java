@@ -15,18 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.common;
+package syncthing.android.ui.folderpicker;
+
+import javax.inject.Named;
+
+import dagger.Module;
+import dagger.Provides;
+import syncthing.android.model.Credentials;
 
 /**
- * Created by drew on 3/12/15.
+ * Created by drew on 11/3/15.
  */
-public interface ActivityRequestCodes {
-    int _BASE = 200;
-    int LOGIN_ACTIVITY = _BASE << 1;
-    int SCAN_QR = _BASE << 2;
-    int DIRECTORY_PICKER = _BASE << 3;
-    int IMPORT_CONFIG = _BASE << 4;
-    int MANAGE_ACTIVITY = _BASE << 5;
-    int WELCOME_ACTIVITY = _BASE << 6;
-    int FOLDER_PICKER = _BASE << 7;
+@Module
+public class FolderPickerModule {
+    final FolderPickerScreen screen;
+
+    public FolderPickerModule(FolderPickerScreen screen) {
+        this.screen = screen;
+    }
+
+    @Provides
+    public Credentials provideCrendentials() {
+        return screen.credentials;
+    }
+
+    @Provides @Named("path")
+    public String providePath() {
+        return screen.path;
+    }
 }

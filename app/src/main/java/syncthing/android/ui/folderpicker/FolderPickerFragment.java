@@ -15,38 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.sessionsettings;
+package syncthing.android.ui.folderpicker;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import org.opensilk.common.ui.mortar.Screen;
+import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
-import syncthing.android.R;
 import syncthing.android.model.Credentials;
 
 /**
- * Created by drew on 10/11/15.
+ * Created by drew on 11/3/15.
  */
-public class EditIgnoresFragment extends EditFragment2 {
-    public static final String NAME = EditIgnoresFragment.class.getName();
+public class FolderPickerFragment extends MortarFragment {
+    public static final String NAME = FolderPickerFragment.class.getName();
 
-    public static Bundle makeArgs(Credentials credentials, @NonNull String folderID) {
-        Bundle b = putCredentials(credentials);
-        b.putString("folder", folderID);
-        b.putInt("title", R.string.ignore_patterns);
+    public static Bundle makeArgs(Credentials credentials, String path) {
+        Bundle b = new Bundle();
+        b.putParcelable("creds", credentials);
+        b.putString("path", path);
         return b;
     }
 
-    public static EditIgnoresFragment ni(Context context, Credentials credentials, String folderId) {
-        return factory(context, NAME, makeArgs(credentials, folderId));
+    public static FolderPickerFragment ni(Context context, Credentials credentials, String path) {
+        return factory(context, NAME, makeArgs(credentials, path));
     }
 
     @Override
     protected Screen newScreen() {
-        ensureCredentials();
-        String fid = getArguments().getString("folder");
-        return new EditIgnoresScreen(mCredentials, fid); //ignores
+        Credentials credentials = getArguments().getParcelable("creds");
+        String path = getArguments().getString("path");
+        return new FolderPickerScreen(credentials, path);
     }
 }

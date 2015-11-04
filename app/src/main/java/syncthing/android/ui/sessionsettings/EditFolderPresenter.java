@@ -17,20 +17,29 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.Collection;
 import java.util.Collections;
 
 import javax.inject.Inject;
 
+import mortar.MortarScope;
 import rx.Subscription;
+import syncthing.android.ui.ManageActivity;
+import syncthing.android.ui.common.ActivityRequestCodes;
+import syncthing.android.ui.folderpicker.FolderPickerFragment;
 import syncthing.api.SessionManager;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
@@ -41,7 +50,9 @@ import static syncthing.android.ui.sessionsettings.EditPresenterConfig.INVALID_I
  * Created by drew on 3/16/15.
  */
 @ScreenScope
-public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
+public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> implements ActivityResultsListener {
+
+    final FragmentManagerOwner fm;
 
     FolderConfig origFolder;
 
@@ -52,9 +63,17 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
             SessionManager manager,
             DialogPresenter dialogPresenter,
             ActivityResultsController activityResultContoller,
-            EditPresenterConfig config
+            EditPresenterConfig config,
+            FragmentManagerOwner fm
     ) {
         super(manager, dialogPresenter, activityResultContoller, config);
+        this.fm = fm;
+    }
+
+    @Override
+    protected void onEnterScope(MortarScope scope) {
+        super.onEnterScope(scope);
+        activityResultsController.register(scope, this);
     }
 
     @Override
@@ -88,6 +107,29 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
     protected void onSave(Bundle outState) {
         super.onSave(outState);
         outState.putSerializable("folder", origFolder);
+    }
+
+    void openFolderPicker(Context context, String base) {
+        Intent i = new Intent(context, ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, FolderPickerFragment.NAME)
+                .putExtra(ManageActivity.EXTRA_ARGS, FolderPickerFragment.makeArgs(credentials, base))
+                .putExtra(ManageActivity.EXTRA_UP_IS_BACK, true);
+        activityResultsController.startActivityForResult(i, ActivityRequestCodes.FOLDER_PICKER, null);
+    }
+
+    @Override
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivityRequestCodes.FOLDER_PICKER) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (hasView()) {
+                    String path = data.getStringExtra("path");
+                    getView().editFolderPath.setText(path);
+                }//else TODO
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     boolean validateFolderId(CharSequence text) {
@@ -191,9 +233,9 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> {
         );
     }
 
-    void openIgnoresEditor() {
-        //TODO
-//        sessionPresenter.openEditIgnoresScreen(folderId);
+    void openIgnoresEditor(Context context) {
+        EditIgnoresFragment f = EditIgnoresFragment.ni(context, credentials, folderId);
+        fm.replaceMainContent(f, true);
     }
 
 }

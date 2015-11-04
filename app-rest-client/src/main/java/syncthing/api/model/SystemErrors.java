@@ -9,12 +9,12 @@
 
 package syncthing.api.model;
 
-import org.joda.time.DateTime;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by drew on 3/15/15.
  */
-public class GuiError {
-    public DateTime time;
-    public String error;
+public class SystemErrors {
+    public List<GuiError> errors = Collections.emptyList();
 }

@@ -19,8 +19,10 @@ package syncthing.android.ui.sessionsettings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,21 +123,47 @@ public class EditFolderScreenView extends CoordinatorLayout {
         super.onFinishInflate();
         ButterKnife.inject(this);
         rdioVerGroup.setOnCheckedChangeListener(versioningChangeListener);
-        mPresenter.takeView(this);
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+        }
     }
 
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mToolbarOwner.attachToolbar(toolbar);
-        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        if (!isInEditMode()) {
+            mToolbarOwner.attachToolbar(toolbar);
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        }
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
+        mToolbarOwner.detachToolbar(toolbar);
+    }
+
+    @OnClick(R.id.edit_folder_path_picker_btn)
+    void openFolderPicker() {
+        String home = Environment.getExternalStorageDirectory().getAbsolutePath();
+        Editable editText = editFolderPath.getText();
+        String path;
+        if (editText != null) {
+            path = editText.toString();
+            if (StringUtils.equals(path, home)) {
+                path = home;
+            } else if (StringUtils.endsWith(path, "/")) {
+                path = path.substring(0, path.length() - 1);
+            } else if (path.lastIndexOf("/") > 0) {
+                //we want the last directory they inputed not any partial name in there
+                path = path.substring(0, path.lastIndexOf("/"));
+            }
+        } else {
+            path = home;
+        }
+        mPresenter.openFolderPicker(getContext(), path);
     }
 
     @OnClick(R.id.btn_delete)
@@ -145,7 +173,7 @@ public class EditFolderScreenView extends CoordinatorLayout {
 
     @OnClick(R.id.btn_ignore_ptrn)
     void openIgnoresEditor() {
-        mPresenter.openIgnoresEditor();
+        mPresenter.openIgnoresEditor(getContext());
     }
 
     @OnClick(R.id.btn_cancel)
