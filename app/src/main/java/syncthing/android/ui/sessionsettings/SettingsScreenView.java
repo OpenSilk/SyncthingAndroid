@@ -86,10 +86,10 @@ public class SettingsScreenView extends CoordinatorLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        if (!SyncthingUtils.isClipBoardSupported(getContext())) {
-            copyApiKeyButton.setVisibility(View.INVISIBLE);
-        }
         if (!isInEditMode()) {
+            if (!SyncthingUtils.isClipBoardSupported(getContext())) {
+                copyApiKeyButton.setVisibility(GONE);
+            }
             mPresenter.takeView(this);
         }
     }
@@ -97,8 +97,10 @@ public class SettingsScreenView extends CoordinatorLayout {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mToolbarOwner.attachToolbar(toolbar);
-        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        if (!isInEditMode()) {
+            mToolbarOwner.attachToolbar(toolbar);
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        }
     }
 
     @Override

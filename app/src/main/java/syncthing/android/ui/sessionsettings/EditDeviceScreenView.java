@@ -95,14 +95,18 @@ public class EditDeviceScreenView extends CoordinatorLayout {
         super.onFinishInflate();
         ButterKnife.inject(this);
         groupCompression.setOnCheckedChangeListener(compressionChangedListener);
-        mPresenter.takeView(this);
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+        }
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mToolbarOwner.attachToolbar(toolbar);
-        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        if (!isInEditMode()) {
+            mToolbarOwner.attachToolbar(toolbar);
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        }
     }
 
     @Override

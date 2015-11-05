@@ -63,14 +63,18 @@ public class EditIgnoresScreenView extends CoordinatorLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        mPresenter.takeView(this);
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+        }
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mToolbarOwner.attachToolbar(toolbar);
-        mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        if (!isInEditMode()) {
+            mToolbarOwner.attachToolbar(toolbar);
+            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+        }
     }
 
     @Override
