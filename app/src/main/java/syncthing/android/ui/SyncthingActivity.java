@@ -40,7 +40,7 @@ import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import javax.inject.Inject;
 
-import syncthing.android.AppSettings;
+import syncthing.android.settings.AppSettings;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import timber.log.Timber;

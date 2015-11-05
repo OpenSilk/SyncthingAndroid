@@ -40,7 +40,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
-import syncthing.android.AppSettings;
+import syncthing.android.settings.AppSettings;
 import syncthing.android.model.Credentials;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.ManageActivity;

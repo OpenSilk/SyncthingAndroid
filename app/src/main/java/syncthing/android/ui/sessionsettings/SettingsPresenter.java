@@ -25,11 +25,9 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogPresenter;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import syncthing.android.AppSettings;
+import syncthing.android.settings.AppSettings;
 import syncthing.android.model.Credentials;
 import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;

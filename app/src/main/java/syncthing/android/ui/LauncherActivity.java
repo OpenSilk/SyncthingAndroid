@@ -19,7 +19,6 @@ package syncthing.android.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -28,24 +27,17 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.opensilk.common.core.mortar.DaggerService;
-import org.opensilk.common.ui.mortar.ActionBarConfig;
-import org.opensilk.common.ui.mortar.ActivityResultsActivity;
-import org.opensilk.common.ui.mortar.ActivityResultsOwner;
 import org.opensilk.common.ui.mortar.DrawerOwner;
 import org.opensilk.common.ui.mortar.DrawerOwnerActivity;
 import org.opensilk.common.ui.mortar.DrawerOwnerDelegate;
-import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortar.ToolbarOwnerDelegate;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
-import org.opensilk.common.ui.mortarfragment.MortarFragmentActivity;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -53,13 +45,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
 import mortar.MortarScope;
-import rx.Subscription;
 import syncthing.android.AppComponent;
-import syncthing.android.AppSettings;
 import syncthing.android.R;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
-import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.login.LoginFragment;
 import syncthing.android.ui.login.ManageFragment;
@@ -286,8 +275,8 @@ public class LauncherActivity extends SyncthingActivity implements
             } else if (creds.isEmpty()) {
                 startWelcomeActivity();
             } else {
-                //???
-                Timber.w("Ignoring goToCurrent");
+                Timber.w("No current device");
+                openDrawer(GravityCompat.START);
             }
         }
     }

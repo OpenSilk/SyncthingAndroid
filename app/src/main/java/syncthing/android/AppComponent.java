@@ -26,10 +26,10 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import syncthing.android.identicon.IdenticonComponent;
-import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.identicon.IdenticonModule;
 import syncthing.android.service.ServiceSettings;
 import syncthing.android.service.ServiceSettingsModule;
+import syncthing.android.settings.AppSettings;
 import syncthing.api.GsonModule;
 import syncthing.api.SessionManagerComponent;
 

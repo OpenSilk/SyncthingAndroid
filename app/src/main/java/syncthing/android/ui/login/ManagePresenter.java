@@ -29,7 +29,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import mortar.ViewPresenter;
-import syncthing.android.AppSettings;
+import syncthing.android.settings.AppSettings;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
 
