@@ -43,6 +43,7 @@ import syncthing.android.ui.folderpicker.FolderPickerFragment;
 import syncthing.api.SessionManager;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
+import timber.log.Timber;
 
 import static syncthing.android.ui.sessionsettings.EditPresenterConfig.INVALID_ID;
 
@@ -99,6 +100,11 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
             }
         } else {
             origFolder = (FolderConfig) savedInstanceState.getSerializable("folder");
+        }
+        if (origFolder == null) {
+            Timber.e("Folder was null! cannot continue.");
+            activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, new Intent());
+            return;
         }
         getView().initialize(isAdd, origFolder, controller.getRemoteDevices(), controller.getSystemInfo(), savedInstanceState != null);
     }
