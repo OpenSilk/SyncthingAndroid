@@ -69,7 +69,7 @@ import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.FolderStats;
 import syncthing.api.model.FolderStatsMap;
 import syncthing.api.model.GUIConfig;
-import syncthing.api.model.SystemError;
+import syncthing.api.model.SystemMessage;
 import syncthing.api.model.SystemErrors;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
@@ -939,8 +939,8 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     @Nullable
-    public SystemError getLatestError() {
-        List<SystemError> errors = errorsList.get() != null ? errorsList.get().errors : null;
+    public SystemMessage getLatestError() {
+        List<SystemMessage> errors = errorsList.get() != null ? errorsList.get().errors : null;
         if (errors != null && errors.size() > 0) {
             return errors.get(errors.size() - 1);
         } else {

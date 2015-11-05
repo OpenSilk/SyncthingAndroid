@@ -12,7 +12,7 @@ package syncthing.api.model;
 import org.joda.time.DateTime;
 
 /**
- * Created by drew on 11/4/15.
+ * Created by drew on 3/15/15.
  */
 public class SystemMessage {
     public DateTime when;

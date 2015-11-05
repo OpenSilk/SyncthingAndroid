@@ -22,7 +22,7 @@ import android.databinding.Bindable;
 import org.apache.commons.lang3.StringUtils;
 
 import syncthing.android.R;
-import syncthing.api.model.SystemError;
+import syncthing.api.model.SystemMessage;
 
 /**
  * Created by drew on 3/15/15.
@@ -31,7 +31,7 @@ public class NotifCardError extends NotifCard {
 
     public static final NotifCardError INSTANCE = new NotifCardError();
 
-    private SystemError guiError;
+    private SystemMessage guiError;
 
     private NotifCardError() {
     }
@@ -41,19 +41,19 @@ public class NotifCardError extends NotifCard {
         return R.layout.session_notif_error;
     }
 
-    public void setError(SystemError error) {
+    public void setError(SystemMessage error) {
         if (error == null) {
             throw new IllegalArgumentException("Tried setting null error");
         } else if (this.guiError == null) {
             this.guiError = error;
             notifyChange(syncthing.android.BR._all);
         } else {
-            if (!StringUtils.equals(this.guiError.error, error.error)) {
-                this.guiError.error = error.error;
+            if (!StringUtils.equals(this.guiError.message, error.message)) {
+                this.guiError.message = error.message;
                 notifyChange(syncthing.android.BR.message);
             }
-            if (!this.guiError.time.equals(error.time)) {
-                this.guiError.time = error.time;
+            if (!this.guiError.when.equals(error.when)) {
+                this.guiError.when = error.when;
                 notifyChange(syncthing.android.BR.time);
             }
         }
@@ -61,11 +61,11 @@ public class NotifCardError extends NotifCard {
 
     @Bindable
     public String getTime() {
-        return guiError.time.toString("H:mm:ss");
+        return guiError.when.toString("H:mm:ss");
     }
 
     @Bindable
     public String getMessage() {
-        return guiError.error;
+        return guiError.message;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
-    <string name="a_negative_number_of_days_doesnt_make_sense">A negative number of days doesn\'t make sense.</string>
+    <string name="a_negative_number_of_days_doesnt_make_sense">Negatiivinen määrä päiviä ei ole järjellinen.</string>
     <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">A new major version may not be compatible with previous versions.</string>
     <string name="about">Tietoja</string>
     <string name="actions">Actions</string>
@@ -54,7 +54,7 @@
     <string name="edit_folder">Muokkaa kansiota</string>
     <string name="editing">Muokkaus</string>
     <string name="enable_upnp">Ota UPnP käyttöön</string>
-    <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Enter comma separated  (\"tcp://ip:port\", \"tcp://host:port\") addresses or \"dynamic\" to perform automatic discovery of the address.</string>
+    <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Syötä osoitteet pilkuilla erotettuina (\"tcp://ip:portti, tcp://nimi:portti\") tai \"dynamic\" käyttääksesi osoitteen automaattista selvitystä.</string>
     <string name="enter_ignore_patterns_one_per_line">Syötä ohituslausekkeet, yksi riviä kohden.</string>
     <string name="error">Virhe</string>
     <string name="external_file_versioning">Ulkoinen tiedostoversionti</string>
@@ -63,9 +63,9 @@
     <string name="file_pull_order">File Pull Order</string>
     <string name="file_versioning">Tiedostoversiointi</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Tiedostot siirretään päivämäärällä merkityiksi versioiksi .stversions-kansioon, kun Syncthing korvaa tai poistaa ne.</string>
-    <string name="files_are_moved_to_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to .stversions folder when replaced or deleted by Syncthing.</string>
+    <string name="files_are_moved_to_stversions_folder_when_replaced_or_deleted_by_syncthing">Kun Syncthing poistaa tai korvaa tiedostoja, ne siirretään .stversions-hakemistoon.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Tiedostot on suojattu muilla laitteilla tehdyiltä muutoksilta, mutta tällä laitteella tehdyt muutokset lähetetään muuhun ryhmään.</string>
-    <string name="folder">Folder</string>
+    <string name="folder">Kansio</string>
     <string name="folder_id">Kansion ID</string>
     <string name="folder_master">Hallitsijakansio</string>
     <string name="folder_path">Kansion polku</string>
@@ -100,7 +100,7 @@
     <string name="major_upgrade">Major Upgrade</string>
     <string name="maximum_age">Maksimi-ikä</string>
     <string name="metadata_only">Vain metadata</string>
-    <string name="minimum_free_disk_space">Minimum Free Disk Space</string>
+    <string name="minimum_free_disk_space">Vapaan levytilan vähimmäismäärä</string>
     <string name="move_to_top_of_queue">Siirrä jonon alkuun</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Monitasoinen jokerimerkki (vaikuttaa useassa kansiotasossa)</string>
     <string name="never">Ei koskaan</string>
@@ -120,8 +120,8 @@
     <string name="override_changes">Ohita muutokset</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Polku kansioon paikallisella tietokoneella. Kansio luodaan, ellei sitä ole olemassa. Tilde-merkkiä (~) voidaan käyttää oikotienä polulle</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Polku jonne versiot tullaan tallentamaan (jätä tyhjäksi oletusvalintaa .stversions varten).</string>
-    <string name="pause">Pause</string>
-    <string name="paused">Paused</string>
+    <string name="pause">Keskeytä</string>
+    <string name="paused">Keskeytetty</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Ole hyvä ja odota</string>
     <string name="preview">Esikatselu</string>
@@ -130,16 +130,16 @@
     <string name="ram_utilization">RAM:n käyttö</string>
     <string name="random">Satunnaien</string>
     <string name="relayed_via">Relayed via</string>
-    <string name="relays">Relays</string>
-    <string name="release_notes">Release Notes</string>
-    <string name="remove">Remove</string>
+    <string name="relays">Välityspalvelimet</string>
+    <string name="release_notes">Julkaisutiedot</string>
+    <string name="remove">Poista</string>
     <string name="rescan">Skannaa uudelleen</string>
     <string name="rescan_all">Skannaa kaikki uudelleen</string>
     <string name="rescan_interval">Uudelleenskannauksen aikaväli</string>
     <string name="restart">Käynnistä uudelleen</string>
     <string name="restart_needed">Uudelleenkäynnistys tarvitaan</string>
     <string name="restarting">Käynnistetään uudelleen</string>
-    <string name="resume">Resume</string>
+    <string name="resume">Jatka</string>
     <string name="reused">Uudelleenkäytetty</string>
     <string name="save">Tallenna</string>
     <string name="scanning">Skannataan</string>
@@ -160,11 +160,11 @@
     <string name="shutdown_complete">Sammutus valmis</string>
     <string name="simple_file_versioning">Yksinkertainen tiedostoversiointi</string>
     <string name="single_level_wildcard_matches_within_a_directory_only">Yksitasoinen jokerimerkki (vaikuttaa vain kyseisen kansion sisällä)</string>
-    <string name="smallest_first">Smallest First</string>
+    <string name="smallest_first">Pienin ensin</string>
     <string name="source_code">Lähdekoodi</string>
     <string name="staggered_file_versioning">Porrastettu tiedostoversiointi</string>
     <string name="start_browser">Käynnistä selain</string>
-    <string name="statistics">Statistics</string>
+    <string name="statistics">Tilastot</string>
     <string name="stopped">Pysäytetty</string>
     <string name="support">Tuki</string>
     <string name="sync_protocol_listen_addresses">Synkronointiprotokollan kuunteluosoite</string>
@@ -187,16 +187,16 @@
     <string name="the_folder_id_must_be_unique">Kansion ID:n tulee olla uniikki.</string>
     <string name="the_folder_path_cannot_be_blank">Kansion polku ei voi olla tyhjä.</string>
     <string name="the_following_intervals_are_used_for_the_first_hour_a_version_is_kept_every_30_seconds_for_the_first_day_a_version_is_kept_every_hour_for_the_first_30_days_a_version_is_kept_every_day_until_the_maximum_age_a_version_is_kept_every_week">Seuraavat aikavälit ovat käytössä: ensimmäisen tunnin ajalta uusi versio säilytetään joka 30 sekunti, ensimmäisen päivän ajalta uusi versio säilytetään tunneittain ja ensimmäisen 30 päivän aikana uusi versio säilytetään päivittäin. Lopulta uusi versio säilytetään viikoittain, kunnes maksimi-ikä saavutetaan.</string>
-    <string name="the_following_items_could_not_be_synchronized">The following items could not be synchronized.</string>
+    <string name="the_following_items_could_not_be_synchronized">Seuraavia nimikkeitä ei voitu synkronoida.</string>
     <string name="the_maximum_age_must_be_a_number_and_cannot_be_blank">Maksimi-iän tulee olla numero, eikä se voi olla tyhjä.</string>
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Maksimiaika versioiden säilytykseen (päivissä, aseta 0 säilyttääksesi versiot ikuisesti).</string>
-    <string name="the_minimum_free_disk_space_percentage_must_be_a_nonnegative_number_between_0_and_100_inclusive">The minimum free disk space percentage must be a non-negative number between 0 and 100 (inclusive).</string>
-    <string name="the_number_of_days_must_be_a_number_and_cannot_be_blank">The number of days must be a number and cannot be blank.</string>
-    <string name="the_number_of_days_to_keep_files_in_the_trash_can_zero_means_forever">The number of days to keep files in the trash can. Zero means forever.</string>
+    <string name="the_minimum_free_disk_space_percentage_must_be_a_nonnegative_number_between_0_and_100_inclusive">Vapaan levytilan vähimmäismäärä prosentteina tulee olla positiivinen luku (suljetulta) väliltä 0-100.</string>
+    <string name="the_number_of_days_must_be_a_number_and_cannot_be_blank">Päivien määrän tulee olla numero, eikä se voi olla tyhjä.</string>
+    <string name="the_number_of_days_to_keep_files_in_the_trash_can_zero_means_forever">Montako päivää tiedostoja säilytetään roskakorissa. Nolla (0) = ikuisesti.</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Säilytettävien vanhojen versioiden määrä tiedostoa kohden.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Versioiden määrän rulee olla numero, eikä se voi olla tyhjä.</string>
     <string name="the_path_cannot_be_blank">Polku ei voi olla tyhjä.</string>
-    <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">The rate limit must be a non-negative number (0: no limit)</string>
+    <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Nopeusrajan tulee olla positiivinen luku tai nolla. (0: ei rajaa)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Uudelleenskannauksen aikavälin tulee olla ei-negatiivinen numero sekunteja.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">They are retried automatically and will be synced when the error is resolved.</string>
     <string name="this_is_a_major_version_upgrade">This is a major version upgrade.</string>
@@ -210,7 +210,7 @@
     <string name="upgrade_to_version">Päivitä versioon %1$s</string>
     <string name="upgrading">Päivitetään</string>
     <string name="upload_rate">Lähetysmäärä</string>
-    <string name="uptime">Uptime</string>
+    <string name="uptime">Päälläoloaika</string>
     <string name="use_https_for_gui">Käytä HTTPS:ää GUI:n kanssa</string>
     <string name="version">Versio</string>
     <string name="versions_are_automatically_deleted_if_they_are_older_than_the_maximum_age_or_exceed_the_number_of_files_allowed_in_an_interval">Versiot poistetaan automaattisesti mikäli ne ovat vanhempia kuin maksimi-ikä tai niiden määrä ylittää sallitun määrän tietyllä aikavälillä.</string>

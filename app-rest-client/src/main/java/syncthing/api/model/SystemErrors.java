@@ -16,5 +16,5 @@ import java.util.List;
  * Created by drew on 3/15/15.
  */
 public class SystemErrors {
-    public List<SystemError> errors = Collections.emptyList();
+    public List<SystemMessage> errors = Collections.emptyList();
 }

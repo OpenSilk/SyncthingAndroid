@@ -68,7 +68,7 @@ import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import syncthing.api.model.FolderConfig;
-import syncthing.api.model.SystemError;
+import syncthing.api.model.SystemMessage;
 import syncthing.api.model.Model;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
@@ -317,7 +317,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         if (!controller.isConfigInSync()) {
             notifications.add(NotifCardRestart.INSTANCE);
         }
-        SystemError guiError = controller.getLatestError();
+        SystemMessage guiError = controller.getLatestError();
         if (guiError != null) {
             NotifCardError.INSTANCE.setError(guiError);
             notifications.add(NotifCardError.INSTANCE);
