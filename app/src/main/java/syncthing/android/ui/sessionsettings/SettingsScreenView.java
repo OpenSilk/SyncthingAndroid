@@ -149,8 +149,7 @@ public class SettingsScreenView extends CoordinatorLayout {
         options.globalAnnounceServers = SyncthingUtils.rollArray(editGlobalDiscovrServr.getText().toString());
         guiConfig.address = editGuiListenAddrs.getText().toString();
         guiConfig.user = editGuiUsr.getText().toString();
-        if (!StringUtils.isEmpty(editGuiPass.getText().toString()) &&
-                !editGuiPass.getText().toString().equals(hiddenPass)) {
+        if (!StringUtils.equals(editGuiPass.getText().toString(), hiddenPass)) {
             guiConfig.password = editGuiPass.getText().toString();
         }
         guiConfig.useTLS = enableHttps.isChecked();
