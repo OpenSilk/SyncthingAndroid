@@ -107,6 +107,7 @@ public class SettingsScreenView extends CoordinatorLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
+        mToolbarOwner.detachToolbar(toolbar);
     }
 
     @OnClick(R.id.btn_copy_apikey)

@@ -113,6 +113,7 @@ public class EditDeviceScreenView extends CoordinatorLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
+        mToolbarOwner.detachToolbar(toolbar);
     }
 
     @OnClick(R.id.btn_scanqr)
