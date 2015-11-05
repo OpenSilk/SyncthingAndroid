@@ -1,43 +1,44 @@
-From 425047b0a9597d72cfe25636e3d06b77f8cc1c89 Mon Sep 17 00:00:00 2001
+From d4fb633e21f0b4ef5e82b83dc9535f52afd5a562 Mon Sep 17 00:00:00 2001
 From: Andrew Sutherland <dr3wsuth3rland@gmail.com>
 Date: Tue, 7 Apr 2015 09:28:53 -0500
 Subject: [PATCH 2/2] usage: remove android workaround
 
 ---
- cmd/syncthing/usage_report.go | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ cmd/syncthing/usage_report.go | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/cmd/syncthing/usage_report.go b/cmd/syncthing/usage_report.go
-index 3318547..f5a4860 100644
+index 7b1f830..abe3f45 100644
 --- a/cmd/syncthing/usage_report.go
 +++ b/cmd/syncthing/usage_report.go
-@@ -12,7 +12,6 @@ import (
- 	"crypto/sha256"
+@@ -13,14 +13,12 @@ import (
+ 	"crypto/tls"
  	"encoding/json"
  	"fmt"
 -	"net"
  	"net/http"
  	"runtime"
+ 	"sort"
  	"time"
-@@ -134,17 +133,7 @@ func (s *usageReportingService) sendUsageReport() error {
- 	var b bytes.Buffer
- 	json.NewEncoder(&b).Encode(d)
  
--	var client = http.DefaultClient
+ 	"github.com/syncthing/syncthing/lib/config"
+-	"github.com/syncthing/syncthing/lib/dialer"
+ 	"github.com/syncthing/syncthing/lib/model"
+ 	"github.com/syncthing/syncthing/lib/protocol"
+ 	"github.com/syncthing/syncthing/lib/upgrade"
+@@ -251,12 +249,6 @@ func (s *usageReportingService) sendUsageReport() error {
+ 
+ 	transp := &http.Transport{}
+ 	client := &http.Client{Transport: transp}
 -	if BuildEnv == "android" {
 -		// This works around the lack of DNS resolution on Android... :(
--		tr := &http.Transport{
--			Dial: func(network, addr string) (net.Conn, error) {
--				return net.Dial(network, "194.126.249.13:443")
--			},
+-		transp.Dial = func(network, addr string) (net.Conn, error) {
+-			return dialer.Dial(network, "194.126.249.13:443")
 -		}
--		client = &http.Client{Transport: tr}
 -	}
--	_, err := client.Post("https://data.syncthing.net/newdata", "application/json", &b)
-+	_, err := http.DefaultClient.Post("https://data.syncthing.net/newdata", "application/json", &b)
- 	return err
- }
  
+ 	if s.cfg.Options().URPostInsecurely {
+ 		transp.TLSClientConfig = &tls.Config{
 -- 
 2.5.2
 

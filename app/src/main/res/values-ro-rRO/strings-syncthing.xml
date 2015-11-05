@@ -12,7 +12,7 @@
     <string name="address">Adresă</string>
     <string name="addresses">Adrese</string>
     <string name="advanced">Advanced</string>
-    <string name="advanced_configuration">Advanced Configuration</string>
+    <string name="advanced_configuration">Configurari avansate</string>
     <string name="all_data">Toate Datele</string>
     <string name="allow_anonymous_usage_reporting">Permiteţi raportarea anonimă de folosire a aplicaţiei?</string>
     <string name="alphabetic">Alphabetic</string>
@@ -21,7 +21,7 @@
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Toate dispozitivele configurate pe un dispozitiv iniţiator vor fi adăugate şi pe acest dispozitiv. </string>
     <string name="api_key">Cheie API</string>
     <string name="automatic_upgrades">Actualizare automată</string>
-    <string name="be_careful">Be careful!</string>
+    <string name="be_careful">Fii atent!</string>
     <string name="bugs">Bug-uri</string>
     <string name="changelog">Noutăți</string>
     <string name="clean_out_after">Clean out after</string>
@@ -34,7 +34,7 @@
     <string name="copied_from_original">Copiat  din original</string>
     <string name="copyright_2015_the_following_contributors">Copyright ©2015 Următorii Contribuitori:</string>
     <string name="cpu_utilization">CPU </string>
-    <string name="days">days</string>
+    <string name="days">Zile</string>
     <string name="delete">Şterge</string>
     <string name="deleted">Deleted</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Dispozitivul%1$s(%2$s)vrea sa se conecteze.Adaug un dispozitiv nou?</string>
@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s vrea să transmită mapa %2$s</string>
     <string name="devices">Dispozitiv</string>
     <string name="disconnected">Deconectat</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Documentaţie</string>
     <string name="download_rate">Viteză de Descărcare</string>
     <string name="downloaded">Descărcat</string>
@@ -64,7 +65,7 @@
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Documentele sînt mutate într-un fișier .stversions conținînd versiuni datate atunci cînd sînt șterse sau înlocuite de Syncthing. </string>
     <string name="files_are_moved_to_stversions_folder_when_replaced_or_deleted_by_syncthing">Files are moved to .stversions folder when replaced or deleted by Syncthing.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Fișierele sunt protejate de schimbările făcute pe alte dispozitive dar schimbările efectuate pe acest dispozitiv vor fi trimise catre restul grupului.</string>
-    <string name="folder">Folder</string>
+    <string name="folder">Mapă</string>
     <string name="folder_id">ID Mapă</string>
     <string name="folder_master">Master Măpi</string>
     <string name="folder_path">Locaţie Mapei</string>
@@ -119,7 +120,7 @@
     <string name="override_changes">Suprascrie Schimbări</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Localizarea fișierului în acest computer. Dacă nu există, va fi creat. Tilda (~) înlocuiește </string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Locul unde vor fi stocate versiunile (a se lăsa neschimbat pentru fișierul .stversions din fișier). </string>
-    <string name="pause">Pause</string>
+    <string name="pause">Pauză</string>
     <string name="paused">Paused</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Aşteaptă</string>
@@ -163,7 +164,7 @@
     <string name="source_code">Cod Sursă</string>
     <string name="staggered_file_versioning">Versiuni eşalonate ale documentelor</string>
     <string name="start_browser">Lansează Browser</string>
-    <string name="statistics">Statistics</string>
+    <string name="statistics">Statistici</string>
     <string name="stopped">Oprit</string>
     <string name="support">Suport Tehnic</string>
     <string name="sync_protocol_listen_addresses">Adresa protocolului de sincronizare</string>

@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by drew on 3/15/15.
+ * Created by drew on 11/4/15.
  */
-public class SystemErrors {
-    public List<SystemError> errors = Collections.emptyList();
+public class SystemMessages {
+    public List<SystemMessage> messages = Collections.emptyList();
 }

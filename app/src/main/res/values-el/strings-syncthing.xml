@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">Η συσκευή %1$s θέλει να μοιράσει τον φάκελο «%2$s».</string>
     <string name="devices">Συσκευές</string>
     <string name="disconnected">Αποσυνδεδεμένος</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Τεκμηρίωση</string>
     <string name="download_rate">Ταχύτητα λήψης</string>
     <string name="downloaded">Έχει ληφθεί</string>

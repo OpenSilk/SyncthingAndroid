@@ -44,8 +44,9 @@
     <string name="device_wants_to_share_folder_folder">%1$s möchte das Verzeichnis \"%2$s\" teilen.</string>
     <string name="devices">Geräte</string>
     <string name="disconnected">Getrennt</string>
+    <string name="discovery">Gerätesuche</string>
     <string name="documentation">Dokumentation</string>
-    <string name="download_rate">Download-Rate</string>
+    <string name="download_rate">Download</string>
     <string name="downloaded">Heruntergeladen</string>
     <string name="downloading">Lädt herunter</string>
     <string name="edit">Bearbeiten</string>
@@ -95,7 +96,7 @@
     <string name="later">Später</string>
     <string name="local_discovery">Lokale Gerätesuche</string>
     <string name="local_state">Lokaler Status</string>
-    <string name="local_state_total">Lokaler Status (total)</string>
+    <string name="local_state_total">Lokaler Status (Gesamt)</string>
     <string name="major_upgrade">Hauptversionsupgrade</string>
     <string name="maximum_age">Höchstalter</string>
     <string name="metadata_only">Nur Metadaten</string>
@@ -154,7 +155,7 @@
     <string name="short_identifier_for_the_folder_must_be_the_same_on_all_cluster_devices">Kurze ID für das Verzeichnis. Muss auf allen Verbunds-Geräten gleich sein.</string>
     <string name="show_id">ID anzeigen</string>
     <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_advertised_to_other_devices_as_an_optional_default_name">Wird anstatt der Geräte ID angezeigt. Wird als optionaler Gerätename an die anderen Clients im Cluster weitergegeben.</string>
-    <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty">Wird anstatt der Geräte ID im Verbunds-Status angezeigt.Wird auf den Namen aktualisiert, den das Gerät angibt, wenn nichts eingetragen wird.</string>
+    <string name="shown_instead_of_device_id_in_the_cluster_status_will_be_updated_to_the_name_the_device_advertises_if_left_empty">Wird auf diesem Gerät als Gerätename angezeigt und an die anderen Geräte im Geräte-Verbund weitergegeben. Wenn kein Gerätename anegegeben wird, wird der Name des entfernten Gerätes genommen.</string>
     <string name="shutdown">Herunterfahren</string>
     <string name="shutdown_complete">Vollständig Heruntergefahren</string>
     <string name="simple_file_versioning">Einfache Dateiversionierung</string>

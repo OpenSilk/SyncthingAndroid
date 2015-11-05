@@ -80,8 +80,13 @@ public class EditFolderScreenView extends CoordinatorLayout {
     @InjectView(R.id.radio_group_pullorder) RadioGroup pullOrderGroup;
     @InjectView(R.id.radio_group_versioning) RadioGroup rdioVerGroup;
     @InjectView(R.id.radio_no_versioning) RadioButton rdioNoVer;
+    @InjectView(R.id.radio_trashcan_versioning) RadioButton rdioTrashCanVer;
     @InjectView(R.id.radio_simple_versioning) RadioButton rdioSimpleVer;
     @InjectView(R.id.radio_staggered_versioning) RadioButton rdioStaggeredVer;
+    @InjectView(R.id.trashcan_versioning_extra) ViewGroup trashCanVerExtra;
+    @InjectView(R.id.desc_trashcan_versioning) TextView descTrashCanVerDesc;
+    @InjectView(R.id.error_trashcan_versioning) TextView errorTrashCanVerInvalid;
+    @InjectView(R.id.edit_trashcan_versioning_keep) EditText editTrashCanVerKeep;
     @InjectView(R.id.simple_versioning_extra) ViewGroup simpleVerExtra;
     @InjectView(R.id.edit_simple_versioning_keep) EditText editSimpleVerKeep;
     @InjectView(R.id.desc_simple_versioning_keep) TextView descSimpleVerKeep;
@@ -221,6 +226,14 @@ public class EditFolderScreenView extends CoordinatorLayout {
         }
 
         switch (rdioVerGroup.getCheckedRadioButtonId()) {
+            case R.id.radio_trashcan_versioning:
+                folder.versioning = new VersioningConfig();
+                folder.versioning.type = VersioningType.TRASHCAN;
+                if (!mPresenter.validateTrashCanVersioningKeep(editTrashCanVerKeep.getText().toString())) {
+                    return;
+                }
+                folder.versioning.params.cleanoutDays = editTrashCanVerKeep.getText().toString();
+                break;
             case R.id.radio_simple_versioning:
                 folder.versioning = new VersioningConfig();
                 folder.versioning.type = VersioningType.SIMPLE;
@@ -311,6 +324,10 @@ public class EditFolderScreenView extends CoordinatorLayout {
             switch (folder.versioning.type) {
                 case NONE:
                     rdioVerGroup.check(R.id.radio_no_versioning);
+                    break;
+                case TRASHCAN:
+                    rdioVerGroup.check(R.id.radio_trashcan_versioning);
+                    editTrashCanVerKeep.setText(folder.versioning.params.cleanoutDays);
                     break;
                 case SIMPLE:
                     rdioVerGroup.check(R.id.radio_simple_versioning);
@@ -413,6 +430,18 @@ public class EditFolderScreenView extends CoordinatorLayout {
         errorRescanIntrvl.setVisibility(valid ? GONE : VISIBLE);
     }
 
+    @OnTextChanged(R.id.edit_trashcan_versioning_keep)
+    void onTrashCanVerKeepChanged(CharSequence text) {
+        if (!StringUtils.isEmpty(text)) {
+            mPresenter.validateTrashCanVersioningKeep(text.toString());
+        }
+    }
+
+    void notifyTrashCanVersioningKeepInvalid(boolean valid) {
+        descTrashCanVerDesc.setVisibility(valid ? VISIBLE : GONE);
+        errorTrashCanVerInvalid.setVisibility(valid ? GONE : VISIBLE);
+    }
+
     @OnTextChanged(R.id.edit_simple_versioning_keep)
     void onSimpleVerKeepChanged(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
@@ -458,23 +487,33 @@ public class EditFolderScreenView extends CoordinatorLayout {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
+                case R.id.radio_trashcan_versioning:
+                    trashCanVerExtra.setVisibility(VISIBLE);
+                    simpleVerExtra.setVisibility(GONE);
+                    staggeredVerExtra.setVisibility(GONE);
+                    externalVerExtra.setVisibility(GONE);
+                    break;
                 case R.id.radio_simple_versioning:
+                    trashCanVerExtra.setVisibility(GONE);
                     simpleVerExtra.setVisibility(VISIBLE);
                     staggeredVerExtra.setVisibility(GONE);
                     externalVerExtra.setVisibility(GONE);
                     break;
                 case R.id.radio_staggered_versioning:
+                    trashCanVerExtra.setVisibility(GONE);
                     simpleVerExtra.setVisibility(GONE);
                     staggeredVerExtra.setVisibility(VISIBLE);
                     externalVerExtra.setVisibility(GONE);
                     break;
                 case R.id.radio_external_versioning:
+                    trashCanVerExtra.setVisibility(GONE);
                     simpleVerExtra.setVisibility(GONE);
                     staggeredVerExtra.setVisibility(GONE);
                     externalVerExtra.setVisibility(VISIBLE);
                     break;
                 case R.id.radio_no_versioning:
                 default:
+                    trashCanVerExtra.setVisibility(GONE);
                     simpleVerExtra.setVisibility(GONE);
                     staggeredVerExtra.setVisibility(GONE);
                     externalVerExtra.setVisibility(GONE);

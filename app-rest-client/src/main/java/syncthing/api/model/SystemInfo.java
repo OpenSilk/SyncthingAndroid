@@ -9,9 +9,9 @@
 
 package syncthing.api.model;
 
-import java.util.ArrayList;
+import org.joda.time.DateTime;
+
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import syncthing.api.ApiUtils;
@@ -27,11 +27,14 @@ public class SystemInfo {
     public long sys;
     public String pathSeparator;
     public long uptime;
+    public DateTime startTime;
     public String tilde;
-    public Map<String, Boolean> extAnnounceOK = Collections.emptyMap();
-    //pojo
-    public transient int announceServersTotal;
-    public transient List<String> announceServersFailed = new ArrayList<>();
+    public boolean discoveryEnabled;
+    public int discoveryMethods;
+    public Map<String, String> discoveryErrors = Collections.emptyMap();
+    public boolean relaysEnabled;
+    public Map<String, Boolean> relayClientStatus = Collections.emptyMap();
+    public Map<String, Integer> relayClientLatency = Collections.emptyMap();
 
     @Override
     public String toString() {

@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s 想要分享資料夾 \"%2$s\"。</string>
     <string name="devices">裝置</string>
     <string name="disconnected">斷線</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">說明文件</string>
     <string name="download_rate">下載速率</string>
     <string name="downloaded">已下載</string>

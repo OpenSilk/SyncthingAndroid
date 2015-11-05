@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s quer compartilhar a pasta \"%2$s\".</string>
     <string name="devices">Dispositivos</string>
     <string name="disconnected">Desconectado</string>
+    <string name="discovery">Descoberta</string>
     <string name="documentation">Documentação</string>
     <string name="download_rate">Velocidade de recepção</string>
     <string name="downloaded">Recebido</string>

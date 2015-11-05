@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s haluaa jakaa kansion \"%2$s\".</string>
     <string name="devices">Laitteet</string>
     <string name="disconnected">Yhteys katkaistu</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Dokumentaatio</string>
     <string name="download_rate">Latausmäärä</string>
     <string name="downloaded">Ladattu</string>

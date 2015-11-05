@@ -17,7 +17,6 @@
 
 package syncthing.android.api.model;
 
-import android.content.res.Resources;
 import android.databinding.BindingAdapter;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
@@ -82,6 +81,9 @@ public class EnumTextBinding {
     public static void versioningTypeText(TextView view, VersioningType type) {
         if (type == null) type = VersioningType.NONE;
         switch (type) {
+            case TRASHCAN:
+                view.setText(R.string.trash_can_file_versioning);
+                break;
             case SIMPLE:
                 view.setText(R.string.simple_file_versioning);
                 break;
@@ -98,7 +100,7 @@ public class EnumTextBinding {
         }
     }
     @BindingAdapter("modelStateText")
-    public static void modelStatText(TextView view, ModelState state) {
+    public static void modelStateText(TextView view, ModelState state) {
         if (state == null) state = ModelState.UNKNOWN;
         switch (state) {
             case IDLE:
@@ -120,7 +122,7 @@ public class EnumTextBinding {
         }
     }
     @BindingAdapter("modelStateTextColor")
-    public static void modelStatTextColor(TextView view, ModelState state) {
+    public static void modelStateTextColor(TextView view, ModelState state) {
         if (state == null) state = ModelState.UNKNOWN;
         switch (state) {
             case IDLE:

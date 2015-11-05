@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s vol compartir la carpeta \"%2$s\".</string>
     <string name="devices">Dispositius</string>
     <string name="disconnected">Desconnectat</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Documentació</string>
     <string name="download_rate">Tasca de descarrega</string>
     <string name="downloaded">Descarregat</string>

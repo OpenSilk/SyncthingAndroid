@@ -11,6 +11,8 @@ package syncthing.api;
 
 import com.squareup.okhttp.ResponseBody;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import retrofit.http.Body;
@@ -25,7 +27,7 @@ import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceId;
 import syncthing.api.model.DeviceStatsMap;
 import syncthing.api.model.FolderStatsMap;
-import syncthing.api.model.GuiErrors;
+import syncthing.api.model.SystemErrors;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
 import syncthing.api.model.Need;
@@ -33,6 +35,7 @@ import syncthing.api.model.Ok;
 import syncthing.api.model.Ping;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
+import syncthing.api.model.SystemMessages;
 import syncthing.api.model.Version;
 import syncthing.api.model.event.Event;
 
@@ -64,7 +67,7 @@ public interface SyncthingApi {
     @GET("/rest/db/status")
     Observable<Model> model(@Query("folder") String folder);
 
-    //@GET("/rest/db/browse")
+    //@GET("/rest/db/browse") //@Query("folder") ops @Query("prefix") @Query("disonly") @Query("levels")
 
     @GET("/rest/events")
     Observable<Event[]> events(@Query("since") long lastId);
@@ -101,7 +104,7 @@ public interface SyncthingApi {
     //@GET("/rest/system/discovery")
 
     @GET("/rest/system/error")
-    Observable<GuiErrors> errors();
+    Observable<SystemErrors> errors();
 
     @GET("/rest/system/ping")
     Observable<Ping> ping();
@@ -113,6 +116,16 @@ public interface SyncthingApi {
 
     @GET("/rest/system/version")
     Observable<Version> version();
+
+    //@GET("/rest/system/debug")
+
+    @GET("/rest/system/log")
+    Observable<SystemMessages> log();
+
+    @GET("/rest/system/log")
+    Observable<SystemMessages> log(@Query("since") DateTime since);
+
+    //@GEE("/rest/system/log.txt") //op @Query("since")
 
     /*
      * POST
@@ -152,6 +165,12 @@ public interface SyncthingApi {
     Observable<Ok> shutdown();
 
     //@POST("/rest/system/upgrade")
+
+    //@POST("/rest/system/pause") @Query("device")
+
+    //@POST("/rest/system/resume") @Query("device")
+
+    //@POST("/rest/system/debug") //op @Query("enable") @Query("disable")
 
     @POST("/rest/scan")
     Observable<Void> scan();

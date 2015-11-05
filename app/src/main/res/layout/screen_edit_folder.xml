@@ -271,6 +271,12 @@
                     android:text="@string/no_file_versioning"/>
 
                 <RadioButton
+                    android:id="@+id/radio_trashcan_versioning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trash_can_file_versioning"/>
+
+                <RadioButton
                     android:id="@+id/radio_simple_versioning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -289,6 +295,63 @@
                     android:text="@string/external_file_versioning"/>
 
             </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/trashcan_versioning_extra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/files_are_moved_to_stversions_folder_when_replaced_or_deleted_by_syncthing"
+                    style="@style/session.edit.FieldDescription"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clean_out_after"
+                    style="@style/session.edit.FieldHeader"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edit_trashcan_versioning_keep"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        style="@style/session.edit.EditText.Number"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/days"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/desc_trashcan_versioning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/the_number_of_days_to_keep_files_in_the_trash_can_zero_means_forever"
+                    style="@style/session.edit.FieldDescription" />
+
+                <TextView
+                    android:id="@+id/error_trashcan_versioning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/the_number_of_days_must_be_a_number_and_cannot_be_blank"
+                    android:visibility="gone"
+                    style="@style/session.edit.FieldError"
+                    tools:visibility="visible"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/simple_versioning_extra"

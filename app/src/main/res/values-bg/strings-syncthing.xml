@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s желае да сподели папка \"%2$s\".</string>
     <string name="devices">Устройства</string>
     <string name="disconnected">Прекрати Връзката</string>
+    <string name="discovery">Откриване</string>
     <string name="documentation">Документация</string>
     <string name="download_rate">Скорост на Теглене</string>
     <string name="downloaded">Изтеглен</string>

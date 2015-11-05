@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s がフォルダー \"%2$s\" を共有するよう求めています。</string>
     <string name="devices">デバイス</string>
     <string name="disconnected">切断中</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">マニュアル</string>
     <string name="download_rate">ダウンロード速度</string>
     <string name="downloaded">ダウンロード済</string>

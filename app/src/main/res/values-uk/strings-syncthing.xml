@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s хоче поділитися директорією \"%2$s\".</string>
     <string name="devices">Пристрої</string>
     <string name="disconnected">З’єднання відсутнє</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Документація</string>
     <string name="download_rate">Швидкість завантаження</string>
     <string name="downloaded">Завантажено</string>

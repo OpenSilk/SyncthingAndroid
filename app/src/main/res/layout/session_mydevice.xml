@@ -173,17 +173,37 @@
                     android:id="@+id/global_discovery_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{card.showGlobalAnnounce ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{card.discoveryEnabled ? View.VISIBLE : View.GONE}">
 
                     <TextView
                         android:id="@+id/global_discovery_title"
-                        android:text="@string/global_discovery"
+                        android:text="@string/discovery"
                         style="@style/session.RecyclerTextLeftColumn"
                         />
 
                     <TextView
                         android:id="@+id/global_discovery"
-                        app:globalAnnounce="@{card.systemInfo}"
+                        app:discoveryText="@{card.systemInfo}"
+                        style="@style/session.RecyclerTextRightColumn"
+                        tools:text="OK"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/relays_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{card.relaysEnabled ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        android:id="@+id/relays_title"
+                        android:text="@string/relays"
+                        style="@style/session.RecyclerTextLeftColumn"
+                        />
+
+                    <TextView
+                        android:id="@+id/relays"
+                        app:relaysText="@{card.systemInfo}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="OK"/>
 

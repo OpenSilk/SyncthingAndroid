@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s 想将 “%2$s” 文件夹共享给您</string>
     <string name="devices">设备</string>
     <string name="disconnected">连接已断开</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">文档</string>
     <string name="download_rate">下载速度</string>
     <string name="downloaded">已下载</string>

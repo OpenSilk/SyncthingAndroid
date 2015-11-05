@@ -92,7 +92,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
                 return new StateChanged(id, time, type, context.deserialize(data, StateChanged.Data.class));
             }
             default: {
-                return new UnknownEvent(id, time, obj.getAsString());
+                return new UnknownEvent(id, time, obj.toString());
             }
         }
     }

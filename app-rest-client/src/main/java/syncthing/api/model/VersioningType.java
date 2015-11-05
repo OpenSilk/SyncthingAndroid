@@ -15,6 +15,7 @@ import com.google.gson.annotations.SerializedName;
 * Created by drew on 3/17/15.
 */
 public enum VersioningType {
+    @SerializedName("trashcan") TRASHCAN,
     @SerializedName("simple") SIMPLE,
     @SerializedName("staggered") STAGGERED,
     @SerializedName("external") EXTERNAL,

@@ -34,6 +34,7 @@
     <string name="copied_from_original">Copied from original</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
     <string name="cpu_utilization">CPU Utilization</string>
+    <string name="days">days</string>
     <string name="delete">Delete</string>
     <string name="deleted">Deleted</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Device %1$s (%2$s) wants to connect. Add new device?</string>
@@ -43,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s wants to share folder \"%2$s\".</string>
     <string name="devices">Devices</string>
     <string name="disconnected">Disconnected</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Documentation</string>
     <string name="download_rate">Download Rate</string>
     <string name="downloaded">Downloaded</string>
@@ -52,7 +54,7 @@
     <string name="edit_folder">Edit Folder</string>
     <string name="editing">Editing</string>
     <string name="enable_upnp">Enable UPnP</string>
-    <string name="enter_comma_separated_ipport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Enter comma separated \"ip:port\" addresses or \"dynamic\" to perform automatic discovery of the address.</string>
+    <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Enter comma separated  (\"tcp://ip:port\", \"tcp://host:port\") addresses or \"dynamic\" to perform automatic discovery of the address.</string>
     <string name="enter_ignore_patterns_one_per_line">Enter ignore patterns, one per line.</string>
     <string name="error">Error</string>
     <string name="external_file_versioning">External File Versioning</string>
@@ -118,6 +120,8 @@
     <string name="override_changes">Override Changes</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Path to the folder on the local computer. Will be created if it does not exist. The tilde character (~) can be used as a shortcut for</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Path where versions should be stored (leave empty for the default .stversions folder in the folder).</string>
+    <string name="pause">Pause</string>
+    <string name="paused">Paused</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
     <string name="please_wait">Please wait</string>
     <string name="preview">Preview</string>
@@ -125,6 +129,8 @@
     <string name="quick_guide_to_supported_patterns">Quick guide to supported patterns</string>
     <string name="ram_utilization">RAM Utilization</string>
     <string name="random">Random</string>
+    <string name="relayed_via">Relayed via</string>
+    <string name="relays">Relays</string>
     <string name="release_notes">Release Notes</string>
     <string name="remove">Remove</string>
     <string name="rescan">Rescan</string>
@@ -133,6 +139,7 @@
     <string name="restart">Restart</string>
     <string name="restart_needed">Restart Needed</string>
     <string name="restarting">Restarting</string>
+    <string name="resume">Resume</string>
     <string name="reused">Reused</string>
     <string name="save">Save</string>
     <string name="scanning">Scanning</string>

@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s quiere compartir repositorio \"%2$s\".</string>
     <string name="devices">Dispositivos</string>
     <string name="disconnected">Desconectado</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Documentación</string>
     <string name="download_rate">Tasa de descarga</string>
     <string name="downloaded">Descargado</string>

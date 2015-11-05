@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s ønskjer å dela mappa \"%2$s\".</string>
     <string name="devices">Einingar</string>
     <string name="disconnected">Fråkopla</string>
+    <string name="discovery">Discovery</string>
     <string name="documentation">Dokumentasjon</string>
     <string name="download_rate">Nedlastingsfart</string>
     <string name="downloaded">Lasta ned</string>

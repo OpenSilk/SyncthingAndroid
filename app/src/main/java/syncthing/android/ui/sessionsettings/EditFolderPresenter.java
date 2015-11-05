@@ -177,6 +177,17 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         return valid;
     }
 
+    boolean validateTrashCanVersioningKeep(CharSequence text) {
+        if (StringUtils.isEmpty(text) || !StringUtils.isNumeric(text)
+                || Integer.parseInt(text.toString()) < 0) {
+            getView().notifyTrashCanVersioningKeepInvalid(false);
+            return false;
+        } else {
+            getView().notifyTrashCanVersioningKeepInvalid(true);
+            return true;
+        }
+    }
+
     boolean validateSimpleVersioningKeep(CharSequence text) {
         if (StringUtils.isEmpty(text) || !StringUtils.isNumeric(text)) {
             getView().notifySimpleVersioningKeepEmpty(false);

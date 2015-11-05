@@ -116,17 +116,17 @@
                 style="@style/session.edit.Checkbox"/>
 
             <CheckBox
-                android:id="@+id/check_global_discovery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/global_discovery"
-                style="@style/session.edit.Checkbox"/>
-
-            <CheckBox
                 android:id="@+id/check_local_discovery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/local_discovery"
+                style="@style/session.edit.Checkbox"/>
+
+            <CheckBox
+                android:id="@+id/check_global_discovery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/global_discovery"
                 style="@style/session.edit.Checkbox"/>
 
             <TextView

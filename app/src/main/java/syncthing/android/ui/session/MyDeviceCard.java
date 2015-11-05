@@ -67,6 +67,7 @@ public class MyDeviceCard extends ExpandableCard {
         this.connection = connection;
         this.system = system;
         this.version = version;
+        setExpanded(true);
     }
 
     public void setDevice(DeviceConfig device) {
@@ -111,7 +112,8 @@ public class MyDeviceCard extends ExpandableCard {
             notifyChange(syncthing.android.BR.cpuPercentText);
             notifyChange(syncthing.android.BR.systemInfo);
             notifyChange(syncthing.android.BR.hasSystemInfo);
-            notifyChange(syncthing.android.BR.showGlobalAnnounce);
+            notifyChange(syncthing.android.BR.discoveryEnabled);
+            notifyChange(syncthing.android.BR.relaysEnabled);
             notifyChange(syncthing.android.BR.uptime);
             notifyChange(syncthing.android.BR.uptimeText);
         } else {
@@ -127,12 +129,15 @@ public class MyDeviceCard extends ExpandableCard {
             if (oldSystem.uptime != system.uptime) {
                 notifyChange(syncthing.android.BR.uptime);
             }
-            //todo handle global announce better
-            if (oldSystem.announceServersFailed.size()
-                    != system.announceServersFailed.size()) {
-                notifyChange(syncthing.android.BR.systemInfo);
-                notifyChange(syncthing.android.BR.showGlobalAnnounce);
+
+            if (oldSystem.discoveryEnabled != system.discoveryEnabled) {
+                notifyChange(syncthing.android.BR.discoveryEnabled);
             }
+            if (oldSystem.relaysEnabled != system.relaysEnabled) {
+                notifyChange(syncthing.android.BR.relaysEnabled);
+            }
+            //todo handle better (bindings depend on this)
+            notifyChange(syncthing.android.BR.systemInfo);
         }
     }
 
@@ -203,11 +208,6 @@ public class MyDeviceCard extends ExpandableCard {
     }
 
     @Bindable
-    public boolean getShowGlobalAnnounce() {
-        return system != null && system.extAnnounceOK != null && system.announceServersTotal > 0;
-    }
-
-    @Bindable
     public long getUptime() {
         return system != null ? system.uptime : -1;
     }
@@ -222,23 +222,46 @@ public class MyDeviceCard extends ExpandableCard {
         return version != null ? version.toString() : "?";
     }
 
-    @BindingAdapter("globalAnnounce")
-    public static void setGlobalAnnounce(TextView view, SystemInfo sys) {
-        if (sys != null && sys.extAnnounceOK != null && sys.announceServersTotal > 0) {
-            if (sys.announceServersFailed.isEmpty()) {
-                view.setText(android.R.string.ok);
-                view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.announce_ok));
-            } else {
-                int successes = (sys.announceServersTotal - sys.announceServersFailed.size());
-                view.setText(view.getResources().getString(R.string.announce_failures,
-                        successes, sys.announceServersTotal
-                ));
-                view.setTextColor(ContextCompat.getColor(view.getContext(),
-                                successes == 0
-                                ? R.color.announce_fail
-                                : R.color.announce_ok
-                ));
+    @Bindable
+    public boolean isDiscoveryEnabled() {
+        return system != null && system.discoveryEnabled;
+    }
+
+    @BindingAdapter("discoveryText")
+    public static void setDiscoveryText(TextView view, SystemInfo sys) {
+        if (sys != null) {
+            int failures = 0;
+            if (sys.discoveryErrors != null && !sys.discoveryErrors.isEmpty()) {
+                failures = sys.discoveryErrors.size();
             }
+            view.setText(view.getResources().getString(R.string.announce_failures,
+                    (sys.discoveryMethods - failures), sys.discoveryMethods));
+            view.setTextColor(ContextCompat.getColor(view.getContext(),
+                    (sys.discoveryMethods - failures) == 0 ? R.color.announce_fail : R.color.announce_ok));
         }//else its hidden
     }
+
+    @Bindable
+    public boolean isRelaysEnabled() {
+        return system != null && system.relaysEnabled;
+    }
+
+    @BindingAdapter("relaysText")
+    public static void setRelaysText(TextView view, SystemInfo sys) {
+        if (sys != null && sys.relayClientStatus != null) {
+            int failed, total;
+            failed = total = 0;
+            for (String r : sys.relayClientStatus.keySet()) {
+                if (!sys.relayClientStatus.get(r)) {
+                    failed++;
+                }
+                total++;
+            }
+            view.setText(view.getResources().getString(R.string.announce_failures,
+                    (total - failed), total));
+            view.setTextColor(ContextCompat.getColor(view.getContext(),
+                    (total - failed) == 0 ? R.color.announce_fail : R.color.announce_ok));
+        }//else its hidden
+    }
+
 }

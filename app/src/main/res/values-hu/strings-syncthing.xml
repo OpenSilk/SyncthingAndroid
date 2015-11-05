@@ -32,7 +32,7 @@
     <string name="connection_error">Kapcsolódási hiba</string>
     <string name="copied_from_elsewhere">Másolva máshonnan</string>
     <string name="copied_from_original">Másolva az eredetiről</string>
-    <string name="copyright_2015_the_following_contributors">Copyright © 2015 az alábbi Közreműködők</string>
+    <string name="copyright_2015_the_following_contributors">Copyright © 2015 az alábbi Közreműködők:</string>
     <string name="cpu_utilization">Processzor használat</string>
     <string name="days">nap</string>
     <string name="delete">Törlés</string>
@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s meg szeretné osztani a \"%2$s\" nevű mappát.</string>
     <string name="devices">Eszközök</string>
     <string name="disconnected">Kapcsolat bontva</string>
+    <string name="discovery">Felfedezés</string>
     <string name="documentation">Dokumentáció</string>
     <string name="download_rate">Letöltési sebesség</string>
     <string name="downloaded">Letöltve</string>

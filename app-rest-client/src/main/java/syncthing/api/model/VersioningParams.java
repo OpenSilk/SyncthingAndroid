@@ -12,10 +12,13 @@ package syncthing.api.model;
 import java.io.Serializable;
 
 /**
-* Created by drew on 3/17/15.
-*/
+ * TODO separate into own classes
+ * Created by drew on 3/17/15.
+ */
 public class VersioningParams implements Serializable {
-    private static final long serialVersionUID = 3403767982430372571L;
+    private static final long serialVersionUID = 6669162098435872133L;
+    //TrashCan
+    public String cleanoutDays = "0";
     //Simple
     public String keep = "5";
     //Staggered

@@ -22,8 +22,7 @@ import android.databinding.Bindable;
 import org.apache.commons.lang3.StringUtils;
 
 import syncthing.android.R;
-import syncthing.android.ui.common.ExpandableCard;
-import syncthing.api.model.GuiError;
+import syncthing.api.model.SystemError;
 
 /**
  * Created by drew on 3/15/15.
@@ -32,7 +31,7 @@ public class NotifCardError extends NotifCard {
 
     public static final NotifCardError INSTANCE = new NotifCardError();
 
-    private GuiError guiError;
+    private SystemError guiError;
 
     private NotifCardError() {
     }
@@ -42,7 +41,7 @@ public class NotifCardError extends NotifCard {
         return R.layout.session_notif_error;
     }
 
-    public void setError(GuiError error) {
+    public void setError(SystemError error) {
         if (error == null) {
             throw new IllegalArgumentException("Tried setting null error");
         } else if (this.guiError == null) {

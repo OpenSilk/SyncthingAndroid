@@ -69,8 +69,8 @@ import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.FolderStats;
 import syncthing.api.model.FolderStatsMap;
 import syncthing.api.model.GUIConfig;
-import syncthing.api.model.GuiError;
-import syncthing.api.model.GuiErrors;
+import syncthing.api.model.SystemError;
+import syncthing.api.model.SystemErrors;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
 import syncthing.api.model.Ok;
@@ -161,7 +161,7 @@ public class SessionController implements EventMonitor.EventListener {
     final Map<String, DeviceRejected> deviceRejections = new LinkedHashMap<>();
     //synchronize on self
     final Map<String, FolderRejected> folderRejections = new LinkedHashMap<>();
-    final AtomicReference<GuiErrors> errorsList = new AtomicReference<>();
+    final AtomicReference<SystemErrors> errorsList = new AtomicReference<>();
     //synchronize on self
     final WeakHashMap<String, Subscription> activeSubscriptions = new WeakHashMap<>();
 
@@ -634,25 +634,7 @@ public class SessionController implements EventMonitor.EventListener {
         return myId.get();
     }
 
-    public int getAnnounceServersTotal() {
-        return systemInfo.get().announceServersTotal;
-    }
-
-    public List<String> getAnnounceServersFailed() {
-        return systemInfo.get().announceServersFailed;
-    }
-
     void updateSystemInfo(SystemInfo systemInfo) {
-        systemInfo.announceServersTotal = 0;
-        systemInfo.announceServersFailed.clear();
-        if (systemInfo.extAnnounceOK != null) {
-            systemInfo.announceServersTotal = systemInfo.extAnnounceOK.size();
-            for (String server : systemInfo.extAnnounceOK.keySet()) {
-                if (!systemInfo.extAnnounceOK.get(server)) {
-                    systemInfo.announceServersFailed.add(server);
-                }
-            }
-        }
         this.myId.set(systemInfo.myID);
         this.systemInfo.set(systemInfo);
     }
@@ -957,8 +939,8 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     @Nullable
-    public GuiError getLatestError() {
-        List<GuiError> errors = errorsList.get() != null ? errorsList.get().errors : null;
+    public SystemError getLatestError() {
+        List<SystemError> errors = errorsList.get() != null ? errorsList.get().errors : null;
         if (errors != null && errors.size() > 0) {
             return errors.get(errors.size() - 1);
         } else {

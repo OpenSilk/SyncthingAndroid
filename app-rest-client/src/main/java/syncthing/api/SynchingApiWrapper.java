@@ -11,6 +11,8 @@ package syncthing.api;
 
 import com.squareup.okhttp.ResponseBody;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import retrofit.http.Body;
@@ -24,7 +26,7 @@ import syncthing.api.model.Connections;
 import syncthing.api.model.DeviceId;
 import syncthing.api.model.DeviceStatsMap;
 import syncthing.api.model.FolderStatsMap;
-import syncthing.api.model.GuiErrors;
+import syncthing.api.model.SystemErrors;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
 import syncthing.api.model.Need;
@@ -32,6 +34,7 @@ import syncthing.api.model.Ok;
 import syncthing.api.model.Ping;
 import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
+import syncthing.api.model.SystemMessages;
 import syncthing.api.model.Version;
 import syncthing.api.model.event.Event;
 
@@ -131,7 +134,7 @@ public class SynchingApiWrapper implements SyncthingApi {
     }
 
     @Override
-    public Observable<GuiErrors> errors() {
+    public Observable<SystemErrors> errors() {
         return api.errors().subscribeOn(scheduler);
     }
 
@@ -148,6 +151,16 @@ public class SynchingApiWrapper implements SyncthingApi {
     @Override
     public Observable<Version> version() {
         return api.version().subscribeOn(scheduler);
+    }
+
+    @Override
+    public Observable<SystemMessages> log() {
+        return api.log().subscribeOn(scheduler);
+    }
+
+    @Override
+    public Observable<SystemMessages> log(@Query("since") DateTime since) {
+        return api.log(since).subscribeOn(scheduler);
     }
 
     @Override

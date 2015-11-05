@@ -44,6 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s chce sdílet adresář \"%2$s\".</string>
     <string name="devices">Přístroje</string>
     <string name="disconnected">Odpojen</string>
+    <string name="discovery">Oznamování</string>
     <string name="documentation">Dokumentace</string>
     <string name="download_rate">Rychlost stahování</string>
     <string name="downloaded">Staženo</string>
@@ -84,7 +85,7 @@
     <string name="ignore_patterns">Ignorované vzory</string>
     <string name="ignore_permissions">Ignorovat oprávnění</string>
     <string name="incoming_rate_limit_kibs">Omezení příchozí rychlosti (KiB/s)</string>
-    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Nesprávné nastavení může poškodit obsah Vašich složek a učinit Syncthing nefunkční.</string>
+    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Nesprávné nastavení může poškodit obsah Vašich adresářů a učinit Syncthing nefunkční.</string>
     <string name="introducer">Zavaděč</string>
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Prohození zadané podmínky (např. nevynechat)</string>
     <string name="items">položky</string>

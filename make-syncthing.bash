@@ -77,7 +77,10 @@ export GOARCH=$_GOARCH
 
 mv syncthing ${ASSETSDIR}/syncthing.${GOARCH}
 chmod 644 ${ASSETSDIR}/syncthing.${GOARCH}
-#git clean -f
+
+if [[ RESET -eq 1 && -e ./build.go ]]; then
+    git clean -f
+fi
 
 popd
 
