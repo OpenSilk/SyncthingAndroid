@@ -23,7 +23,17 @@ public class DeviceDiscovered extends Event<DeviceDiscovered.Data> {
     }
 
     public static class Data {
-        public List<String> addrs = Collections.emptyList();
         public String device;
+        public List<Address> addrs = Collections.emptyList();
+        public List<Relay> relays = Collections.emptyList();
+    }
+
+    public static class Address {
+        public String URL;
+    }
+
+    public static class Relay {
+        public String url;
+        public int latency;
     }
 }
