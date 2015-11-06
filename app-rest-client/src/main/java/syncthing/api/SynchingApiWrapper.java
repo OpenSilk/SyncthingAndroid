@@ -204,6 +204,16 @@ public class SynchingApiWrapper implements SyncthingApi {
     }
 
     @Override
+    public Observable<Void> pause(@Query("device") String device) {
+        return api.pause(device).subscribeOn(scheduler);
+    }
+
+    @Override
+    public Observable<Void> resume(@Query("device") String device) {
+        return api.resume(device).subscribeOn(scheduler);
+    }
+
+    @Override
     public Observable<Void> scan() {
         return api.scan().subscribeOn(scheduler);
     }

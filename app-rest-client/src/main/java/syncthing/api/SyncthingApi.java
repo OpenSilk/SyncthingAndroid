@@ -166,9 +166,11 @@ public interface SyncthingApi {
 
     //@POST("/rest/system/upgrade")
 
-    //@POST("/rest/system/pause") @Query("device")
+    @POST("/rest/system/pause")
+    Observable<Void> pause(@Query("device") String device);
 
-    //@POST("/rest/system/resume") @Query("device")
+    @POST("/rest/system/resume")
+    Observable<Void> resume(@Query("device") String device);
 
     //@POST("/rest/system/debug") //op @Query("enable") @Query("disable")
 
