@@ -22,6 +22,9 @@ public class ConnectionInfo {
     public long outBytesTotal;
     public String address;
     public String clientVersion;
+    public boolean paused;
+    public boolean connected;
+    public ConnectionType type = ConnectionType.UNKNOWN;
     //pojo only
     public transient String deviceId;
     public transient long inbps;
