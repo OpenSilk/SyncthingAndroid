@@ -21,15 +21,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import org.opensilk.common.core.mortar.DaggerService;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import syncthing.android.R;
 import syncthing.android.ui.common.ExpandableCardViewWrapper;
 
@@ -39,28 +33,15 @@ import syncthing.android.ui.common.ExpandableCardViewWrapper;
 public class NotifCardErrorView extends ExpandableCardViewWrapper<NotifCardError> {
 
     @InjectView(R.id.expand) ViewGroup expand;
-    @InjectView(R.id.time) TextView time;
-    @InjectView(R.id.message) TextView message;
-
-    @Inject SessionPresenter mPresenter;
 
     public NotifCardErrorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (!isInEditMode()) {
-            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
-            cmp.inject(this);
-        }
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-    }
-
-    @OnClick(R.id.btn_dismiss)
-    void dismissErrors() {
-        mPresenter.controller.clearErrors();
     }
 
     @Override

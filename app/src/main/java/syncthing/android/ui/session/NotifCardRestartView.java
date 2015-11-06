@@ -21,47 +21,27 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import org.opensilk.common.core.mortar.DaggerService;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import syncthing.android.R;
 import syncthing.android.ui.common.ExpandableCardViewWrapper;
-import syncthing.api.SessionController;
 
 /**
  * Created by drew on 3/7/15.
  */
 public class NotifCardRestartView extends ExpandableCardViewWrapper<NotifCardRestart> {
 
-    @InjectView(R.id.header) ViewGroup header;
     @InjectView(R.id.expand) ViewGroup expand;
-    @InjectView(R.id.title) TextView title;
-
-    @Inject SessionPresenter mPresenter;
 
     public NotifCardRestartView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (!isInEditMode()) {
-            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
-            cmp.inject(this);
-        }
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-    }
-
-    @OnClick(R.id.btn_restart)
-    void restartSyncthing() {
-        mPresenter.controller.restart();
     }
 
     @Override

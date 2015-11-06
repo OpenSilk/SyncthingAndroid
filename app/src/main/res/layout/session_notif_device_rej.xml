@@ -38,6 +38,9 @@
 
                 <org.opensilk.common.ui.widget.SquareImageView
                     android:id="@+id/identicon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    app:identicon="@{card.deviceID}"
                     style="@style/session.RecyclerNotifHeaderIcon"/>
 
                 <TextView
@@ -71,7 +74,7 @@
                     android:id="@+id/message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/device_device_address_wants_to_connect_add_new_device(card.device,card.address)}"
+                    android:text="@{@string/device_device_address_wants_to_connect_add_new_device(card.deviceID,card.address)}"
                     style="@style/session.RecycleNotifMessageText"
                     tools:text="Message stoifo ysonito fasont"/>
 
@@ -87,6 +90,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/add"
+                        android:onClick="@{card.addDevice}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button
@@ -94,6 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/ignore"
+                        android:onClick="@{card.ignoreDevice}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button
@@ -101,6 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/later"
+                        android:onClick="@{card.dismissDevice}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                 </LinearLayout>

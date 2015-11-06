@@ -18,6 +18,7 @@
 package syncthing.android.ui.session;
 
 import android.databinding.Bindable;
+import android.view.View;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,11 +30,10 @@ import syncthing.api.model.SystemMessage;
  */
 public class NotifCardError extends NotifCard {
 
-    public static final NotifCardError INSTANCE = new NotifCardError();
+    private SystemMessage message;
 
-    private SystemMessage guiError;
-
-    private NotifCardError() {
+    public NotifCardError(SessionPresenter presenter) {
+        super(presenter);
     }
 
     @Override
@@ -44,16 +44,16 @@ public class NotifCardError extends NotifCard {
     public void setError(SystemMessage error) {
         if (error == null) {
             throw new IllegalArgumentException("Tried setting null error");
-        } else if (this.guiError == null) {
-            this.guiError = error;
+        } else if (this.message == null) {
+            this.message = error;
             notifyChange(syncthing.android.BR._all);
         } else {
-            if (!StringUtils.equals(this.guiError.message, error.message)) {
-                this.guiError.message = error.message;
+            if (!StringUtils.equals(this.message.message, error.message)) {
+                this.message.message = error.message;
                 notifyChange(syncthing.android.BR.message);
             }
-            if (!this.guiError.when.equals(error.when)) {
-                this.guiError.when = error.when;
+            if (!this.message.when.equals(error.when)) {
+                this.message.when = error.when;
                 notifyChange(syncthing.android.BR.time);
             }
         }
@@ -61,11 +61,15 @@ public class NotifCardError extends NotifCard {
 
     @Bindable
     public String getTime() {
-        return guiError.when.toString("H:mm:ss");
+        return message.when.toString("H:mm:ss");
     }
 
     @Bindable
     public String getMessage() {
-        return guiError.message;
+        return message.message;
+    }
+
+    public void dismissError(View btn) {
+        presenter.controller.clearErrors();
     }
 }

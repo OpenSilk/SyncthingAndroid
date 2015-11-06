@@ -18,18 +18,21 @@
 package syncthing.android.ui.session;
 
 import android.databinding.Bindable;
+import android.view.View;
+
+import java.util.Collections;
 
 import syncthing.android.R;
+import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.event.DeviceRejected;
-import syncthing.api.model.event.Event;
 
 /**
  * Created by drew on 3/6/15.
  */
 public class NotifCardRejDevice extends NotifCardRej<DeviceRejected> {
 
-    public NotifCardRejDevice(String id, DeviceRejected event) {
-        super(id, event);
+    public NotifCardRejDevice(SessionPresenter presenter, String id, DeviceRejected event) {
+        super(presenter, id, event);
     }
 
     @Override
@@ -43,12 +46,48 @@ public class NotifCardRejDevice extends NotifCardRej<DeviceRejected> {
     }
 
     @Bindable
-    public String getDevice() {
+    public String getDeviceID() {
         return event.data.device;
     }
 
     @Bindable
     public String getAddress() {
         return event.data.address;
+    }
+
+    public void addDevice(View btn) {
+        presenter.showSavingDialog();
+        //TODO stop doing this (move logic somewhere else)
+        DeviceConfig deviceConfig = new DeviceConfig();
+        deviceConfig.deviceID = getDeviceID();
+        presenter.controller.editDevice(deviceConfig, Collections.emptyMap(),
+                t -> {
+                    presenter.showError("Save failed", t.getMessage());
+                },
+                () -> {
+                    presenter.dismissSavingDialog();
+                    presenter.showSuccessMsg();
+                    dismissDevice(null);
+                }
+        );
+    }
+
+    public void ignoreDevice(View btn) {
+        presenter.showSavingDialog();
+        //TODO stop doing this (move logic somewhere else)
+        presenter.controller.ignoreDevice(getDeviceID(),
+                t -> {
+                    presenter.showError("Ignore failed", t.getMessage());
+                },
+                () -> {
+                    presenter.dismissSavingDialog();
+                    presenter.showSuccessMsg();
+                    dismissDevice(null);
+                }
+        );
+    }
+
+    public void dismissDevice(View btn) {
+        presenter.controller.removeDeviceRejection(getDeviceID());
     }
 }

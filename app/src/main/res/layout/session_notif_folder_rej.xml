@@ -47,7 +47,7 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/new_folder"
+                    android:text="@{card.share ? @string/share_this_folder : @string/new_folder}"
                     style="@style/session.RecyclerNotifHeaderText"/>
 
                 <TextView
@@ -74,6 +74,7 @@
                     android:id="@+id/message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{@string/device_wants_to_share_folder_folder(card.deviceName, card.folderName)}"
                     style="@style/session.RecycleNotifMessageText"
                     tools:text="Message stoifo ysonito fasont"/>
 
@@ -88,7 +89,8 @@
                         android:id="@+id/btn_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="@string/add"
+                        android:text="@{card.share ? @string/share : @string/add}"
+                        android:onClick="@{card.addFolder}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button
@@ -96,6 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/later"
+                        android:onClick="@{card.dismissFolder}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                 </LinearLayout>

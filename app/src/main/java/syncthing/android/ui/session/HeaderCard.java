@@ -17,6 +17,11 @@
 
 package syncthing.android.ui.session;
 
+import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
+import android.support.annotation.StringRes;
+import android.widget.TextView;
+
 import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.ui.common.Card;
@@ -53,8 +58,9 @@ public class HeaderCard extends Card {
         return R.layout.session_header;
     }
 
-    @Override
-    public int adapterId() {
-        return super.adapterId() ^ title;
+    @Bindable
+    public @StringRes int getTitle() {
+        return title;
     }
+
 }

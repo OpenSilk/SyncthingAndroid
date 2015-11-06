@@ -18,9 +18,11 @@
 package syncthing.android.ui.session;
 
 import android.databinding.Bindable;
+import android.view.View;
 
 import syncthing.android.R;
-import syncthing.api.model.event.Event;
+import syncthing.android.service.SyncthingUtils;
+import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.event.FolderRejected;
 
 /**
@@ -28,8 +30,8 @@ import syncthing.api.model.event.FolderRejected;
  */
 public class NotifCardRejFolder extends NotifCardRej<FolderRejected> {
 
-    public NotifCardRejFolder(String id, FolderRejected event) {
-        super(id, event);
+    public NotifCardRejFolder(SessionPresenter presenter, String id, FolderRejected event) {
+        super(presenter, id, event);
     }
 
     @Override
@@ -41,4 +43,49 @@ public class NotifCardRejFolder extends NotifCardRej<FolderRejected> {
     public String getTime() {
         return event.time.toString("H:mm:ss");
     }
+
+    @Bindable
+    public boolean isShare() {
+        return presenter.controller.getFolder(event.data.folder) != null;
+    }
+
+    @Bindable
+    public String getDeviceName() {
+        DeviceConfig device = presenter.controller.getDevice(event.data.device);
+        if (device == null) {
+            device = new DeviceConfig();
+            device.deviceID = event.data.device;
+        }
+        return SyncthingUtils.getDisplayName(device);
+    }
+
+    @Bindable
+    public String getFolderName() {
+        return event.data.folder;
+    }
+
+    public void addFolder(View btn) {
+        if (isShare()) {
+            presenter.showSavingDialog();
+            //TODO stop doing this (move logic somewhere else)
+            presenter.controller.shareFolder(event.data.folder, event.data.device,
+                    t -> {
+                        presenter.showError("Share failed", t.getMessage());
+                    },
+                    () -> {
+                        presenter.dismissSavingDialog();
+                        presenter.showSuccessMsg();
+                        dismissFolder(null);
+                    }
+            );
+        } else {
+            dismissFolder(null);
+            presenter.openEditFolderScreen(event.data.folder, event.data.device);
+        }
+    }
+
+    public void dismissFolder(View btn) {
+        presenter.controller.removeFolderRejection(id);
+    }
+
 }

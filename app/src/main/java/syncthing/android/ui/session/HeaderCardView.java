@@ -21,10 +21,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import org.opensilk.common.core.mortar.DaggerService;
-
-import javax.inject.Inject;
-
 import syncthing.android.ui.common.BindsCard;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.NoDecorate;
@@ -34,49 +30,20 @@ import syncthing.android.ui.common.NoDecorate;
  */
 public class HeaderCardView extends TextView implements BindsCard, NoDecorate {
 
-    //@InjectView(R.id.title) TextView title;
-    //@InjectView(R.id.btn_add) Button btnAdd;
-
-    @Inject SessionPresenter mPresenter;
-
-    HeaderCard item;
-
     public HeaderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (!isInEditMode()) {
-            SessionComponent cmp = DaggerService.getDaggerComponent(getContext());
-            cmp.inject(this);
-        }
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        //ButterKnife.inject(this);
-    }
-
-    //@OnClick(R.id.btn_add)
-    void doAdd() {
-        if (item != null && item.addAction != null) {
-            item.addAction.call(mPresenter);
-        }
     }
 
     @Override
     public Card getCard() {
-        return item;
+        return null;
     }
 
     @Override
     public void bind(Card card) {
-        item = ((HeaderCard) card);
-        setText(item.title);
-        //title.setText(item.title);
-        //btnAdd.setText(item.buttonText);
     }
 
     @Override
     public void reset() {
-        item = null;
     }
 }

@@ -19,6 +19,7 @@ package syncthing.android.ui.session;
 
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
+import android.view.View;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
@@ -44,10 +44,12 @@ import syncthing.api.model.VersioningType;
  */
 public class FolderCard extends ExpandableCard {
 
+    private final SessionPresenter presenter;
     private FolderConfig folder;
     private Model model;
 
-    public FolderCard(FolderConfig folder, Model model) {
+    public FolderCard(SessionPresenter presenter, FolderConfig folder, Model model) {
+        this.presenter = presenter;
         this.folder = folder;
         this.model = model;
     }
@@ -231,6 +233,18 @@ public class FolderCard extends ExpandableCard {
         return (model.globalBytes != 0)
                 ? Math.min(100, Math.round(100f * model.inSyncBytes / model.globalBytes))
                 : 100;
+    }
+
+    public void overrideFolderChanges(View btn) {
+        presenter.overrideChanges(getId());
+    }
+
+    public void rescanFolder(View btn) {
+        presenter.scanFolder(getId());
+    }
+
+    public void editFolder(View btn) {
+        presenter.openEditFolderScreen(getId());
     }
 
 }

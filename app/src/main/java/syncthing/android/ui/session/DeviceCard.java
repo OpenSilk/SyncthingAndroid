@@ -20,7 +20,7 @@ package syncthing.android.ui.session;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
 import android.support.v4.content.ContextCompat;
-import android.widget.ProgressBar;
+import android.view.View;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,16 +39,21 @@ import syncthing.api.model.DeviceStats;
  */
 public class DeviceCard extends ExpandableCard {
 
+
+    private final SessionPresenter presenter;
     protected DeviceConfig device;
     protected ConnectionInfo connection;
     protected DeviceStats stats;
     protected int completion;
 
-    public DeviceCard(DeviceConfig device) {
-        this.device = device;
-    }
-
-    public DeviceCard(DeviceConfig device, ConnectionInfo connection, DeviceStats stats, int completion) {
+    public DeviceCard(
+            SessionPresenter presenter,
+            DeviceConfig device,
+            ConnectionInfo connection,
+            DeviceStats stats,
+            int completion
+    ) {
+        this.presenter = presenter;
         this.device = device;
         this.connection = connection;
         this.stats = stats;
@@ -204,6 +209,10 @@ public class DeviceCard extends ExpandableCard {
             view.setText(R.string.syncing);
             view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.device_syncing));
         }
+    }
+
+    public void editDevice(View btn) {
+        presenter.openEditDeviceScreen(device.deviceID);
     }
 
 }

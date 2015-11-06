@@ -23,4 +23,8 @@ import syncthing.android.ui.common.ExpandableCard;
  * Created by drew on 10/12/15.
  */
 public abstract class NotifCard extends ExpandableCard {
+    protected final SessionPresenter presenter;
+    public NotifCard(SessionPresenter presenter) {
+        this.presenter = presenter;
+    }
 }

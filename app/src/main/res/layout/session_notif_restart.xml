@@ -19,6 +19,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data class="syncthing.android.ui.session.NotifCardRestartViewBinding">
+        <variable name="card" type="syncthing.android.ui.session.NotifCardRestart"/>
         <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
     <syncthing.android.ui.session.NotifCardRestartView
@@ -81,6 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/restart"
+                        android:onClick="@{card.restartSyncthing}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                 </LinearLayout>

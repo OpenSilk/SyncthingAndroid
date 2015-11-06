@@ -17,18 +17,25 @@
 
 package syncthing.android.ui.session;
 
+import android.view.View;
+
 import syncthing.android.R;
-import syncthing.android.ui.common.ExpandableCard;
 
 /**
  * Created by drew on 3/6/15.
  */
 public class NotifCardRestart extends NotifCard {
-    public static final NotifCardRestart INSTANCE = new NotifCardRestart();
+
+    public NotifCardRestart(SessionPresenter presenter) {
+        super(presenter);
+    }
 
     @Override
     public int getLayout() {
         return R.layout.session_notif_restart;
     }
 
+    public void restartSyncthing(View btn) {
+        presenter.controller.restart();
+    }
 }

@@ -315,18 +315,19 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         */
         notifications.clear();
         if (!controller.isConfigInSync()) {
-            notifications.add(NotifCardRestart.INSTANCE);
+            notifications.add(new NotifCardRestart(this));
         }
         SystemMessage guiError = controller.getLatestError();
         if (guiError != null) {
-            NotifCardError.INSTANCE.setError(guiError);
-            notifications.add(NotifCardError.INSTANCE);
+            NotifCardError errCard = new NotifCardError(this);
+            errCard.setError(guiError);
+            notifications.add(errCard);
         }
         for (Map.Entry<String, DeviceRejected> e : controller.getDeviceRejections()) {
-            notifications.add(new NotifCardRejDevice(e.getKey(), e.getValue()));
+            notifications.add(new NotifCardRejDevice(this, e.getKey(), e.getValue()));
         }
         for (Map.Entry<String, FolderRejected> e : controller.getFolderRejections()) {
-            notifications.add(new NotifCardRejFolder(e.getKey(), e.getValue()));
+            notifications.add(new NotifCardRejFolder(this, e.getKey(), e.getValue()));
         }
     }
 
@@ -353,7 +354,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                 card.setFolder(folder);
                 card.setModel(model);
             } else if (card == null) {
-                folders.add(new FolderCard(folder, model));
+                folders.add(new FolderCard(this, folder, model));
             }
             if (model == null) {
                 needsUpdate.add(folder.id);
@@ -413,7 +414,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                 c.setDeviceStats(stats);
                 c.setCompletion(completion);
             } else {
-                devices.add(new DeviceCard(device, connection, stats, completion));
+                devices.add(new DeviceCard(this, device, connection, stats, completion));
             }
         }
         Collections.sort(devices, (lhs, rhs) -> lhs.getDeviceID().compareTo(rhs.getDeviceID()));

@@ -247,6 +247,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/edit"
+                        android:onClick="@{card.editDevice}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                 </LinearLayout>
