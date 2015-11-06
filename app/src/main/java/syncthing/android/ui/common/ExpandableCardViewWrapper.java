@@ -18,7 +18,10 @@
 package syncthing.android.ui.common;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import timber.log.Timber;
@@ -26,97 +29,77 @@ import timber.log.Timber;
 /**
  * Created by drew on 3/20/15.
  */
-public abstract class ExpandableCardViewWrapper<T extends Card> extends FrameLayout implements BindsCard, CanExpand {
+public class ExpandableCardViewWrapper extends FrameLayout implements CanExpand {
 
-    Card card;
-    Expandable expandable;
-    CanExpand.OnExpandListener expandListener;
+    protected Expandable expandable;
+    protected CanExpand.OnExpandListener expandListener;
+    protected View expandView;
 
     public ExpandableCardViewWrapper(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    protected abstract void onBind(T card);
+    @Override
+    public void setExpandable(@NonNull Expandable card) {
+        expandable = card;
+        expandView = findViewById(expandable.getExpandableViewId());
+        if (expandView == null) {
+            throw new NullPointerException("Unable to find expand view in layout");
+        }
+        int newVis = expandable.isExpanded() ? VISIBLE : GONE;
+        if (expandView.getVisibility() != newVis) {
+            expandView.setVisibility(newVis);
+        }
+    }
 
-    Expandable getExpandable() {
+    @Override
+    public Expandable getExpandable() {
         return expandable;
     }
 
     @Override
-    public T getCard() {
-        return (T) card;
-    }
-
-    @Override
-    public final void bind(Card card) {
-        this.card = card;
-        if (!(card instanceof Expandable)) {
-            throw new IllegalArgumentException("Bound card not expandable");
-        }
-        this.expandable = (Expandable) card;
-        if (getExpandView() != null) {
-            int newVis = this.expandable.isExpanded() ? VISIBLE : GONE;
-            if (getExpandView().getVisibility() != newVis) {
-                getExpandView().setVisibility(newVis);
-            }
-        }
-        onBind((T) card);
-    }
-
-    @Override
-    public void reset() {
-        card = null;
-        expandable = null;
-    }
-
-    public CanExpand.OnExpandListener getExpandListener() {
+    public @Nullable CanExpand.OnExpandListener getExpandListener() {
         return expandListener;
     }
 
+    @Override
     public void setExpandListener(CanExpand.OnExpandListener expandListener) {
         this.expandListener = expandListener;
     }
 
-    public boolean isExpanded() {
-        return getExpandable() != null && getExpandable().isExpanded();
-    }
-
-    public void setExpanded(boolean expanded) {
-        if (getExpandable() != null) {
-            getExpandable().setExpanded(expanded);
-        }
-    }
-
+    @Override
     public void expand() {
         Timber.d("expand %s",Integer.toHexString(hashCode()));
-        if (getExpandView() != null) {
-            if (expandListener != null) {
-                expandListener.onExpandStart(this, getExpandView());
-            } else {
-                getExpandView().setVisibility(VISIBLE);
-                setExpanded(true);
-            }
+        if (expandListener != null) {
+            expandListener.onExpandStart(this, expandView);
+        } else {
+            expandView.setVisibility(VISIBLE);
+            expandable.setExpanded(true);
         }
     }
 
+    @Override
     public void collapse() {
         Timber.d("collapse %s",Integer.toHexString(hashCode()));
-        if (getExpandView() != null) {
-            if (expandListener != null) {
-                expandListener.onCollapseStart(this, getExpandView());
-            } else {
-                getExpandView().setVisibility(GONE);
-                setExpanded(false);
-            }
+        if (expandListener != null) {
+            expandListener.onCollapseStart(this, expandView);
+        } else {
+            expandView.setVisibility(GONE);
+            expandable.setExpanded(false);
         }
     }
 
+    @Override
     public void toggleExpanded() {
-        if (isExpanded()) {
+        if (expandable.isExpanded()) {
             collapse();
         } else {
             expand();
         }
     }
 
+    @Override
+    public View getView() {
+        return this;
+    }
 }

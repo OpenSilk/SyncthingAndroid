@@ -17,10 +17,13 @@
 
 package syncthing.android.ui.common;
 
+import android.support.annotation.IdRes;
+
 /**
  * Created by drew on 3/20/15.
  */
 public interface Expandable {
     void setExpanded(boolean expanded);
     boolean isExpanded();
+    @IdRes int getExpandableViewId();
 }

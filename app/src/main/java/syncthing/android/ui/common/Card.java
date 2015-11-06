@@ -18,31 +18,34 @@
 package syncthing.android.ui.common;
 
 import android.databinding.PropertyChangeRegistry;
+import android.support.annotation.LayoutRes;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Wrapper for recycler items to abstract adapter fuctionality
+ * Cards are (improperly named) ModelViews (bridges between raw model data and views).
+ * Cards should be relatively persistable, (ie hold no Context or View references) and should
+ * not be discarded on new model data but updated to reflect the change.
  *
  * Created by drew on 3/10/15.
  */
 public abstract class Card implements android.databinding.Observable {
 
     private static final AtomicInteger idGenerator = new AtomicInteger(1);
-    protected PropertyChangeRegistry mRegistry = new PropertyChangeRegistry();
+
+    private final PropertyChangeRegistry mRegistry = new PropertyChangeRegistry();
     private final int adapterId = idGenerator.getAndIncrement();
 
-    public abstract int getLayout();
+    /**
+     * @return The layout to inflate for this card
+     */
+    public abstract @LayoutRes int getLayout();
 
-    public int adapterId() {
+    /**
+     * @return The unique adapter id (monotonically increasing int)
+     */
+    public final int adapterId() {
         return adapterId;
-    }
-
-    public boolean isSame(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (adapterId() != ((Card)o).adapterId()) return false;
-        return true;
     }
 
     @Override
@@ -55,12 +58,12 @@ public abstract class Card implements android.databinding.Observable {
         mRegistry.remove(callback);
     }
 
+    /**
+     * Helper method to notify active listeners of model changes to this Card
+     * @param val an Binding Resource (BR) int
+     */
     protected void notifyChange(int val) {
         mRegistry.notifyChange(this, val);
-    }
-
-    public boolean canExpand() {
-        return false;
     }
 
     @Override

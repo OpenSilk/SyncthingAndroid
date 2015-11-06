@@ -17,6 +17,8 @@
 
 package syncthing.android.ui.common;
 
+import syncthing.android.R;
+
 /**
  * Created by drew on 3/20/15.
  */
@@ -35,7 +37,7 @@ public abstract class ExpandableCard extends Card implements Expandable {
     }
 
     @Override
-    public boolean canExpand() {
-        return true;
+    public int getExpandableViewId() {
+        return R.id.expand;
     }
 }

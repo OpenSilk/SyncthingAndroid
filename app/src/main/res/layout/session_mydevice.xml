@@ -25,7 +25,7 @@
         <variable name="card" type="syncthing.android.ui.session.MyDeviceCard"/>
         <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
-    <syncthing.android.ui.session.MyDeviceCardView
+    <syncthing.android.ui.common.ExpandableCardViewWrapper
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -252,5 +252,5 @@
 
         </RelativeLayout>
 
-    </syncthing.android.ui.session.MyDeviceCardView>
+    </syncthing.android.ui.common.ExpandableCardViewWrapper>
 </layout>

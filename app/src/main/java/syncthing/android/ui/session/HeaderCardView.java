@@ -21,29 +21,15 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import syncthing.android.ui.common.BindsCard;
-import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.NoDecorate;
 
 /**
  * Created by drew on 3/1/15.
  */
-public class HeaderCardView extends TextView implements BindsCard, NoDecorate {
+public class HeaderCardView extends TextView implements NoDecorate {
 
     public HeaderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    @Override
-    public Card getCard() {
-        return null;
-    }
-
-    @Override
-    public void bind(Card card) {
-    }
-
-    @Override
-    public void reset() {
-    }
 }

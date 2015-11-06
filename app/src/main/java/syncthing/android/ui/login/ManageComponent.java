@@ -41,6 +41,5 @@ public interface ManageComponent {
                 }
             };
     ManagePresenter presenter();
-    void inject(ManageDeviceCardView view);
     void inject(ManageScreenView view);
 }

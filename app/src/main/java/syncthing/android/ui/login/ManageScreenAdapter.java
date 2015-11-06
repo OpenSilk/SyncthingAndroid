@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.InjectView;
 import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardRecyclerAdapter;
@@ -30,20 +33,19 @@ import syncthing.android.ui.common.CardRecyclerAdapter;
  */
 public class ManageScreenAdapter extends CardRecyclerAdapter {
 
-    List<ManageDeviceCard> devices = new ArrayList<>();
+    final List<ManageDeviceCard> devices = new ArrayList<>();
 
+    @Inject
     public ManageScreenAdapter() {
     }
 
-    void setDevices(Collection<Credentials> credentialses, Credentials def) {
+    public void replaceAll(List<ManageDeviceCard> cards) {
         devices.clear();
-        for (Credentials creds : credentialses) {
-            ManageDeviceCard card = new ManageDeviceCard(creds);
-            if (creds.equals(def)) {
-                card.setChecked(true);
-            }
-            devices.add(card);
-        }
+        addAll(cards);
+    }
+
+    public void addAll(List<ManageDeviceCard> cards) {
+        devices.addAll(cards);
         notifyDataSetChanged();
     }
 

@@ -25,7 +25,13 @@ import android.view.View;
 public class ExpandHandler {
     final CanExpand cardView;
 
-    public ExpandHandler(CanExpand cardView) {
+    public static ExpandHandler create(Expandable card, CanExpand cardView, CanExpand.OnExpandListener listener) {
+        cardView.setExpandable(card);
+        cardView.setExpandListener(listener);
+        return new ExpandHandler(cardView);
+    }
+
+    private ExpandHandler(CanExpand cardView) {
         this.cardView = cardView;
     }
 

@@ -26,7 +26,7 @@
         <variable name="card" type="syncthing.android.ui.session.DeviceCard"/>
         <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
-    <syncthing.android.ui.session.DeviceCardView
+    <syncthing.android.ui.common.ExpandableCardViewWrapper
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/session.RecyclerCard">
@@ -47,8 +47,6 @@
 
                     <org.opensilk.common.ui.widget.SquareImageView
                         android:id="@+id/identicon"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
                         app:identicon="@{card.deviceID}"
                         style="@style/session.RecyclerHeaderIcon"/>
 
@@ -267,5 +265,5 @@
 
         </RelativeLayout>
 
-    </syncthing.android.ui.session.DeviceCardView>
+    </syncthing.android.ui.common.ExpandableCardViewWrapper>
 </layout>

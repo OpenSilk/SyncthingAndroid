@@ -19,7 +19,6 @@ package syncthing.android.ui.common;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.databinding.adapters.ViewBindingAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -40,32 +39,26 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
         mBinding = DataBindingUtil.bind(itemView, component);
     }
 
-    public ViewDataBinding getBinding() {
-        return mBinding;
+    @SuppressWarnings("unchecked")
+    public <T extends ViewDataBinding> T getBinding() {
+        return (T) mBinding;
     }
 
     public void bind(Card card, CanExpand.OnExpandListener listener) {
-        if (itemView instanceof BindsCard) {
-            ((BindsCard) itemView).bind(card);
-            mBinding.setVariable(syncthing.android.BR.card, card);
-        }
-        if (itemView instanceof CanExpand) {
-            CanExpand ce = (CanExpand) itemView;
-            ce.setExpandListener(listener);
-            mBinding.setVariable(syncthing.android.BR.expandHandler, new ExpandHandler(ce));
+        mBinding.setVariable(syncthing.android.BR.card, card);
+        if (card instanceof Expandable && itemView instanceof CanExpand) {
+            mBinding.setVariable(syncthing.android.BR.expandHandler,
+                    ExpandHandler.create((Expandable) card, (CanExpand) itemView, listener));
         }
         mBinding.executePendingBindings();
     }
 
     //TODO reset binding?
     public void recycle() {
-        if (itemView instanceof BindsCard) {
-            ((BindsCard) itemView).reset();
-        }
-        if (itemView instanceof CanExpand) {
-            CanExpand ce = (CanExpand) itemView;
-            ce.setExpandListener(null);
-        }
+//        mBinding.setVariable(syncthing.android.BR.card, null);
+//        if (itemView instanceof CanExpand) {
+//            mBinding.setVariable(syncthing.android.BR.expandHandler, null);
+//        }
     }
 
 }

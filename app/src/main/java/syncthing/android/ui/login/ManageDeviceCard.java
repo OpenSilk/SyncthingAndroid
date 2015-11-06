@@ -17,7 +17,11 @@
 
 package syncthing.android.ui.login;
 
+import android.databinding.Bindable;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Checkable;
+import android.widget.PopupMenu;
 
 import syncthing.android.R;
 import syncthing.android.model.Credentials;
@@ -28,11 +32,13 @@ import syncthing.android.ui.common.Card;
  */
 public class ManageDeviceCard extends Card implements Checkable {
 
-    public final Credentials credentials;
+    private final ManagePresenter presenter;
+    private final Credentials credentials;
 
     boolean checked = false;
 
-    public ManageDeviceCard(Credentials credentials) {
+    public ManageDeviceCard(ManagePresenter presenter, Credentials credentials) {
+        this.presenter = presenter;
         this.credentials = credentials;
     }
 
@@ -44,9 +50,11 @@ public class ManageDeviceCard extends Card implements Checkable {
     @Override
     public void setChecked(boolean checked) {
         this.checked = checked;
+        notifyChange(syncthing.android.BR.checked);
     }
 
     @Override
+    @Bindable
     public boolean isChecked() {
         return checked;
     }
@@ -54,5 +62,38 @@ public class ManageDeviceCard extends Card implements Checkable {
     @Override
     public void toggle() {
         setChecked(!checked);
+    }
+
+    @Bindable
+    public String getDeviceID() {
+        return credentials.id;
+    }
+
+    @Bindable
+    public String getName() {
+        return credentials.alias;
+    }
+
+    public void showOverflowMenu(View v) {
+        PopupMenu popup = new PopupMenu(v.getContext(), v);
+        popup.inflate(R.menu.popup_login_manage);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.make_default:
+                        presenter.setAsDefault(credentials);
+                        return true;
+                    case R.id.edit:
+                        presenter.openEditScreen(credentials);
+                        return true;
+                    case R.id.remove:
+                        presenter.removeDevice(credentials);
+                        return true;
+                }
+                return false;
+            }
+        });
+        popup.show();
     }
 }

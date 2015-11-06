@@ -22,10 +22,6 @@ import org.opensilk.common.ui.mortar.ActivityResultsController;
 
 import rx.functions.Func2;
 import syncthing.android.ui.LauncherActivityComponent;
-import syncthing.api.SessionController;
-import syncthing.api.SessionScope;
-import syncthing.api.SyncthingApiLongpollModule;
-import syncthing.api.SyncthingApiModule;
 
 /**
 * Created by drew on 3/11/15.
@@ -50,14 +46,6 @@ public interface SessionComponent {
             };
     SessionPresenter presenter();
     ActivityResultsController activityResultsController();
-    void inject(DeviceCardView view);
-    void inject(FolderCardView view);
-    void inject(HeaderCardView view);
-    void inject(MyDeviceCardView view);
-    void inject(NotifCardErrorView view);
-    void inject(NotifCardRejDeviceView view);
-    void inject(NotifCardRejFolderView view);
-    void inject(NotifCardRestartView view);
     void inject(SessionScreenView view);
     void inject(ShowIdDialogView view);
 }

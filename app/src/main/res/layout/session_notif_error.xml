@@ -22,8 +22,7 @@
         <variable name="card" type="syncthing.android.ui.session.NotifCardError"/>
         <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
-    <syncthing.android.ui.session.NotifCardErrorView
-
+    <syncthing.android.ui.common.ExpandableCardViewWrapper
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/session.RecyclerCard.Notif"
@@ -101,5 +100,5 @@
 
         </RelativeLayout>
 
-    </syncthing.android.ui.session.NotifCardErrorView>
+    </syncthing.android.ui.common.ExpandableCardViewWrapper>
 </layout>

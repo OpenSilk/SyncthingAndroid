@@ -40,7 +40,7 @@ public class ExpandCollapseHelper {
                 layoutParams.height = origHeight;
                 expandingLayout.setLayoutParams(layoutParams);
 
-                cardView.setExpanded(false);//card.setExpanded(true);
+                cardView.getExpandable().setExpanded(false);
 
                 //notifyAdapter(recyclerView, recyclerView.getLayoutManager().getPosition((View)cardView));
 
@@ -51,7 +51,7 @@ public class ExpandCollapseHelper {
         });
         if (wobble) {
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(animator, createWobbleAnimator((View)cardView));
+            animatorSet.playTogether(animator, createWobbleAnimator(cardView.getView()));
             animatorSet.start();
         } else {
             animator.start();
@@ -103,7 +103,7 @@ public class ExpandCollapseHelper {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                cardView.setExpanded(true);//card.setExpanded(true);
+                cardView.getExpandable().setExpanded(true);
 
                 //notifyAdapter(recyclerView,recyclerView.getLayoutManager().getPosition((View)cardView));
 

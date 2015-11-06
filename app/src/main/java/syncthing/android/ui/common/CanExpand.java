@@ -20,22 +20,25 @@ package syncthing.android.ui.common;
 import android.view.View;
 
 /**
+ * Describes a view that can be expanded
+ *
  * Created by drew on 3/10/15.
  */
 public interface CanExpand {
     /**
      * Interface to listen any callbacks when expand/collapse animation starts
+     * Listeners must notify the Expandable after expand/collapse completes
      */
     interface OnExpandListener {
-        public void onExpandStart(CanExpand viewCard, View expandingLayout);
-        public void onCollapseStart(CanExpand viewCard, View expandingLayout);
+        void onExpandStart(CanExpand viewCard, View expandingLayout);
+        void onCollapseStart(CanExpand viewCard, View expandingLayout);
     }
+    void setExpandable(Expandable card);
+    Expandable getExpandable();
     void setExpandListener(OnExpandListener listener);
     OnExpandListener getExpandListener();
-    void setExpanded(boolean expanded);
-    boolean isExpanded();
-    View getExpandView();
     void expand();
     void collapse();
     void toggleExpanded();
+    View getView();
 }

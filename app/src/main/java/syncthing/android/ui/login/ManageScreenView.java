@@ -46,7 +46,7 @@ public class ManageScreenView extends RelativeLayout {
     @InjectView(R.id.toolbar) Toolbar toolbar;
     @InjectView(R.id.recyclerview) CardRecyclerView list;
 
-    final ManageScreenAdapter adapter = new ManageScreenAdapter();
+    @Inject ManageScreenAdapter mAdapter;
     @Inject ToolbarOwner mToolbarOwner;
     @Inject ManagePresenter mPresenter;
 
@@ -62,8 +62,8 @@ public class ManageScreenView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
-        list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setAdapter(mAdapter);
         if (!isInEditMode()) {
             mPresenter.takeView(this);
         }
@@ -93,7 +93,15 @@ public class ManageScreenView extends RelativeLayout {
         mPresenter.openAddScreen();
     }
 
-    void load(List<Credentials> creds, Credentials def) {
-        adapter.setDevices(creds, def);
+    void addAll(List<ManageDeviceCard> cards, boolean dirty) {
+        if (dirty) {
+            mAdapter.replaceAll(cards);
+        } else {
+            mAdapter.addAll(cards);
+        }
+    }
+
+    void onComplete() {
+        //TODO notify if empty
     }
 }
