@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.databinding.PropertyChangeRegistry;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ import syncthing.api.SessionManager;
 /**
  * Created by drew on 3/23/15.
  */
-public class EditPresenter<V extends View> extends ViewPresenter<V> {
+public class EditPresenter<V extends View> extends ViewPresenter<V> implements android.databinding.Observable {
 
     protected final SessionManager manager;
     protected final SessionController controller;
@@ -58,6 +59,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     protected final ActivityResultsController activityResultsController;
     protected final Credentials credentials;
 
+    protected final PropertyChangeRegistry mRegistry = new PropertyChangeRegistry();
     protected Subscription saveSubscription;
     protected int titleRes;
 
@@ -141,5 +143,20 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
     public ActionBarConfig getToolbarConfig() {
         return ActionBarConfig.builder()
                 .setTitle(titleRes).build();
+    }
+
+
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        mRegistry.add(callback);
+    }
+
+    @Override
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        mRegistry.remove(callback);
+    }
+
+    protected void notifyChange(int val) {
+        mRegistry.notifyChange(this, val);
     }
 }

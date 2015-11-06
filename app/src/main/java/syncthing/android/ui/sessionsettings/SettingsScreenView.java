@@ -22,15 +22,15 @@ import android.databinding.DataBindingUtil;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
+import com.jakewharton.rxbinding.widget.RxTextView;
+
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import javax.inject.Inject;
 
-import syncthing.android.service.SyncthingUtils;
-import syncthing.api.model.DeviceConfig;
-import syncthing.api.model.GUIConfig;
-import syncthing.api.model.OptionsConfig;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by drew on 3/17/15.
@@ -39,7 +39,7 @@ public class SettingsScreenView extends CoordinatorLayout {
 
     @Inject ToolbarOwner mToolbarOwner;
     @Inject SettingsPresenter mPresenter;
-
+    CompositeSubscription subscriptions;
     syncthing.android.ui.sessionsettings.SettingsScreenViewBinding binding;
 
     public SettingsScreenView(Context context, AttributeSet attrs) {
@@ -54,12 +54,12 @@ public class SettingsScreenView extends CoordinatorLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         binding = DataBindingUtil.bind(this);
-        binding.setPresenter(mPresenter);
         if (!isInEditMode()) {
-            if (!SyncthingUtils.isClipBoardSupported(getContext())) {
-                binding.btnCopyApikey.setVisibility(GONE);
-            }
             mPresenter.takeView(this);
+            binding.setPresenter(mPresenter);
+            // we must eagerly execute to prevent the change
+            // subscriptions from wiping out the data with nulls
+            binding.executePendingBindings();
         }
     }
 
@@ -67,6 +67,7 @@ public class SettingsScreenView extends CoordinatorLayout {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isInEditMode()) {
+            subscribeChanges();
             mToolbarOwner.attachToolbar(binding.toolbar);
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
@@ -77,26 +78,40 @@ public class SettingsScreenView extends CoordinatorLayout {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
         mToolbarOwner.detachToolbar(binding.toolbar);
+        if (subscriptions != null) subscriptions.unsubscribe();
     }
 
-    void initialize(DeviceConfig thisDevice, OptionsConfig options, GUIConfig guiConfig, boolean fromsavedstate) {
-        if (fromsavedstate) return;
-        String hiddenPass = mPresenter.hiddenPass;
-        binding.editDeviceName.setText(SyncthingUtils.getDisplayName(thisDevice));
-        binding.editProtocolListenAddr.setText(SyncthingUtils.unrollArray(options.listenAddress));
-        binding.editIncomingRateLimit.setText(String.valueOf(options.maxRecvKbps));
-        binding.editOutgoingRateLimit.setText(String.valueOf(options.maxSendKbps));
-        binding.checkEnableUpnp.setChecked(options.upnpEnabled);
-        binding.checkGlobalDiscovery.setChecked(options.globalAnnounceEnabled);
-        binding.checkLocalDiscovery.setChecked(options.localAnnounceEnabled);
-        binding.editGlobalDiscoveryServer.setText(SyncthingUtils.unrollArray(options.globalAnnounceServers));
-        binding.editGuiListenAddr.setText(guiConfig.address);
-        binding.editGuiUser.setText(guiConfig.user);
-        binding.editGuiPass.setText(hiddenPass);
-        binding.checkEnableUpnp.setChecked(guiConfig.useTLS);
-        binding.checkStartBrowser.setChecked(options.startBrowser);
-        binding.checkUsageReporting.setChecked(options.urAccepted >= 0);
-        binding.editApikey.setText(guiConfig.apiKey);
+    void subscribeChanges() {
+        subscriptions = new CompositeSubscription(
+                RxTextView.textChanges(binding.editDeviceName)
+                        .subscribe(mPresenter::setDeviceName),
+                RxTextView.textChanges(binding.editProtocolListenAddr)
+                        .subscribe(mPresenter::setListenAddress),
+                RxTextView.textChanges(binding.editIncomingRateLimit)
+                        .subscribe(mPresenter::setMaxRecvKpbs),
+                RxTextView.textChanges(binding.editOutgoingRateLimit)
+                        .subscribe(mPresenter::setMaxSendKbps),
+                RxCompoundButton.checkedChanges(binding.checkEnableUpnp)
+                        .subscribe(mPresenter::setUpnpEnabled),
+                RxCompoundButton.checkedChanges(binding.checkGlobalDiscovery)
+                        .subscribe(mPresenter::setGlobalAnnounceEnabled),
+                RxCompoundButton.checkedChanges(binding.checkLocalDiscovery)
+                        .subscribe(mPresenter::setLocalAnnounceEnabled),
+                RxTextView.textChanges(binding.editGlobalDiscoveryServer)
+                        .subscribe(mPresenter::setGlobalAnnounceServers),
+                RxTextView.textChanges(binding.editGuiListenAddr)
+                        .subscribe(mPresenter::setGuiListenAddress),
+                RxTextView.textChanges(binding.editGuiUser)
+                        .subscribe(mPresenter::setGuiUser),
+                RxTextView.textChanges(binding.editGuiPass)
+                        .subscribe(mPresenter::setGuiPassword),
+                RxCompoundButton.checkedChanges(binding.checkUseHttps)
+                        .subscribe(mPresenter::setUseTLS),
+                RxCompoundButton.checkedChanges(binding.checkStartBrowser)
+                        .subscribe(mPresenter::setStartBrowser),
+                RxCompoundButton.checkedChanges(binding.checkUsageReporting)
+                        .subscribe(mPresenter::setURAccepted)
+        );
     }
 
 }

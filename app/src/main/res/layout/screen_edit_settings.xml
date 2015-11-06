@@ -21,6 +21,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data class="syncthing.android.ui.sessionsettings.SettingsScreenViewBinding">
+        <import type="android.view.View"/>
         <variable name="presenter" type="syncthing.android.ui.sessionsettings.SettingsPresenter"/>
     </data>
     <syncthing.android.ui.sessionsettings.SettingsScreenView
@@ -68,6 +69,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_protocol_listen_addr"
+                    android:text="@{presenter.deviceName}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -82,6 +84,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_incoming_rate_limit"
+                    android:text="@{presenter.listenAddressText}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -96,6 +99,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_outgoing_rate_limit"
+                    android:text="@{presenter.maxRecvKbps}"
                     style="@style/session.edit.EditText.Number"/>
 
                 <TextView
@@ -110,6 +114,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_global_discovery_server"
+                    android:text="@{presenter.maxSendKbps}"
                     style="@style/session.edit.EditText.Number"/>
 
                 <CheckBox
@@ -117,6 +122,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/enable_upnp"
+                    android:checked="@{presenter.upnpEnabled}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -124,6 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/local_discovery"
+                    android:checked="@{presenter.localAnnounceEnabled}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -131,6 +138,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/global_discovery"
+                    android:checked="@{presenter.globalAnnounceEnabled}"
                     style="@style/session.edit.Checkbox"/>
 
                 <TextView
@@ -145,6 +153,8 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_gui_listen_addr"
+                    android:text="@{presenter.globalAnnounceServersText}"
+                    android:enabled="@{presenter.globalAnnounceEnabled}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -159,6 +169,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_gui_user"
+                    android:text="@{presenter.guiListenAddress}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -173,6 +184,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_gui_pass"
+                    android:text="@{presenter.guiUser}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -185,6 +197,7 @@
                     android:id="@+id/edit_gui_pass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{presenter.guiPassword}"
                     style="@style/session.edit.EditText.Password"/>
 
                 <CheckBox
@@ -192,6 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/use_https_for_gui"
+                    android:checked="@{presenter.useTLS}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -199,6 +213,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/start_browser"
+                    android:checked="@{presenter.startBrowser}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -206,25 +221,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/anonymous_usage_reporting"
+                    android:checked="@{presenter.URAccepted}"
                     style="@style/session.edit.Checkbox"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/api_key"
-                    style="@style/session.edit.FieldHeader"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/edit_apikey"
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        style="@style/session.edit.EditText"/>
+                        android:layout_gravity="start|top"
+                        android:gravity="start"
+                        android:text="@string/api_key"
+                        style="@style/session.edit.FieldHeader"/>
 
                     <Button
                         android:id="@+id/btn_copy_apikey"
@@ -243,6 +254,14 @@
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                 </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edit_apikey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="@{presenter.apiKey}"
+                    style="@style/session.edit.EditText"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -266,6 +285,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/save"
+                        android:onClick="@{presenter.saveConfig}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                 </LinearLayout>
