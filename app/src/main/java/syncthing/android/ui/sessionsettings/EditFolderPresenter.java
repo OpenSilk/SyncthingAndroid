@@ -21,6 +21,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.Editable;
+import android.view.View;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,19 +33,26 @@ import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import org.opensilk.common.ui.mortar.DialogPresenter;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import mortar.MortarScope;
 import rx.Subscription;
+import syncthing.android.R;
+import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.folderpicker.FolderPickerFragment;
 import syncthing.api.SessionManager;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
+import syncthing.api.model.PullOrder;
+import syncthing.api.model.VersioningConfig;
+import syncthing.api.model.VersioningType;
 import timber.log.Timber;
 
 import static syncthing.android.ui.sessionsettings.EditPresenterConfig.INVALID_ID;
@@ -106,36 +116,13 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
             activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, new Intent());
             return;
         }
-        getView().initialize(isAdd, origFolder, controller.getRemoteDevices(), controller.getSystemInfo(), savedInstanceState != null);
+        getView().initialize(controller.getRemoteDevices(), controller.getSystemInfo(), savedInstanceState != null);
     }
 
     @Override
     protected void onSave(Bundle outState) {
         super.onSave(outState);
         outState.putSerializable("folder", origFolder);
-    }
-
-    void openFolderPicker(Context context, String base) {
-        Intent i = new Intent(context, ManageActivity.class)
-                .putExtra(ManageActivity.EXTRA_FRAGMENT, FolderPickerFragment.NAME)
-                .putExtra(ManageActivity.EXTRA_ARGS, FolderPickerFragment.makeArgs(credentials, base))
-                .putExtra(ManageActivity.EXTRA_UP_IS_BACK, true);
-        activityResultsController.startActivityForResult(i, ActivityRequestCodes.FOLDER_PICKER, null);
-    }
-
-    @Override
-    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ActivityRequestCodes.FOLDER_PICKER) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (hasView()) {
-                    String path = data.getStringExtra("path");
-                    getView().editFolderPath.setText(path);
-                }//else TODO
-            }
-            return true;
-        } else {
-            return false;
-        }
     }
 
     boolean validateFolderId(CharSequence text) {
@@ -232,7 +219,101 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         return valid;
     }
 
-    void saveFolder() {
+    public void saveFolder(View btn) {
+        if(!hasView()) return;
+        EditFolderScreenView v = getView();
+        if (isAdd && !validateFolderId(v.binding.editFolderId.getText().toString())) {
+            return;
+        }
+        origFolder.id = v.binding.editFolderId.getText().toString();
+        if (isAdd && !validateFolderPath(v.binding.editFolderPath.getText().toString())) {
+            return;
+        }
+        origFolder.path = v.binding.editFolderPath.getText().toString();
+        if (!validateRescanInterval(v.binding.editRescanInterval.getText().toString())) {
+            return;
+        }
+        origFolder.rescanIntervalS = Integer.decode(v.binding.editRescanInterval.getText().toString());
+        origFolder.readOnly = v.binding.checkFolderMaster.isChecked();
+        origFolder.ignorePerms = v.binding.checkIgnorePermissions.isChecked();
+
+        switch (v.binding.radioGroupPullorder.getCheckedRadioButtonId()) {
+            case R.id.radio_pullorder_alphabetic:
+                origFolder.order = PullOrder.ALPHABETIC;
+                break;
+            case R.id.radio_pullorder_smallestfirst:
+                origFolder.order = PullOrder.SMALLESTFIRST;
+                break;
+            case R.id.radio_pullorder_largestfirst:
+                origFolder.order = PullOrder.LARGESTFIRST;
+                break;
+            case R.id.radio_pullorder_oldestfirst:
+                origFolder.order = PullOrder.OLDESTFIRST;
+                break;
+            case R.id.radio_pullorder_newestfirst:
+                origFolder.order = PullOrder.NEWESTFIRST;
+                break;
+            case R.id.radio_pullorder_random:
+            default:
+                origFolder.order = PullOrder.RANDOM;
+                break;
+        }
+
+        switch (v.binding.radioGroupVersioning.getCheckedRadioButtonId()) {
+            case R.id.radio_trashcan_versioning:
+                origFolder.versioning = new VersioningConfig();
+                origFolder.versioning.type = VersioningType.TRASHCAN;
+                if (!validateTrashCanVersioningKeep(v.binding.editTrashcanVersioningKeep.getText().toString())) {
+                    return;
+                }
+                origFolder.versioning.params.cleanoutDays = v.binding.editTrashcanVersioningKeep.getText().toString();
+                break;
+            case R.id.radio_simple_versioning:
+                origFolder.versioning = new VersioningConfig();
+                origFolder.versioning.type = VersioningType.SIMPLE;
+                if (!validateSimpleVersioningKeep(v.binding.editSimpleVersioningKeep.getText().toString())) {
+                    return;
+                }
+                origFolder.versioning.params.keep = v.binding.editSimpleVersioningKeep.getText().toString();
+                break;
+            case R.id.radio_staggered_versioning:
+                origFolder.versioning = new VersioningConfig();
+                origFolder.versioning.type = VersioningType.STAGGERED;
+                if (!validateStaggeredMaxAge(v.binding.editStaggeredMaxAge.getText().toString())) {
+                    return;
+                }
+                origFolder.versioning.params.maxAge = SyncthingUtils.daysToSeconds(v.binding.editStaggeredMaxAge.getText().toString());
+                //todo notify empty
+                if (!StringUtils.isEmpty(v.binding.editStaggeredPath.getText().toString())) {
+                    origFolder.versioning.params.versionPath = v.binding.editStaggeredPath.getText().toString();
+                }
+                break;
+            case R.id.radio_external_versioning:
+                origFolder.versioning = new VersioningConfig();
+                origFolder.versioning.type = VersioningType.EXTERNAL;
+                if (!validateExternalVersioningCmd(v.binding.editExternalVersioningCommand.getText().toString())) {
+                    return;
+                }
+                origFolder.versioning.params.command = v.binding.editExternalVersioningCommand.getText().toString();
+                break;
+            case R.id.radio_no_versioning:
+            default:
+                origFolder.versioning = new VersioningConfig();
+                break;
+        }
+
+        List<FolderDeviceConfig> devices = new ArrayList<>();
+        for (int ii=0; ii< v.binding.shareDevicesContainer.getChildCount(); ii++) {
+            View c = v.binding.shareDevicesContainer.getChildAt(ii);
+            if (c instanceof EditFolderScreenView.DeviceCheckBox) {
+                EditFolderScreenView.DeviceCheckBox cb = (EditFolderScreenView.DeviceCheckBox) c;
+                if (cb.isChecked()) {
+                    devices.add(new FolderDeviceConfig(cb.device.deviceID));
+                }
+            }
+        }
+        origFolder.devices = devices;
+
         unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editFolder(origFolder,
@@ -241,7 +322,7 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         );
     }
 
-    void deleteFolder() {
+    public void deleteFolder(View btn) {
         unsubscribe(deleteSubscription);
         onSaveStart();
         deleteSubscription = controller.deleteFolder(origFolder,
@@ -250,9 +331,52 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         );
     }
 
-    void openIgnoresEditor(Context context) {
-        EditIgnoresFragment f = EditIgnoresFragment.ni(context, credentials, folderId);
+    public void openIgnoresEditor(View btn) {
+        EditIgnoresFragment f = EditIgnoresFragment.ni(btn.getContext(), credentials, folderId);
         fm.replaceMainContent(f, true);
+    }
+
+    public void openFolderPicker(View btn) {
+        if (!hasView()) return;
+        EditFolderScreenView v = getView();
+        String home = Environment.getExternalStorageDirectory().getAbsolutePath();
+        Editable editText = v.binding.editFolderPath.getText();
+        String path = null;
+        if (editText != null) {
+            path = editText.toString();
+            if (StringUtils.equals(path, home) || StringUtils.isEmpty(path)) {
+                path = home;
+            } else if (StringUtils.endsWith(path, "/")) {
+                path = path.substring(0, path.length() - 1);
+            } else if (path.lastIndexOf("/") > 0) {
+                //we want the last directory they inputed not any partial name in there
+                path = path.substring(0, path.lastIndexOf("/"));
+            }
+        }
+        if (StringUtils.isEmpty(path)) {
+            path = home;
+        }
+        Intent i = new Intent(v.getContext(), ManageActivity.class)
+                .putExtra(ManageActivity.EXTRA_FRAGMENT, FolderPickerFragment.NAME)
+                .putExtra(ManageActivity.EXTRA_ARGS, FolderPickerFragment.makeArgs(credentials, path))
+                .putExtra(ManageActivity.EXTRA_UP_IS_BACK, true);
+        activityResultsController.startActivityForResult(i, ActivityRequestCodes.FOLDER_PICKER, null);
+    }
+
+
+    @Override
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivityRequestCodes.FOLDER_PICKER) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (hasView()) {
+                    String path = data.getStringExtra("path");
+                    getView().binding.editFolderPath.setText(path);
+                }//else TODO
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

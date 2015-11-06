@@ -19,34 +19,23 @@ package syncthing.android.ui.sessionsettings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
-import android.widget.TextView;
+
+import com.jakewharton.rxbinding.widget.RxTextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
+import rx.subscriptions.CompositeSubscription;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.api.model.Compression;
@@ -59,28 +48,10 @@ import syncthing.api.model.FolderDeviceConfig;
  */
 public class EditDeviceScreenView extends CoordinatorLayout {
 
-    @InjectView(R.id.toolbar) Toolbar toolbar;
-    @InjectView(R.id.edit_device_id) EditText editDeviceId;
-    @InjectView(R.id.btn_scanqr) ImageButton btnScanQr;
-    @InjectView(R.id.desc_device_id) TextView descDeviceId;
-    @InjectView(R.id.desc_device_id2) TextView descDeviceId2;
-    @InjectView(R.id.error_device_id_blank) TextView errorDeviceIdBlank;
-    @InjectView(R.id.error_device_id_invalid) TextView errorDeviceIdInvalid;
-    @InjectView(R.id.edit_device_name) TextView editDeviceName;
-    @InjectView(R.id.edit_addresses) TextView editAddresses;
-    @InjectView(R.id.radio_group_compression) RadioGroup groupCompression;
-    @InjectView(R.id.radio_all_compression) RadioButton rdioAllCompression;
-    @InjectView(R.id.radio_meta_compression) RadioButton rdioMetaCompression;
-    @InjectView(R.id.radio_no_compression) RadioButton rdioNoCompression;
-    @InjectView(R.id.check_introducer) CheckBox checkIntroducer;
-    @InjectView(R.id.share_folders_container) ViewGroup shareFoldersContainer;
-    @InjectView(R.id.btn_delete) Button btnDelete;
-
     @Inject ToolbarOwner mToolbarOwner;
     @Inject EditDevicePresenter mPresenter;
-
-    boolean isAdd;
-    DeviceConfig device;
+    CompositeSubscription subscriptons;
+    syncthing.android.ui.sessionsettings.EditDeviceScreenViewBinding binding;
 
     public EditDeviceScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -93,8 +64,9 @@ public class EditDeviceScreenView extends CoordinatorLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
-        groupCompression.setOnCheckedChangeListener(compressionChangedListener);
+        binding = DataBindingUtil.bind(this);
+        binding.setPresenter(mPresenter);
+        binding.radioGroupCompression.setOnCheckedChangeListener(compressionChangedListener);
         if (!isInEditMode()) {
             mPresenter.takeView(this);
         }
@@ -103,8 +75,9 @@ public class EditDeviceScreenView extends CoordinatorLayout {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        subscribeTextChanges();
         if (!isInEditMode()) {
-            mToolbarOwner.attachToolbar(toolbar);
+            mToolbarOwner.attachToolbar(binding.toolbar);
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
     }
@@ -113,83 +86,39 @@ public class EditDeviceScreenView extends CoordinatorLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
-        mToolbarOwner.detachToolbar(toolbar);
+        mToolbarOwner.detachToolbar(binding.toolbar);
+        if (subscriptons != null) subscriptons.unsubscribe();
     }
 
-    @OnClick(R.id.btn_scanqr)
-    void scanQr() {
-        mPresenter.startQRScannerActivity();
+    void subscribeTextChanges() {
+        subscriptons = new CompositeSubscription(
+                RxTextView.textChangeEvents(binding.editDeviceId)
+                        .subscribe(e -> onDeviceIdChange(e.text()))
+        );
     }
 
-    @OnClick(R.id.btn_delete)
-    void onDelete() {
-        mPresenter.deleteDevice();
-    }
-
-    @OnClick(R.id.btn_cancel)
-    void onCancel(){
-        mPresenter.dismissDialog();
-    }
-
-    @OnClick(R.id.btn_save)
-    void onSave() {
-        if (!mPresenter.validateDeviceId(editDeviceId.getText().toString(), false)) {
-            return;
-        }
-        device.deviceID = editDeviceId.getText().toString();
-        device.name = editDeviceName.getText().toString();
-        if (!mPresenter.validateAddresses(editAddresses.getText().toString())) {
-            return;
-        }
-        device.addresses = SyncthingUtils.rollArray(editAddresses.getText().toString());
-        switch (groupCompression.getCheckedRadioButtonId()) {
-            case R.id.radio_all_compression:
-                device.compression = Compression.ALWAYS;
-                break;
-            case R.id.radio_meta_compression:
-                device.compression = Compression.METADATA;
-                break;
-            case R.id.radio_no_compression:
-            default:
-                device.compression = Compression.NEVER;
-                break;
-        }
-        device.introducer = checkIntroducer.isChecked();
-
-        Map<String, Boolean> folders = new HashMap<>();
-        for (int ii=0; ii<shareFoldersContainer.getChildCount(); ii++) {
-            View child = shareFoldersContainer.getChildAt(ii);
-            if (child instanceof FolderCheckBox) {
-                FolderCheckBox cb = (FolderCheckBox) child;
-                folders.put(cb.folder.id, cb.isChecked());
-            }
-        }
-
-        mPresenter.saveDevice(folders);
-    }
-
-    void initialize(boolean isAdd, DeviceConfig device, Collection<FolderConfig> folders, boolean fromsavedstate) {
-        this.isAdd = isAdd;
-        this.device = device;
+    void initialize(Collection<FolderConfig> folders, boolean fromsavedstate) {
         if (fromsavedstate) return;
+        boolean isAdd = mPresenter.isAdd;
+        DeviceConfig device = mPresenter.originalDevice;
         if (!isAdd) {
-            editDeviceId.setText(device.deviceID);
-            editDeviceId.setEnabled(false);
-            btnScanQr.setVisibility(GONE);
-            descDeviceId.setVisibility(GONE);
-            descDeviceId2.setVisibility(GONE);
-            editDeviceName.setText(device.name);
-            editAddresses.setText(SyncthingUtils.unrollArray(device.addresses));
+            binding.editDeviceId.setText(device.deviceID);
+            binding.editDeviceId.setEnabled(false);
+            binding.btnScanqr.setVisibility(GONE);
+            binding.descDeviceId.setVisibility(GONE);
+            binding.descDeviceId2.setVisibility(GONE);
+            binding.editDeviceName.setText(device.name);
+            binding.editAddresses.setText(SyncthingUtils.unrollArray(device.addresses));
             setCompression(device.compression);
-            checkIntroducer.setChecked(device.introducer);
+            binding.checkIntroducer.setChecked(device.introducer);
         } else {
             //set nice defaults
-            editAddresses.setText(SyncthingUtils.unrollArray(device.addresses));
+            binding.editAddresses.setText(SyncthingUtils.unrollArray(device.addresses));
             setCompression(device.compression);
-            checkIntroducer.setChecked(device.introducer);
+            binding.checkIntroducer.setChecked(device.introducer);
         }
 
-        shareFoldersContainer.removeAllViews();
+        binding.shareFoldersContainer.removeAllViews();
         for (FolderConfig f : folders) {
             FolderCheckBox checkBox = new FolderCheckBox(getContext(), f);
             checkBox.setText(f.id);
@@ -201,53 +130,53 @@ public class EditDeviceScreenView extends CoordinatorLayout {
                     }
                 }
             }
-            shareFoldersContainer.addView(checkBox);
+            binding.shareFoldersContainer.addView(checkBox);
         }
 
-        btnDelete.setVisibility(isAdd ? GONE : VISIBLE);
+        binding.btnDelete.setVisibility(isAdd ? GONE : VISIBLE);
 
     }
 
     void setCompression(Compression compression) {
         switch (compression) {
             case ALWAYS:
-                rdioAllCompression.setChecked(true);
+                binding.radioAllCompression.setChecked(true);
                 break;
             case METADATA:
-                rdioMetaCompression.setChecked(true);
+                binding.radioMetaCompression.setChecked(true);
                 break;
             case NEVER:
             default:
-                rdioNoCompression.setChecked(true);
+                binding.radioNoCompression.setChecked(true);
                 break;
 
         }
     }
 
-    @OnTextChanged(R.id.edit_device_id)
     void onDeviceIdChange(CharSequence text) {
+        boolean isAdd = mPresenter.isAdd;
         if (isAdd && !StringUtils.isEmpty(text)) {
             if (mPresenter.validateDeviceId(text.toString(), true)) {
-                descDeviceId.setVisibility(VISIBLE);
-                descDeviceId2.setVisibility(VISIBLE);
-                errorDeviceIdBlank.setVisibility(GONE);
-                errorDeviceIdInvalid.setVisibility(GONE);
+                binding.descDeviceId.setVisibility(VISIBLE);
+                binding.descDeviceId2.setVisibility(VISIBLE);
+                binding.errorDeviceIdBlank.setVisibility(GONE);
+                binding.errorDeviceIdInvalid.setVisibility(GONE);
             }
         }
     }
 
     void notifyDeviceIdEmpty() {
-        descDeviceId.setVisibility(GONE);
-        descDeviceId2.setVisibility(GONE);
-        errorDeviceIdBlank.setVisibility(VISIBLE);
-        errorDeviceIdInvalid.setVisibility(GONE);
+        binding.descDeviceId.setVisibility(GONE);
+        binding.descDeviceId2.setVisibility(GONE);
+        binding.errorDeviceIdBlank.setVisibility(VISIBLE);
+        binding.errorDeviceIdInvalid.setVisibility(GONE);
     }
 
     void notifyDeviceIdInvalid() {
-        descDeviceId.setVisibility(GONE);
-        descDeviceId2.setVisibility(GONE);
-        errorDeviceIdBlank.setVisibility(GONE);
-        errorDeviceIdInvalid.setVisibility(VISIBLE);
+        binding.descDeviceId.setVisibility(GONE);
+        binding.descDeviceId2.setVisibility(GONE);
+        binding.errorDeviceIdBlank.setVisibility(GONE);
+        binding.errorDeviceIdInvalid.setVisibility(VISIBLE);
     }
 
     void notifyInvalidAddresses() {

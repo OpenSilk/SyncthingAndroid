@@ -18,12 +18,9 @@
 package syncthing.android.ui.sessionsettings;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
@@ -31,10 +28,6 @@ import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
-import syncthing.android.R;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.SystemInfo;
@@ -44,12 +37,10 @@ import syncthing.api.model.SystemInfo;
  */
 public class EditIgnoresScreenView extends CoordinatorLayout {
 
-    @InjectView(R.id.toolbar) Toolbar toolbar;
-    @InjectView(R.id.desc_filename) TextView descFilename;
-    @InjectView(R.id.edit_ignores) EditText editIgnores;
-
     @Inject ToolbarOwner mToolbarOwner;
     @Inject EditIgnoresPresenter mPresenter;
+
+    syncthing.android.ui.sessionsettings.EditIgnoresScreenViewBinding binding;
 
     public EditIgnoresScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,7 +53,8 @@ public class EditIgnoresScreenView extends CoordinatorLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
+        binding = DataBindingUtil.bind(this);
+        binding.setPresenter(mPresenter);
         if (!isInEditMode()) {
             mPresenter.takeView(this);
         }
@@ -72,7 +64,7 @@ public class EditIgnoresScreenView extends CoordinatorLayout {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isInEditMode()) {
-            mToolbarOwner.attachToolbar(toolbar);
+            mToolbarOwner.attachToolbar(binding.toolbar);
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
     }
@@ -81,31 +73,14 @@ public class EditIgnoresScreenView extends CoordinatorLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
-        mToolbarOwner.detachToolbar(toolbar);
-    }
-
-    @OnClick(R.id.btn_help)
-    void showHelp() {
-        mPresenter.openHelp();
-    }
-
-    @OnClick(R.id.btn_cancel)
-    void doCancel() {
-        mPresenter.dismissDialog();
-    }
-
-    @OnClick(R.id.btn_save)
-    void save() {
-        if (!mPresenter.validateIgnores(editIgnores.getText().toString())) {
-            return;
-        }
-        mPresenter.saveIgnores(editIgnores.getText().toString());
+        mToolbarOwner.detachToolbar(binding.toolbar);
     }
 
     void initialize(FolderConfig folder, SystemInfo system, Ignores ignores) {
-        descFilename.setText(folder.path + system.pathSeparator + ".stignore");
+        String descText = folder.path + system.pathSeparator + ".stignore";
+        binding.descFilename.setText(descText);
         if (ignores.ignore != null && ignores.ignore.length > 0) {
-            editIgnores.setText(StringUtils.join(ignores.ignore, "\n"));
+            binding.editIgnores.setText(StringUtils.join(ignores.ignore, "\n"));
         }
     }
 }

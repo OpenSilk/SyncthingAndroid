@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,14 +30,18 @@ import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import org.opensilk.common.ui.mortar.DialogPresenter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import mortar.MortarScope;
 import rx.Subscription;
+import syncthing.android.R;
+import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.api.SessionManager;
+import syncthing.api.model.Compression;
 import syncthing.api.model.DeviceConfig;
 
 /**
@@ -83,7 +88,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         } else {
             originalDevice = (DeviceConfig) savedInstanceState.getSerializable("device");
         }
-        getView().initialize(isAdd, originalDevice, controller.getFolders(), savedInstanceState != null);
+        getView().initialize(controller.getFolders(), savedInstanceState != null);
     }
 
     @Override
@@ -107,7 +112,40 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         return true;//TODO
     }
 
-    void saveDevice(Map<String, Boolean> folders) {
+    public void saveDevice(View btn) {
+        if (!hasView()) return;
+        EditDeviceScreenView v = getView();
+        if (!validateDeviceId(v.binding.editDeviceId.getText().toString(), false)) {
+            return;
+        }
+        originalDevice.deviceID = v.binding.editDeviceId.getText().toString();
+        originalDevice.name = v.binding.editDeviceName.getText().toString();
+        if (!validateAddresses(v.binding.editAddresses.getText().toString())) {
+            return;
+        }
+        originalDevice.addresses = SyncthingUtils.rollArray(v.binding.editAddresses.getText().toString());
+        switch (v.binding.radioGroupCompression.getCheckedRadioButtonId()) {
+            case R.id.radio_all_compression:
+                originalDevice.compression = Compression.ALWAYS;
+                break;
+            case R.id.radio_meta_compression:
+                originalDevice.compression = Compression.METADATA;
+                break;
+            case R.id.radio_no_compression:
+            default:
+                originalDevice.compression = Compression.NEVER;
+                break;
+        }
+        originalDevice.introducer = v.binding.checkIntroducer.isChecked();
+
+        Map<String, Boolean> folders = new HashMap<>();
+        for (int ii=0; ii<v.binding.shareFoldersContainer.getChildCount(); ii++) {
+            View child = v.binding.shareFoldersContainer.getChildAt(ii);
+            if (child instanceof EditDeviceScreenView.FolderCheckBox) {
+                EditDeviceScreenView.FolderCheckBox cb = (EditDeviceScreenView.FolderCheckBox) child;
+                folders.put(cb.folder.id, cb.isChecked());
+            }
+        }
         unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editDevice(originalDevice, folders,
@@ -116,7 +154,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         );
     }
 
-    void deleteDevice() {
+    public void deleteDevice(View btn) {
         unsubscribe(deleteSubscription);
         onSaveStart();
         deleteSubscription = controller.deleteDevice(originalDevice,
@@ -125,7 +163,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         );
     }
 
-    void startQRScannerActivity() {
+    public void startQRScannerActivity(View btn) {
         Intent intentScan = new Intent("com.google.zxing.client.android.SCAN");
         intentScan.addCategory(Intent.CATEGORY_DEFAULT);
         intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -146,7 +184,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
             if (resultCode == Activity.RESULT_OK && hasView()) {
                 String id = data.getStringExtra("SCAN_RESULT");
                 if (hasView()) {
-                    getView().editDeviceId.setText(id);
+                    getView().binding.editDeviceId.setText(id);
                 }
             }
             return true;

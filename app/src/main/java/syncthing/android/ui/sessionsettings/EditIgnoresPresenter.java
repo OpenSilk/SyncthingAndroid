@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
@@ -111,7 +112,13 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
         return true;//todo
     }
 
-    void saveIgnores(CharSequence raw) {
+    public void saveIgnores(View btn) {
+        if (!hasView()) return;
+        EditIgnoresScreenView v = getView();
+        if (!validateIgnores(v.binding.editIgnores.getText().toString())) {
+            return;
+        }
+        CharSequence raw = v.binding.editIgnores.getText().toString();
         Ignores i = new Ignores();
         i.ignore = StringUtils.split(raw.toString(), "\n");
         unsubscribe(saveSubscription);
@@ -123,7 +130,7 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
         );
     }
 
-    void openHelp() {
+    public void openHelp(View btn) {
         if (hasView()) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);

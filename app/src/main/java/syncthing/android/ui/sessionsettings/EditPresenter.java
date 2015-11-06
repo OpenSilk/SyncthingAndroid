@@ -120,6 +120,10 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> {
         );
     }
 
+    public void dismissDialog(View btn) {
+        dismissDialog();
+    }
+
     protected void dismissDialog() {
         activityResultsController.setResultAndFinish(Activity.RESULT_OK, null);
     }
