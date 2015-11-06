@@ -1312,9 +1312,10 @@ public class SessionController implements EventMonitor.EventListener {
                         return false;
                     });
         }
-        //always post online event for new subscribers
-        onNext.call(new ChangeEvent(online ? Change.ONLINE : Change.OFFLINE, null));
-        return o.onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
+        return o.onBackpressureBuffer()
+                //always post online event for new subscribers
+                .startWith(new ChangeEvent(online ? Change.ONLINE : Change.OFFLINE, null))
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(onNext);
     }
 
 }
