@@ -64,6 +64,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         app:deviceCompletion="@{card.completion}"
+                        app:deviceConnected="@{card.connected}"
                         style="@style/session.RecyclerHeaderText"
                         tools:text="Unknown"/>
 
@@ -162,6 +163,7 @@
                     android:id="@+id/use_compression_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="@{card.connected ? View.VISIBLE : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -181,7 +183,7 @@
                     android:id="@+id/introducer_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{card.introducer ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{card.connected ? (card.introducer ? View.VISIBLE : View.GONE) : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -199,6 +201,7 @@
                     android:id="@+id/version_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="@{card.connected ? View.VISIBLE : View.GONE}"
                     style="@style/session.RecyclerCardRow">
 
                     <TextView
@@ -248,6 +251,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/edit"
                         android:onClick="@{card.editDevice}"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    <Button
+                        android:id="@+id/btn_pause_resume"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{card.paused ? @string/resume : @string/pause}"
+                        android:onClick="@{card.pauseResumeDevice}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                 </LinearLayout>

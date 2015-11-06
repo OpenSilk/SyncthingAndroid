@@ -180,7 +180,12 @@ public class DeviceCard extends ExpandableCard {
 
     @Bindable
     public boolean isConnected() {
-        return connection != null;
+        return connection != null && connection.connected;
+    }
+
+    @Bindable
+    public boolean isPaused() {
+        return connection != null && connection.paused;
     }
 
     static final DateTime epoch = new DateTime(1969);
@@ -197,9 +202,9 @@ public class DeviceCard extends ExpandableCard {
         }
     }
 
-    @BindingAdapter("deviceCompletion")
-    public static void deviceCompletion(TextView view, int completion) {
-        if (completion < 1) {
+    @BindingAdapter({"deviceCompletion", "deviceConnected"})
+    public static void deviceCompletion(TextView view, int completion, boolean connected) {
+        if (!connected || completion < 1) {
             view.setText(R.string.disconnected);
             view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.device_disconnected));
         } else if (completion == 100) {
@@ -213,6 +218,14 @@ public class DeviceCard extends ExpandableCard {
 
     public void editDevice(View btn) {
         presenter.openEditDeviceScreen(device.deviceID);
+    }
+
+    public void pauseResumeDevice(View btn) {
+        if (isPaused()) {
+            presenter.controller.resumeDevice(getDeviceID());
+        } else {
+            presenter.controller.pauseDevice(getDeviceID());
+        }
     }
 
 }

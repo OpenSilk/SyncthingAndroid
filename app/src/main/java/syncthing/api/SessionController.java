@@ -53,6 +53,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.observers.Subscribers;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.SerializedSubject;
@@ -69,14 +70,14 @@ import syncthing.api.model.FolderDeviceConfig;
 import syncthing.api.model.FolderStats;
 import syncthing.api.model.FolderStatsMap;
 import syncthing.api.model.GUIConfig;
-import syncthing.api.model.SystemMessage;
-import syncthing.api.model.SystemErrors;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
 import syncthing.api.model.Ok;
 import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.Report;
+import syncthing.api.model.SystemErrors;
 import syncthing.api.model.SystemInfo;
+import syncthing.api.model.SystemMessage;
 import syncthing.api.model.Version;
 import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.Event;
@@ -1250,6 +1251,16 @@ public class SessionController implements EventMonitor.EventListener {
                         onError,
                         onComplete
                 );
+    }
+
+    public Subscription pauseDevice(String deviceId) {
+        return restApi.pause(deviceId)
+                .subscribe(Subscribers.create(v -> {}, this::logException));
+    }
+
+    public Subscription resumeDevice(String deviceId) {
+        return restApi.resume(deviceId)
+                .subscribe(Subscribers.create(v -> {}, this::logException));
     }
 
     void logException(Throwable e) {
