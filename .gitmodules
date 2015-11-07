@@ -7,6 +7,3 @@
 [submodule "syncthing/src/github.com/syncthing/syncthing-inotify"]
 	path = syncthing/src/github.com/syncthing/syncthing-inotify
 	url = https://github.com/syncthing/syncthing-inotify
-[submodule "go1.4"]
-	path = golang/go1.4
-	url = https://go.googlesource.com/go
