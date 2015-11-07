@@ -201,7 +201,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                     if (controller.isRestarting()) {
                         showRestartingDialog();
                     } else {
-                        getView().showEmpty(true);
+                        getView().showLoading();
                     }
                     getView().updateToolbarState(false);
                 }

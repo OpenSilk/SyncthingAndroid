@@ -16,52 +16,58 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<syncthing.android.ui.login.ManageScreenView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="syncthing.android.ui.login.ManageScreenViewBinding">
+        <variable name="presenter" type="syncthing.android.ui.login.ManagePresenter"/>
+    </data>
+    <syncthing.android.ui.login.ManageScreenView
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        style="?toolbarStyle"/>
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/btn_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp"
-        style="@style/mtrl.ButtonBar">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            style="?toolbarStyle"/>
 
-        <Button
-            android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/btn_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_device"
-            style="@style/mtrl.ButtonBarButton.Small"/>
+            android:gravity="end"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            style="@style/mtrl.ButtonBar">
 
-        <Button
-            android:id="@+id/btn_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/abc_action_mode_done"
-            style="@style/mtrl.ButtonBarButton.Small"/>
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_device"
+                android:onClick="@{presenter.openLoginScreen}"
+                style="@style/mtrl.ButtonBarButton.Small"/>
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/btn_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/done"
+                android:onClick="@{presenter.closeDialog}"
+                style="@style/mtrl.ButtonBarButton.Small"/>
 
-    <syncthing.android.ui.common.CardRecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_above="@id/btn_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        style="@style/mtrl.List"/>
+        </LinearLayout>
 
-</syncthing.android.ui.login.ManageScreenView>
+        <syncthing.android.ui.common.CardRecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_above="@id/btn_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            style="@style/mtrl.List"/>
+
+    </syncthing.android.ui.login.ManageScreenView>
+</layout>

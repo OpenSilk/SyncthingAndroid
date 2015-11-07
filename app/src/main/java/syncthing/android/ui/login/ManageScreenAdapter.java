@@ -18,13 +18,10 @@
 package syncthing.android.ui.login;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
-import syncthing.android.model.Credentials;
 import syncthing.android.ui.common.Card;
 import syncthing.android.ui.common.CardRecyclerAdapter;
 
@@ -33,10 +30,17 @@ import syncthing.android.ui.common.CardRecyclerAdapter;
  */
 public class ManageScreenAdapter extends CardRecyclerAdapter {
 
+    final ManagePresenter presenter;
     final List<ManageDeviceCard> devices = new ArrayList<>();
 
     @Inject
-    public ManageScreenAdapter() {
+    public ManageScreenAdapter(ManagePresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public android.databinding.DataBindingComponent getBindingComponent() {
+        return presenter;
     }
 
     public void replaceAll(List<ManageDeviceCard> cards) {

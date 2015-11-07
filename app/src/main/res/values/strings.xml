@@ -47,6 +47,7 @@
     <string name="use_tls">Use TLS</string>
     <string name="retry">Retry</string>
     <string name="copy">Copy</string>
+    <string name="done">Done</string>
 
     <!--Misc-->
     <string name="cleaning">Cleaning</string>

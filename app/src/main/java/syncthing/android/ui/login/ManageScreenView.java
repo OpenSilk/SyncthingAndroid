@@ -18,8 +18,8 @@
 package syncthing.android.ui.login;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
@@ -31,24 +31,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import syncthing.android.R;
-import syncthing.android.model.Credentials;
-import syncthing.android.ui.common.CardRecyclerView;
 
 /**
  * Created by drew on 3/15/15.
  */
 public class ManageScreenView extends RelativeLayout {
 
-    @InjectView(R.id.toolbar) Toolbar toolbar;
-    @InjectView(R.id.recyclerview) CardRecyclerView list;
-
     @Inject ManageScreenAdapter mAdapter;
     @Inject ToolbarOwner mToolbarOwner;
     @Inject ManagePresenter mPresenter;
+
+    syncthing.android.ui.login.ManageScreenViewBinding binding;
 
     public ManageScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,9 +55,12 @@ public class ManageScreenView extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.inject(this);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
-        list.setAdapter(mAdapter);
+        binding = DataBindingUtil.bind(this);
+        binding.setPresenter(mPresenter);
+        binding.executePendingBindings();
+        binding.recyclerview.setHasFixedSize(true);
+        binding.recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerview.setAdapter(mAdapter);
         if (!isInEditMode()) {
             mPresenter.takeView(this);
         }
@@ -72,25 +69,18 @@ public class ManageScreenView extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mToolbarOwner.attachToolbar(toolbar);
-        mToolbarOwner.setConfig(ActionBarConfig.builder().setTitle(R.string.manage_devices).build());
+        if (!isInEditMode()) {
+            mPresenter.takeView(this);
+            mToolbarOwner.attachToolbar(binding.toolbar);
+            mToolbarOwner.setConfig(ActionBarConfig.builder().setTitle(R.string.manage_devices).build());
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mToolbarOwner.detachToolbar(toolbar);
+        mToolbarOwner.detachToolbar(binding.toolbar);
         mPresenter.dropView(this);
-    }
-
-    @OnClick(R.id.btn_done)
-    public void onDone() {
-        mPresenter.exitActivity();
-    }
-
-    @OnClick(R.id.btn_add)
-    public void onAddDevice() {
-        mPresenter.openAddScreen();
     }
 
     void addAll(List<ManageDeviceCard> cards, boolean dirty) {

@@ -19,6 +19,7 @@ package syncthing.android.ui.login;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
@@ -33,9 +34,8 @@ import mortar.ViewPresenter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.settings.AppSettings;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.model.Credentials;
@@ -45,7 +45,8 @@ import timber.log.Timber;
  * Created by drew on 3/15/15.
  */
 @ScreenScope
-public class ManagePresenter extends ViewPresenter<ManageScreenView> {
+public class ManagePresenter extends ViewPresenter<ManageScreenView> implements
+        android.databinding.DataBindingComponent, IdenticonComponent {
 
     final IdenticonGenerator identiconGenerator;
     final FragmentManagerOwner fragmentManagerOwner;
@@ -77,62 +78,52 @@ public class ManagePresenter extends ViewPresenter<ManageScreenView> {
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        if (loaderSubscription == null || loaderSubscription.isUnsubscribed()) {
-            adapterDirty = true;
-            reload();
-        }
+        reload();
     }
 
     void reload() {
         if (loaderSubscription != null) loaderSubscription.unsubscribe();
+        adapterDirty = true;
         loaderSubscription = Observable.create(new Observable.OnSubscribe<List<Credentials>>() {
             @Override
             public void call(Subscriber<? super List<Credentials>> subscriber) {
                 subscriber.onNext(appSettings.getSavedCredentialsSorted());
                 subscriber.onCompleted();
             }
-        }).map(creds -> {
-            List<ManageDeviceCard> cards = new ArrayList<>(creds.size());
-            Credentials defaultCredentials = appSettings.getDefaultCredentials();
-            for (Credentials c : creds) {
-                ManageDeviceCard card = new ManageDeviceCard(ManagePresenter.this, c);
-                card.setChecked(c.equals(defaultCredentials));
+        }).map(new Func1<List<Credentials>, List<ManageDeviceCard>>() {
+            @Override
+            public List<ManageDeviceCard> call(List<Credentials> creds) {
+                List<ManageDeviceCard> cards = new ArrayList<>(creds.size());
+                Credentials defaultCredentials = appSettings.getDefaultCredentials();
+                for (Credentials c : creds) {
+                    ManageDeviceCard card = new ManageDeviceCard(ManagePresenter.this, c);
+                    card.setChecked(c.equals(defaultCredentials));
+                    cards.add(card);
+                }
+                return cards;
             }
-            return cards;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<ManageDeviceCard>>() {
-                    @Override
-                    public void onCompleted() {
-                        if (hasView()) {
-                            getView().onComplete();
-                        } else if (loaderSubscription != null) {
-                            loaderSubscription.unsubscribe();
-                        }
-                    }
+        }).subscribe(new Subscriber<List<ManageDeviceCard>>() {
+            @Override
+            public void onCompleted() {
+                if (hasView()) {
+                    getView().onComplete();
+                }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e, "loadCredentials");
-                        //TODO notify
-                        if (loaderSubscription != null) {
-                            loaderSubscription.unsubscribe();
-                        }
-                    }
+            @Override
+            public void onError(Throwable e) {
+                Timber.e(e, "loadCredentials");
+                //TODO notify
+            }
 
-                    @Override
-                    public void onNext(List<ManageDeviceCard> manageDeviceCards) {
-                        if (hasView()) {
-                            getView().addAll(manageDeviceCards, adapterDirty);
-                            adapterDirty = false;
-                        }
-                    }
-                });
-    }
-
-    void openAddScreen() {
-        LoginFragment f = LoginFragment.newInstance(Credentials.NONE);
-        fragmentManagerOwner.replaceMainContent(f, true);
+            @Override
+            public void onNext(List<ManageDeviceCard> manageDeviceCards) {
+                if (hasView()) {
+                    getView().addAll(manageDeviceCards, adapterDirty);
+                    adapterDirty = false;
+                }
+            }
+        });
     }
 
     void openEditScreen(Credentials credentials) {
@@ -142,18 +133,24 @@ public class ManagePresenter extends ViewPresenter<ManageScreenView> {
 
     void removeDevice(Credentials credentials) {
         appSettings.removeCredentials(credentials);
-        adapterDirty = true;
         reload();
-    }
-
-    void exitActivity() {
-        activityResultsController.setResultAndFinish(Activity.RESULT_OK, null);
     }
 
     void setAsDefault(Credentials credentials) {
         appSettings.setDefaultCredentials(credentials);
-        adapterDirty = true;
         reload();
     }
 
+    public void openLoginScreen(View btn) {
+        LoginFragment f = LoginFragment.newInstance(Credentials.NONE);
+        fragmentManagerOwner.replaceMainContent(f, true);
+    }
+
+    public void closeDialog(View btn) {
+        activityResultsController.setResultAndFinish(Activity.RESULT_OK, null);
+    }
+
+    public IdenticonGenerator identiconGenerator() {
+        return identiconGenerator;
+    }
 }
