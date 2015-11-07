@@ -23,15 +23,15 @@ import android.view.View;
  * Created by drew on 10/13/15.
  */
 public class ExpandHandler {
-    final CanExpand cardView;
+    final ExpandableView cardView;
 
-    public static ExpandHandler create(Expandable card, CanExpand cardView, CanExpand.OnExpandListener listener) {
+    public static ExpandHandler create(Expandable card, ExpandableView cardView, ExpandableView.OnExpandListener listener) {
         cardView.setExpandable(card);
         cardView.setExpandListener(listener);
         return new ExpandHandler(cardView);
     }
 
-    private ExpandHandler(CanExpand cardView) {
+    private ExpandHandler(ExpandableView cardView) {
         this.cardView = cardView;
     }
 

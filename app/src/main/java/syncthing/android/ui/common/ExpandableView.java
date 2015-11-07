@@ -24,14 +24,14 @@ import android.view.View;
  *
  * Created by drew on 3/10/15.
  */
-public interface CanExpand {
+public interface ExpandableView {
     /**
      * Interface to listen any callbacks when expand/collapse animation starts
      * Listeners must notify the Expandable after expand/collapse completes
      */
     interface OnExpandListener {
-        void onExpandStart(CanExpand viewCard, View expandingLayout);
-        void onCollapseStart(CanExpand viewCard, View expandingLayout);
+        void onExpandStart(ExpandableView viewCard, View expandingLayout);
+        void onCollapseStart(ExpandableView viewCard, View expandingLayout);
     }
     void setExpandable(Expandable card);
     Expandable getExpandable();

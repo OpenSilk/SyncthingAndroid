@@ -29,13 +29,13 @@ import timber.log.Timber;
 /**
  * Created by drew on 3/20/15.
  */
-public class ExpandableCardViewWrapper extends FrameLayout implements CanExpand {
+public class ExpandableCardView extends FrameLayout implements ExpandableView {
 
     protected Expandable expandable;
-    protected CanExpand.OnExpandListener expandListener;
+    protected ExpandableView.OnExpandListener expandListener;
     protected View expandView;
 
-    public ExpandableCardViewWrapper(Context context, AttributeSet attrs) {
+    public ExpandableCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -58,12 +58,12 @@ public class ExpandableCardViewWrapper extends FrameLayout implements CanExpand 
     }
 
     @Override
-    public @Nullable CanExpand.OnExpandListener getExpandListener() {
+    public @Nullable ExpandableView.OnExpandListener getExpandListener() {
         return expandListener;
     }
 
     @Override
-    public void setExpandListener(CanExpand.OnExpandListener expandListener) {
+    public void setExpandListener(ExpandableView.OnExpandListener expandListener) {
         this.expandListener = expandListener;
     }
 

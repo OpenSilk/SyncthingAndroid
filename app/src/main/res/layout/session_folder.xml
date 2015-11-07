@@ -20,7 +20,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="syncthing.android.ui.session.FolderCardViewBinding">
+    <data>
         <import type="org.apache.commons.lang3.StringUtils"/>
         <import type="android.view.View"/>
         <import type="syncthing.api.model.ModelState"/>
@@ -28,7 +28,7 @@
         <variable name="card" type="syncthing.android.ui.session.FolderCard"/>
         <variable name="expandHandler" type="syncthing.android.ui.common.ExpandHandler"/>
     </data>
-    <syncthing.android.ui.common.ExpandableCardViewWrapper
+    <syncthing.android.ui.common.ExpandableCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/session.RecyclerCard">
@@ -361,7 +361,7 @@
 
         </RelativeLayout>
 
-    </syncthing.android.ui.common.ExpandableCardViewWrapper>
+    </syncthing.android.ui.common.ExpandableCardView>
 </layout>
 
 

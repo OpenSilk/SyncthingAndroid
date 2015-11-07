@@ -33,28 +33,25 @@ import timber.log.Timber;
  */
 public abstract class CardRecyclerAdapter extends RecyclerView.Adapter<CardViewHolder> {
 
-    CanExpand.OnExpandListener expandListener;
-    RecyclerView mRecyclerView;
+    protected ExpandableView.OnExpandListener mExpandListener;
+    protected RecyclerView mRecyclerView;
+    protected LayoutInflater mLayoutInflater;
 
     public CardRecyclerAdapter() {
-    }
-
-    public CanExpand.OnExpandListener getExpandListener() {
-        return expandListener;
-    }
-
-    public void setExpandListener(CanExpand.OnExpandListener expandListener) {
-        this.expandListener = expandListener;
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
+        mExpandListener = (ExpandableView.OnExpandListener) mRecyclerView;
+        mLayoutInflater = LayoutInflater.from(recyclerView.getContext());
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         mRecyclerView = null;
+        mExpandListener = null;
+        mLayoutInflater = null;
     }
 
     public abstract Card getItem(int pos);
@@ -63,35 +60,32 @@ public abstract class CardRecyclerAdapter extends RecyclerView.Adapter<CardViewH
     }
 
     @Override
-    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(viewType, parent, false);
-        CardViewHolder viewHolder;
+    public final CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View v = mLayoutInflater.inflate(viewType, parent, false);
+        final CardViewHolder viewHolder;
         if (getBindingComponent() != null) {
             viewHolder = new CardViewHolder(v, getBindingComponent());
         } else {
             viewHolder = new CardViewHolder(v);
         }
-        if (viewHolder.getBinding() != null) {
-            //Trick from the databinding talk by google
-            viewHolder.getBinding().addOnRebindCallback(new OnRebindCallback() {
-                @Override
-                public boolean onPreBind(ViewDataBinding binding) {
-                    return mRecyclerView != null && mRecyclerView.isComputingLayout();
-                }
+        //Trick from the databinding talk by google
+        viewHolder.getBinding().addOnRebindCallback(new OnRebindCallback() {
+            @Override
+            public boolean onPreBind(ViewDataBinding binding) {
+                return mRecyclerView != null && mRecyclerView.isComputingLayout();
+            }
 
-                @Override
-                public void onCanceled(ViewDataBinding binding) {
-                    if (mRecyclerView == null || mRecyclerView.isComputingLayout()) {
-                        return;
-                    }
-                    int position = mRecyclerView.getChildAdapterPosition(binding.getRoot());
-                    if (position != RecyclerView.NO_POSITION) {
-                        notifyItemChanged(position, DATA_INVALIDATION);
-                    }
+            @Override
+            public void onCanceled(ViewDataBinding binding) {
+                if (mRecyclerView == null || mRecyclerView.isComputingLayout()) {
+                    return;
                 }
-            });
-        }
+                int position = mRecyclerView.getChildAdapterPosition(binding.getRoot());
+                if (position != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(position, DATA_INVALIDATION);
+                }
+            }
+        });
         return viewHolder;
     }
 
@@ -103,7 +97,7 @@ public abstract class CardRecyclerAdapter extends RecyclerView.Adapter<CardViewH
     public void onBindViewHolder(CardViewHolder holder, int position) {
         holder.recycle();
         Card c = getItem(position);
-        holder.bind(c, expandListener);
+        holder.bind(c, mExpandListener);
         applyAdditionalBinding(c, holder);
     }
 

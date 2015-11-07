@@ -19,7 +19,7 @@
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="syncthing.android.ui.session.HeaderCardViewBinding">
+    <data>
         <variable name="card" type="syncthing.android.ui.session.HeaderCard"/>
     </data>
     <syncthing.android.ui.session.HeaderCardView

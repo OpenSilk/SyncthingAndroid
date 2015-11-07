@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 
-public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpandListener {
+public class CardRecyclerView extends RecyclerView implements ExpandableView.OnExpandListener {
 
     boolean wobbleOnExpand = true;
 
@@ -43,12 +43,12 @@ public class CardRecyclerView extends RecyclerView implements CanExpand.OnExpand
     //--------------------------------------------------------------------------
 
     @Override
-    public void onExpandStart(CanExpand viewCard, View expandingLayout) {
+    public void onExpandStart(ExpandableView viewCard, View expandingLayout) {
         ExpandCollapseHelper.animateExpanding(expandingLayout,viewCard,this,wobbleOnExpand);
     }
 
     @Override
-    public void onCollapseStart(CanExpand viewCard, View expandingLayout) {
+    public void onCollapseStart(ExpandableView viewCard, View expandingLayout) {
         ExpandCollapseHelper.animateCollapsing(expandingLayout,viewCard,this,wobbleOnExpand);
     }
 

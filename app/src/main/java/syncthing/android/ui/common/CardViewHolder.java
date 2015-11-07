@@ -44,11 +44,11 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
         return (T) mBinding;
     }
 
-    public void bind(Card card, CanExpand.OnExpandListener listener) {
+    public void bind(Card card, ExpandableView.OnExpandListener listener) {
         mBinding.setVariable(syncthing.android.BR.card, card);
-        if (card instanceof Expandable && itemView instanceof CanExpand) {
+        if (card instanceof Expandable && itemView instanceof ExpandableView) {
             mBinding.setVariable(syncthing.android.BR.expandHandler,
-                    ExpandHandler.create((Expandable) card, (CanExpand) itemView, listener));
+                    ExpandHandler.create((Expandable) card, (ExpandableView) itemView, listener));
         }
         mBinding.executePendingBindings();
     }

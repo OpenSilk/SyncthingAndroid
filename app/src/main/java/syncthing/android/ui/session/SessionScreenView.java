@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import syncthing.android.R;
-import syncthing.android.ui.common.CanExpand;
+import syncthing.android.ui.common.ExpandableView;
 
 /**
  * Created by drew on 3/6/15.
@@ -62,10 +62,8 @@ public class SessionScreenView extends RecyclerListCoordinator implements ISessi
         super.onFinishInflate();
         ButterKnife.inject(this);
         mListAdapter = new SessionRecyclerAdapter(mPresenter);
-        mListAdapter.setExpandListener((CanExpand.OnExpandListener) mList);
-        mList.setAdapter(mListAdapter);
         mList.setLayoutManager(new LinearLayoutManager(getContext()));
-        //((CardRecyclerView) mList).setWobbleOnExpand(false);
+        mList.setAdapter(mListAdapter);
         if (!isInEditMode()) {
             mPresenter.takeView(this);
         }

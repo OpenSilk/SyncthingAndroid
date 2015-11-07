@@ -25,7 +25,7 @@ public class ExpandCollapseHelper {
      * @param cardView         cardView
      * @param recyclerView     recyclerView
      */
-    public static void animateCollapsing(final View expandingLayout, final CanExpand cardView, final RecyclerView recyclerView, boolean wobble) {
+    public static void animateCollapsing(final View expandingLayout, final ExpandableView cardView, final RecyclerView recyclerView, boolean wobble) {
         final int origHeight = expandingLayout.getHeight();
 
         ValueAnimator animator = createHeightAnimator(expandingLayout, origHeight, 0);
@@ -65,12 +65,13 @@ public class ExpandCollapseHelper {
      * @param cardView         cardView
      * @param recyclerView     recyclerView
      */
-    public static void animateExpanding(final View expandingLayout, final CanExpand cardView, final RecyclerView recyclerView, boolean wobble) {
+    public static void animateExpanding(final View expandingLayout, final ExpandableView cardView, final RecyclerView recyclerView, boolean wobble) {
             /* Update the layout so the extra content becomes visible.*/
         expandingLayout.setVisibility(View.VISIBLE);
 
         View parent = (View) expandingLayout.getParent();
-        final int widthSpec = View.MeasureSpec.makeMeasureSpec(parent.getMeasuredWidth() - parent.getPaddingLeft() - parent.getPaddingRight(), View.MeasureSpec.AT_MOST);
+        final int widthSpec = View.MeasureSpec.makeMeasureSpec(
+                parent.getMeasuredWidth() - parent.getPaddingLeft() - parent.getPaddingRight(), View.MeasureSpec.AT_MOST);
         final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         expandingLayout.measure(widthSpec, heightSpec);
 
