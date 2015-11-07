@@ -117,7 +117,12 @@ public class EventMonitor {
                     }
                 })
                 // drop unknown events
-                .filter(event -> (event.type != null && event.type != EventType.UNKNOWN))
+                .filter(event -> {
+                    if (event.type == EventType.UNKNOWN) {
+                        Timber.w("Dropping unknown event %s", event.data);
+                    }
+                    return (event.type != null && event.type != EventType.UNKNOWN);
+                })
                 //drop selected duplicate events like PING
                 .lift(OperatorEventsDistinctUntilChanged.INSTANCE)
                 .subscribe(
