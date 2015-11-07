@@ -59,7 +59,7 @@ public class LoginUtils {
         return true;
     }
 
-    public static String buildUri(String host, String port, boolean tls) {
+    public static String buildUrl(String host, String port, boolean tls) {
         String realUrl = StringUtils.trim(host).toLowerCase(Locale.US);
         realUrl = stripHttp(realUrl);
         String realPort = StringUtils.trim(port);

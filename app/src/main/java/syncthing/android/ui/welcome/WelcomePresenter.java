@@ -216,7 +216,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
         tmpCreds.alias = alias;
         String url = "127.0.0.1";
         String port = "8385";
-        String uri = LoginUtils.buildUri(url, port, true);
+        String uri = LoginUtils.buildUrl(url, port, true);
         tmpCreds.url = uri;
         configBuilder.setUrl(uri);
         acquireNewSession();

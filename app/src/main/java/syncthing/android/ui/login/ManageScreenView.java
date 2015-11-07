@@ -17,6 +17,7 @@
 
 package syncthing.android.ui.login;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import org.opensilk.common.core.mortar.DaggerService;
+import org.opensilk.common.core.util.VersionUtils;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 
@@ -46,6 +48,7 @@ public class ManageScreenView extends RelativeLayout {
 
     public ManageScreenView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        applyTransitionGroup();
         if (!isInEditMode()) {
             ManageComponent cmp = DaggerService.getDaggerComponent(getContext());
             cmp.inject(this);
@@ -93,5 +96,12 @@ public class ManageScreenView extends RelativeLayout {
 
     void onComplete() {
         //TODO notify if empty
+    }
+
+    @TargetApi(21)
+    private void applyTransitionGroup() {
+        if (VersionUtils.hasLollipop()) {
+            setTransitionGroup(true);
+        }
     }
 }

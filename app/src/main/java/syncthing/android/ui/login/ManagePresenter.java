@@ -17,11 +17,18 @@
 
 package syncthing.android.ui.login;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
+import android.view.Gravity;
 import android.view.View;
 
 import org.opensilk.common.core.dagger2.ScreenScope;
+import org.opensilk.common.core.util.VersionUtils;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
@@ -128,6 +135,7 @@ public class ManagePresenter extends ViewPresenter<ManageScreenView> implements
 
     void openEditScreen(Credentials credentials) {
         LoginFragment f = LoginFragment.newInstance(credentials);
+        applyFragmentTransitions(f);
         fragmentManagerOwner.replaceMainContent(f, true);
     }
 
@@ -143,6 +151,7 @@ public class ManagePresenter extends ViewPresenter<ManageScreenView> implements
 
     public void openLoginScreen(View btn) {
         LoginFragment f = LoginFragment.newInstance(Credentials.NONE);
+        applyFragmentTransitions(f);
         fragmentManagerOwner.replaceMainContent(f, true);
     }
 
@@ -152,5 +161,15 @@ public class ManagePresenter extends ViewPresenter<ManageScreenView> implements
 
     public IdenticonGenerator identiconGenerator() {
         return identiconGenerator;
+    }
+
+    @TargetApi(21)
+    private void applyFragmentTransitions(Fragment f) {
+        if (VersionUtils.hasLollipop()) {
+            TransitionSet set = new TransitionSet();
+            set.addTransition(new Slide(Gravity.BOTTOM));
+            set.addTransition(new Fade(Fade.IN));
+            f.setEnterTransition(set);
+        }
     }
 }

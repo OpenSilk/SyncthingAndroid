@@ -18,18 +18,24 @@
 package syncthing.android.ui.login;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Pair;
+import android.view.View;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
+import org.opensilk.common.ui.mortar.DialogPresenter;
 
-import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
@@ -38,11 +44,11 @@ import mortar.ViewPresenter;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
-import syncthing.android.settings.AppSettings;
+import syncthing.android.R;
 import syncthing.android.model.Credentials;
 import syncthing.android.service.SyncthingUtils;
+import syncthing.android.settings.AppSettings;
 import syncthing.android.ui.ManageActivity;
 import syncthing.api.Session;
 import syncthing.api.SessionManager;
@@ -58,27 +64,27 @@ import timber.log.Timber;
 @ScreenScope
 public class LoginPresenter extends ViewPresenter<LoginScreenView> {
 
+    enum State {
+        NONE,
+        LOADING,
+        ERROR,
+        SUCCESS
+    }
+
     final Context appContext;
-    final Credentials initialCredentials;
     final ActivityResultsController activityResultsController;
     final AppSettings settings;
     final SessionManager manager;
+    final DialogPresenter dialogPresenter;
+
+    final LoginScreenViewModel viewModel = new LoginScreenViewModel();
+    final AtomicReference<Credentials> credentials = new AtomicReference<>();
+    final SyncthingApiConfig.Builder configBuilder = SyncthingApiConfig.builder();
 
     Subscription subscription;
-    boolean isloading;
-    Credentials newCredentials;
     String error;
-    TempCredStorage tmpCreds = new TempCredStorage();
     Session session;
-    SyncthingApiConfig.Builder configBuilder = SyncthingApiConfig.builder();
-
-    static class TempCredStorage implements Serializable {
-        private static final long serialVersionUID = 0L;
-        String alias;
-        String deviceId;
-        String url;
-        String key;
-    }
+    State state = State.NONE;
 
     @Inject
     public LoginPresenter(
@@ -86,16 +92,18 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
             Credentials initialCredentials,
             ActivityResultsController activityResultsController,
             SessionManager manager,
-            AppSettings settings
+            AppSettings settings,
+            DialogPresenter dialogPresenter
     ) {
         this.appContext = context;
-        this.initialCredentials = initialCredentials;
+        this.credentials.set(initialCredentials);
         this.activityResultsController = activityResultsController;
         this.settings = settings;
         this.manager = manager;
         if (initialCredentials != Credentials.NONE) {
             configBuilder.forCredentials(initialCredentials);
         }
+        this.dialogPresenter = dialogPresenter;
     }
 
     @Override
@@ -120,74 +128,95 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
         if (savedInstanceState == null) {
-            if (initialCredentials != Credentials.NONE) {
-                getView().initWithCredentials(initialCredentials);
+            if (credentials.get() != Credentials.NONE) {
+                Credentials c = credentials.get();
+                viewModel.setAlias(c.alias);
+                viewModel.setHost(LoginUtils.extractHost(c.url));
+                viewModel.setPort(LoginUtils.extractPort(c.url));
+                viewModel.setTls(LoginUtils.isHttps(c.url));
             }
-        } else {
-            savedInstanceState.setClassLoader(getClass().getClassLoader());
-            isloading = savedInstanceState.getBoolean("isloading");
-            newCredentials = savedInstanceState.getParcelable("creds");
-            error = savedInstanceState.getString("error");
-            tmpCreds = (TempCredStorage) savedInstanceState.getSerializable("tmpcreds");
-            if (isloading) {
-                getView().showLoginProgress();
-            } else if (newCredentials != null) {
+        }
+        getView().binding.setModel(viewModel);
+        switch (state) {
+            case ERROR:
+                showError();
+                break;
+            case LOADING:
+                showLoading();
+                break;
+            case SUCCESS:
                 exitSuccess();
-            } else if (error != null) {
-                getView().showLoginError(error);
-            }
+                break;
         }
     }
 
-    @Override
-    protected void onSave(Bundle outState) {
-        super.onSave(outState);
-        outState.putBoolean("isloading", isloading);
-        outState.putParcelable("creds", (Parcelable) newCredentials);
-        outState.putString("error", error);
-        outState.putSerializable("tmpcreds", tmpCreds);
+    public void submit(View btn) {
+        if (!hasView()) return;
+        LoginScreenView v = getView();
+        if (LoginUtils.validateHost(viewModel.getHost())
+                && LoginUtils.validatePort(viewModel.getPort())) {
+            v.dismissKeyboard();
+            fetchApiKey();
+        } else {
+            Toast.makeText(v.getContext(), R.string.input_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
-    void fetchApiKey(String alias, String url, String port, String user, String pass, boolean tls) {
+    public void cancel(View btn) {
+        exitCanceled();
+    }
+
+    void fetchApiKey() {
         if (!hasView()) return;
-        tmpCreds.alias = alias;
-        String uri = LoginUtils.buildUri(url, port, tls);
-        tmpCreds.url = uri;
-        configBuilder.setUrl(uri);
-        String auth = LoginUtils.buildAuthorization(user, pass);
-        configBuilder.setAuth(auth);
+        state = State.LOADING;
+        showLoading();
+        String url = LoginUtils.buildUrl(viewModel.getHost(), viewModel.getPort(), viewModel.isTls());
+        credentials.set(credentials.get().buildUpon().setUrl(url).build());
+        configBuilder.setUrl(url);
+        configBuilder.setAuth(LoginUtils.buildAuthorization(viewModel.getUser(), viewModel.getPass()));
         if (session != null) {
             manager.release(session);
         }
         session = manager.acquire(configBuilder.build());
         final SyncthingApi api = SynchingApiWrapper.wrap(session.api(), Schedulers.io());
-        isloading = true;
-        subscription = api.config()
-                .zipWith(api.system(),
-                (config, system) -> {
-                    TempCredStorage tmp = new TempCredStorage();
-                    tmp.key = config.gui.apiKey;
-                    tmp.deviceId = system.myID;
-                    for (DeviceConfig d : config.devices) {
-                        if (StringUtils.equals(d.deviceID, system.myID)) {
-                            tmp.alias = SyncthingUtils.getDisplayName(d);
-                        }
-                    }
-                    Timber.d(ReflectionToStringBuilder.reflectionToString(tmp));
-                    return tmp;
-                })
+        subscription = rx.Observable.zip(api.config(), api.system(), Pair::create)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        tmp -> {
-                            tmpCreds.deviceId = tmp.deviceId;
-                            tmpCreds.key = tmp.key;
-                            if (StringUtils.isEmpty(tmpCreds.alias)) {
-                                tmpCreds.alias = tmp.alias;
+                        pair -> {
+                            Credentials.Builder builder = credentials.get().buildUpon();
+                            builder.setId(pair.second.myID);
+                            builder.setApiKey(pair.first.gui.apiKey);
+                            if (StringUtils.isEmpty(viewModel.getAlias())) {
+                                for (DeviceConfig d : pair.first.devices) {
+                                    if (StringUtils.equals(d.deviceID, pair.second.myID)) {
+                                        builder.setAlias(SyncthingUtils.getDisplayName(d));
+                                        break;
+                                    }
+                                }
+                            } else {
+                                builder.setAlias(viewModel.getAlias());
                             }
-                            saveKeyAndFinish();
+                            credentials.set(builder.build());
                         },
-                        this::notifyLoginError
-                );
+                        this::notifyLoginError,
+                        this::saveKeyAndFinish
+        );
+    }
+
+    void notifyLoginError(Throwable t) {
+        state = State.ERROR;
+        error = t.getMessage();
+        if (hasView()) {
+            showError();
+        }
+    }
+
+    void saveKeyAndFinish() {
+        state = State.SUCCESS;
+        settings.saveCredentials(credentials.get());
+        if (hasView()) {
+            exitSuccess();
+        }
     }
 
     void cancelLogin() {
@@ -195,50 +224,46 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
             final Subscription s = subscription;
             subscription = null;
             final Scheduler.Worker worker = Schedulers.io().createWorker();
-            worker.schedule(new Action0() {
-                @Override
-                public void call() {
-                    s.unsubscribe();
-                    worker.unsubscribe();
-                }
+            worker.schedule(() -> {
+                s.unsubscribe();
+                worker.unsubscribe();
             });
         }
-        getView().dismissLoginProgress();
     }
 
-    void saveKeyAndFinish() {
-        isloading = false;
-        newCredentials = new Credentials(tmpCreds.alias, tmpCreds.deviceId, tmpCreds.url, tmpCreds.key, null);
-        Timber.d(ReflectionToStringBuilder.reflectionToString(newCredentials));
-        settings.saveCredentials(newCredentials);
-        if (hasView()) {
-            exitSuccess();
-        }
+    void showLoading() {
+        dialogPresenter.showDialog(
+                context -> {
+                    ProgressDialog loadingProgress = new ProgressDialog(context);
+                    loadingProgress.setMessage(context.getString(R.string.fetching_api_key_dots));
+                    loadingProgress.setCancelable(false);
+                    loadingProgress.setButton(DialogInterface.BUTTON_NEGATIVE,
+                            context.getString(android.R.string.cancel),
+                            (dialog, which) -> {
+                                cancelLogin();
+                                dialog.dismiss();
+                            });
+                    return loadingProgress;
+                }
+        );
     }
 
-    void notifyLoginError(Throwable t) {
-        isloading = false;
-        error = t.getMessage();
-        if (hasView()) {
-            getView().dismissLoginProgress();
-            getView().showLoginError(error);
-        }
+    void showError() {
+        dialogPresenter.showDialog(
+                context -> new AlertDialog.Builder(context)
+                        .setTitle(R.string.login_failure)
+                        .setMessage(error)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .create());
     }
 
     void exitSuccess() {
-        Intent intent = new Intent().putExtra(ManageActivity.EXTRA_CREDENTIALS, (Parcelable) newCredentials);
+        Intent intent = new Intent().putExtra(ManageActivity.EXTRA_CREDENTIALS, (Parcelable) credentials.get());
         activityResultsController.setResultAndFinish(Activity.RESULT_OK, intent);
     }
 
-    void exitCanceled() {
-        activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, null);
-    }
-
-    void gotoCredentialsInstaller() {
-        Intent intent = new Intent("android.credentials.INSTALL")
-                .setPackage("com.android.certinstaller");
-                //.setComponent(new ComponentName(""com.android.certinstaller", ".CertInstallerMain"));
-        activityResultsController.startActivityForResult(intent, 0, null);
+    public void exitCanceled() {
+        activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, new Intent());
     }
 
 }

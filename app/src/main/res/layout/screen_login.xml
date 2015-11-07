@@ -16,116 +16,176 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<syncthing.android.ui.login.LoginScreenView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="syncthing.android.ui.login.LoginScreenViewBinding">
+        <variable
+            name="model"
+            type="syncthing.android.ui.login.LoginScreenViewModel"/>
+        <variable
+            name="presenter"
+            type="syncthing.android.ui.login.LoginPresenter"/>
+    </data>
+    <syncthing.android.ui.login.LoginScreenView
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        app:layout_scrollFlags="scroll|enterAlways"
-        style="?toolbarStyle"/>
+        android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/login"
-        android:layout_below="@id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp">
-
-        <EditText
-            android:id="@+id/alias"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:singleLine="true"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/server_url"
-            android:hint="@string/display_name"/>
+            android:fitsSystemWindows="true"
+            android:theme="?appBarTheme">
 
-        <EditText
-            android:id="@+id/server_port"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/alias"
-            android:layout_alignParentRight="true"
-            android:inputType="number"
-            android:text="@string/default_port"
-            tools:ignore="RtlHardcoded"/>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
+                style="?toolbarStyle"/>
 
-        <EditText
-            android:id="@+id/server_url"
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/alias"
-            android:layout_toLeftOf="@id/server_port"
-            android:inputType="textUri"
-            android:singleLine="true"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/user"
-            android:hint="@string/ip_or_domain"
-            tools:ignore="RtlHardcoded"/>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:padding="16dp">
 
-        <EditText
-            android:id="@+id/user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/server_url"
-            android:inputType="textUri"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@+id/password"
-            android:hint="@string/username"/>
+            <LinearLayout
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/user"
-            android:inputType="textPassword"
-            android:singleLine="true"
-            android:imeOptions="actionGo"
-            android:hint="@string/password"
-            />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_alias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/display_name">
 
-        <CheckBox
-            android:id="@+id/use_tls"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/password"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/use_tls"/>
+                    <EditText
+                        android:id="@+id/edit_alias"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edit_server_url"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/use_tls"
-            android:layout_marginTop="16dp"
-            android:gravity="end"
-            style="@style/mtrl.ButtonBar">
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@android:string/cancel"
-                style="@style/mtrl.ButtonBarButton.Small"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login"
-                style="@style/mtrl.ButtonBarButton.Small"/>
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_server_url"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/ip_or_domain">
 
-        </LinearLayout>
+                        <EditText
+                            android:id="@+id/edit_server_url"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textUri"
+                            android:singleLine="true"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/edit_server_port"/>
 
-    </RelativeLayout>
+                    </android.support.design.widget.TextInputLayout>
 
-</syncthing.android.ui.login.LoginScreenView>
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_server_port"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/port_number">
+
+                        <EditText
+                            android:id="@+id/edit_server_port"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/edit_user"
+                            android:text="@string/default_port" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username">
+
+                    <EditText
+                        android:id="@+id/edit_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textUri"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edit_password"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password">
+
+                    <EditText
+                        android:id="@+id/edit_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:singleLine="true"
+                        android:imeOptions="actionGo"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <CheckBox
+                    android:id="@+id/use_tls"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/use_tls"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="end"
+                    style="@style/mtrl.ButtonBar">
+
+                    <Button
+                        android:id="@+id/cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@android:string/cancel"
+                        android:onClick="@{presenter.cancel}"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    <Button
+                        android:id="@+id/submit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login"
+                        android:onClick="@{presenter.submit}"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </syncthing.android.ui.login.LoginScreenView>
+</layout>

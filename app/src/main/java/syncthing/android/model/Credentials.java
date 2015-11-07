@@ -19,12 +19,13 @@ package syncthing.android.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by drew on 3/6/15.
  */
 public class Credentials implements Parcelable {
-    public static final Credentials NONE = new Credentials(null, null);
+    public static final Credentials NONE = new Credentials();
 
     public final String alias;
     public final String id;
@@ -32,9 +33,8 @@ public class Credentials implements Parcelable {
     public final String apiKey;
     public final String caCert;
 
-    @Deprecated
-    public Credentials(String url, String apiKey) {
-        this(null, null, url, apiKey, null);
+    private Credentials() {
+        this(null, null, null, null, null);
     }
 
     public Credentials(String alias, String id, String url, String apiKey, String caCert) {
@@ -43,6 +43,10 @@ public class Credentials implements Parcelable {
         this.url = url;
         this.apiKey = apiKey;
         this.caCert = caCert;
+    }
+
+    public Builder buildUpon() {
+        return new Builder(this);
     }
 
     @Override
@@ -90,4 +94,49 @@ public class Credentials implements Parcelable {
             return new Credentials[size];
         }
     };
+
+    public static class Builder {
+        public String alias;
+        public String id;
+        public String url;
+        public String apiKey;
+        public String caCert;
+
+        private Builder(@NonNull Credentials credentials) {
+            alias = credentials.alias;
+            id = credentials.id;
+            url = credentials.url;
+            apiKey = credentials.apiKey;
+            caCert = credentials.caCert;
+        }
+
+        public Builder setAlias(String alias) {
+            this.alias = alias;
+            return this;
+        }
+
+        public Builder setId(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+            return this;
+        }
+
+        public Builder setCaCert(String caCert) {
+            this.caCert = caCert;
+            return this;
+        }
+
+        public Credentials build() {
+            return new Credentials(alias, id, url, apiKey, caCert);
+        }
+    }
 }

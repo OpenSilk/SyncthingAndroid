@@ -58,12 +58,13 @@
 
     <!--Login-->
     <string name="display_name">Display name</string>
-    <string name="ip_or_domain">IP or Domain</string>
+    <string name="ip_or_domain">IP address or domain name</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="fetching_api_key_dots">Fetching api key…</string>
     <string name="login_failure">Login Failure</string>
+    <string name="port_number">Port number</string>
 
     <!--Notification-->
     <string name="syncthing_is_running">Syncthing is running</string>
