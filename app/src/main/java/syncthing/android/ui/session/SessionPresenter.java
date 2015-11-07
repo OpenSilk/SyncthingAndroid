@@ -243,6 +243,8 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                 break;
             case CONNECTIONS_UPDATE:
             case CONNECTIONS_CHANGE:
+            case DEVICE_PAUSED:
+            case DEVICE_RESUMED:
                 postConnectiosUpdate();
                 break;
             case DEVICE_STATS:
@@ -453,9 +455,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     void postConnectiosUpdate() {
         for (DeviceCard c : devices) {
             ConnectionInfo conn = controller.getConnection(c.getDeviceID());
-            if (conn != null) {
-                c.setConnectionInfo(conn);
-            }
+            c.setConnectionInfo(conn);
         }
         ConnectionInfo tConn = controller.getConnectionTotal();
         if (tConn != null) {

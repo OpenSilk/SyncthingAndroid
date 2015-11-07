@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.joda.time.DateTime;
 
 import syncthing.android.R;
@@ -33,18 +34,26 @@ import syncthing.api.model.Compression;
 import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/10/15.
  */
 public class DeviceCard extends ExpandableCard {
 
-
     private final SessionPresenter presenter;
     protected DeviceConfig device;
-    protected ConnectionInfo connection;
     protected DeviceStats stats;
-    protected int completion;
+    protected int completion = -1;
+
+    private long inbps = -1;
+    private long inBytesTotal = -1;
+    private long outbps = -1;
+    private long outBytesTotal = -1;
+    private String address;
+    private String clientVersion = "?";
+    private boolean connected;
+    private boolean paused;
 
     public DeviceCard(
             SessionPresenter presenter,
@@ -55,9 +64,9 @@ public class DeviceCard extends ExpandableCard {
     ) {
         this.presenter = presenter;
         this.device = device;
-        this.connection = connection;
         this.stats = stats;
         this.completion = completion;
+        setConnectionInfo(connection);
     }
 
     public void setDevice(DeviceConfig device) {
@@ -69,9 +78,11 @@ public class DeviceCard extends ExpandableCard {
         notifyChange(syncthing.android.BR._all);//TODO only notify changed fields
     }
 
+
     public void setConnectionInfo(ConnectionInfo connection) {
-        if (this.connection == null || connection == null) {
-            this.connection = connection;
+        Timber.d("setConnectionInfo(%s)", ReflectionToStringBuilder.toString(connection));
+        if (connection == null) {
+            connected = false;
             notifyChange(syncthing.android.BR.inbps);
             notifyChange(syncthing.android.BR.inBytesTotal);
             notifyChange(syncthing.android.BR.outbps);
@@ -79,26 +90,39 @@ public class DeviceCard extends ExpandableCard {
             notifyChange(syncthing.android.BR.address);
             notifyChange(syncthing.android.BR.clientVersion);
             notifyChange(syncthing.android.BR.connected);
+            notifyChange(syncthing.android.BR.paused);
         } else {
-            ConnectionInfo oldConnection = this.connection;
-            this.connection = connection;
-            if (oldConnection.inbps != connection.inbps) {
+            if (inbps != connection.inbps) {
+                inbps = connection.inbps;
                 notifyChange(syncthing.android.BR.inbps);
             }
-            if (oldConnection.inBytesTotal != connection.inBytesTotal) {
+            if (inBytesTotal != connection.inBytesTotal) {
+                inBytesTotal = connection.inBytesTotal;
                 notifyChange(syncthing.android.BR.inBytesTotal);
             }
-            if (oldConnection.outbps != connection.outbps) {
+            if (outbps != connection.outbps) {
+                outbps = connection.outbps;
                 notifyChange(syncthing.android.BR.outbps);
             }
-            if (oldConnection.outBytesTotal != connection.outBytesTotal) {
+            if (outBytesTotal != connection.outBytesTotal) {
+                outBytesTotal = connection.outBytesTotal;
                 notifyChange(syncthing.android.BR.outBytesTotal);
             }
-            if (!StringUtils.equals(oldConnection.address, connection.address)) {
+            if (!StringUtils.equals(address, connection.address)) {
+                address = connection.address;
                 notifyChange(syncthing.android.BR.address);
             }
-            if (!StringUtils.equals(oldConnection.clientVersion, connection.clientVersion)) {
+            if (!StringUtils.equals(clientVersion, connection.clientVersion)) {
+                clientVersion = connection.clientVersion;
                 notifyChange(syncthing.android.BR.clientVersion);
+            }
+            if (connected != connection.connected) {
+                connected = connection.connected;
+                notifyChange(syncthing.android.BR.connected);
+            }
+            if (paused != connection.paused) {
+                paused = connection.paused;
+                notifyChange(syncthing.android.BR.paused);
             }
         }
     }
@@ -150,42 +174,42 @@ public class DeviceCard extends ExpandableCard {
 
     @Bindable
     public long getInbps() {
-        return connection != null ? connection.inbps : -1;
+        return inbps;
     }
 
     @Bindable
     public long getInBytesTotal(){
-        return connection != null ? connection.inBytesTotal : -1;
+        return inBytesTotal;
     }
 
     @Bindable
     public long getOutbps() {
-        return connection != null ? connection.outbps : -1;
+        return outbps;
     }
 
     @Bindable
     public long getOutBytesTotal() {
-        return connection != null ? connection.outBytesTotal : -1;
+        return outBytesTotal;
     }
 
     @Bindable
     public String getAddress() {
-        return connection != null ? connection.address : null;
+        return address;
     }
 
     @Bindable
     public String getClientVersion() {
-        return connection != null ? connection.clientVersion : "?";
+        return clientVersion;
     }
 
     @Bindable
     public boolean isConnected() {
-        return connection != null && connection.connected;
+        return connected;
     }
 
     @Bindable
     public boolean isPaused() {
-        return connection != null && connection.paused;
+        return paused;
     }
 
     static final DateTime epoch = new DateTime(1969);

@@ -79,7 +79,9 @@ import syncthing.api.model.SystemErrors;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.SystemMessage;
 import syncthing.api.model.Version;
+import syncthing.api.model.event.DevicePaused;
 import syncthing.api.model.event.DeviceRejected;
+import syncthing.api.model.event.DeviceResumed;
 import syncthing.api.model.event.Event;
 import syncthing.api.model.event.FolderCompletion;
 import syncthing.api.model.event.FolderRejected;
@@ -111,7 +113,9 @@ public class SessionController implements EventMonitor.EventListener {
         DEVICE_DISCOVERED,
         DEVICE_CONNECTED,
         DEVICE_DISCONNECTED,
+        DEVICE_PAUSED, //DevicePaused.Data
         DEVICE_REJECTED,
+        DEVICE_RESUMED, //DeviceResumed.Data
         LOCAL_INDEX_UPDATED,
         REMOTE_INDEX_UPDATED,
         ITEM_STARTED,
@@ -285,6 +289,24 @@ public class SessionController implements EventMonitor.EventListener {
                 refreshDeviceStats();
                 break;
             } case DEVICE_DISCOVERED: {
+                break;
+            } case DEVICE_PAUSED: {
+                String id = ((DevicePaused.Data)e.data).device;
+                synchronized (connections) {
+                    if (connections.connections.containsKey(id)) {
+                        connections.connections.get(id).paused = true;
+                    }
+                }
+                postChange(Change.DEVICE_PAUSED, e.data);
+                break;
+            } case DEVICE_RESUMED: {
+                String id = ((DeviceResumed.Data)e.data).device;
+                synchronized (connections) {
+                    if (connections.connections.containsKey(id)) {
+                        connections.connections.get(id).paused = false;
+                    }
+                }
+                postChange(Change.DEVICE_RESUMED, e.data);
                 break;
             } case DEVICE_REJECTED: {
                 DeviceRejected dr = (DeviceRejected) e;
