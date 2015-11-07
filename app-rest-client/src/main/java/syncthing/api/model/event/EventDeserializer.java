@@ -49,8 +49,14 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             case DEVICE_DISCOVERED: {
                 return new DeviceDiscovered(id, time, type, context.deserialize(data, DeviceDiscovered.Data.class));
             }
+            case DEVICE_PAUSED: {
+                return new DevicePaused(id, time, type, context.deserialize(data, DevicePaused.Data.class));
+            }
             case DEVICE_REJECTED: {
                 return new DeviceRejected(id, time, type, context.deserialize(data, DeviceRejected.Data.class));
+            }
+            case DEVICE_RESUMED: {
+                return new DeviceResumed(id, time, type, context.deserialize(data, DeviceResumed.Data.class));
             }
             case DOWNLOAD_PROGRESS: {
                 return new DownloadProgress(id, time, type, new DownloadProgress.Data());//TODO
