@@ -14,12 +14,8 @@ Secondary objectives include:
 
 Syncthing runs with a number of custom settings to optimise your experience and to avoid conflicts with other applications (e.g. [Syncthing for Android application](https://github.com/syncthing/syncthing-android)). In particular:
   - Default GUI address is set to 127.0.0.1:8385 (TLS on)
-  - Default Listen Address is set to 0.0.0.0:22001
-  - Default Local Announce Port is set to 21040
-  - Default Local Announce MCAddr is set to [ff32::5222]:21041
   - Default Rescan Interval is set to 86400 seconds (1 day)
   - Default Ignore Permissions are enabled
-  - Default IPv4 and IPv6 Global Announce Server is an ip instead of a domain name (see Github issue #4)
   - Default folder is set to Environment.DIRECTORY_DCIM
 
 ###Building
@@ -50,10 +46,17 @@ export ANDROID_HOME=/opt/android/sdk
 * Android ndk. Set `TOOLCHAIN_ROOT` or update scripts to point to yours
 
 ```bash
-# Create standalone ARM toolchain (x86 not working yet)
 # The build scripts expect TOOLCHAIN_ROOT set as defined here
 export TOOLCHAIN_ROOT=/opt/android/ndk/toolchains
-./android-ndk-r10d/build/tools/make-standalone-toolchain.sh --platform=android-19 --install-dir=$TOOLCHAIN_ROOT/arm --arch=arm
+# If yours differs you can set TOOLCHAIN_ROOT to the proper location,
+# However the subdirectory structure is mandatory
+
+# Create standalone ARM toolchain
+./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=arm --install-dir=$TOOLCHAIN_ROOT/arm
+# Create standalone x86 toolchain
+./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=x86  --install-dir=$TOOLCHAIN_ROOT/386
+# Create standalone x86_64 toolchain
+./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=x86_64  --install-dir=$TOOLCHAIN_ROOT/amd64
 ```
 
 * Building Syncthing
@@ -63,20 +66,29 @@ export TOOLCHAIN_ROOT=/opt/android/ndk/toolchains
 # If you are building for your self and know what arch you want you can omit
 # the other to reduce apk size (ie only build the arm versions)
 
-# Build go for android arm
+# You must have go 1.5+ installed on the host to bootstrap the cross compilation
+# the scripts expect the install to be at /usr/lib/go if yours differs you can
+# set GOROOT_BOOTSTRAP to the proper location
+
+# Build go for android/arm
 ./make-go.bash arm
-# Build go for linux x86
-./make-go.bash x86
-# Build syncthing for android arm
+# Build go for android/386 (x86)
+./make-go.bash 386
+# Build go for android/amd64 (x86_64) (only useful for emulator right now)
+./make-go.bash amd64
+
+# Build syncthing for android/arm
 ./make-syncthing.bash arm
-# Build syncthing for linux x86
-./make-syncthing.bash x86
+# Build syncthing for android/386
+./make-syncthing.bash 386
+# Build syncthing for android/amd64
+./make-syncthing.bash amd64
 
 #Binaries will be installed to app/src/main/assets
 
 ```
 
-Alternatively use docker (This may be broken)
+Alternatively use docker (This is broken)
 
 ```bash
 #Make the image (only need to run once)
