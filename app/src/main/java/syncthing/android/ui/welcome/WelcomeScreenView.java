@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.welcome;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
@@ -34,7 +33,6 @@ public class WelcomeScreenView extends RelativeLayout {
 
     @Inject WelcomePresenter presenter;
     Context context;
-    AlertDialog errorDialog;
 
     @InjectView(R.id.pager_view) WelcomeScreenPagerView pageView;
 
@@ -59,21 +57,6 @@ public class WelcomeScreenView extends RelativeLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         presenter.dropView(this);
-    }
-
-    void showError(String error) {
-        dismissError();
-        errorDialog = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.welcome_pl_generating_failed)
-                .setMessage(error)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
-
-    void dismissError(){
-        if (errorDialog != null && errorDialog.isShowing()) {
-            errorDialog.dismiss();
-        }
     }
 
     public void setPage(int page) {

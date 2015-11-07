@@ -23,6 +23,8 @@ import android.view.View;
 import org.opensilk.common.ui.mortar.MortarPagerAdapter;
 import org.opensilk.common.ui.mortar.Screen;
 
+import syncthing.android.R;
+
 public class WelcomeScreenPagerAdapter extends MortarPagerAdapter<Screen, View> {
 
     final WelcomePresenter presenter;
@@ -41,19 +43,19 @@ public class WelcomeScreenPagerAdapter extends MortarPagerAdapter<Screen, View> 
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "Welcome";
+            default:
+                return context.getString(R.string.welcome_p0_title);
             case 1:
-                return "Syncthing";
+                return context.getString(R.string.welcome_p1_title);
             case 2:
-                return "Devices";
+                return context.getString(R.string.welcome_p2_title);
             case 3:
-                return "Folders";
+                return context.getString(R.string.welcome_p3_title);
             case 4:
-                return "Remote Control";
+                return context.getString(R.string.welcome_p4_title);
             case 5:
-                return "Start";
+                return context.getString(R.string.welcome_pl_title);
         }
-        return null;
     }
 
     static Screen[] getScreens() {

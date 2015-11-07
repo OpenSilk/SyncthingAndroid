@@ -31,37 +31,28 @@ public class WelcomeScreenPagerView extends ViewPager {
 
     @Inject WelcomePresenter mPresenter;
     WelcomeScreenPagerAdapter adapter;
-    boolean splash;
 
     public WelcomeScreenPagerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (!isInEditMode()) {
             WelcomeComponent cmp = DaggerService.getDaggerComponent(getContext());
             cmp.inject(this);
-            this.adapter = new WelcomeScreenPagerAdapter(context, mPresenter);
-            this.splash = true;
-            setAdapter(adapter);
-            addOnPageChangeListener(new SimpleOnPageChangeListener() {
-                @Override
-                public void onPageSelected(int page) {
-                    splash = false;
-                    mPresenter.updatePage(page);
-                }
-            });
         }
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        if (isInEditMode())
-            return;
-        ButterKnife.inject(this);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
+        if (!isInEditMode()) {
+            this.adapter = new WelcomeScreenPagerAdapter(getContext(), mPresenter);
+            setAdapter(adapter);
+            addOnPageChangeListener(new SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int page) {
+                    mPresenter.updatePage(page);
+                }
+            });
+        }
     }
 
     public void setPage(int page) {

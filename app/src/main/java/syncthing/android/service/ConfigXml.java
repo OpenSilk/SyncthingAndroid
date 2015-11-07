@@ -39,6 +39,8 @@ import timber.log.Timber;
 public class ConfigXml {
 
     public static final String CONFIG_FILE = "config.xml";
+    public static final String LOCALHOST_IP = "127.0.0.1";
+    public static final String DEFAULT_PORT = "8385";
 
     private File mConfigFile;
 
@@ -118,7 +120,7 @@ public class ConfigXml {
         // Enable TLS
         options.setAttribute("tls", Boolean.toString(true));
         Element address = (Element) options.getElementsByTagName("address").item(0);
-        address.setTextContent("127.0.0.1:8385");
+        address.setTextContent(LOCALHOST_IP + ":" + DEFAULT_PORT);
         saveChanges();
     }
 

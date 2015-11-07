@@ -25,17 +25,13 @@ import android.support.annotation.NonNull;
  * Created by drew on 3/6/15.
  */
 public class Credentials implements Parcelable {
-    public static final Credentials NONE = new Credentials();
+    public static final Credentials NONE = builder().build();
 
     public final String alias;
     public final String id;
     public final String url;
     public final String apiKey;
     public final String caCert;
-
-    private Credentials() {
-        this(null, null, null, null, null);
-    }
 
     public Credentials(String alias, String id, String url, String apiKey, String caCert) {
         this.alias = alias;
@@ -47,6 +43,10 @@ public class Credentials implements Parcelable {
 
     public Builder buildUpon() {
         return new Builder(this);
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -96,11 +96,15 @@ public class Credentials implements Parcelable {
     };
 
     public static class Builder {
-        public String alias;
-        public String id;
-        public String url;
-        public String apiKey;
-        public String caCert;
+        private String alias;
+        private String id;
+        private String url;
+        private String apiKey;
+        private String caCert;
+
+        private Builder() {
+
+        }
 
         private Builder(@NonNull Credentials credentials) {
             alias = credentials.alias;
