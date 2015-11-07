@@ -22,12 +22,11 @@ case "$1" in
         export GOARCH=arm
         export GOARM=7
         ;;
-    x86)
-        #export CC_FOR_TARGET=${TOOLCHAIN_ROOT}/bin/i686-linux-android-gcc
-        #export CXX_FOR_TARGET=${TOOLCHAIN_ROOT}/bin/i686-linux-android-g++
-        #export CGO_ENABLED=1 #TODO fails
-        export CGO_ENABLED=0
-        export GOOS=linux
+    386)
+        export CC_FOR_TARGET=${TOOLCHAIN_ROOT}/386/bin/i686-linux-android-gcc
+        export CXX_FOR_TARGET=${TOOLCHAIN_ROOT}/386/bin/i686-linux-android-g++
+        export CGO_ENABLED=1
+        export GOOS=android
         export GOARCH=386
         export GO386=387
         ;;
@@ -39,7 +38,7 @@ case "$1" in
         export GOARCH=amd64
         ;;
     *)
-        echo "Must specify either arm or x86"
+        echo "Must specify either arm or 386 or amd64"
         exit 1
 esac
 
@@ -59,8 +58,8 @@ mkdir -p "$GOROOT_FINAL"
 
 pushd golang/go/src
 
-if [ $CGO_ENABLED -eq 0 ]; then
-    git am -3 ../../../patches/golang/netgohacks/*
+if [ "$GOARCH" = "386" ]; then
+    git am -3 ../../../patches/golang/386/*
 fi
 
 set +e
