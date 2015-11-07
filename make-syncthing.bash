@@ -33,6 +33,13 @@ case "$1" in
         #export CGO_CFLAGS="-fPIE"
         #export CGO_LDFLAGS="-fPIE" #-pie is already added
         ;;
+    amd64)
+        export CC_FOR_TARGET=${TOOLCHAIN_ROOT}/amd64/bin/x86_64-linux-android-gcc
+        export CXX_FOR_TARGET=${TOOLCHAIN_ROOT}/amd64/bin/x86_64-linux-android-g++
+        export CGO_ENABLED=1
+        export GOOS=android
+        export GOARCH=amd64
+        ;;
     *)
         echo "Must specify either arm or x86"
         exit 1
@@ -53,10 +60,8 @@ fi
 
 pushd syncthing/src/github.com/syncthing/syncthing
 
-git am -3 ../../../../../patches/syncthing/cgo/*
 if [ $CGO_ENABLED -eq 0 ]; then
     git am -3 ../../../../../patches/syncthing/netgo/*
-    netgo="-netgo"
 fi
 
 _GOOS=$GOOS
@@ -105,7 +110,7 @@ go clean
 if [ $CGO_ENABLED -eq 0 ]; then
     go build -tags netgo -ldflags "-w -X main.Version=$(git describe --abbrev=0 --tags)"
 else
-    go build -ldflags "-w -X main.Version=$(git describe --abbrev=0 --tags) -extldflags '-fPIE -pie'"
+    go build -ldflags "-w -X main.Version=$(git describe --abbrev=0 --tags)"
 fi
 
 mv syncthing-inotify ${ASSETSDIR}/syncthing-inotify.${GOARCH}

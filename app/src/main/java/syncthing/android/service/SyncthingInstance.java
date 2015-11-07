@@ -423,10 +423,16 @@ public class SyncthingInstance extends MortarService {
         }
         String ext = null;
         for (String abi: abis) {
-            if (StringUtils.startsWith(abi, "x86")) {
+            if (StringUtils.equals(abi, "x86_64")) {
+                Timber.i("Found abi %s", abi);
+                ext = "amd64";
+                break;
+            } else if (StringUtils.equals(abi, "x86")) {
+                Timber.i("Found abi %s", abi);
                 ext = "386";
                 break;
             } else if (StringUtils.startsWith(abi, "armeabi")) {
+                Timber.i("Found abi %s", abi);
                 ext = "arm";
                 break;
             }
