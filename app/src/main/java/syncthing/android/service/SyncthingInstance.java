@@ -121,6 +121,7 @@ public class SyncthingInstance extends MortarService {
         Timber.d("onCreate");
         ensureBinaries();
         DaggerService.<SyncthingInstanceComponent>getDaggerComponent(this).inject(this);
+        mSettings.setCached(true);
     }
 
     @Override

@@ -17,6 +17,7 @@
 
 package syncthing.android.service;
 
+import android.annotation.TargetApi;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -51,10 +52,7 @@ import timber.log.Timber;
 /**
  * Created by drew on 3/21/15.
  */
-@Singleton
 public class ServiceSettings {
-
-    public static final String FILE_NAME = "service";
 
     public static final String ENABLED = "local_instance_enabled";
     public static final String INITIALISED = "local_instance_initialised";
@@ -76,6 +74,7 @@ public class ServiceSettings {
     final Uri callUri;
 
     ContentProviderClient client;
+    boolean cached;
 
     @Inject
     public ServiceSettings(
@@ -100,22 +99,9 @@ public class ServiceSettings {
     }
 
     private Bundle makeCall(String method, String pref, Bundle extras, boolean retry) {
-        if (VersionUtils.hasApi17()) {
-            if (client == null) {
-                synchronized (this) {
-                    if (client == null) {
-                        //clients dramatically improve performance and is what
-                        //content resolver does under the hood anyway.
-                        client = appContext.getContentResolver()
-                                .acquireUnstableContentProviderClient(callUri);
-                    }
-                }
-            }
-            if (client == null) {
-                throw new RuntimeException("Unable to connect to our *own* content provider !!!!");
-            }
+        if (cached && VersionUtils.hasApi17()) {
             try {
-                return client.call(method, pref, extras);
+                return makeCallApi17(method, pref, extras);
             } catch (RemoteException e) {
                 release();
                 if (retry) {
@@ -129,12 +115,37 @@ public class ServiceSettings {
         }
     }
 
+    @TargetApi(17)
+    private Bundle makeCallApi17(String method, String pref, Bundle extras) throws RemoteException {
+        if (client == null) {
+            //clients dramatically improve performance and is what
+            //content resolver does under the hood anyway.
+            client = appContext.getContentResolver()
+                    .acquireUnstableContentProviderClient(callUri);
+        }
+        if (client == null) {
+            throw new RuntimeException("Unable to connect to our *own* content provider !!!!");
+        }
+        return client.call(method, pref, extras);
+    }
+
     public void release() {
-        synchronized (this) {
-            if (client != null) {
-                client.release();
-                client = null;
-            }
+        if (client != null) {
+            client.release();
+            client = null;
+        }
+    }
+
+    public void setCached(boolean cached) {
+        this.cached = cached;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (client != null) {
+            Timber.e("Settings were not released!!!");
+            release();
         }
     }
 

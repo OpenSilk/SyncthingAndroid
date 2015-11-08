@@ -45,6 +45,5 @@ public interface ServiceComponent extends SessionManagerComponent {
     AlarmManager alarmManager();
     WifiManager wifiManager();
     ConnectivityManager connectivityManager();
-    ServiceSettings settings();
     void inject(ServiceSettingsProvider provider);
 }

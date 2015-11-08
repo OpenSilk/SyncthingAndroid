@@ -97,9 +97,6 @@ import static org.acra.ReportField.USER_CRASH_DATE;
         },
         excludeMatchingSharedPreferencesKeys = {
                 "TRANSIENT.*", //Private stuff
-        },
-        additionalSharedPreferences = {
-                ServiceSettings.FILE_NAME,
         }
 )
 public class App extends BaseApp {

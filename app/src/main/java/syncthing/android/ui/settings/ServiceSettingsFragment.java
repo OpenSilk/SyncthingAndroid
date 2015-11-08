@@ -89,8 +89,7 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         SettingsActivityComponent cmp = DaggerService.getDaggerComponent(getActivity());
         cmp.inject(this);
 
-        getPreferenceManager().setSharedPreferencesName(ServiceSettings.FILE_NAME);
-        getPreferenceManager().setSharedPreferencesMode(Context.MODE_MULTI_PROCESS);
+        mSettings.setCached(true);
 
         addPreferencesFromResource(R.xml.prefs_service);
 
