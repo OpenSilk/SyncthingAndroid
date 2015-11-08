@@ -53,8 +53,8 @@ public class SettingsScreenView extends CoordinatorLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        binding = DataBindingUtil.bind(this);
         if (!isInEditMode()) {
+            binding = DataBindingUtil.bind(this);
             mPresenter.takeView(this);
             binding.setPresenter(mPresenter);
             // we must eagerly execute to prevent the change

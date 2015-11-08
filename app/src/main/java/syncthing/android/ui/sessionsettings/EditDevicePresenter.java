@@ -80,7 +80,9 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        if (savedInstanceState == null) {
+        if (!wasPreviouslyLoaded && savedInstanceState != null) {
+            originalDevice = (DeviceConfig) savedInstanceState.getSerializable("device");
+        } else if (!wasPreviouslyLoaded) {
             if (isAdd) {
                 originalDevice = DeviceConfig.withDefaults();
             } else {
@@ -89,14 +91,14 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
                     originalDevice = d.clone();
                 }
             }
-        } else {
-            originalDevice = (DeviceConfig) savedInstanceState.getSerializable("device");
         }
+        wasPreviouslyLoaded = true;
         if (originalDevice == null) {
             Timber.e("Null device! Cannot continue");
             dismissDialog();
+        } else {
+            getView().initialize(controller.getFolders(), savedInstanceState != null);
         }
-        getView().initialize(controller.getFolders(), savedInstanceState != null);
     }
 
     @Override
@@ -117,6 +119,10 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     }
 
     boolean validateAddresses(CharSequence text) {
+        if (StringUtils.isEmpty(text)) {
+            //todo
+            return false;
+        }
         return true;//TODO
     }
 

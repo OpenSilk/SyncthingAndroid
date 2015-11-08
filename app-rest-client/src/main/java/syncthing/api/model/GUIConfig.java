@@ -14,7 +14,7 @@ import java.io.Serializable;
 /**
  * Created by drew on 3/1/15.
  */
-public class GUIConfig implements Serializable {
+public class GUIConfig implements Serializable, Cloneable {
     private static final long serialVersionUID = 2361764664373127666L;
     public boolean enabled;
     public String address;
@@ -28,5 +28,14 @@ public class GUIConfig implements Serializable {
         c.enabled = true;
         c.address = "127.0.0.1:8384";
         return c;
+    }
+
+    @Override
+    public GUIConfig clone() {
+        try {
+            return (GUIConfig) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw  new RuntimeException(e);
+        }
     }
 }

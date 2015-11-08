@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.databinding.PropertyChangeRegistry;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
     protected final PropertyChangeRegistry mRegistry = new PropertyChangeRegistry();
     protected Subscription saveSubscription;
     protected int titleRes;
+    protected boolean wasPreviouslyLoaded;
 
     public EditPresenter(
             SessionManager manager,

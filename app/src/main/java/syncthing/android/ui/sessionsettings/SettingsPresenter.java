@@ -39,6 +39,7 @@ import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.GUIConfig;
 import syncthing.api.model.OptionsConfig;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/17/15.
@@ -71,14 +72,28 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        if (savedInstanceState == null) {
-            thisDevice = SerializationUtils.clone(controller.getThisDevice());
-            options = SerializationUtils.clone(controller.getConfig().options);
-            guiConfig = SerializationUtils.clone(controller.getConfig().gui);
-        } else {
+        if (!wasPreviouslyLoaded && savedInstanceState != null) {
             thisDevice = (DeviceConfig) savedInstanceState.getSerializable("device");
             options = (OptionsConfig) savedInstanceState.getSerializable("options");
             guiConfig = (GUIConfig) savedInstanceState.getSerializable("guiconfig");
+        } else if (!wasPreviouslyLoaded) {
+            DeviceConfig d = controller.getThisDevice();
+            if (d != null) {
+                thisDevice = d.clone();
+            }
+            OptionsConfig o = controller.getConfig().options;
+            if (o != null) {
+                options = o.clone();
+            }
+            GUIConfig g = controller.getConfig().gui;
+            if (g != null) {
+                guiConfig = g.clone();
+            }
+        }
+        wasPreviouslyLoaded = true;
+        if (thisDevice == null || options == null || guiConfig == null) {
+            Timber.e("Incomplete data! Cannot continue");
+            dismissDialog();
         }
     }
 

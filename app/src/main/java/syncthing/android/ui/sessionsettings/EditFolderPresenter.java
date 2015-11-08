@@ -98,7 +98,9 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        if (savedInstanceState == null) {
+        if (!wasPreviouslyLoaded && savedInstanceState != null) {
+            origFolder = (FolderConfig) savedInstanceState.getSerializable("folder");
+        } else if (!wasPreviouslyLoaded) {
             if (isAdd) {
                 origFolder = FolderConfig.withDefaults();
                 if (!INVALID_ID.equals(folderId)) {
@@ -113,15 +115,14 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
                     origFolder = f.clone();
                 }
             }
-        } else {
-            origFolder = (FolderConfig) savedInstanceState.getSerializable("folder");
         }
+        wasPreviouslyLoaded = true;
         if (origFolder == null) {
             Timber.e("Folder was null! cannot continue.");
             dismissDialog();
-            return;
+        } else {
+            getView().initialize(controller.getRemoteDevices(), controller.getSystemInfo(), savedInstanceState != null);
         }
-        getView().initialize(controller.getRemoteDevices(), controller.getSystemInfo(), savedInstanceState != null);
     }
 
     @Override
