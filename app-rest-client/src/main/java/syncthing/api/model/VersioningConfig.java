@@ -14,8 +14,19 @@ import java.io.Serializable;
 /**
  * Created by drew on 3/1/15.
  */
-public class VersioningConfig implements Serializable {
+public class VersioningConfig implements Serializable, Cloneable {
     private static final long serialVersionUID = -6095511925370580788L;
     public VersioningType type = VersioningType.NONE;
     public VersioningParams params = new VersioningParams();
+
+    @Override
+    public VersioningConfig clone() {
+        try {
+            VersioningConfig n = (VersioningConfig) super.clone();
+            n.params = params.clone();
+            return n;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

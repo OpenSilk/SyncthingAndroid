@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by drew on 3/1/15.
  */
-public class FolderConfig implements Serializable {
+public class FolderConfig implements Serializable, Cloneable {
     private static final long serialVersionUID = -1620434875319958462L;
     public String id;
     public String path;
@@ -62,4 +62,19 @@ public class FolderConfig implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
+    @Override
+    public FolderConfig clone() {
+        try {
+            FolderConfig n = (FolderConfig) super.clone();
+            if (devices != null && !devices.isEmpty()) {
+                n.devices = new ArrayList<>(devices);
+            }
+            if (versioning != null) {
+                n.versioning = versioning.clone();
+            }
+            return n;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

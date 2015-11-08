@@ -43,6 +43,7 @@ import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.api.SessionManager;
 import syncthing.api.model.Compression;
 import syncthing.api.model.DeviceConfig;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/16/15.
@@ -83,10 +84,17 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
             if (isAdd) {
                 originalDevice = DeviceConfig.withDefaults();
             } else {
-                originalDevice = SerializationUtils.clone(controller.getDevice(deviceId));
+                DeviceConfig d = controller.getDevice(deviceId);
+                if (d != null) {
+                    originalDevice = d.clone();
+                }
             }
         } else {
             originalDevice = (DeviceConfig) savedInstanceState.getSerializable("device");
+        }
+        if (originalDevice == null) {
+            Timber.e("Null device! Cannot continue");
+            dismissDialog();
         }
         getView().initialize(controller.getFolders(), savedInstanceState != null);
     }

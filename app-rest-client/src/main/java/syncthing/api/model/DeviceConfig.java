@@ -10,13 +10,14 @@
 package syncthing.api.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import syncthing.api.ApiUtils;
 
 /**
  * Created by drew on 3/1/15.
  */
-public class DeviceConfig implements Serializable {
+public class DeviceConfig implements Serializable, Cloneable {
     private static final long serialVersionUID = 2383227051854131929L;
     public String deviceID;
     public String name;
@@ -54,5 +55,18 @@ public class DeviceConfig implements Serializable {
     @Override
     public String toString() {
         return ApiUtils.reflectionToString(this);
+    }
+
+    @Override
+    public DeviceConfig clone() {
+        try {
+            DeviceConfig n = (DeviceConfig)super.clone();
+            if (addresses != null) {
+                addresses = Arrays.copyOf(addresses, addresses.length);
+            }
+            return n;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

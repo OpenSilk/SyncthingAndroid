@@ -108,14 +108,17 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
                     origFolder.devices = Collections.singletonList(new FolderDeviceConfig(deviceId));
                 }
             } else {
-                origFolder = SerializationUtils.clone(controller.getFolder(folderId));
+                FolderConfig f = controller.getFolder(folderId);
+                if (f != null) {
+                    origFolder = f.clone();
+                }
             }
         } else {
             origFolder = (FolderConfig) savedInstanceState.getSerializable("folder");
         }
         if (origFolder == null) {
             Timber.e("Folder was null! cannot continue.");
-            activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, new Intent());
+            dismissDialog();
             return;
         }
         getView().initialize(controller.getRemoteDevices(), controller.getSystemInfo(), savedInstanceState != null);
