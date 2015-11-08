@@ -72,6 +72,7 @@ import syncthing.api.model.FolderStatsMap;
 import syncthing.api.model.GUIConfig;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
+import syncthing.api.model.ModelState;
 import syncthing.api.model.Ok;
 import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.Report;
@@ -85,6 +86,7 @@ import syncthing.api.model.event.DeviceResumed;
 import syncthing.api.model.event.Event;
 import syncthing.api.model.event.FolderCompletion;
 import syncthing.api.model.event.FolderRejected;
+import syncthing.api.model.event.FolderScanProgress;
 import syncthing.api.model.event.FolderSummary;
 import syncthing.api.model.event.StateChanged;
 import timber.log.Timber;
@@ -127,6 +129,7 @@ public class SessionController implements EventMonitor.EventListener {
         FOLDER_COMPLETION,
         FOLDER_SUMMARY, //FolderSummary.Data
         FOLDER_ERRORS,
+        FOLDER_SCAN_PROGRESS, //FolderScanProgress.Data
     }
 
     public static class ChangeEvent {
@@ -169,6 +172,8 @@ public class SessionController implements EventMonitor.EventListener {
     final AtomicReference<SystemErrors> errorsList = new AtomicReference<>();
     //synchronize on self
     final WeakHashMap<String, Subscription> activeSubscriptions = new WeakHashMap<>();
+    //synchronize on self
+    final Map<String, FolderScanProgress.Data> folderScanProgress = new LinkedHashMap<>();
 
     //Following synchronized by lock
     private final Object lock = new Object();
@@ -268,6 +273,12 @@ public class SessionController implements EventMonitor.EventListener {
                         incremental = true;
                     }
                 }
+                if (st.data.to == ModelState.SCANNING) {
+                    //remove any stale scan progress
+                    synchronized (folderScanProgress) {
+                        folderScanProgress.remove(st.data.folder);
+                    }
+                }
                 if (incremental) {
                     postChange(Change.STATE_CHANGED, st.data);
                 } else {
@@ -346,6 +357,13 @@ public class SessionController implements EventMonitor.EventListener {
                 postChange(Change.COMPLETION, fc.data);
                 break;
             } case FOLDER_ERRORS: {
+                break;
+            } case FOLDER_SCAN_PROGRESS: {
+                FolderScanProgress.Data d = (FolderScanProgress.Data) e.data;
+                synchronized (folderScanProgress) {
+                    folderScanProgress.put(d.folder, d);
+                }
+                postChange(Change.FOLDER_SCAN_PROGRESS, d);
                 break;
             } case ITEM_FINISHED: {
                 postChange(Change.ITEM_FINISHED, e.data);
@@ -796,8 +814,7 @@ public class SessionController implements EventMonitor.EventListener {
         this.report.set(report);
     }
 
-    @Nullable
-    public Model getModel(String folderName) {
+    public @Nullable Model getModel(String folderName) {
         synchronized (models) {
             return models.get(folderName);
         }
@@ -825,14 +842,19 @@ public class SessionController implements EventMonitor.EventListener {
         }
     }
 
+    public @Nullable FolderScanProgress.Data getFolderScanProgress(String folder) {
+        synchronized (folderScanProgress) {
+            return folderScanProgress.get(folder);
+        }
+    }
+
     public List<DeviceConfig> getDevices() {
         synchronized (devices) {
             return new ArrayList<>(devices);
         }
     }
 
-    @Nullable
-    public DeviceConfig getThisDevice() {
+    public @Nullable DeviceConfig getThisDevice() {
         final String myid = myId.get();
         for (DeviceConfig d : getDevices()) {
             if (StringUtils.equals(d.deviceID, myid)){
@@ -842,8 +864,7 @@ public class SessionController implements EventMonitor.EventListener {
         return null;
     }
 
-    @NonNull
-    public List<DeviceConfig> getRemoteDevices() {
+    public @NonNull List<DeviceConfig> getRemoteDevices() {
         final String myid = myId.get();
         List<DeviceConfig> dvs = new ArrayList<>();
         for (DeviceConfig d : getDevices()) {
@@ -854,8 +875,7 @@ public class SessionController implements EventMonitor.EventListener {
         return dvs;
     }
 
-    @Nullable
-    public DeviceConfig getDevice(String deviceId) {
+    public @Nullable DeviceConfig getDevice(String deviceId) {
         for (DeviceConfig d : getDevices()) {
             if (StringUtils.equals(deviceId, d.deviceID)) {
                 return d;

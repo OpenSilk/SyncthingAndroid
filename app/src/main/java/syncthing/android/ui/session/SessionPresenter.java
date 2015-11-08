@@ -75,6 +75,7 @@ import syncthing.api.model.Version;
 import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.FolderCompletion;
 import syncthing.api.model.event.FolderRejected;
+import syncthing.api.model.event.FolderScanProgress;
 import syncthing.api.model.event.FolderSummary;
 import syncthing.api.model.event.StateChanged;
 import timber.log.Timber;
@@ -266,6 +267,14 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
 //                    getView().refreshFolders(updateFolders());
 //                }
                 break;
+            case FOLDER_SCAN_PROGRESS: {
+                FolderScanProgress.Data d = (FolderScanProgress.Data) e.data;
+                FolderCard c = getFolderCard(d.folder);
+                if (c != null) {
+                    c.setScanProgress(d.current, d.total);
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -351,12 +360,20 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         List<String> needsUpdate = new ArrayList<>();
         for (FolderConfig folder : folderConfigs) {
             Model model = controller.getModel(folder.id);
+            FolderScanProgress.Data scanP = controller.getFolderScanProgress(folder.id);
             FolderCard card = getFolderCard(folder.id);
             if (card != null && model != null) {
                 card.setFolder(folder);
                 card.setModel(model);
+                if (scanP != null) {
+                    card.setScanProgress(scanP.current, scanP.total);
+                }
             } else if (card == null) {
-                folders.add(new FolderCard(this, folder, model));
+                card = new FolderCard(this, folder, model);
+                if (scanP != null) {
+                    card.setScanProgress(scanP.current, scanP.total);
+                }
+                folders.add(card);
             }
             if (model == null) {
                 needsUpdate.add(folder.id);

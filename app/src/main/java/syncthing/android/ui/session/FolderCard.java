@@ -46,12 +46,27 @@ public class FolderCard extends ExpandableCard {
 
     private final SessionPresenter presenter;
     private FolderConfig folder;
-    private Model model;
+
+    // model
+    private ModelState state = ModelState.UNKNOWN;
+    private String invalid;
+    private long globalFiles;
+    private long globalBytes;
+    private long localFiles;
+    private long localBytes;
+    private long needFiles;
+    private long needBytes;
+    private long inSyncBytes;
+    private boolean ignorePatterns;
+
+    //scan progress
+    private long scanProgressCurrent;
+    private long scanProgressTotal;
 
     public FolderCard(SessionPresenter presenter, FolderConfig folder, Model model) {
         this.presenter = presenter;
         this.folder = folder;
-        this.model = model;
+        setModel(model);
     }
 
     public void setFolder(FolderConfig folder) {
@@ -64,50 +79,73 @@ public class FolderCard extends ExpandableCard {
     }
 
     public void setModel(Model model) {
-        if (this.model == null || model == null) {
-            this.model = model;
+        if (model == null) {
+            state = ModelState.UNKNOWN;
             notifyChange(syncthing.android.BR._all);
         } else {
-            Model oldModel = this.model;
-            this.model = model;
-            if (oldModel.state != model.state) {
+            if (state != model.state) {
+                state = model.state;
                 notifyChange(syncthing.android.BR.state);
             }
-            if (!StringUtils.equals(oldModel.invalid, model.invalid)) {
+            if (!StringUtils.equals(invalid, model.invalid)) {
+                invalid = model.invalid;
                 notifyChange(syncthing.android.BR.invalid);
             }
-            if (oldModel.globalFiles != model.globalFiles) {
+            if (globalFiles != model.globalFiles) {
+                globalFiles = model.globalFiles;
                 notifyChange(syncthing.android.BR.globalFiles);
             }
-            if (oldModel.globalBytes != model.globalBytes) {
+            if (globalBytes != model.globalBytes) {
+                globalBytes = model.globalBytes;
                 notifyChange(syncthing.android.BR.globalBytes);
                 notifyChange(syncthing.android.BR.completion);
             }
-            if (oldModel.localFiles != model.localFiles) {
+            if (localFiles != model.localFiles) {
+                localFiles = model.localFiles;
                 notifyChange(syncthing.android.BR.localFiles);
             }
-            if (oldModel.localBytes != model.localBytes) {
+            if (localBytes != model.localBytes) {
+                localBytes = model.localBytes;
                 notifyChange(syncthing.android.BR.localBytes);
             }
-            if (oldModel.needFiles != model.needFiles) {
+            if (needFiles != model.needFiles) {
+                needFiles = model.needFiles;
                 notifyChange(syncthing.android.BR.needFiles);
             }
-            if (oldModel.needBytes != model.needBytes) {
+            if (needBytes != model.needBytes) {
+                needBytes = model.needBytes;
                 notifyChange(syncthing.android.BR.needBytes);
             }
-            if (oldModel.inSyncBytes != model.inSyncBytes) {
+            if (inSyncBytes != model.inSyncBytes) {
+                inSyncBytes = model.inSyncBytes;
                 notifyChange(syncthing.android.BR.completion);
             }
-            if (oldModel.ignorePatterns != model.ignorePatterns) {
+            if (ignorePatterns != model.ignorePatterns) {
+                ignorePatterns = model.ignorePatterns;
                 notifyChange(syncthing.android.BR.ignorePatterns);
             }
         }
     }
 
     public void setState(ModelState state) {
-        if (model != null && state != null) {
-            model.state = state;
+        if (state != null) {
+            ModelState oldState = this.state;
+            this.state = state;
             notifyChange(syncthing.android.BR.state);
+            if (oldState != ModelState.SCANNING && state == ModelState.SCANNING) {
+                //reset scan progress on new scan
+                setScanProgress(0, 0);
+            }
+        } else {
+            this.state = ModelState.UNKNOWN;
+        }
+    }
+
+    public void setScanProgress(long current, long total) {
+        if (scanProgressCurrent != current || scanProgressTotal != total) {
+            scanProgressCurrent = current;
+            scanProgressTotal = total;
+            notifyChange(syncthing.android.BR.completion);
         }
     }
 
@@ -128,7 +166,7 @@ public class FolderCard extends ExpandableCard {
 
     @Bindable
     public String getInvalid() {
-        return model != null ? model.invalid : folder.invalid;
+        return invalid != null ? invalid : folder.invalid;
     }
 
     @Bindable
@@ -158,47 +196,57 @@ public class FolderCard extends ExpandableCard {
 
     @Bindable
     public ModelState getState() {
-        return model != null ? model.state : ModelState.UNKNOWN;
+        return state;
     }
 
     @Bindable
     public long getGlobalFiles() {
-        return model != null ? model.globalFiles : 0;
+        return globalFiles;
     }
 
     @Bindable
     public long getGlobalBytes() {
-        return model != null ? model.globalBytes : 0;
+        return globalBytes;
     }
 
     @Bindable
     public long getLocalFiles() {
-        return model != null ? model.localFiles : 0;
+        return localFiles;
     }
 
     @Bindable
     public long getLocalBytes() {
-        return model != null ? model.localBytes : 0;
+        return localBytes;
     }
 
     @Bindable
     public long getNeedFiles() {
-        return model != null ? model.needFiles : 0;
+        return needFiles;
     }
 
     @Bindable
     public long getNeedBytes() {
-        return model != null ? model.needBytes : 0;
+        return needBytes;
     }
 
     @Bindable
     public int getCompletion() {
-        return model != null ? calculateCompletion(model) : -1;
+        if (state == ModelState.SYNCING) {
+            return globalBytes != 0
+                    ? Math.min(100, Math.round(100f * inSyncBytes / globalBytes))
+                    : 100;
+        } else if (state == ModelState.SCANNING) {
+            return scanProgressTotal != 0
+                    ? Math.min(100, Math.round(100f * scanProgressCurrent / scanProgressTotal))
+                    : 100;
+        } else {
+            return 0;
+        }
     }
 
     @Bindable
     public boolean getIgnorePatterns() {
-        return model != null && model.ignorePatterns;
+        return ignorePatterns;
     }
 
     @Bindable
@@ -227,12 +275,6 @@ public class FolderCard extends ExpandableCard {
             }
             view.setText(b.toString());
         }
-    }
-
-    static int calculateCompletion(Model model) {
-        return (model.globalBytes != 0)
-                ? Math.min(100, Math.round(100f * model.inSyncBytes / model.globalBytes))
-                : 100;
     }
 
     public void overrideFolderChanges(View btn) {

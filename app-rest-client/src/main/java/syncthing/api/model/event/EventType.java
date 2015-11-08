@@ -36,5 +36,6 @@ public enum EventType {
     @SerializedName("FolderCompletion") FOLDER_COMPLETION,
     @SerializedName("FolderErrors") FOLDER_ERRORS,
     @SerializedName("RelayStateChanged") RELAY_STATE_CHANGED,
+    @SerializedName("FolderScanProgress") FOLDER_SCAN_PROGRESS,
     UNKNOWN,
 }

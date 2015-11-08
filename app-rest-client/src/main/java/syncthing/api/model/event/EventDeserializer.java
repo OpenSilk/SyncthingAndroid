@@ -70,6 +70,9 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             case FOLDER_REJECTED: {
                 return new FolderRejected(id, time, type, context.deserialize(data, FolderRejected.Data.class));
             }
+            case FOLDER_SCAN_PROGRESS: {
+                return new FolderScanProgress(id, time, type, context.deserialize(data, FolderScanProgress.Data.class));
+            }
             case FOLDER_SUMMARY: {
                 return new FolderSummary(id, time, type, context.deserialize(data, FolderSummary.Data.class));
             }
