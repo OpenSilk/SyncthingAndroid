@@ -432,7 +432,7 @@ public class SyncthingInstance extends MortarService {
                 Timber.i("Found abi %s", abi);
                 ext = "386";
                 break;
-            } else if (StringUtils.startsWith(abi, "armeabi")) {
+            } else if (StringUtils.equals(abi, "armeabi-v7a")) {
                 Timber.i("Found abi %s", abi);
                 ext = "arm";
                 break;
