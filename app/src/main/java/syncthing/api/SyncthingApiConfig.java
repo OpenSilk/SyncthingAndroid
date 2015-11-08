@@ -19,8 +19,6 @@ package syncthing.api;
 
 import java.security.cert.X509Certificate;
 
-import syncthing.android.model.Credentials;
-
 /**
  * Created by drew on 10/10/15.
  */

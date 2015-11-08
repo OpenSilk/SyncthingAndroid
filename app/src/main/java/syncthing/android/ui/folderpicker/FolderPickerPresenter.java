@@ -48,7 +48,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import syncthing.android.R;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import syncthing.api.Session;
 import syncthing.api.SessionManager;
 import timber.log.Timber;

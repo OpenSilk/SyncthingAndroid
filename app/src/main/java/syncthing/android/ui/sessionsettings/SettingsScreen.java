@@ -27,7 +27,7 @@ import org.opensilk.common.ui.mortar.WithComponentFactory;
 
 import mortar.MortarScope;
 import syncthing.android.R;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import syncthing.android.ui.ManageActivityComponent;
 
 /**

@@ -18,12 +18,8 @@
 package syncthing.api;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
-
-import syncthing.android.model.Credentials;
-import syncthing.api.model.Config;
 
 /**
  * Created by drew on 10/10/15.

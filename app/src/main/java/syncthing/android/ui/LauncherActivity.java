@@ -48,7 +48,7 @@ import mortar.MortarScope;
 import syncthing.android.AppComponent;
 import syncthing.android.R;
 import syncthing.android.identicon.IdenticonGenerator;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.login.LoginFragment;
 import syncthing.android.ui.login.ManageFragment;

@@ -34,7 +34,7 @@ import javax.inject.Inject;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.settings.AppSettings;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import syncthing.api.SessionManager;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.GUIConfig;

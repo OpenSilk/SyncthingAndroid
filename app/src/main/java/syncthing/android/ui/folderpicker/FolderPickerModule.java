@@ -21,7 +21,7 @@ import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 
 /**
  * Created by drew on 11/3/15.

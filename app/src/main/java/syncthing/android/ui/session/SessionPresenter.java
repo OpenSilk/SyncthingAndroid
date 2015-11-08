@@ -54,7 +54,7 @@ import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.sessionsettings.EditDeviceFragment;

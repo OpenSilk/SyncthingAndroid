@@ -18,12 +18,11 @@
 package syncthing.android.ui.sessionsettings;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import mortar.MortarScope;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 
 /**
  * Created by drew on 10/11/15.

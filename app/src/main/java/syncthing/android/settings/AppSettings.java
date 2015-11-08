@@ -40,8 +40,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import syncthing.android.model.Credentials;
-import timber.log.Timber;
+import syncthing.api.Credentials;
 
 /**
  * Created by drew on 3/8/15.

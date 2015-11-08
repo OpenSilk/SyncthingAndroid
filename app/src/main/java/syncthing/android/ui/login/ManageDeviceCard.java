@@ -24,7 +24,7 @@ import android.widget.Checkable;
 import android.widget.PopupMenu;
 
 import syncthing.android.R;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import syncthing.android.ui.common.Card;
 
 /**

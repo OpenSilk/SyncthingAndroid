@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 import org.opensilk.common.ui.mortar.Screen;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 
 /**
  * Created by drew on 3/10/15.

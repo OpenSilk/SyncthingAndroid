@@ -45,7 +45,7 @@ import rx.functions.Func1;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.settings.AppSettings;
 import syncthing.android.identicon.IdenticonGenerator;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import timber.log.Timber;
 
 /**

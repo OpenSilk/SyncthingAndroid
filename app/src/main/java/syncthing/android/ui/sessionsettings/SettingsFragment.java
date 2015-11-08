@@ -22,7 +22,7 @@ import android.os.Bundle;
 import org.opensilk.common.ui.mortar.Screen;
 
 import syncthing.android.R;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 
 /**
  * Created by drew on 10/11/15.

@@ -19,27 +19,22 @@ package syncthing.android.ui.sessionsettings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.databinding.PropertyChangeRegistry;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
-import org.opensilk.common.ui.mortar.DialogFactory;
 import org.opensilk.common.ui.mortar.DialogPresenter;
 
 import mortar.MortarScope;
 import mortar.ViewPresenter;
 import rx.Scheduler;
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import syncthing.android.R;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
 import syncthing.api.SessionManager;

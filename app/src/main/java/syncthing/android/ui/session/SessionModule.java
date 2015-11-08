@@ -18,7 +18,7 @@
 package syncthing.android.ui.session;
 
 import dagger.Provides;
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 
 /**
 * Created by drew on 3/11/15.

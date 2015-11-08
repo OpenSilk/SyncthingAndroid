@@ -19,7 +19,7 @@ package syncthing.android.ui.sessionsettings;
 
 import org.opensilk.common.core.util.Preconditions;
 
-import syncthing.android.model.Credentials;
+import syncthing.api.Credentials;
 
 /**
  * Created by drew on 10/10/15.
