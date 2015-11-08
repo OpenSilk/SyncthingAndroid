@@ -105,16 +105,36 @@ public class SessionScreenView extends RecyclerListCoordinator implements ISessi
         mListAdapter.setNotifications(notifs, true);
     }
 
+    @Override
+    public List<NotifCard> getNotifications() {
+        return mListAdapter.getNotifications();
+    }
+
     public void refreshFolders(List<FolderCard> folders) {
         mListAdapter.setFolders(folders, true);
+    }
+
+    @Override
+    public List<FolderCard> getFolders() {
+        return mListAdapter.getFolders();
     }
 
     public void refreshThisDevice(MyDeviceCard myDevice) {
         mListAdapter.setThisDevice(myDevice, true);
     }
 
+    @Override
+    public MyDeviceCard getThisDevice() {
+        return mListAdapter.getThisDevice();
+    }
+
     public void refreshDevices(List<DeviceCard> devices) {
         mListAdapter.setDevices(devices, true);
+    }
+
+    @Override
+    public List<DeviceCard> getDevices() {
+        return mListAdapter.getDevices();
     }
 
     @Override

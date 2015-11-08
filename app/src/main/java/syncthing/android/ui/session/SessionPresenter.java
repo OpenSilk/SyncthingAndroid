@@ -98,10 +98,6 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     final DialogPresenter dialogPresenter;
 
     Subscription changeSubscription;
-    final ArrayList<NotifCard> notifications = new ArrayList<>();
-    final ArrayList<FolderCard> folders = new ArrayList<>();
-    final ArrayList<DeviceCard> devices = new ArrayList<>();
-    MyDeviceCard myDevice;
     Subscription lifecycleSubscription;
 
     @Inject
@@ -218,60 +214,66 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             case FOLDER_REJECTED:
             case NOTICE:
                 if (hasView()) {
-                    updateNotifications();
+                    List<NotifCard> notifications = updateNotifications(getView().getNotifications());
                     getView().refreshNotifications(notifications);
                 }
                 break;
             case CONFIG_UPDATE:
                 if (hasView()) {
                     if (!controller.isConfigInSync()) {
-                        updateNotifications();
-                        getView().refreshNotifications(notifications);
+                        getView().refreshNotifications(updateNotifications(getView().getNotifications()));
                     }
-                    updateFolders();
-                    getView().refreshFolders(folders);
-                    updateDevices();
-                    getView().refreshDevices(devices);
-                    updateThisDevice();
-                    getView().refreshThisDevice(myDevice);
+                    getView().refreshFolders(updateFolders(getView().getFolders()));
+                    getView().refreshDevices(updateDevices(getView().getDevices()));
+                    getView().refreshThisDevice(updateThisDevice(getView().getThisDevice()));
                 }
                 break;
             case NEED_LOGIN:
                 openLoginScreen();
                 break;
             case COMPLETION:
-                onCompletionUpdate(e.data);
+                if (hasView()) {
+                    onCompletionUpdate(e.data, getView().getDevices());
+                }
                 break;
             case CONNECTIONS_UPDATE:
             case CONNECTIONS_CHANGE:
             case DEVICE_PAUSED:
             case DEVICE_RESUMED:
-                postConnectiosUpdate();
+                if (hasView()) {
+                    postConnectiosUpdate(getView().getThisDevice(), getView().getDevices());
+                }
                 break;
             case DEVICE_STATS:
-                postDeviceStatsUpdate();
+                if (hasView()) {
+                    postDeviceStatsUpdate(getView().getDevices());
+                }
                 break;
             case SYSTEM:
-                onSystemInfoUpdate();
+                if (hasView()) {
+                    onSystemInfoUpdate(getView().getThisDevice());
+                }
                 break;
             case FOLDER_SUMMARY:
-                onFolderModelUpdate(e.data);
+                if (hasView()) {
+                    onFolderModelUpdate(e.data, getView().getFolders());
+                }
                 break;
             case STATE_CHANGED:
-                onFolderStateChange(e.data);
+                if (hasView()) {
+                    onFolderStateChange(e.data, getView().getFolders());
+                }
                 break;
             case FOLDER_STATS:
                 Timber.w("Ignoring FOLDER_STATS update");
-                //TODO pretty sure not needed
-//                if (hasView()) {
-//                    getView().refreshFolders(updateFolders());
-//                }
                 break;
             case FOLDER_SCAN_PROGRESS: {
-                FolderScanProgress.Data d = (FolderScanProgress.Data) e.data;
-                FolderCard c = getFolderCard(d.folder);
-                if (c != null) {
-                    c.setScanProgress(d.current, d.total);
+                if (hasView()) {
+                    FolderScanProgress.Data d = (FolderScanProgress.Data) e.data;
+                    FolderCard c = getFolderCard(d.folder, getView().getFolders());
+                    if (c != null) {
+                        c.setScanProgress(d.current, d.total);
+                    }
                 }
                 break;
             }
@@ -282,10 +284,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
 
     void initializeView() {
         if (!hasView()) throw new IllegalStateException("initialize called without view");
-        updateNotifications();
-        updateFolders();
-        updateThisDevice();
-        updateDevices();
+        List<NotifCard> notifications = updateNotifications(Collections.emptyList());
+        List<FolderCard> folders = updateFolders(Collections.emptyList());
+        MyDeviceCard myDevice = updateThisDevice(null);
+        List<DeviceCard> devices = updateDevices(Collections.emptyList());
         getView().initialize(
                 notifications,
                 folders,
@@ -294,7 +296,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         );
     }
 
-    void updateNotifications() {
+    List<NotifCard> updateNotifications(List<NotifCard> notifications) {
         /*todo compare device/foler rej and update
         if (!controller.isConfigInSync()) {
             if (notifications.indexOf(NotifCardRestart.INSTANCE) == -1) {
@@ -340,9 +342,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         for (Map.Entry<String, FolderRejected> e : controller.getFolderRejections()) {
             notifications.add(new NotifCardRejFolder(this, e.getKey(), e.getValue()));
         }
+        return notifications;
     }
 
-    void updateFolders() {
+    List<FolderCard> updateFolders(List<FolderCard> folders) {
         Collection<FolderConfig> folderConfigs = controller.getFolders();
         if (folderConfigs.size() > 0) {
             Set<String> configIds = new HashSet<>(folderConfigs.size());
@@ -361,7 +364,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         for (FolderConfig folder : folderConfigs) {
             Model model = controller.getModel(folder.id);
             FolderScanProgress.Data scanP = controller.getFolderScanProgress(folder.id);
-            FolderCard card = getFolderCard(folder.id);
+            FolderCard card = getFolderCard(folder.id, folders);
             if (card != null && model != null) {
                 card.setFolder(folder);
                 card.setModel(model);
@@ -383,9 +386,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             controller.refreshFolders(needsUpdate);
         }
         Collections.sort(folders, (lhs, rhs) -> lhs.getId().compareTo(rhs.getId()));
+        return folders;
     }
 
-    private FolderCard getFolderCard(String id) {
+    private FolderCard getFolderCard(String id, List<FolderCard> folders) {
         for (FolderCard fc : folders) {
             if (StringUtils.equals(fc.getId(), id)) {
                 return fc;
@@ -394,7 +398,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         return null;
     }
 
-    void updateThisDevice() {
+    MyDeviceCard updateThisDevice(MyDeviceCard myDevice) {
         DeviceConfig device = controller.getThisDevice();
         ConnectionInfo conn = controller.getConnectionTotal();
         SystemInfo sys = controller.getSystemInfo();
@@ -404,10 +408,12 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         } else {
             myDevice.setConnectionInfo(conn);
             myDevice.setSystemInfo(sys);
+            myDevice.setVersion(ver);
         }
+        return myDevice;
     }
 
-    void updateDevices() {
+    List<DeviceCard> updateDevices(List<DeviceCard> devices) {
         Collection<DeviceConfig> remoteDevices = controller.getRemoteDevices();
         if (devices.size() >0 ) {
             Set<String> deviceIds = new HashSet<>(remoteDevices.size());
@@ -426,7 +432,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             ConnectionInfo connection = controller.getConnection(device.deviceID);
             DeviceStats stats = controller.getDeviceStats(device.deviceID);
             int completion = controller.getCompletionTotal(device.deviceID);
-            DeviceCard c = getDeviceCard(device.deviceID);
+            DeviceCard c = getDeviceCard(device.deviceID, devices);
             if (c != null) {
                 c.setDevice(device);
                 c.setConnectionInfo(connection);
@@ -437,9 +443,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             }
         }
         Collections.sort(devices, (lhs, rhs) -> lhs.getDeviceID().compareTo(rhs.getDeviceID()));
+        return devices;
     }
 
-    private DeviceCard getDeviceCard(String id) {
+    private DeviceCard getDeviceCard(String id, List<DeviceCard> devices) {
         for (DeviceCard c : devices) {
             if (StringUtils.equals(c.device.deviceID, id)) {
                 return c;
@@ -448,19 +455,19 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         return null;
     }
 
-    void onCompletionUpdate(Object o) {
+    void onCompletionUpdate(Object o, List<DeviceCard> devices) {
         if (SessionController.ChangeEvent.NONE == o) {
             for (DeviceCard c : devices) {
                 c.setCompletion(controller.getCompletionTotal(c.getDeviceID()));
             }
         } else {
             FolderCompletion.Data data = (FolderCompletion.Data) o;
-            DeviceCard c = getDeviceCard(data.device);
+            DeviceCard c = getDeviceCard(data.device, devices);
             if (c != null) {
                 c.setCompletion(controller.getCompletionTotal(c.getDeviceID()));
             } else {
-                updateDevices();
                 if (hasView()) {
+                    devices = updateDevices(devices);
                     getView().refreshDevices(devices);
                 }
             }
@@ -469,7 +476,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     }
 
     //TODO only notify on changed device
-    void postConnectiosUpdate() {
+    void postConnectiosUpdate(MyDeviceCard myDevice, List<DeviceCard> devices) {
         for (DeviceCard c : devices) {
             ConnectionInfo conn = controller.getConnection(c.getDeviceID());
             c.setConnectionInfo(conn);
@@ -479,8 +486,8 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (myDevice != null) {
                 myDevice.setConnectionInfo(tConn);
             } else {
-                updateThisDevice();
                 if (hasView()) {
+                    myDevice = updateThisDevice(null);
                     getView().refreshThisDevice(myDevice);
                 }
             }
@@ -488,7 +495,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     }
 
     //TODO only notif on changed device
-    void postDeviceStatsUpdate() {
+    void postDeviceStatsUpdate(List<DeviceCard> devices) {
         for (DeviceCard c : devices) {
             DeviceStats s = controller.getDeviceStats(c.getDeviceID());
             if (s != null) {
@@ -497,45 +504,51 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         }
     }
 
-    void onSystemInfoUpdate() {
+    void onSystemInfoUpdate(MyDeviceCard myDevice) {
         if (myDevice != null) {
             myDevice.setSystemInfo(controller.getSystemInfo());
         } else {
-            updateThisDevice();
             if (hasView()) {
+                myDevice = updateThisDevice(null);
                 getView().refreshThisDevice(myDevice);
             }
         }
     }
 
-    void onFolderModelUpdate(Object o) {
+    void onFolderModelUpdate(Object o, List<FolderCard> folders) {
         if (SessionController.ChangeEvent.NONE == o) {
-            updateFolders();
+            if (hasView()) {
+                folders = updateFolders(folders);
+                getView().refreshFolders(folders);
+            }
         } else {
             FolderSummary.Data data = (FolderSummary.Data) o;
-            FolderCard fc = getFolderCard(data.folder);
+            FolderCard fc = getFolderCard(data.folder, folders);
             if (fc != null) {
                 fc.setModel(data.summary);
             } else {
-                updateFolders();
                 if (hasView()) {
+                    folders = updateFolders(folders);
                     getView().refreshFolders(folders);
                 }
             }
         }
     }
 
-    void onFolderStateChange(Object o) {
+    void onFolderStateChange(Object o, List<FolderCard> folders) {
         if (SessionController.ChangeEvent.NONE == o) {
-            updateFolders();
+            if (hasView()) {
+                folders = updateFolders(folders);
+                getView().refreshFolders(folders);
+            }
         } else {
             StateChanged.Data data = (StateChanged.Data) o;
-            FolderCard fc = getFolderCard(data.folder);
+            FolderCard fc = getFolderCard(data.folder, folders);
             if (fc != null) {
                 fc.setState(data.to);
             } else {
-                updateFolders();
                 if (hasView()) {
+                    folders = updateFolders(folders);
                     getView().refreshFolders(folders);
                 }
             }
