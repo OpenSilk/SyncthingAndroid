@@ -250,14 +250,9 @@ public class FolderCard extends ExpandableCard {
     }
 
     @Bindable
-    public List<FolderDeviceConfig> getDevices() {
-        return folder.devices;
-    }
-
-    @BindingAdapter("folderSharedWith")
-    public static void folderSharedWith(SessionPresenter presenter, TextView view, List<FolderDeviceConfig> devices) {
+    public String getSharedWith() {
         List<String> sharedNames = new ArrayList<>();
-        for (FolderDeviceConfig d : devices) {
+        for (FolderDeviceConfig d : folder.devices) {
             if (!StringUtils.equals(d.deviceID, presenter.getMyDeviceId())) {
                 DeviceConfig dev = presenter.controller.getDevice(d.deviceID);//TODO stop doing this
                 if (dev != null) {
@@ -267,13 +262,13 @@ public class FolderCard extends ExpandableCard {
         }
         Collections.sort(sharedNames);
         if (sharedNames.isEmpty()) {
-            view.setText("");
+            return "";
         } else {
             StringBuilder b = new StringBuilder(sharedNames.get(0));
             for (int ii=1; ii<sharedNames.size(); ii++) {
                 b.append(", ").append(sharedNames.get(ii));
             }
-            view.setText(b.toString());
+            return b.toString();
         }
     }
 

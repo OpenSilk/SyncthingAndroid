@@ -316,7 +316,7 @@
 
                     <TextView
                         android:id="@+id/shared_with"
-                        app:folderSharedWith="@{card.devices}"
+                        android:text="@{card.sharedWith}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="master, slave"/>
 
