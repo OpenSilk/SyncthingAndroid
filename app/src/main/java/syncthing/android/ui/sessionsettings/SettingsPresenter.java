@@ -20,7 +20,9 @@ package syncthing.android.ui.sessionsettings;
 import android.content.Context;
 import android.databinding.Bindable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -148,6 +150,27 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
             return false;
         }
         return true;
+    }
+
+    public void showApiKeyOverflow(final View btn) {
+        PopupMenu m = new PopupMenu(btn.getContext(), btn);
+        m.inflate(R.menu.apikey_overflow);
+        m.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.copy:
+                        copyApiKey(btn);
+                        return true;
+                    case R.id.generate:
+                        regenApiKey(btn);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        m.show();
     }
 
     public void copyApiKey(View btn) {

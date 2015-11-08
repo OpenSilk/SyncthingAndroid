@@ -224,44 +224,36 @@
                     android:checked="@{presenter.URAccepted}"
                     style="@style/session.edit.Checkbox"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/api_key"
+                    style="@style/session.edit.FieldHeader"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
+                    <EditText
+                        android:id="@+id/edit_apikey"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start|top"
-                        android:gravity="start"
-                        android:text="@string/api_key"
-                        style="@style/session.edit.FieldHeader"/>
+                        android:enabled="false"
+                        android:text="@{presenter.apiKey}"
+                        style="@style/session.edit.EditText"/>
 
-                    <Button
-                        android:id="@+id/btn_copy_apikey"
+                    <ImageButton
+                        android:id="@+id/btn_apikey_overflow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/copy"
-                        android:onClick="@{presenter.copyApiKey}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
-
-                    <Button
-                        android:id="@+id/btn_generate_apikey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/generate"
-                        android:onClick="@{presenter.regenApiKey}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
+                        android:src="@drawable/dots_vertical_grey600_24dp"
+                        android:scaleType="centerInside"
+                        android:onClick="@{presenter.showApiKeyOverflow}"
+                        android:contentDescription="@string/options"
+                        style="@style/Widget.AppCompat.ActionButton"/>
 
                 </LinearLayout>
-
-                <EditText
-                    android:id="@+id/edit_apikey"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:text="@{presenter.apiKey}"
-                    style="@style/session.edit.EditText"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -276,7 +268,7 @@
                         android:id="@+id/btn_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@android:string/cancel"
+                        android:text="@string/close"
                         android:onClick="@{presenter.dismissDialog}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
