@@ -555,36 +555,29 @@
                     style="@style/mtrl.ButtonBar">
 
                     <Button
-                        android:id="@+id/btn_cancel"
+                        android:id="@+id/btn_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/remove"
+                        android:onClick="@{presenter.deleteFolder}"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    <android.support.v4.widget.Space
                         android:layout_width="0dp"
                         android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@android:string/cancel"
+                        android:text="@string/close"
                         android:onClick="@{presenter.dismissDialog}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button
-                        android:id="@+id/btn_delete"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/delete"
-                        android:onClick="@{presenter.deleteFolder}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
-
-                    <Button
-                        android:id="@+id/btn_ignore_ptrn"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ignore_patterns"
-                        android:onClick="@{presenter.openIgnoresEditor}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
-
-                    <Button
                         android:id="@+id/btn_save"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/save"
                         android:onClick="@{presenter.saveFolder}"

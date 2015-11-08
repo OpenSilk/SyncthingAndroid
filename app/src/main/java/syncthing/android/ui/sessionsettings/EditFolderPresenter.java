@@ -28,6 +28,8 @@ import android.view.View;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
+import org.opensilk.common.ui.mortar.ActionBarMenuConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import org.opensilk.common.ui.mortar.DialogPresenter;
@@ -123,6 +125,22 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
     protected void onSave(Bundle outState) {
         super.onSave(outState);
         outState.putSerializable("folder", origFolder);
+    }
+
+    @Override
+    public ActionBarConfig getToolbarConfig() {
+        return super.getToolbarConfig().buildUpon()
+                .setMenuConfig(ActionBarMenuConfig.builder()
+                .withMenu(R.menu.folder_ignores)
+                .setActionHandler((context, id) -> {
+                    switch (id) {
+                        case R.id.edit_ignores:
+                            openIgnoresEditor(context);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }).build()).build();
     }
 
     boolean validateFolderId(CharSequence text) {
@@ -331,8 +349,8 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         );
     }
 
-    public void openIgnoresEditor(View btn) {
-        EditIgnoresFragment f = EditIgnoresFragment.ni(btn.getContext(), credentials, folderId);
+    public void openIgnoresEditor(Context context) {
+        EditIgnoresFragment f = EditIgnoresFragment.ni(context, credentials, folderId);
         fm.replaceMainContent(f, true);
     }
 

@@ -222,23 +222,27 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:orientation="horizontal"
-                    android:gravity="end"
                     style="@style/mtrl.ButtonBar">
-
-                    <Button
-                        android:id="@+id/btn_cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@android:string/cancel"
-                        android:onClick="@{presenter.dismissDialog}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button
                         android:id="@+id/btn_delete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/delete"
+                        android:text="@string/remove"
                         android:onClick="@{presenter.deleteDevice}"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/close"
+                        android:onClick="@{presenter.dismissDialog}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button

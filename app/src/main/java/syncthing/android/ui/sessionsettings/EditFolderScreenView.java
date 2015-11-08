@@ -27,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.RadioGroup;
 
+import com.jakewharton.rxbinding.widget.RxRadioGroup;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -69,10 +70,9 @@ public class EditFolderScreenView extends CoordinatorLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        binding = DataBindingUtil.bind(this);
-        binding.setPresenter(mPresenter);
-        binding.radioGroupVersioning.setOnCheckedChangeListener(versioningChangeListener);
         if (!isInEditMode()) {
+            binding = DataBindingUtil.bind(this);
+            binding.setPresenter(mPresenter);
             mPresenter.takeView(this);
         }
     }
@@ -81,8 +81,9 @@ public class EditFolderScreenView extends CoordinatorLayout {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        subscribeTextChanges();
         if (!isInEditMode()) {
+            subscribeChanges();
+            mPresenter.takeView(this);
             mToolbarOwner.attachToolbar(binding.toolbar);
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
@@ -96,20 +97,22 @@ public class EditFolderScreenView extends CoordinatorLayout {
         if (subscriptions != null) subscriptions.unsubscribe();
     }
 
-    void subscribeTextChanges() {
+    void subscribeChanges() {
         subscriptions = new CompositeSubscription(
-                RxTextView.textChangeEvents(binding.editFolderId)
-                        .subscribe(e -> onFolderIdChanged(e.text())),
-                RxTextView.textChangeEvents(binding.editRescanInterval)
-                        .subscribe(e -> onRescanIntrvlChanged(e.text())),
-                RxTextView.textChangeEvents(binding.editTrashcanVersioningKeep)
-                        .subscribe(e -> onTrashCanVerKeepChanged(e.text())),
-                RxTextView.textChangeEvents(binding.editSimpleVersioningKeep)
-                        .subscribe(e -> onSimpleVerKeepChanged(e.text())),
-                RxTextView.textChangeEvents(binding.editStaggeredMaxAge)
-                        .subscribe(e -> onStaggeredMaxAgeChange(e.text())),
-                RxTextView.textChangeEvents(binding.editExternalVersioningCommand)
-                        .subscribe(e -> onExternalVerCmdChange(e.text()))
+                RxTextView.textChanges(binding.editFolderId)
+                        .subscribe(this::onFolderIdChanged),
+                RxTextView.textChanges(binding.editRescanInterval)
+                        .subscribe(this::onRescanIntrvlChanged),
+                RxTextView.textChanges(binding.editTrashcanVersioningKeep)
+                        .subscribe(this::onTrashCanVerKeepChanged),
+                RxTextView.textChanges(binding.editSimpleVersioningKeep)
+                        .subscribe(this::onSimpleVerKeepChanged),
+                RxTextView.textChanges(binding.editStaggeredMaxAge)
+                        .subscribe(this::onStaggeredMaxAgeChange),
+                RxTextView.textChanges(binding.editExternalVersioningCommand)
+                        .subscribe(this::onExternalVerCmdChange),
+                RxRadioGroup.checkedChanges(binding.radioGroupVersioning)
+                        .subscribe(this::onVersioningCheckedChanged)
         );
     }
 
@@ -211,7 +214,7 @@ public class EditFolderScreenView extends CoordinatorLayout {
         }
 
         binding.btnDelete.setVisibility(isAdd ? GONE : VISIBLE);
-        binding.btnIgnorePtrn.setVisibility(isAdd ? GONE : VISIBLE);
+//        binding.btnIgnorePtrn.setVisibility(isAdd ? GONE : VISIBLE);
 
     }
 
@@ -307,44 +310,41 @@ public class EditFolderScreenView extends CoordinatorLayout {
         binding.errorExternalVersioningCommandBlank.setVisibility(valid ? GONE : VISIBLE);
     }
 
-    final RadioGroup.OnCheckedChangeListener versioningChangeListener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            switch (checkedId) {
-                case R.id.radio_trashcan_versioning:
-                    binding.trashcanVersioningExtra.setVisibility(VISIBLE);
-                    binding.simpleVersioningExtra.setVisibility(GONE);
-                    binding.staggeredVersioningExtra.setVisibility(GONE);
-                    binding.externalVersioningExtra.setVisibility(GONE);
-                    break;
-                case R.id.radio_simple_versioning:
-                    binding.trashcanVersioningExtra.setVisibility(GONE);
-                    binding.simpleVersioningExtra.setVisibility(VISIBLE);
-                    binding.staggeredVersioningExtra.setVisibility(GONE);
-                    binding.externalVersioningExtra.setVisibility(GONE);
-                    break;
-                case R.id.radio_staggered_versioning:
-                    binding.trashcanVersioningExtra.setVisibility(GONE);
-                    binding.simpleVersioningExtra.setVisibility(GONE);
-                    binding.staggeredVersioningExtra.setVisibility(VISIBLE);
-                    binding.externalVersioningExtra.setVisibility(GONE);
-                    break;
-                case R.id.radio_external_versioning:
-                    binding.trashcanVersioningExtra.setVisibility(GONE);
-                    binding.simpleVersioningExtra.setVisibility(GONE);
-                    binding.staggeredVersioningExtra.setVisibility(GONE);
-                    binding.externalVersioningExtra.setVisibility(VISIBLE);
-                    break;
-                case R.id.radio_no_versioning:
-                default:
-                    binding.trashcanVersioningExtra.setVisibility(GONE);
-                    binding.simpleVersioningExtra.setVisibility(GONE);
-                    binding.staggeredVersioningExtra.setVisibility(GONE);
-                    binding.externalVersioningExtra.setVisibility(GONE);
-                    break;
-            }
+    void onVersioningCheckedChanged(int checkedId) {
+        switch (checkedId) {
+            case R.id.radio_trashcan_versioning:
+                binding.trashcanVersioningExtra.setVisibility(VISIBLE);
+                binding.simpleVersioningExtra.setVisibility(GONE);
+                binding.staggeredVersioningExtra.setVisibility(GONE);
+                binding.externalVersioningExtra.setVisibility(GONE);
+                break;
+            case R.id.radio_simple_versioning:
+                binding.trashcanVersioningExtra.setVisibility(GONE);
+                binding.simpleVersioningExtra.setVisibility(VISIBLE);
+                binding.staggeredVersioningExtra.setVisibility(GONE);
+                binding.externalVersioningExtra.setVisibility(GONE);
+                break;
+            case R.id.radio_staggered_versioning:
+                binding.trashcanVersioningExtra.setVisibility(GONE);
+                binding.simpleVersioningExtra.setVisibility(GONE);
+                binding.staggeredVersioningExtra.setVisibility(VISIBLE);
+                binding.externalVersioningExtra.setVisibility(GONE);
+                break;
+            case R.id.radio_external_versioning:
+                binding.trashcanVersioningExtra.setVisibility(GONE);
+                binding.simpleVersioningExtra.setVisibility(GONE);
+                binding.staggeredVersioningExtra.setVisibility(GONE);
+                binding.externalVersioningExtra.setVisibility(VISIBLE);
+                break;
+            case R.id.radio_no_versioning:
+            default:
+                binding.trashcanVersioningExtra.setVisibility(GONE);
+                binding.simpleVersioningExtra.setVisibility(GONE);
+                binding.staggeredVersioningExtra.setVisibility(GONE);
+                binding.externalVersioningExtra.setVisibility(GONE);
+                break;
         }
-    };
+    }
 
     class DirectoryAutoCompleteAdapter extends ArrayAdapter<String> {
         DirectoryAutoCompleteAdapter(Context context) {

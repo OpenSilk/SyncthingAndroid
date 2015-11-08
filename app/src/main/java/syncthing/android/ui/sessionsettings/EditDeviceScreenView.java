@@ -25,6 +25,7 @@ import android.util.AttributeSet;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
+import com.jakewharton.rxbinding.widget.RxRadioGroup;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -64,10 +65,9 @@ public class EditDeviceScreenView extends CoordinatorLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        binding = DataBindingUtil.bind(this);
-        binding.setPresenter(mPresenter);
-        binding.radioGroupCompression.setOnCheckedChangeListener(compressionChangedListener);
         if (!isInEditMode()) {
+            binding = DataBindingUtil.bind(this);
+            binding.setPresenter(mPresenter);
             mPresenter.takeView(this);
         }
     }
@@ -75,8 +75,9 @@ public class EditDeviceScreenView extends CoordinatorLayout {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        subscribeTextChanges();
         if (!isInEditMode()) {
+            subscribeChanges();
+            mPresenter.takeView(this);
             mToolbarOwner.attachToolbar(binding.toolbar);
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
@@ -90,10 +91,12 @@ public class EditDeviceScreenView extends CoordinatorLayout {
         if (subscriptons != null) subscriptons.unsubscribe();
     }
 
-    void subscribeTextChanges() {
+    void subscribeChanges() {
         subscriptons = new CompositeSubscription(
-                RxTextView.textChangeEvents(binding.editDeviceId)
-                        .subscribe(e -> onDeviceIdChange(e.text()))
+                RxTextView.textChanges(binding.editDeviceId)
+                        .subscribe(this::onDeviceIdChange),
+                RxRadioGroup.checkedChanges(binding.radioGroupCompression)
+                        .subscribe(this::onCompressionCheckedChanged)
         );
     }
 
@@ -183,20 +186,17 @@ public class EditDeviceScreenView extends CoordinatorLayout {
         //TODO
     }
 
-    final RadioGroup.OnCheckedChangeListener compressionChangedListener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            switch (checkedId) {
-                case R.id.radio_all_compression:
-                    break;
-                case R.id.radio_meta_compression:
-                    break;
-                case R.id.radio_no_compression:
-                default:
-                    break;
-            }
+    void onCompressionCheckedChanged(int checkedId) {
+        switch (checkedId) {
+            case R.id.radio_all_compression:
+                break;
+            case R.id.radio_meta_compression:
+                break;
+            case R.id.radio_no_compression:
+            default:
+                break;
         }
-    };
+    }
 
     @SuppressLint("ViewConstructor")
     static class FolderCheckBox extends CheckBox {
