@@ -28,13 +28,9 @@ public interface ISessionScreenView {
     Context getContext();
     void initialize(List<NotifCard> notifs, List<FolderCard> folders, MyDeviceCard myDevice, List<DeviceCard> devices);
     void refreshNotifications(List<NotifCard> notifs);
-    List<NotifCard> getNotifications();
     void refreshFolders(List<FolderCard> folders);
-    List<FolderCard> getFolders();
     void refreshThisDevice(MyDeviceCard myDevice);
-    MyDeviceCard getThisDevice();
     void refreshDevices(List<DeviceCard> devices);
-    List<DeviceCard> getDevices();
     void showEmpty(boolean animate);
     void showList(boolean animate);
     void showLoading();

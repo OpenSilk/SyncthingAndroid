@@ -20,7 +20,6 @@ package syncthing.android.ui.session;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,12 +40,12 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
     final SessionPresenter mPresenter;
 
     //order here is display order
-    List<NotifCard> notifications = new ArrayList<>();
+    List<NotifCard> notifications = new LinkedList<>();
     HeaderCard folderHeader = HeaderCard.FOLDER;
-    List<FolderCard> folderItems = new ArrayList<>();
+    List<FolderCard> folderItems = new LinkedList<>();
     HeaderCard deviceHeader = HeaderCard.DEVICE;
     MyDeviceCard thisDevice;
-    List<DeviceCard> deviceItems = new ArrayList<>();
+    List<DeviceCard> deviceItems = new LinkedList<>();
 
     public SessionRecyclerAdapter(SessionPresenter presenter) {
         setHasStableIds(true);
@@ -63,20 +62,17 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
         return mPresenter;
     }
 
+    @Override
+    public void applyAdditionalBinding(Card card, CardViewHolder holder) {
+//        holder.getBinding().setVariable(syncthing.android.BR.clickHandler, this);
+    }
+
     public void setNotifications(List<NotifCard> notifs, boolean notify) {
         updateList(notifications, notifs, this::findNotificationOffset, notify);
     }
 
-    public List<NotifCard> getNotifications() {
-        return new LinkedList<>(notifications);
-    }
-
     public void setFolders(List<FolderCard> folders, boolean notify) {
         updateList(folderItems, folders, this::findFolderOffset, notify);
-    }
-
-    public List<FolderCard> getFolders() {
-        return new LinkedList<>(folderItems);
     }
 
     public void setThisDevice(MyDeviceCard myDevice, boolean notify) {
@@ -91,16 +87,8 @@ public class SessionRecyclerAdapter extends CardRecyclerAdapter {
         }
     }
 
-    public MyDeviceCard getThisDevice() {
-        return thisDevice;
-    }
-
     public void setDevices(List<DeviceCard> devices, boolean notify) {
         updateList(deviceItems, devices, this::findDeviceOffset, notify);
-    }
-
-    public List<DeviceCard> getDevices() {
-        return new LinkedList<>(deviceItems);
     }
 
     <T extends ExpandableCard> void  updateList(List<T> lst1, List<T> lst2, Func1<Integer, Integer> findFunc, boolean notify) {
