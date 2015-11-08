@@ -58,15 +58,31 @@ public class MyDeviceCard extends ExpandableCard {
     }
 
     protected DeviceConfig device;
-    protected ConnectionInfo connection;
-    protected SystemInfo system;
     protected Version version;
+
+    //connection info;
+    private long inbps = -1;
+    private long inBytesTotal = -1;
+    private long outbps = -1;
+    private long outBytesTotal = -1;
+
+    //system info
+    private boolean hasSystemInfo;
+    private long sys;
+    private double cpuPercent;
+    private long uptime;
+    private boolean discoveryEnabled;
+    private int discoveryFailures;
+    private int discoveryMethods;
+    private boolean relaysEnabled;
+    private int relaysFailures;
+    private int relaysTotal;
 
     public MyDeviceCard(DeviceConfig device, ConnectionInfo connection, SystemInfo system, Version version) {
         this.device = device;
-        this.connection = connection;
-        this.system = system;
         this.version = version;
+        setConnectionInfo(connection);
+        setSystemInfo(system);
         setExpanded(true);
     }
 
@@ -80,64 +96,96 @@ public class MyDeviceCard extends ExpandableCard {
     }
 
     public void setConnectionInfo(ConnectionInfo connection) {
-        if (this.connection == null || connection == null) {
-            this.connection = connection;
+        if (connection == null) {
+            inbps = inBytesTotal = outbps = outBytesTotal = -1;
             notifyChange(syncthing.android.BR.inbps);
             notifyChange(syncthing.android.BR.inBytesTotal);
             notifyChange(syncthing.android.BR.outbps);
             notifyChange(syncthing.android.BR.outBytesTotal);
         } else {
-            ConnectionInfo oldConnection = this.connection;
-            this.connection = connection;
-            if (oldConnection.inbps != connection.inbps) {
+            if (inbps != connection.inbps || inBytesTotal != connection.inBytesTotal) {
+                inbps = connection.inbps;
+                inBytesTotal = connection.inBytesTotal;
                 notifyChange(syncthing.android.BR.inbps);
-            }
-            if (oldConnection.inBytesTotal != connection.inBytesTotal) {
                 notifyChange(syncthing.android.BR.inBytesTotal);
             }
-            if (oldConnection.outbps != connection.outbps) {
+            if (outbps != connection.outbps || outBytesTotal != connection.outBytesTotal) {
+                outbps = connection.outbps;
+                outBytesTotal = connection.outBytesTotal;
                 notifyChange(syncthing.android.BR.outbps);
-            }
-            if (oldConnection.outBytesTotal != connection.outBytesTotal) {
                 notifyChange(syncthing.android.BR.outBytesTotal);
             }
         }
     }
 
     public void setSystemInfo(SystemInfo system) {
-        if (this.system == null) {
-            this.system = system;
+        if (system == null) {
+            hasSystemInfo = false;
+            discoveryEnabled = relaysEnabled = false;
+            notifyChange(syncthing.android.BR.hasSystemInfo);
             notifyChange(syncthing.android.BR.mem);
             notifyChange(syncthing.android.BR.cpuPercent);
             notifyChange(syncthing.android.BR.cpuPercentText);
-            notifyChange(syncthing.android.BR.systemInfo);
-            notifyChange(syncthing.android.BR.hasSystemInfo);
-            notifyChange(syncthing.android.BR.discoveryEnabled);
-            notifyChange(syncthing.android.BR.relaysEnabled);
             notifyChange(syncthing.android.BR.uptime);
             notifyChange(syncthing.android.BR.uptimeText);
+            notifyChange(syncthing.android.BR.discoveryEnabled);
+            notifyChange(syncthing.android.BR.discoveryFailures);
+            notifyChange(syncthing.android.BR.discoveryMethods);
+            notifyChange(syncthing.android.BR.relaysEnabled);
+            notifyChange(syncthing.android.BR.relaysFailures);
+            notifyChange(syncthing.android.BR.relaysTotal);
         } else {
-            SystemInfo oldSystem = this.system;
-            this.system = system;
-            if (oldSystem.sys != system.sys) {
+            if (!hasSystemInfo) {
+                hasSystemInfo = true;
+                notifyChange(syncthing.android.BR.hasSystemInfo);
+            }
+            if (sys != system.sys) {
+                sys = system.sys;
                 notifyChange(syncthing.android.BR.mem);
             }
-            if (oldSystem.cpuPercent != system.cpuPercent) {
+            if (cpuPercent != system.cpuPercent) {
+                cpuPercent = system.cpuPercent;
                 notifyChange(syncthing.android.BR.cpuPercent);
                 notifyChange(syncthing.android.BR.cpuPercentText);
             }
-            if (oldSystem.uptime != system.uptime) {
+            if (uptime != system.uptime) {
+                uptime = system.uptime;
                 notifyChange(syncthing.android.BR.uptime);
+                notifyChange(syncthing.android.BR.uptimeText);
             }
-
-            if (oldSystem.discoveryEnabled != system.discoveryEnabled) {
+            if (discoveryEnabled != system.discoveryEnabled) {
+                discoveryEnabled = system.discoveryEnabled;
                 notifyChange(syncthing.android.BR.discoveryEnabled);
             }
-            if (oldSystem.relaysEnabled != system.relaysEnabled) {
+            int failures = 0;
+            if (system.discoveryErrors != null && !system.discoveryErrors.isEmpty()) {
+                failures = system.discoveryErrors.size();
+            }
+            if (discoveryFailures != failures || discoveryMethods != system.discoveryMethods) {
+                discoveryFailures = failures;
+                discoveryMethods = system.discoveryMethods;
+                notifyChange(syncthing.android.BR.discoveryFailures);
+                notifyChange(syncthing.android.BR.discoveryMethods);
+            }
+            if (relaysEnabled != system.relaysEnabled) {
+                relaysEnabled = system.relaysEnabled;
                 notifyChange(syncthing.android.BR.relaysEnabled);
             }
-            //todo handle better (bindings depend on this)
-            notifyChange(syncthing.android.BR.systemInfo);
+            int failed = 0, total = 0;
+            if (system.relayClientStatus != null) {
+                for (String r : system.relayClientStatus.keySet()) {
+                    if (!system.relayClientStatus.get(r)) {
+                        failed++;
+                    }
+                    total++;
+                }
+            }
+            if (relaysFailures != failed || relaysTotal != total) {
+                relaysFailures = failed;
+                relaysTotal = total;
+                notifyChange(syncthing.android.BR.relaysFailures);
+                notifyChange(syncthing.android.BR.relaysTotal);
+            }
         }
     }
 
@@ -151,7 +199,6 @@ public class MyDeviceCard extends ExpandableCard {
         return R.layout.session_mydevice;
     }
 
-
     @Bindable
     public String getDeviceID() {
         return device.deviceID;
@@ -164,32 +211,32 @@ public class MyDeviceCard extends ExpandableCard {
 
     @Bindable
     public long getInbps() {
-        return connection != null ? connection.inbps : -1;
+        return inbps;
     }
 
     @Bindable
     public long getInBytesTotal(){
-        return connection != null ? connection.inBytesTotal : -1;
+        return inBytesTotal;
     }
 
     @Bindable
     public long getOutbps() {
-        return connection != null ? connection.outbps : -1;
+        return outbps;
     }
 
     @Bindable
     public long getOutBytesTotal() {
-        return connection != null ? connection.outBytesTotal : -1;
+        return outBytesTotal;
     }
 
     @Bindable
     public long getMem() {
-        return system != null ? system.sys : -1;
+        return sys;
     }
 
     @Bindable
     public double getCpuPercent() {
-        return system != null ? system.cpuPercent : -1.0;
+        return cpuPercent;
     }
 
     @Bindable
@@ -198,18 +245,13 @@ public class MyDeviceCard extends ExpandableCard {
     }
 
     @Bindable
-    public SystemInfo getSystemInfo() {
-        return system;
-    }
-
-    @Bindable
     public boolean getHasSystemInfo() {
-        return system != null;
+        return hasSystemInfo;
     }
 
     @Bindable
     public long getUptime() {
-        return system != null ? system.uptime : -1;
+        return uptime;
     }
 
     @Bindable
@@ -224,44 +266,32 @@ public class MyDeviceCard extends ExpandableCard {
 
     @Bindable
     public boolean isDiscoveryEnabled() {
-        return system != null && system.discoveryEnabled;
+        return discoveryEnabled;
     }
 
-    @BindingAdapter("discoveryText")
-    public static void setDiscoveryText(TextView view, SystemInfo sys) {
-        if (sys != null) {
-            int failures = 0;
-            if (sys.discoveryErrors != null && !sys.discoveryErrors.isEmpty()) {
-                failures = sys.discoveryErrors.size();
-            }
-            view.setText(view.getResources().getString(R.string.announce_failures,
-                    (sys.discoveryMethods - failures), sys.discoveryMethods));
-            view.setTextColor(ContextCompat.getColor(view.getContext(),
-                    (sys.discoveryMethods - failures) == 0 ? R.color.announce_fail : R.color.announce_ok));
-        }//else its hidden
+    @Bindable
+    public int getDiscoveryFailures() {
+        return discoveryFailures;
+    }
+
+    @Bindable
+    public int getDiscoveryMethods() {
+        return discoveryMethods;
     }
 
     @Bindable
     public boolean isRelaysEnabled() {
-        return system != null && system.relaysEnabled;
+        return relaysEnabled;
     }
 
-    @BindingAdapter("relaysText")
-    public static void setRelaysText(TextView view, SystemInfo sys) {
-        if (sys != null && sys.relayClientStatus != null) {
-            int failed, total;
-            failed = total = 0;
-            for (String r : sys.relayClientStatus.keySet()) {
-                if (!sys.relayClientStatus.get(r)) {
-                    failed++;
-                }
-                total++;
-            }
-            view.setText(view.getResources().getString(R.string.announce_failures,
-                    (total - failed), total));
-            view.setTextColor(ContextCompat.getColor(view.getContext(),
-                    (total - failed) == 0 ? R.color.announce_fail : R.color.announce_ok));
-        }//else its hidden
+    @Bindable
+    public int getRelaysFailures() {
+        return relaysFailures;
+    }
+
+    @Bindable
+    public int getRelaysTotal() {
+        return relaysTotal;
     }
 
 }

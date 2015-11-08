@@ -183,7 +183,8 @@
 
                     <TextView
                         android:id="@+id/global_discovery"
-                        app:discoveryText="@{card.systemInfo}"
+                        android:text="@{@string/announce_failures((card.discoveryMethods - card.discoveryFailures), card.discoveryMethods)}"
+                        android:textColor="@{(card.discoveryMethods - card.discoveryFailures) == 0 ? @color/announce_fail : @color/announce_ok}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="OK"/>
 
@@ -203,7 +204,8 @@
 
                     <TextView
                         android:id="@+id/relays"
-                        app:relaysText="@{card.systemInfo}"
+                        android:text="@{@string/announce_failures((card.relaysTotal - card.relaysFailures), card.relaysTotal)}"
+                        android:textColor="@{(card.relaysTotal - card.relaysFailures) == 0 ? @color/announce_fail : @color/announce_ok}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="OK"/>
 
