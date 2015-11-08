@@ -1,0 +1,21 @@
+[
+  {
+    "id" : 6032,
+    "data" : {
+      "pkg" : {
+        "randomdata.dat" : {
+          "copiedFromElsewhere" : 0,
+          "pulled" : 10403,
+          "copiedFromOrigin" : 0,
+          "bytesTotal" : 2107965440,
+          "reused" : 0,
+          "bytesDone" : 1363476480,
+          "total" : 16083,
+          "pulling" : 17
+        }
+      }
+    },
+    "type" : "DownloadProgress",
+    "time" : "2015-11-07T17:49:14.340074607-06:00"
+  }
+]

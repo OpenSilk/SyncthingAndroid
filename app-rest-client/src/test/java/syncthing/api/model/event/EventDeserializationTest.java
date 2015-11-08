@@ -45,6 +45,8 @@ public class EventDeserializationTest {
         mGson = new GsonModule().provideGson();
     }
 
+    //TODO test all events
+
     @Test
     public void test1() throws Exception {
         InputStream is = getClass().getClassLoader().getResourceAsStream("events1.json");
@@ -63,6 +65,18 @@ public class EventDeserializationTest {
         assertThat(((FolderSummary.Data) events[4].data).summary.inSyncBytes).isEqualTo(927210);
     }
 
-    //TODO test all events
+    @Test
+    public void testDownloadProgress() throws Exception {
+        InputStream is = getClass().getClassLoader().getResourceAsStream("event_downloadprogress.json");
+        Reader reader = new InputStreamReader(is, "UTF-8");
+        Event[] events = mGson.fromJson(reader, Event[].class);
+        is.close();
+        assertThat(events.length).isEqualTo(1);
+        assertThat(events[0].type).isEqualTo(EventType.DOWNLOAD_PROGRESS);
+        DownloadProgress.Data data = (DownloadProgress.Data) events[0].data;
+        assertThat(data.size()).isEqualTo(1);
+        assertThat(data.get("pkg")).isNotNull();
+        assertThat(data.get("pkg").get("randomdata.dat")).isNotNull();
+    }
 
 }

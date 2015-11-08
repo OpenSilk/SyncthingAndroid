@@ -11,6 +11,8 @@ package syncthing.api.model.event;
 
 import org.joda.time.DateTime;
 
+import java.util.HashMap;
+
 /**
  * Created by drew on 10/11/15.
  */
@@ -19,7 +21,23 @@ public class DownloadProgress extends Event<DownloadProgress.Data> {
         super(id, time, type, data);
     }
 
-    public static class Data {
-        //TODO
+    public static class Data extends HashMap<String, Files> {
+        private static final long serialVersionUID = -2642445567671314630L;
+    }
+
+    public static class Files extends HashMap<String, Progress> {
+        private static final long serialVersionUID = 1539569407920748984L;
+    }
+
+    public static class Progress {
+        public int total;
+        public int reused;
+        public int copiedFromOrigin;
+        public int copiedFromElsewhere;
+        public int pulled;
+        public int pulling;
+        public long bytesDone;
+        public long bytesTotal;
     }
 }
+

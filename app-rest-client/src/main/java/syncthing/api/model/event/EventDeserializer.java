@@ -59,7 +59,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
                 return new DeviceResumed(id, time, type, context.deserialize(data, DeviceResumed.Data.class));
             }
             case DOWNLOAD_PROGRESS: {
-                return new DownloadProgress(id, time, type, new DownloadProgress.Data());//TODO
+                return new DownloadProgress(id, time, type, context.deserialize(data, DownloadProgress.Data.class));
             }
             case FOLDER_COMPLETION: {
                 return new FolderCompletion(id, time, type, context.deserialize(data, FolderCompletion.Data.class));
@@ -96,6 +96,9 @@ public class EventDeserializer implements JsonDeserializer<Event> {
             }
             case STATE_CHANGED: {
                 return new StateChanged(id, time, type, context.deserialize(data, StateChanged.Data.class));
+            }
+            case RELAY_STATE_CHANGED: {
+                return new RelayStateChanged(id, time, type, context.deserialize(data, RelayStateChanged.Data.class));
             }
             default: {
                 return new UnknownEvent(id, time, obj.toString());

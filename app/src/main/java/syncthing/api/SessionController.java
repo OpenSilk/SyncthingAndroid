@@ -334,7 +334,6 @@ public class SessionController implements EventMonitor.EventListener {
                 refreshConfig();
                 break;
             } case DOWNLOAD_PROGRESS: {
-                //TODO
                 break;
             } case FOLDER_SUMMARY: {
                 FolderSummary fs = (FolderSummary) e;
@@ -352,6 +351,9 @@ public class SessionController implements EventMonitor.EventListener {
                 postChange(Change.ITEM_FINISHED, e.data);
                 break;
             } case ITEM_STARTED: {
+                break;
+            } case RELAY_STATE_CHANGED: {
+                refreshSystem();
                 break;
             } case PING: {
                 refreshSystem();
