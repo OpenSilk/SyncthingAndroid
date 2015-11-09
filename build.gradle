@@ -23,7 +23,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0-beta1'
+        classpath 'com.android.tools.build:gradle:1.5.0-beta2'
         classpath 'me.tatarka:gradle-retrolambda:3.2.3'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -42,22 +42,24 @@ allprojects {
 
 // Build config
 ext.compileSdkVersion = 23
-ext.buildToolsVersion  = "23.0.1"
+ext.buildToolsVersion  = "23.0.2"
 
 // defaultConfig
 ext.targetSdkVersion = 22
 
 ext.supportLibVersion = "23.1.0"
-ext.dagger2Version = "2.0.1"
-ext.rxJavaVersion = "1.0.14"
+ext.dagger2Version = "2.0.2"
+ext.rxJavaVersion = "1.0.15"
 ext.rxAndroidVersion = "1.0.1"
-ext.timberVersion = "2.5.0"
+ext.timberVersion = "4.1.0"
 ext.commonsLangVersion = "3.4"
 ext.butterKnifeVersion = "6.1.0"
 ext.commonsIoVersion = "2.4"
 ext.gsonVersion = "2.4"
 ext.okHttpVersion = "2.5.0"
 ext.retrofitVersion = "2.0.0-beta2"
+ext.rxBindingVersion = "0.3.0"
+ext.acraVersion = "4.7.0-RC.1"
 
 ext.testJunitVersion = "4.12"
 ext.testAssertJVersion = "1.7.0"
