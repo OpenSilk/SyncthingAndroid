@@ -38,7 +38,6 @@ public class AlarmManagerHelper {
 
     final SyncthingInstance service;
     final AlarmManager alarmManager;
-    final ServiceSettings settings;
 
     private boolean shudownScheduled;
     PendingIntent shutdownIntent;
@@ -47,12 +46,10 @@ public class AlarmManagerHelper {
     @Inject
     public AlarmManagerHelper(
             SyncthingInstance service,
-            AlarmManager alarmManager,
-            ServiceSettings settings
+            AlarmManager alarmManager
     ) {
         this.service = service;
         this.alarmManager = alarmManager;
-        this.settings = settings;
     }
 
     void scheduleDelayedShutdown() {
@@ -61,8 +58,8 @@ public class AlarmManagerHelper {
             Intent intent = new Intent(service, SyncthingInstance.class).setAction(SyncthingInstance.SCHEDULED_SHUTDOWN);
             shutdownIntent = PendingIntent.getService(service, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
-        if (settings.isOnSchedule()) {
-            long nextShutdown = settings.getNextScheduledEndTime();
+        if (service.getSettings().isOnSchedule()) {
+            long nextShutdown = service.getSettings().getNextScheduledEndTime();
             Timber.d("Scheduling shutdown at %s", new DateTime(nextShutdown).toString());
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextShutdown, shutdownIntent);
         } else {
@@ -90,8 +87,8 @@ public class AlarmManagerHelper {
             Intent intent = new Intent(service, SyncthingInstance.class).setAction(SyncthingInstance.SCHEDULED_WAKEUP);
             wakeupIntent = PendingIntent.getService(service, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
-        if (settings.isOnSchedule()) {
-            long nextWakeup = settings.getNextScheduledStartTime();
+        if (service.getSettings().isOnSchedule()) {
+            long nextWakeup = service.getSettings().getNextScheduledStartTime();
             Timber.d("Scheduling wakeup at %s", new DateTime(nextWakeup).toString());
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextWakeup, wakeupIntent);
         }
