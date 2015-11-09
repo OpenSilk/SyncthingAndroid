@@ -22,6 +22,9 @@ import android.app.NotificationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
+import org.opensilk.common.core.dagger2.AppContextComponent;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -40,10 +43,11 @@ import syncthing.api.SessionManagerComponent;
                 ServiceSettingsModule.class
         }
 )
-public interface ServiceComponent extends SessionManagerComponent {
+public interface ServiceComponent extends SessionManagerComponent, AppContextComponent {
     NotificationManager notificationManager();
     AlarmManager alarmManager();
     WifiManager wifiManager();
     ConnectivityManager connectivityManager();
+    @Named("settingsAuthority") String settingsAuthority();
     void inject(ServiceSettingsProvider provider);
 }
