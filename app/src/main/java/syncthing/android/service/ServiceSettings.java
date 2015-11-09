@@ -45,7 +45,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import timber.log.Timber;
 
@@ -68,13 +67,15 @@ public class ServiceSettings {
     public static final String WIFI_NETWORKS = "TRANSIENT_wifi_networks";
     public static final String ONLY_CHARGING = "only_when_charging";
 
-    final Context appContext;
-    final ConnectivityManager cm;
-    final WifiManager wm;
-    final Uri callUri;
+    private final Context appContext;
+    private final ConnectivityManager cm;
+    private final WifiManager wm;
+    private final Uri callUri;
 
-    ContentProviderClient client;
-    boolean cached;
+    private final Object clientLock = new Object();
+
+    private ContentProviderClient client;
+    private boolean cached;
 
     @Inject
     public ServiceSettings(
@@ -117,22 +118,26 @@ public class ServiceSettings {
 
     @TargetApi(17)
     private Bundle makeCallApi17(String method, String pref, Bundle extras) throws RemoteException {
-        if (client == null) {
-            //clients dramatically improve performance and is what
-            //content resolver does under the hood anyway.
-            client = appContext.getContentResolver()
-                    .acquireUnstableContentProviderClient(callUri);
+        synchronized (clientLock) {
+            if (client == null) {
+                //clients dramatically improve performance and is what
+                //content resolver does under the hood anyway.
+                client = appContext.getContentResolver()
+                        .acquireUnstableContentProviderClient(callUri);
+                if (client == null) {
+                    throw new RuntimeException("Unable to connect to our *own* content provider !!!!");
+                }
+            }
+            return client.call(method, pref, extras);
         }
-        if (client == null) {
-            throw new RuntimeException("Unable to connect to our *own* content provider !!!!");
-        }
-        return client.call(method, pref, extras);
     }
 
     public void release() {
-        if (client != null) {
-            client.release();
-            client = null;
+        synchronized (clientLock) {
+            if (client != null) {
+                client.release();
+                client = null;
+            }
         }
     }
 
