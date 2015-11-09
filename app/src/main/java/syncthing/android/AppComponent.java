@@ -18,13 +18,15 @@
 package syncthing.android;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 
-import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.core.dagger2.AppContextComponent;
+import org.opensilk.common.core.dagger2.AppContextModule;
+import org.opensilk.common.core.dagger2.SystemServicesComponent;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
+import rx.functions.Func1;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonModule;
 import syncthing.android.service.ServiceSettings;
@@ -39,16 +41,21 @@ import syncthing.api.SessionManagerComponent;
 @Singleton
 @Component (
         modules = {
+                AppContextModule.class,
                 AppModule.class,
-                GsonModule.class,
                 IdenticonModule.class,
-                ServiceSettingsModule.class
         }
 )
-public interface AppComponent extends SessionManagerComponent, IdenticonComponent {
+public interface AppComponent extends SessionManagerComponent, IdenticonComponent, AppContextComponent, SystemServicesComponent {
+    Func1<Context, AppComponent> FACTORY = new Func1<Context, AppComponent>() {
+        @Override
+        public AppComponent call(Context context) {
+            return DaggerAppComponent.builder()
+                    .appContextModule(new AppContextModule(context))
+                    .build();
+        }
+    };
     String NAME = AppComponent.class.getName();
-    @ForApplication Context appContext();
     AppSettings appSettings();
     ServiceSettings serviceSettings();
-    WifiManager wifimanager();
 }

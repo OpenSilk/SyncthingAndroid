@@ -17,59 +17,28 @@
 
 package syncthing.android;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
-
-import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
-import org.opensilk.common.core.dagger2.ForApplication;
+import org.opensilk.common.core.dagger2.SystemServicesModule;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import syncthing.android.service.ServiceSettingsModule;
+import syncthing.api.GsonModule;
 
 /**
  * Created by drew on 3/4/15.
  */
-@Module
+@Module(
+        includes = {
+                SystemServicesModule.class,
+                ServiceSettingsModule.class,
+                GsonModule.class,
+        }
+)
 public class AppModule {
-    final App app;
-
-    public AppModule(App app) {
-        this.app = app;
-    }
-
-    @Provides @Singleton @ForApplication
-    public Context provideAppContext() {
-        return app;
-    }
-
-
-    @Provides @Singleton
-    public ConnectivityManager provideConnectivityManager() {
-        return (ConnectivityManager) app.getSystemService(Context.CONNECTIVITY_SERVICE);
-    }
-
-    @Provides @Singleton
-    public WifiManager provideWifiManager() {
-        return (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
-    }
-
-    @Provides @Singleton
-    public NotificationManager provideNotificationManager() {
-        return (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
-    }
-
-    @Provides @Singleton
-    public AlarmManager provideAlarmManager() {
-        return (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
-    }
-
     @Provides @Singleton
     public OkHttpClient provideOkClient() {
         OkHttpClient client = new OkHttpClient();

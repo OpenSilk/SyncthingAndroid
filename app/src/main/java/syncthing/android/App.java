@@ -112,10 +112,10 @@ public class App extends BaseApp {
     @Override
     protected Object getRootComponent() {
         if (isServiceProcess()) {
-            return DaggerService.createComponent(ServiceComponent.class, new AppModule(this));
+            return ServiceComponent.FACTORY.call(this);
         } else {
             setupReporting();
-            return DaggerService.createComponent(AppComponent.class, new AppModule(this));
+            return AppComponent.FACTORY.call(this);
         }
     }
 

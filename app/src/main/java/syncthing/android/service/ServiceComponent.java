@@ -17,19 +17,18 @@
 
 package syncthing.android.service;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
+import android.content.Context;
 
 import org.opensilk.common.core.dagger2.AppContextComponent;
+import org.opensilk.common.core.dagger2.AppContextModule;
+import org.opensilk.common.core.dagger2.SystemServicesComponent;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import rx.functions.Func1;
 import syncthing.android.AppModule;
-import syncthing.api.GsonModule;
 import syncthing.api.SessionManagerComponent;
 
 /**
@@ -38,16 +37,19 @@ import syncthing.api.SessionManagerComponent;
 @Singleton
 @Component(
         modules = {
+                AppContextModule.class,
                 AppModule.class,
-                GsonModule.class,
-                ServiceSettingsModule.class
         }
 )
-public interface ServiceComponent extends SessionManagerComponent, AppContextComponent {
-    NotificationManager notificationManager();
-    AlarmManager alarmManager();
-    WifiManager wifiManager();
-    ConnectivityManager connectivityManager();
+public interface ServiceComponent extends SessionManagerComponent, AppContextComponent, SystemServicesComponent {
+    Func1<Context, ServiceComponent> FACTORY = new Func1<Context, ServiceComponent>() {
+        @Override
+        public ServiceComponent call(Context context) {
+            return DaggerServiceComponent.builder()
+                    .appContextModule(new AppContextModule(context))
+                    .build();
+        }
+    };
     @Named("settingsAuthority") String settingsAuthority();
     void inject(ServiceSettingsProvider provider);
 }
