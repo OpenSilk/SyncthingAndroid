@@ -1100,7 +1100,7 @@ public class SessionController implements EventMonitor.EventListener {
                         for (FolderConfig f : config.folders) {
                             if (folders.containsKey(f.id)) {
                                 boolean wants = folders.get(f.id);
-                                if (f.devices.isEmpty()) {
+                                if (f.devices == null || f.devices.isEmpty()) {
                                     f.devices = new ArrayList<>();
                                 }
                                 boolean found = false;

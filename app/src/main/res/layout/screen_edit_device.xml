@@ -21,6 +21,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data class="syncthing.android.ui.sessionsettings.EditDeviceScreenViewBinding">
+        <import type="android.view.View"/>
+        <import type="syncthing.api.model.Compression"/>
         <variable name="presenter" type="syncthing.android.ui.sessionsettings.EditDevicePresenter"/>
     </data>
     <syncthing.android.ui.sessionsettings.EditDeviceScreenView
@@ -68,12 +70,22 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
 
-                    <EditText
-                        android:id="@+id/edit_device_id"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_device_id"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        style="@style/session.edit.EditText"/>
+                        app:errorEnabled="true">
+
+                        <EditText
+                            android:id="@+id/edit_device_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{presenter.deviceID}"
+                            android:enabled="@{presenter.isAdd}"
+                            style="@style/session.edit.EditText"/>
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <ImageButton
                         android:id="@+id/btn_scanqr"
@@ -83,6 +95,8 @@
                         android:scaleType="fitCenter"
                         android:padding="4dp"
                         android:onClick="@{presenter.startQRScannerActivity}"
+                        android:contentDescription="@string/accessibility_qr"
+                        android:visibility="@{presenter.isAdd ? View.VISIBLE : View.GONE}"
                         style="?android:borderlessButtonStyle"/>
 
                 </LinearLayout>
@@ -92,6 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/the_device_id_to_enter_here_can_be_found_in_the_edit_show_id_dialog_on_the_other_device_spaces_and_dashes_are_optional_ignored"
+                    android:visibility="@{presenter.isAdd ? View.VISIBLE : View.GONE}"
                     style="@style/session.edit.FieldDescription"/>
 
                 <TextView
@@ -99,21 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/when_adding_a_new_device_keep_in_mind_that_this_device_must_be_added_on_the_other_side_too"
+                    android:visibility="@{presenter.isAdd ? View.VISIBLE : View.GONE}"
                     style="@style/session.edit.FieldDescription"/>
-
-                <TextView
-                    android:id="@+id/error_device_id_blank"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/the_device_id_cannot_be_blank"
-                    style="@style/session.edit.FieldError"/>
-
-                <TextView
-                    android:id="@+id/error_device_id_invalid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional"
-                    style="@style/session.edit.FieldError"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -125,6 +127,7 @@
                     android:id="@+id/edit_device_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{presenter.deviceName}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -139,11 +142,20 @@
                     android:text="@string/addresses"
                     style="@style/session.edit.FieldHeader"/>
 
-                <EditText
-                    android:id="@+id/edit_addresses"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_addresses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/session.edit.EditText"/>
+                    app:errorEnabled="true">
+
+                    <EditText
+                        android:id="@+id/edit_addresses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{presenter.addressesText}"
+                        style="@style/session.edit.EditText"/>
+
+                </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -163,17 +175,19 @@
                     android:layout_height="wrap_content">
 
                     <RadioButton
-                        android:id="@+id/radio_meta_compression"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/metadata_only"
-                        style="@style/session.edit.RadioButton"/>
-
-                    <RadioButton
                         android:id="@+id/radio_all_compression"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/all_data"
+                        android:checked="@{presenter.compression == Compression.ALWAYS}"
+                        style="@style/session.edit.RadioButton"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_meta_compression"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/metadata_only"
+                        android:checked="@{presenter.compression == Compression.METADATA}"
                         style="@style/session.edit.RadioButton"/>
 
                     <RadioButton
@@ -181,6 +195,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/off"
+                        android:checked="@{presenter.compression == Compression.NEVER}"
                         style="@style/session.edit.RadioButton"/>
 
                 </RadioGroup>
@@ -190,6 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/introducer"
+                    android:checked="@{presenter.introducer}"
                     style="@style/session.edit.Checkbox"/>
 
                 <TextView
@@ -230,6 +246,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/remove"
                         android:onClick="@{presenter.deleteDevice}"
+                        android:visibility="@{presenter.isAdd ? View.GONE : View.VISIBLE}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <android.support.v4.widget.Space

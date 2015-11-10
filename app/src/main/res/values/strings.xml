@@ -37,6 +37,7 @@
 
     <!--Messages-->
     <string name="input_error">Input Error</string>
+    <string name="input_error_message">One or more fields appears to be invalid. If you are sure you want to use them press Save otherwise press Cancel.</string>
     <string name="saving_config_dots">Saving config…</string>
     <string name="config_saved">Config saved</string>
     <string name="are_you_sure_you_want_to_shutdown_syncthing">Are you sure you want to shutdown Syncthing?</string>
@@ -70,6 +71,9 @@
 
     <!--Notification-->
     <string name="syncthing_is_running">Syncthing is running</string>
+
+    <!--Accessibility-->
+    <string name="accessibility_qr">Open QR Scanner</string>
 
     <!--Settings service-->
     <string name="service_settings">Syncthing</string>

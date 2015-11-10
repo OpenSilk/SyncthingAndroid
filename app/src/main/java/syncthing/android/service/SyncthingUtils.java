@@ -37,19 +37,19 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.joda.time.format.ISODateTimeFormat;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.WeakHashMap;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import syncthing.android.R;
 import syncthing.api.model.DeviceConfig;
@@ -444,5 +444,55 @@ public class SyncthingUtils {
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, id);
         context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share)));
+    }
+
+    private static final Pattern ipv4Pattern;
+    private static final Pattern ipv4PatternPort;
+    private static final Pattern ipv6Pattern;
+    private static final Pattern ipv6PatternPort;
+    private static final Pattern domainNamePattern;
+    private static final Pattern domainNamePatternPort;
+    static {
+        try {
+            ipv4Pattern = Pattern.compile("(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])", Pattern.CASE_INSENSITIVE);
+            ipv4PatternPort = Pattern.compile("(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])(:([1-9]|[1-9]\\d{1,3}|[1-3]\\d{4}|4[0-8]\\d{3}|490\\d{2}|491[0-4]\\d|49150))", Pattern.CASE_INSENSITIVE);
+            ipv6Pattern = Pattern.compile("([0-9a-f]{1,4})(:([0-9a-f]){1,4}){7}", Pattern.CASE_INSENSITIVE);
+            ipv6PatternPort = Pattern.compile("(\\[)([0-9a-f]{1,4})(:([0-9a-f]){1,4}){7}(\\])(:([1-9]|[1-9]\\d{1,3}|[1-3]\\d{4}|4[0-8]\\d{3}|490\\d{2}|491[0-4]\\d|49150))", Pattern.CASE_INSENSITIVE);
+            //TODO support abbreviated form
+            domainNamePattern = Pattern.compile("((?!-)[a-z0-9-]{1,63}(?<!-)\\.)+([a-z]{2,6})", Pattern.CASE_INSENSITIVE);
+            domainNamePatternPort = Pattern.compile("((?!-)[a-z0-9-]{1,63}(?<!-)\\.)+([a-z]{2,6})(:([1-9]|[1-9]\\d{1,3}|[1-3]\\d{4}|4[0-8]\\d{3}|490\\d{2}|491[0-4]\\d|49150))", Pattern.CASE_INSENSITIVE);
+        } catch (PatternSyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isIpAddress(String ipAddress) {
+        if (ipv4Pattern.matcher(ipAddress).matches()) {
+            return true;
+        }
+        if (ipv6Pattern.matcher(ipAddress).matches()) {
+            return true;
+        }
+        //just assume the user input a valid ipv6 addr
+        return StringUtils.countMatches(ipAddress, "::") > 0;
+    }
+
+    public static boolean isIpAddressWithPort(String ipAddress) {
+        if (ipv4PatternPort.matcher(ipAddress).matches()) {
+            return true;
+        }
+        if (ipv6PatternPort.matcher(ipAddress).matches()) {
+            return true;
+        }
+        //just assume the user input a valid ipv6 addr
+        return StringUtils.countMatches(ipAddress, "::") > 0;
+    }
+
+    public static boolean isDomainName(String hostName) {
+        return domainNamePattern.matcher(hostName).matches();
+    }
+
+    public static boolean isDomainNameWithPort(String hostName) {
+        return domainNamePatternPort.matcher(hostName).matches();
     }
 }
