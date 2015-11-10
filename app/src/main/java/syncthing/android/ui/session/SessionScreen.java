@@ -44,7 +44,7 @@ public class SessionScreen extends Screen {
 
     @Override
     public String getName() {
-        return super.getName() + credentials.apiKey;
+        return super.getName() + "-" + credentials.id;
     }
 
     public static class Factory extends ComponentFactory<SessionScreen> {

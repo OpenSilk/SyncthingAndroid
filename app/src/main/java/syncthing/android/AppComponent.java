@@ -28,11 +28,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import rx.functions.Func1;
 import syncthing.android.identicon.IdenticonComponent;
-import syncthing.android.identicon.IdenticonModule;
 import syncthing.android.service.ServiceSettings;
-import syncthing.android.service.ServiceSettingsModule;
 import syncthing.android.settings.AppSettings;
-import syncthing.api.GsonModule;
 import syncthing.api.SessionManagerComponent;
 
 /**
@@ -42,8 +39,7 @@ import syncthing.api.SessionManagerComponent;
 @Component (
         modules = {
                 AppContextModule.class,
-                AppModule.class,
-                IdenticonModule.class,
+                AppModule.class
         }
 )
 public interface AppComponent extends SessionManagerComponent, IdenticonComponent, AppContextComponent, SystemServicesComponent {
