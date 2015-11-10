@@ -17,12 +17,13 @@
 
 package syncthing.android.ui.session;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +55,7 @@ import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
+import syncthing.android.service.SyncthingUtils;
 import syncthing.api.Credentials;
 import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.common.ActivityRequestCodes;
@@ -669,9 +671,26 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     protected void showIdDialog() {
         if (hasView()) {
             MortarScope myScope = MortarScope.getScope(getView().getContext());
-            Context childContext = myScope.createContext(getView().getContext());
-            //TODO this *will* leak if not dismissed
-            new ShowIdDialog(childContext).show();
+            final Context childContext = myScope.createContext(getView().getContext());
+            final String id = controller.getMyID();
+            AlertDialog.Builder b = new AlertDialog.Builder(childContext)
+                    .setTitle(R.string.device_id)
+                    .setView(R.layout.dialog_show_id)
+                    .setNeutralButton(R.string.close, null);
+            if (SyncthingUtils.isClipBoardSupported(childContext)) {
+                b.setPositiveButton(R.string.copy, (d, w) -> {
+                    SyncthingUtils.copyToClipboard(childContext,
+                            childContext.getString(R.string.device_id), id);
+                });
+                b.setNegativeButton(R.string.share, (d, w) -> {
+                    SyncthingUtils.shareDeviceId(childContext, id);
+                });
+            } else {
+                b.setPositiveButton(R.string.share, (d, w) -> {
+                    SyncthingUtils.shareDeviceId(childContext, id);
+                });
+            }
+            dialogPresenter.showDialog(context -> b.create());
         }
     }
 

@@ -17,14 +17,12 @@
 
 package syncthing.android.ui.session;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,28 +33,23 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import syncthing.android.R;
-import syncthing.android.service.SyncthingUtils;
-import syncthing.api.model.DeviceConfig;
 
 /**
  * Created by drew on 3/11/15.
  */
-public class ShowIdDialogView extends RelativeLayout {
+public class ShowIdDialogView extends FrameLayout {
 
     @InjectView(R.id.id) TextView deviceId;
     @InjectView(R.id.qr_image) ImageView qrImage;
     @InjectView(R.id.loading_progress) ProgressBar progress;
-    @InjectView(R.id.btn_copy) Button copyButton;
 
     @Inject SessionPresenter mPresenter;
 
     String id;
     Subscription qrImageSubscription;
-    Dialog dialog;
 
     public ShowIdDialogView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -73,14 +66,10 @@ public class ShowIdDialogView extends RelativeLayout {
         if (isInEditMode()) {
             return;
         }
-        DeviceConfig device = mPresenter.controller.getThisDevice();
-        if (device != null && !StringUtils.isEmpty(device.deviceID)) {
-            id = device.deviceID;
-            deviceId.setText(device.deviceID);
-            if (!SyncthingUtils.isClipBoardSupported(getContext())) {
-                copyButton.setVisibility(View.INVISIBLE);
-            }
-            qrImageSubscription = mPresenter.controller.getQRImage(device.deviceID)
+        final String id = mPresenter.controller.getMyID();
+        if (!StringUtils.isEmpty(id)) {
+            deviceId.setText(id);
+            qrImageSubscription = mPresenter.controller.getQRImage(id)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             bitmap -> {
@@ -88,6 +77,7 @@ public class ShowIdDialogView extends RelativeLayout {
                                 qrImage.setImageBitmap(bitmap);
                             },
                             t -> {
+                                progress.setVisibility(GONE);
                                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                             }
                     );
@@ -101,25 +91,4 @@ public class ShowIdDialogView extends RelativeLayout {
             qrImageSubscription.unsubscribe();
     }
 
-    @OnClick(R.id.btn_copy)
-    void copyDeviceId() {
-        if (id == null) return;
-        SyncthingUtils.copyToClipboard(getContext(),
-                getContext().getString(R.string.device_id), id);
-    }
-
-    @OnClick(R.id.btn_share)
-    void shareDeviceId() {
-        if (id == null) return;
-        SyncthingUtils.shareDeviceId(getContext(), id);
-    }
-
-    @OnClick(R.id.btn_close)
-    void doClose() {
-        if (dialog != null) dialog.dismiss();
-    }
-
-    void setDialog(Dialog d) {
-        this.dialog = d;
-    }
 }
