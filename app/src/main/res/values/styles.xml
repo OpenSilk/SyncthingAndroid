@@ -37,6 +37,11 @@
 
     </style>
 
+    <style name="session.RecyclerHeaderIcon.Identicon">
+        <item name="android:padding">4dp</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
     <style name="session.RecyclerHeaderText" parent="mtrl.SingleLineListItemLinearInner.Text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -88,6 +93,11 @@
 
     <style name="session.RecyclerNotifHeaderIcon" parent="mtrl.SingleLineListItemLinearInner.Avatar">
 
+    </style>
+
+    <style name="session.RecyclerNotifHeaderIcon.Identicon">
+        <item name="android:padding">4dp</item>
+        <item name="android:scaleType">centerInside</item>
     </style>
 
     <style name="session.RecyclerNotifHeaderText" parent="mtrl.SingleLineListItemLinearInner.Text">

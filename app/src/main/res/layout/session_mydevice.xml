@@ -45,7 +45,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     app:identicon="@{card.deviceID}"
-                    style="@style/session.RecyclerHeaderIcon"/>
+                    style="@style/session.RecyclerHeaderIcon.Identicon"/>
 
                 <TextView
                     android:id="@+id/name"

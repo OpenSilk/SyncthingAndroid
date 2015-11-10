@@ -48,7 +48,7 @@
                     <org.opensilk.common.ui.widget.SquareImageView
                         android:id="@+id/identicon"
                         app:identicon="@{card.deviceID}"
-                        style="@style/session.RecyclerHeaderIcon"/>
+                        style="@style/session.RecyclerHeaderIcon.Identicon"/>
 
                     <TextView
                         android:id="@+id/name"
