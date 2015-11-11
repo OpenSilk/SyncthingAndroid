@@ -187,6 +187,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         super.onSave(outState);
     }
 
+    public boolean isSessionValid() {
+        return controller.isOnline() && controller.getSystemInfo() != null;
+    }
+
     void onChange(SessionController.ChangeEvent e) {
         SessionController.Change change = e.change;
         Timber.d("onChange(%s)", change.toString());
@@ -692,6 +696,19 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             }
             dialogPresenter.showDialog(context -> b.create());
         }
+    }
+
+    public void shutdownSyncthing() {
+        dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                .setTitle(R.string.shutdown)
+                .setMessage(R.string.are_you_sure_you_want_to_shutdown_syncthing)
+                .setPositiveButton(R.string.shutdown, (dialog, which) -> controller.shutdown())
+                .setNegativeButton(android.R.string.cancel, null)
+                .show());
+    }
+
+    public void restartSyncthing() {
+        controller.restart();
     }
 
     @Override

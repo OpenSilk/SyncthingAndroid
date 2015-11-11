@@ -22,7 +22,6 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +47,6 @@ public class ShowIdDialogView extends FrameLayout {
 
     @Inject SessionPresenter mPresenter;
 
-    String id;
     Subscription qrImageSubscription;
 
     public ShowIdDialogView(Context context, AttributeSet attrs) {

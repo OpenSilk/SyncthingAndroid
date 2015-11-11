@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.session;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,8 +45,9 @@ public class SessionMenuHandler implements ActionBarMenuHandler {
 
     @Override
     public boolean onMenuItemClicked(Context context, MenuItem menuItem) {
-        if (!mPresenter.controller.isOnline() || mPresenter.controller.getSystemInfo() == null)
-            return false;
+        if (!mPresenter.isSessionValid()) {
+            return true;//ignore
+        }
         switch (menuItem.getItemId()) {
             case R.id.add_device:
                 mPresenter.openAddDeviceScreen();
@@ -62,16 +62,10 @@ public class SessionMenuHandler implements ActionBarMenuHandler {
                 mPresenter.showIdDialog();
                 return true;
             } case R.id.shutdown: {
-                //todo this could leak if not dismissed
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.shutdown)
-                        .setMessage(R.string.are_you_sure_you_want_to_shutdown_syncthing)
-                        .setPositiveButton(R.string.shutdown, (dialog, which) -> mPresenter.controller.shutdown())
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show();
+                mPresenter.shutdownSyncthing();
                 return true;
             } case R.id.restart:
-                mPresenter.controller.restart();
+                mPresenter.restartSyncthing();
                 return true;
             default:
                 return false;
