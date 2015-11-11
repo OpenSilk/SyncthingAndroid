@@ -20,11 +20,12 @@ package syncthing.android.ui.sessionsettings;
 import android.content.Context;
 import android.databinding.Bindable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
@@ -34,6 +35,7 @@ import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import javax.inject.Inject;
 
+import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.settings.AppSettings;
@@ -48,7 +50,7 @@ import timber.log.Timber;
  * Created by drew on 3/17/15.
  */
 @ScreenScope
-public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
+public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
 
     final Context appContext;
     final AppSettings appSettings;
@@ -57,6 +59,10 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
     DeviceConfig thisDevice;
     OptionsConfig options;
     GUIConfig guiConfig;
+
+    String errorListenAddress;
+    String errorGlobalDiscoverServers;
+    String errorGuiListenAddress;
 
     @Inject
     public SettingsPresenter(
@@ -110,6 +116,51 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
         outState.putSerializable("guiconfig", guiConfig);
     }
 
+    @Bindable
+    public String getDeviceName() {
+        return SyncthingUtils.getDisplayName(thisDevice);
+    }
+
+    public void setDeviceName(CharSequence deviceName) {
+        thisDevice.name = StringUtils.isEmpty(deviceName) ? "" : deviceName.toString();
+    }
+
+    public final Action1<CharSequence> actionSetDeviceName = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setDeviceName(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getListenAddressText() {
+        return SyncthingUtils.unrollArray(options.listenAddress);
+    }
+
+    public void setListenAddress(CharSequence text) {
+        if (validateListenAddresses(text)) {
+            options.listenAddress = SyncthingUtils.rollArray(text.toString());
+        }
+    }
+
+    public final Action1<CharSequence> actionSetListenAddress = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setListenAddress(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getListenAddressError() {
+        return errorListenAddress;
+    }
+
+    public void setListenAddressError(String error) {
+        if (!StringUtils.equals(errorListenAddress, error)) {
+            errorListenAddress = error;
+            notifyChange(syncthing.android.BR.listenAddressError);
+        }
+    }
 
     boolean validateListenAddresses(CharSequence text) {
         if (StringUtils.isEmpty(text)) {
@@ -122,20 +173,117 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
         return true;
     }
 
-    boolean validateMaxSend(CharSequence text) {
-        if (!StringUtils.isNumeric(text) || Integer.decode(text.toString()) >= 0) {
-            //TODO
-            return false;
-        }
-        return true;
+    @Bindable
+    public String getMaxRecvKbps() {
+        return String.valueOf(options.maxRecvKbps);
     }
 
-    boolean validateMaxRecv(CharSequence text) {
-        if (!StringUtils.isNumeric(text) || Integer.decode(text.toString()) >= 0) {
-            //TODO
-            return false;
+    public void setMaxRecvKpbs(CharSequence text) {
+        //input disallows non numeric text
+        options.maxRecvKbps = StringUtils.isEmpty(text) ? 0 : Integer.valueOf(text.toString());
+    }
+
+    public final Action1<CharSequence> actionSetMaxRecvKbps = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setMaxRecvKpbs(charSequence);
         }
-        return true;
+    };
+
+    @Bindable
+    public String getMaxSendKbps() {
+        return String.valueOf(options.maxSendKbps);
+    }
+
+    public void setMaxSendKbps(CharSequence text) {
+        //input disallows non numeric text
+        options.maxSendKbps = StringUtils.isEmpty(text) ? 0 : Integer.valueOf(text.toString());
+    }
+
+    public final Action1<CharSequence> actionSetMaxSendKbps = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setMaxSendKbps(charSequence);
+        }
+    };
+
+    @Bindable
+    public boolean isUpnpEnabled() {
+        return options.upnpEnabled;
+    }
+
+    public void setUpnpEnabled(boolean enabled) {
+        options.upnpEnabled = enabled;
+    }
+
+    public final Action1<Boolean> actionSetUpnpEnabled = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setUpnpEnabled(aBoolean);
+        }
+    };
+
+    @Bindable
+    public boolean isLocalAnnounceEnabled() {
+        return options.localAnnounceEnabled;
+    }
+
+    public void setLocalAnnounceEnabled(boolean enabled) {
+        options.localAnnounceEnabled = enabled;
+    }
+
+    public final Action1<Boolean> actionSetLocalAnnounceEnabled = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setLocalAnnounceEnabled(aBoolean);
+        }
+    };
+
+    @Bindable
+    public boolean isGlobalAnnounceEnabled() {
+        return options.globalAnnounceEnabled;
+    }
+
+    public void setGlobalAnnounceEnabled(boolean enabled) {
+        options.globalAnnounceEnabled = enabled;
+        notifyChange(syncthing.android.BR.globalAnnounceEnabled);
+    }
+
+    public final Action1<Boolean> actionSetGlobalAnnounceEnabled = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setGlobalAnnounceEnabled(aBoolean);
+        }
+    };
+
+    @Bindable
+    public String getGlobalAnnounceServersText() {
+        return SyncthingUtils.unrollArray(options.globalAnnounceServers);
+    }
+
+    public void setGlobalAnnounceServers(CharSequence text) {
+        if (validateGlobalDiscoveryServers(text)) {
+            options.globalAnnounceServers = SyncthingUtils.rollArray(text.toString());
+        }
+    }
+
+    public final Action1<CharSequence> actionSetGlobalAnnounceServers = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setGlobalAnnounceServers(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getGlobalAnnounceServersError() {
+        return errorGlobalDiscoverServers;
+    }
+
+    public void setGlobalAnnounceServersError(String text) {
+        if (!StringUtils.equals(errorGlobalDiscoverServers, text)) {
+            errorGlobalDiscoverServers = text;
+            notifyChange(syncthing.android.BR.globalAnnounceServersError);
+        }
     }
 
     boolean validateGlobalDiscoveryServers(CharSequence text) {
@@ -146,12 +294,140 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
         return true;
     }
 
+    @Bindable
+    public String getGuiListenAddress() {
+        return guiConfig.address;
+    }
+
+    public void setGuiListenAddress(CharSequence text) {
+        if (validateGuiListenAddress(text)) {
+            guiConfig.address = text.toString();
+        }
+    }
+
+    public final Action1<CharSequence> actionSetGuiListenAddress = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setGuiListenAddress(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getGuiListenAddressError() {
+        return errorGuiListenAddress;
+    }
+
+    public void setGuiListenAddressError(String text) {
+        if (!StringUtils.equals(errorGuiListenAddress, text)) {
+            errorGuiListenAddress = text;
+            notifyChange(syncthing.android.BR.guiListenAddressError);
+        }
+    }
+
     boolean validateGuiListenAddress(CharSequence text) {
         if (!StringUtils.isEmpty(text)) {
             //TODO
             return false;
         }
         return true;
+    }
+
+    @Bindable
+    public String getGuiUser() {
+        return guiConfig.user;
+    }
+
+    public void setGuiUser(CharSequence text) {
+        guiConfig.user = StringUtils.isEmpty(text) ? "" : text.toString();
+    }
+
+    public final Action1<CharSequence> actionSetGuiUser = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setGuiUser(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getGuiPassword() {
+        return hiddenPass;
+    }
+
+    public void setGuiPassword(CharSequence text) {
+        if (StringUtils.isEmpty(text)) {
+            guiConfig.password = "";
+        } else if (!StringUtils.equals(hiddenPass, text)) {
+            guiConfig.password = text.toString();
+        }
+    }
+
+    public final Action1<CharSequence> actionSetGuiPassword = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setGuiPassword(charSequence);
+        }
+    };
+
+    @Bindable
+    public boolean isUseTLS() {
+        return guiConfig.useTLS;
+    }
+
+    public void setUseTLS(boolean enable) {
+        guiConfig.useTLS = enable;
+    }
+
+    public final Action1<Boolean> actionSetUseTLS = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setUseTLS(aBoolean);
+        }
+    };
+
+    @Bindable
+    public boolean isStartBrowser() {
+        return options.startBrowser;
+    }
+
+    public void setStartBrowser(boolean enable) {
+        options.startBrowser = enable;
+    }
+
+    public final Action1<Boolean> actionSetStartBrowser = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setStartBrowser(aBoolean);
+        }
+    };
+
+    @Bindable
+    public boolean isURAccepted() {
+        return options.urAccepted > 0;
+    }
+
+    public void setURAccepted(boolean enable) {
+        options.urAccepted = enable ? 1 : -1;
+    }
+
+    public final Action1<Boolean> actionSetURAccepted = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setURAccepted(aBoolean);
+        }
+    };
+
+    @Bindable
+    public String getApiKey() {
+        return guiConfig.apiKey;
+    }
+
+    public void setApiKey(String text) {
+        guiConfig.apiKey = text;
+    }
+
+    @Bindable
+    public boolean isHasClipboard() {
+        return !SyncthingUtils.isClipBoardSupported(appContext);
     }
 
     public void showApiKeyOverflow(final View btn) {
@@ -176,22 +452,37 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
     }
 
     public void copyApiKey(View btn) {
-        if (!hasView()) return;
-        SettingsScreenView v = getView();
-        SyncthingUtils.copyToClipboard(v.getContext(),
-                v.getContext().getString(R.string.api_key),
-                v.binding.editApikey.getText().toString());
+        SyncthingUtils.copyToClipboard(btn.getContext(),
+                btn.getContext().getString(R.string.api_key),
+                getApiKey());
     }
 
     public void regenApiKey(View btn) {
-        if (!hasView()) return;
-        SettingsScreenView v = getView();
         String key = SyncthingUtils.randomString(32);
         setApiKey(key);
         notifyChange(syncthing.android.BR.apiKey);
     }
 
     public void saveConfig(View btn) {
+        boolean invalid = false;
+        invalid |= errorListenAddress != null;
+        invalid |= errorGlobalDiscoverServers != null;
+        invalid |= errorGuiListenAddress != null;
+        if (invalid) {
+            dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                    .setTitle(R.string.input_error)
+                    .setMessage(R.string.input_error_message)
+                    .setPositiveButton(android.R.string.cancel, null)
+                    .setNegativeButton(R.string.save, (d,w) -> {
+                        saveConfig();
+                    })
+                    .create());
+        } else {
+            saveConfig();
+        }
+    }
+
+    private void saveConfig() {
         unsubscribe(saveSubscription);
         onSaveStart();
         final String deviceName = thisDevice.name;
@@ -211,158 +502,4 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
                     credentials.url, credentials.apiKey, credentials.caCert));
         }
     }
-
-    @Bindable
-    public String getDeviceName() {
-        return SyncthingUtils.getDisplayName(thisDevice);
-    }
-
-    public void setDeviceName(CharSequence deviceName) {
-        thisDevice.name = StringUtils.isEmpty(deviceName) ? "" : deviceName.toString();
-    }
-
-    @Bindable
-    public String getListenAddressText() {
-        return SyncthingUtils.unrollArray(options.listenAddress);
-    }
-
-    public void setListenAddress(CharSequence text) {
-        if (validateListenAddresses(text)) {
-            options.listenAddress = SyncthingUtils.rollArray(text.toString());
-        }
-    }
-
-    @Bindable
-    public String getMaxRecvKbps() {
-        return String.valueOf(options.maxRecvKbps);
-    }
-
-    public void setMaxRecvKpbs(CharSequence text) {
-        if (validateMaxRecv(text)) {
-            options.maxRecvKbps = Integer.valueOf(text.toString());
-        }
-    }
-
-    @Bindable
-    public String getMaxSendKbps() {
-        return String.valueOf(options.maxSendKbps);
-    }
-
-    public void setMaxSendKbps(CharSequence text) {
-        if (validateMaxSend(text)) {
-            options.maxSendKbps = Integer.valueOf(text.toString());
-        }
-    }
-
-    @Bindable
-    public boolean isUpnpEnabled() {
-        return options.upnpEnabled;
-    }
-
-    public void setUpnpEnabled(boolean enabled) {
-        options.upnpEnabled = enabled;
-    }
-
-    @Bindable
-    public boolean isLocalAnnounceEnabled() {
-        return options.localAnnounceEnabled;
-    }
-
-    public void setLocalAnnounceEnabled(boolean enabled) {
-        options.localAnnounceEnabled = enabled;
-    }
-
-    @Bindable
-    public boolean isGlobalAnnounceEnabled() {
-        return options.globalAnnounceEnabled;
-    }
-
-    public void setGlobalAnnounceEnabled(boolean enabled) {
-        options.globalAnnounceEnabled = enabled;
-        notifyChange(syncthing.android.BR.globalAnnounceEnabled);
-    }
-
-    @Bindable
-    public String getGlobalAnnounceServersText() {
-        return SyncthingUtils.unrollArray(options.globalAnnounceServers);
-    }
-
-    public void setGlobalAnnounceServers(CharSequence text) {
-        if (validateGlobalDiscoveryServers(text)) {
-            options.globalAnnounceServers = SyncthingUtils.rollArray(text.toString());
-        }
-    }
-
-    @Bindable
-    public String getGuiListenAddress() {
-        return guiConfig.address;
-    }
-
-    public void setGuiListenAddress(CharSequence text) {
-        if (validateGuiListenAddress(text)) {
-            guiConfig.address = text.toString();
-        }
-    }
-
-    @Bindable
-    public String getGuiUser() {
-        return guiConfig.user;
-    }
-
-    public void setGuiUser(CharSequence text) {
-        guiConfig.user = StringUtils.isEmpty(text) ? "" : text.toString();
-    }
-
-    @Bindable
-    public String getGuiPassword() {
-        return hiddenPass;
-    }
-
-    public void setGuiPassword(CharSequence text) {
-        if (!StringUtils.equals(hiddenPass, text)) {
-            guiConfig.password = StringUtils.isEmpty(text) ? "" : text.toString();
-        }
-    }
-
-    @Bindable
-    public boolean isUseTLS() {
-        return guiConfig.useTLS;
-    }
-
-    public void setUseTLS(boolean enable) {
-        guiConfig.useTLS = enable;
-    }
-
-    @Bindable
-    public boolean isStartBrowser() {
-        return options.startBrowser;
-    }
-
-    public void setStartBrowser(boolean enable) {
-        options.startBrowser = enable;
-    }
-
-    @Bindable
-    public boolean isURAccepted() {
-        return options.urAccepted > 0;
-    }
-
-    public void setURAccepted(boolean enable) {
-        options.urAccepted = enable ? 1 : -1;
-    }
-
-    @Bindable
-    public String getApiKey() {
-        return guiConfig.apiKey;
-    }
-
-    public void setApiKey(String text) {
-        guiConfig.apiKey = text;
-    }
-
-    @Bindable
-    public boolean isHasClipboard() {
-        return !SyncthingUtils.isClipBoardSupported(appContext);
-    }
-
 }

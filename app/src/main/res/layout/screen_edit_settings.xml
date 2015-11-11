@@ -20,14 +20,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="syncthing.android.ui.sessionsettings.SettingsScreenViewBinding">
+    <data class="syncthing.android.ui.sessionsettings.SettingsViewBinding">
         <import type="android.view.View"/>
         <variable name="presenter" type="syncthing.android.ui.sessionsettings.SettingsPresenter"/>
     </data>
-    <syncthing.android.ui.sessionsettings.SettingsScreenView
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:onViewDetachedFromWindow="@{presenter.dropViewListener}">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -72,6 +72,7 @@
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_protocol_listen_addr"
                     android:text="@{presenter.deviceName}"
+                    app:textChanges="@{presenter.actionSetDeviceName}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -80,14 +81,24 @@
                     android:text="@string/sync_protocol_listen_addresses"
                     style="@style/session.edit.FieldHeader"/>
 
-                <EditText
-                    android:id="@+id/edit_protocol_listen_addr"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_edit_protocol_listen_addr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:nextFocusDown="@+id/edit_incoming_rate_limit"
-                    android:text="@{presenter.listenAddressText}"
-                    style="@style/session.edit.EditText"/>
+                    app:errorEnabled="true"
+                    app:error="@{presenter.listenAddressError}">
+
+                    <EditText
+                        android:id="@+id/edit_protocol_listen_addr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edit_incoming_rate_limit"
+                        android:text="@{presenter.listenAddressText}"
+                        app:textChanges="@{presenter.actionSetListenAddress}"
+                        style="@style/session.edit.EditText"/>
+
+                </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -102,6 +113,7 @@
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_outgoing_rate_limit"
                     android:text="@{presenter.maxRecvKbps}"
+                    app:textChanges="@{presenter.actionSetMaxRecvKbps}"
                     style="@style/session.edit.EditText.Number"/>
 
                 <TextView
@@ -117,6 +129,7 @@
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_global_discovery_server"
                     android:text="@{presenter.maxSendKbps}"
+                    app:textChanges="@{presenter.actionSetMaxSendKbps}"
                     style="@style/session.edit.EditText.Number"/>
 
                 <CheckBox
@@ -125,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/enable_upnp"
                     android:checked="@{presenter.upnpEnabled}"
+                    app:checkedChanges="@{presenter.actionSetUpnpEnabled}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -133,6 +147,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/local_discovery"
                     android:checked="@{presenter.localAnnounceEnabled}"
+                    app:checkedChanges="@{presenter.actionSetLocalAnnounceEnabled}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -141,6 +156,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/global_discovery"
                     android:checked="@{presenter.globalAnnounceEnabled}"
+                    app:checkedChanges="@{presenter.actionSetGlobalAnnounceEnabled}"
                     style="@style/session.edit.Checkbox"/>
 
                 <TextView
@@ -149,15 +165,25 @@
                     android:text="@string/global_discovery_server"
                     style="@style/session.edit.FieldHeader"/>
 
-                <EditText
-                    android:id="@+id/edit_global_discovery_server"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_global_discovery_server"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:nextFocusDown="@+id/edit_gui_listen_addr"
-                    android:text="@{presenter.globalAnnounceServersText}"
-                    android:enabled="@{presenter.globalAnnounceEnabled}"
-                    style="@style/session.edit.EditText"/>
+                    app:errorEnabled="true"
+                    app:error="@{presenter.globalAnnounceServersError}">
+
+                    <EditText
+                        android:id="@+id/edit_global_discovery_server"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edit_gui_listen_addr"
+                        android:text="@{presenter.globalAnnounceServersText}"
+                        android:enabled="@{presenter.globalAnnounceEnabled}"
+                        app:textChanges="@{presenter.actionSetGlobalAnnounceServers}"
+                        style="@style/session.edit.EditText"/>
+
+                </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -165,14 +191,24 @@
                     android:text="@string/gui_listen_addresses"
                     style="@style/session.edit.FieldHeader"/>
 
-                <EditText
-                    android:id="@+id/edit_gui_listen_addr"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_gui_listen_addr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:nextFocusDown="@+id/edit_gui_user"
-                    android:text="@{presenter.guiListenAddress}"
-                    style="@style/session.edit.EditText"/>
+                    app:errorEnabled="true"
+                    app:error="@{presenter.guiListenAddressError}">
+
+                    <EditText
+                        android:id="@+id/edit_gui_listen_addr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edit_gui_user"
+                        android:text="@{presenter.guiListenAddress}"
+                        app:textChanges="@{presenter.actionSetGuiListenAddress}"
+                        style="@style/session.edit.EditText"/>
+
+                </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -187,6 +223,7 @@
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/edit_gui_pass"
                     android:text="@{presenter.guiUser}"
+                    app:textChanges="@{presenter.actionSetGuiUser}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -200,6 +237,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@{presenter.guiPassword}"
+                    app:textChanges="@{presenter.actionSetGuiPassword}"
                     style="@style/session.edit.EditText.Password"/>
 
                 <CheckBox
@@ -208,6 +246,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/use_https_for_gui"
                     android:checked="@{presenter.useTLS}"
+                    app:checkedChanges="@{presenter.actionSetUseTLS}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -216,6 +255,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/start_browser"
                     android:checked="@{presenter.startBrowser}"
+                    app:checkedChanges="@{presenter.actionSetStartBrowser}"
                     style="@style/session.edit.Checkbox"/>
 
                 <CheckBox
@@ -224,6 +264,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/anonymous_usage_reporting"
                     android:checked="@{presenter.URAccepted}"
+                    app:checkedChanges="@{presenter.actionSetURAccepted}"
                     style="@style/session.edit.Checkbox"/>
 
                 <TextView
@@ -288,5 +329,5 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-    </syncthing.android.ui.sessionsettings.SettingsScreenView>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

@@ -31,5 +31,4 @@ import syncthing.android.ui.ManageActivityComponent;
         modules = SettingsModule.class
 )
 public interface SettingsComponent extends EditPresenterBindingComponent {
-    void inject(SettingsScreenView view);
 }
