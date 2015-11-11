@@ -20,12 +20,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="syncthing.android.ui.sessionsettings.EditIgnoresScreenViewBinding">
+    <data class="syncthing.android.ui.sessionsettings.EditIgnoresViewBinding">
+        <import type="android.view.View"/>
         <variable name="presenter" type="syncthing.android.ui.sessionsettings.EditIgnoresPresenter"/>
     </data>
-    <syncthing.android.ui.sessionsettings.EditIgnoresScreenView
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:onViewDetachedFromWindow="@{presenter.dropViewListener}">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -72,6 +74,7 @@
                         android:id="@+id/desc_filename"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@{presenter.ignoresPath}"
                         style="@style/session.edit.TextCode"
                         tools:text="/sdcard/stuff"/>
 
@@ -83,12 +86,29 @@
                     android:text="@string/enter_ignore_patterns_one_per_line"
                     style="@style/session.edit.FieldHeader"/>
 
-                <EditText
-                    android:id="@+id/edit_ignores"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="240dp"
-                    style="@style/session.edit.EditTextMultiLine"/>
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edit_ignores"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="240dp"
+                        android:text="@{presenter.ignoresText}"
+                        android:enabled="@{presenter.ignoresEnabled}"
+                        app:textChanges="@{presenter.actionSetIgnores}"
+                        style="@style/session.edit.EditTextMultiLine"/>
+
+                    <ProgressBar
+                        android:id="@+id/loading_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="@{presenter.ignoresEnabled ? View.GONE : View.VISIBLE}"
+                        style="?android:progressBarStyle"/>
+
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -144,16 +164,7 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:orientation="horizontal"
-                    android:gravity="end"
                     style="@style/mtrl.ButtonBar">
-
-                    <Button
-                        android:id="@+id/btn_cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@android:string/cancel"
-                        android:onClick="@{presenter.dismissDialog}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button
                         android:id="@+id/btn_help"
@@ -161,6 +172,19 @@
                         android:layout_height="wrap_content"
                         android:text="@string/help"
                         android:onClick="@{presenter.openHelp}"
+                        style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@android:string/cancel"
+                        android:onClick="@{presenter.dismissDialog}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <Button
@@ -177,5 +201,5 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-    </syncthing.android.ui.sessionsettings.EditIgnoresScreenView>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

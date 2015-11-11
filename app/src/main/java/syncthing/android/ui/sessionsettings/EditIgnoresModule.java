@@ -17,6 +17,8 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.databinding.DataBindingUtil;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
 import org.opensilk.common.core.dagger2.ScreenScope;
@@ -49,7 +51,10 @@ public class EditIgnoresModule {
         return new EditPresenterBinding() {
             @Override
             public void bindView(View view) {
-
+                syncthing.android.ui.sessionsettings.EditIgnoresViewBinding binding = DataBindingUtil.bind(view, presenter);
+                presenter.takeView((CoordinatorLayout) view);
+                binding.setPresenter(presenter);
+                binding.executePendingBindings();
             }
         };
     }

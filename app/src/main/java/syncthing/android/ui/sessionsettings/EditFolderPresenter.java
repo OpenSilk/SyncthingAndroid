@@ -193,6 +193,9 @@ public class EditFolderPresenter extends EditPresenter<CoordinatorLayout>
 
     @Override
     public ActionBarConfig getToolbarConfig() {
+        if (isAdd) {
+            return super.getToolbarConfig();
+        }
         return super.getToolbarConfig().buildUpon()
                 .setMenuConfig(ActionBarMenuConfig.builder()
                 .withMenu(R.menu.folder_ignores)

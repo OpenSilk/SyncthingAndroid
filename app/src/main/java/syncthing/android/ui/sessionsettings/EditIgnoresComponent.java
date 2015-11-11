@@ -31,5 +31,4 @@ import syncthing.android.ui.ManageActivityComponent;
         modules = EditIgnoresModule.class
 )
 public interface EditIgnoresComponent extends EditPresenterBindingComponent {
-    void inject(EditIgnoresScreenView viewe);
 }

@@ -19,8 +19,10 @@ package syncthing.android.ui.sessionsettings;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,20 +34,19 @@ import org.opensilk.common.ui.mortar.ToolbarOwner;
 import javax.inject.Inject;
 
 import rx.Subscription;
+import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.api.SessionManager;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.Ignores;
-import syncthing.api.model.SystemInfo;
 
 /**
  * Created by drew on 3/23/15.
  */
 @ScreenScope
-public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
+public class EditIgnoresPresenter extends EditPresenter<CoordinatorLayout> {
 
     Subscription initSubscription;
-    boolean isInitialized;
     Ignores ignores;
 
     @Inject
@@ -68,15 +69,9 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        if (savedInstanceState != null) {
-            isInitialized = savedInstanceState.getBoolean("initd");
+        if (!wasPreviouslyLoaded && savedInstanceState != null) {
             ignores = (Ignores) savedInstanceState.getSerializable("ignores");
-        }
-        if (!isInitialized && ignores != null) {
-            FolderConfig f = controller.getFolder(folderId);
-            SystemInfo s = controller.getSystemInfo();
-            getView().initialize(f, s, ignores);
-        } else {
+        } else if (!wasPreviouslyLoaded) {
             getIgnores();
         }
     }
@@ -84,48 +79,69 @@ public class EditIgnoresPresenter extends EditPresenter<EditIgnoresScreenView> {
     @Override
     protected void onSave(Bundle outState) {
         super.onSave(outState);
-        outState.putBoolean("initd", isInitialized);
         outState.putSerializable("ignores", ignores);
     }
 
     void getIgnores() {
         initSubscription = controller.getIgnores(folderId,
                 ignrs -> {
-                    if (hasView()) {
-                        FolderConfig f = controller.getFolder(folderId);
-                        SystemInfo s = controller.getSystemInfo();
-                        getView().initialize(f, s, ignrs);
-                        isInitialized = true;
-                    } else {
-                        isInitialized = false;
-                        ignores = ignrs;
-                    }
+                    ignores = ignrs;
+                    notifyChange(syncthing.android.BR.ignoresEnabled);
+                    notifyChange(syncthing.android.BR.ignoresText);
+                    notifyChange(syncthing.android.BR.ignoresPath);
                 },
                 t -> {
                     //TODO
-                    if (hasView()) {
-
-                    }
                 }
         );
     }
+
+    @Bindable
+    public boolean isIgnoresEnabled() {
+        return ignores != null;
+    }
+
+    @Bindable
+    public String getIgnoresPath() {
+        FolderConfig f = controller.getFolder(folderId);
+        if (f != null) {
+            return f.path + ".stignore";
+        } else {
+            return ".stignore";
+        }
+    }
+
+    @Bindable
+    public String getIgnoresText() {
+        if (ignores != null) {
+            return StringUtils.join(ignores.ignore, "\n");
+        } else {
+            return null;
+        }
+    }
+
+    public void setIgnores(CharSequence text, boolean notify) {
+        if (isIgnoresEnabled() && validateIgnores(text)) {
+            ignores.ignore = StringUtils.split(StringUtils.isEmpty(text) ? "" : text.toString(), "\n");
+        }
+    }
+
+    public Action1<CharSequence> actionSetIgnores = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setIgnores(charSequence, false);
+        }
+    };
 
     boolean validateIgnores(CharSequence raw) {
         return true;//todo
     }
 
     public void saveIgnores(View btn) {
-        if (!hasView()) return;
-        EditIgnoresScreenView v = getView();
-        if (!validateIgnores(v.binding.editIgnores.getText().toString())) {
-            return;
-        }
-        CharSequence raw = v.binding.editIgnores.getText().toString();
-        Ignores i = new Ignores();
-        i.ignore = StringUtils.split(raw.toString(), "\n");
+        if (!isIgnoresEnabled()) return;
         unsubscribe(saveSubscription);
         onSaveStart();
-        saveSubscription = controller.editIgnores(folderId, i,
+        saveSubscription = controller.editIgnores(folderId, ignores,
                 ignrs -> {},
                 this::onSavefailed,
                 this::onSaveSuccessfull
