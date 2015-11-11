@@ -241,28 +241,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
 
     public void saveDevice(View btn) {
         if (!hasView()) return;
-        boolean invalid = false;
-        if (!validateDeviceId(getDeviceID(), true)) {
-            invalid = true;
-        }
-        if (!validateAddresses(getAddressesText())) {
-            invalid = true;
-        }
-        if (invalid) {
-            dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
-                    .setTitle(R.string.input_error)
-                    .setMessage(R.string.input_error_message)
-                    .setNegativeButton(R.string.save, (dialog, which) -> {
-                        saveDevice();
-                    })
-                    .setPositiveButton(android.R.string.cancel, null)
-                    .create());
-        } else {
-            saveDevice();
-        }
-    }
-
-    private void saveDevice() {
+        //TODO check if any input fields are invalid
         unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editDevice(originalDevice, sharedFolders,

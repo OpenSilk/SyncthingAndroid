@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.design.widget.CoordinatorLayout;
@@ -25,17 +24,17 @@ import android.util.AttributeSet;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Filter;
-import android.widget.RadioGroup;
 
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
-import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -43,9 +42,8 @@ import rx.subscriptions.CompositeSubscription;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.api.model.DeviceConfig;
-import syncthing.api.model.FolderConfig;
-import syncthing.api.model.FolderDeviceConfig;
-import syncthing.api.model.SystemInfo;
+import syncthing.api.model.PullOrder;
+import syncthing.api.model.VersioningType;
 
 /**
  * Created by drew on 3/16/15.
@@ -72,8 +70,13 @@ public class EditFolderScreenView extends CoordinatorLayout {
         super.onFinishInflate();
         if (!isInEditMode()) {
             binding = DataBindingUtil.bind(this);
-            binding.setPresenter(mPresenter);
             mPresenter.takeView(this);
+            binding.setPresenter(mPresenter);
+            binding.editFolderPath.setAdapter(editFolderPathAdapter);
+//            binding.descFolderPath.setText(binding.descFolderPath.getText() + " " + systemInfo.tilde);//TODO Hacky
+            binding.executePendingBindings();
+            subscribeChanges();
+            addShareDevices();
         }
     }
 
@@ -82,8 +85,6 @@ public class EditFolderScreenView extends CoordinatorLayout {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (!isInEditMode()) {
-            subscribeChanges();
-            mPresenter.takeView(this);
             mToolbarOwner.attachToolbar(binding.toolbar);
             mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
@@ -100,248 +101,91 @@ public class EditFolderScreenView extends CoordinatorLayout {
     void subscribeChanges() {
         subscriptions = new CompositeSubscription(
                 RxTextView.textChanges(binding.editFolderId)
-                        .subscribe(this::onFolderIdChanged),
+                        .subscribe(mPresenter::setFolderId),
+                RxTextView.textChanges(binding.editFolderPath)
+                        .subscribe(mPresenter::setFolderPath),
                 RxTextView.textChanges(binding.editRescanInterval)
-                        .subscribe(this::onRescanIntrvlChanged),
-                RxTextView.textChanges(binding.editTrashcanVersioningKeep)
-                        .subscribe(this::onTrashCanVerKeepChanged),
-                RxTextView.textChanges(binding.editSimpleVersioningKeep)
-                        .subscribe(this::onSimpleVerKeepChanged),
-                RxTextView.textChanges(binding.editStaggeredMaxAge)
-                        .subscribe(this::onStaggeredMaxAgeChange),
-                RxTextView.textChanges(binding.editExternalVersioningCommand)
-                        .subscribe(this::onExternalVerCmdChange),
+                        .subscribe(mPresenter::setRescanInterval),
+                RxCompoundButton.checkedChanges(binding.checkFolderMaster)
+                        .subscribe(mPresenter::setReadOnly),
+                RxCompoundButton.checkedChanges(binding.checkIgnorePermissions)
+                        .subscribe(mPresenter::setIgnorePerms),
+                RxRadioGroup.checkedChanges(binding.radioGroupPullorder)
+                        .subscribe(this::onPullOrderCheckedChanged),
                 RxRadioGroup.checkedChanges(binding.radioGroupVersioning)
-                        .subscribe(this::onVersioningCheckedChanged)
+                        .subscribe(this::onVersioningCheckedChanged),
+                RxTextView.textChanges(binding.editTrashcanVersioningKeep)
+                        .subscribe(mPresenter::setTrashCanParamCleanDays),
+                RxTextView.textChanges(binding.editSimpleVersioningKeep)
+                        .subscribe(mPresenter::setSimpleParamKeep),
+                RxTextView.textChanges(binding.editStaggeredMaxAge)
+                        .subscribe(mPresenter::setStaggeredParamMaxAge),
+                RxTextView.textChanges(binding.editStaggeredPath)
+                        .subscribe(mPresenter::setStaggeredParamPath),
+                RxTextView.textChanges(binding.editExternalVersioningCmd)
+                        .subscribe(mPresenter::setExternalParamCmd)
         );
     }
 
-    void initialize(List<DeviceConfig> devices, SystemInfo systemInfo, boolean fromsavedstate) {
-        if (fromsavedstate) return;
-        boolean isAdd = mPresenter.isAdd;
-        FolderConfig folder = mPresenter.origFolder;
-        if (!isAdd) {
-            binding.editFolderId.setText(folder.id);
-            binding.editFolderId.setEnabled(false);
-            binding.descFolderId.setVisibility(GONE);
-            binding.editFolderPath.setText(folder.path);
-            binding.editFolderPath.setEnabled(false);
-            binding.descFolderPath.setVisibility(GONE);
-            binding.editRescanInterval.setText(String.valueOf(folder.rescanIntervalS));
-            binding.checkFolderMaster.setChecked(folder.readOnly);
-            binding.checkIgnorePermissions.setChecked(folder.ignorePerms);
-
-            switch (folder.order) {
-                case ALPHABETIC:
-                    binding.radioGroupPullorder.check(R.id.radio_pullorder_alphabetic);
-                    break;
-                case SMALLESTFIRST:
-                    binding.radioGroupPullorder.check(R.id.radio_pullorder_smallestfirst);
-                    break;
-                case LARGESTFIRST:
-                    binding.radioGroupPullorder.check(R.id.radio_pullorder_largestfirst);
-                    break;
-                case OLDESTFIRST:
-                    binding.radioGroupPullorder.check(R.id.radio_pullorder_oldestfirst);
-                    break;
-                case NEWESTFIRST:
-                    binding.radioGroupPullorder.check(R.id.radio_pullorder_newestfirst);
-                    break;
-                case RANDOM:
-                default:
-                    binding.radioGroupPullorder.check(R.id.radio_pullorder_random);
-                    break;
-            }
-
-            switch (folder.versioning.type) {
-                case NONE:
-                    binding.radioGroupVersioning.check(R.id.radio_no_versioning);
-                    break;
-                case TRASHCAN:
-                    binding.radioGroupVersioning.check(R.id.radio_trashcan_versioning);
-                    binding.editTrashcanVersioningKeep.setText(folder.versioning.params.cleanoutDays);
-                    break;
-                case SIMPLE:
-                    binding.radioGroupVersioning.check(R.id.radio_simple_versioning);
-                    binding.editSimpleVersioningKeep.setText(folder.versioning.params.keep);
-                    break;
-                case STAGGERED:
-                    binding.radioGroupVersioning.check(R.id.radio_staggered_versioning);
-                    binding.editStaggeredMaxAge.setText(SyncthingUtils.secondsToDays(folder.versioning.params.maxAge));
-                    binding.editStaggeredPath.setText(folder.versioning.params.versionPath);
-                    break;
-                case EXTERNAL:
-                    binding.radioGroupVersioning.check(R.id.radio_external_versioning);
-                    binding.editExternalVersioningCommand.setText(folder.versioning.params.command);
-                    break;
-            }
-
-            binding.addWarning.setVisibility(GONE);
-        } else {
-            //Initialize with nice defaults
-            if (!StringUtils.isEmpty(folder.id)) {
-                //when adding new share folder id will already be set
-                binding.editFolderId.setText(folder.id);
-                binding.editFolderId.setEnabled(false);
-                binding.descFolderId.setVisibility(GONE);
-                binding.addWarning.setVisibility(GONE);
-            } else {
-                binding.addWarning.setVisibility(VISIBLE);
-            }
-            binding.editRescanInterval.setText(String.valueOf(folder.rescanIntervalS));
-            binding.editFolderPath.setText(systemInfo.tilde);
-            binding.editFolderPath.setAdapter(editFolderPathAdapter);
-            //TODO set ignore perms if running on android
-            binding.radioGroupPullorder.check(R.id.radio_pullorder_random);
-            binding.radioGroupVersioning.check(R.id.radio_no_versioning);
-            binding.editSimpleVersioningKeep.setText(folder.versioning.params.keep);
-            binding.editStaggeredMaxAge.setText(SyncthingUtils.secondsToDays(folder.versioning.params.maxAge));
-        }
-
-        binding.descFolderPath.setText(binding.descFolderPath.getText() + " " + systemInfo.tilde);//TODO Hacky
-
+    void addShareDevices() {
         binding.shareDevicesContainer.removeAllViews();
-        for (DeviceConfig device : devices) {
-            CheckBox checkBox = new DeviceCheckBox(getContext(), device);
-            checkBox.setText(SyncthingUtils.getDisplayName(device));
-            for (FolderDeviceConfig d : folder.devices) {
-                if (StringUtils.equals(d.deviceID, device.deviceID)) {
-                    checkBox.setChecked(true);
-                    break;
-                }
+        for (Map.Entry<String, Boolean> e : mPresenter.sharedDevices.entrySet()) {
+            final String id = e.getKey();
+            CheckBox checkBox = new CheckBox(getContext());
+            DeviceConfig device = mPresenter.controller.getDevice(id);
+            if (device == null) {
+                device = new DeviceConfig();
+                device.deviceID = id;
             }
+            checkBox.setText(SyncthingUtils.getDisplayName(device));
+            checkBox.setChecked(e.getValue());
+            subscriptions.add(RxCompoundButton.checkedChanges(checkBox)
+                    .subscribe(b -> {
+                        mPresenter.setDeviceShared(id, b);
+                    }));
             binding.shareDevicesContainer.addView(checkBox);
         }
-
-        binding.btnDelete.setVisibility(isAdd ? GONE : VISIBLE);
-//        binding.btnIgnorePtrn.setVisibility(isAdd ? GONE : VISIBLE);
-
     }
 
-    void onFolderIdChanged(CharSequence text) {
-        boolean isAdd = mPresenter.isAdd;
-        if (isAdd && !StringUtils.isEmpty(text)) {
-            mPresenter.validateFolderId(text.toString());
+    void onPullOrderCheckedChanged(int checkedId) {
+        switch (checkedId) {
+            case R.id.radio_pullorder_alphabetic:
+                mPresenter.setPullOrder(PullOrder.ALPHABETIC);
+                break;
+            case R.id.radio_pullorder_smallestfirst:
+                mPresenter.setPullOrder(PullOrder.SMALLESTFIRST);
+                break;
+            case R.id.radio_pullorder_largestfirst:
+                mPresenter.setPullOrder(PullOrder.LARGESTFIRST);
+                break;
+            case R.id.radio_pullorder_oldestfirst:
+                mPresenter.setPullOrder(PullOrder.OLDESTFIRST);
+                break;
+            case R.id.radio_pullorder_newestfirst:
+                mPresenter.setPullOrder(PullOrder.NEWESTFIRST);
+                break;
+            case R.id.radio_pullorder_random:
+                mPresenter.setPullOrder(PullOrder.RANDOM);
+                break;
         }
-    }
-
-    void notifyEmptyFolderId(boolean valid) {
-        binding.descFolderId.setVisibility(valid ? VISIBLE : GONE );
-        binding.errorFolderIdBlank.setVisibility(valid ? GONE : VISIBLE);
-        binding.errorFolderIdUnique.setVisibility(GONE);
-        binding.errorFolderIdInvalid.setVisibility(GONE);
-    }
-
-    void notifyInvalidFolderId(boolean valid) {
-        binding.descFolderId.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorFolderIdBlank.setVisibility(GONE);
-        binding.errorFolderIdUnique.setVisibility(GONE);
-        binding.errorFolderIdInvalid.setVisibility(valid ? GONE : VISIBLE);
-    }
-
-    void notifyNotUniqueFolderId(boolean valid) {
-        binding.descFolderId.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorFolderIdBlank.setVisibility(GONE);
-        binding.errorFolderIdUnique.setVisibility(valid ? GONE : VISIBLE);
-        binding.errorFolderIdInvalid.setVisibility(GONE);
-    }
-
-    void notifyEmptyFolderPath(boolean valid) {
-        binding.descFolderPath.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorFolderPathBlank.setVisibility(valid ? GONE : VISIBLE);
-    }
-
-    void onRescanIntrvlChanged(CharSequence text) {
-        if (!StringUtils.isEmpty(text)) {
-            mPresenter.validateRescanInterval(text.toString());
-        }
-    }
-
-    void notifyInvalidRescanInterval(boolean valid) {
-        binding.errorRescanInterval.setVisibility(valid ? GONE : VISIBLE);
-    }
-
-    void onTrashCanVerKeepChanged(CharSequence text) {
-        if (!StringUtils.isEmpty(text)) {
-            mPresenter.validateTrashCanVersioningKeep(text.toString());
-        }
-    }
-
-    void notifyTrashCanVersioningKeepInvalid(boolean valid) {
-        binding.descTrashcanVersioning.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorTrashcanVersioning.setVisibility(valid ? GONE : VISIBLE);
-    }
-
-    void onSimpleVerKeepChanged(CharSequence text) {
-        if (!StringUtils.isEmpty(text)) {
-            mPresenter.validateSimpleVersioningKeep(text.toString());
-        }
-    }
-
-    void notifySimpleVersioningKeepEmpty(boolean valid) {
-        binding.descSimpleVersioningKeep.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorSimpleVersioningKeepBlank.setVisibility(valid ? GONE : VISIBLE);
-        binding.errorSimpleVersioningKeepInvalid.setVisibility(GONE);
-    }
-
-    void notifySimpleVersioningKeepInvalid(boolean valid) {
-        binding.descSimpleVersioningKeep.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorSimpleVersioningKeepBlank.setVisibility(GONE);
-        binding.errorSimpleVersioningKeepInvalid.setVisibility(valid ? GONE : VISIBLE);
-    }
-
-    void onStaggeredMaxAgeChange(CharSequence text) {
-        if (!StringUtils.isEmpty(text)) {
-            mPresenter.validateStaggeredMaxAge(text.toString());
-        }
-    }
-
-    void notifyStaggeredMaxAgeInvalid(boolean valid) {
-        binding.descStaggeredMaxAge.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorStaggeredMaxAgeInvalid.setVisibility(valid ? GONE : VISIBLE);
-    }
-
-    void onExternalVerCmdChange(CharSequence text) {
-        mPresenter.validateExternalVersioningCmd(text.toString());
-    }
-
-    void notifyExternalVersioningCmdInvalid(boolean valid) {
-        binding.descExternalVersioningCommand.setVisibility(valid ? VISIBLE : GONE);
-        binding.errorExternalVersioningCommandBlank.setVisibility(valid ? GONE : VISIBLE);
     }
 
     void onVersioningCheckedChanged(int checkedId) {
         switch (checkedId) {
             case R.id.radio_trashcan_versioning:
-                binding.trashcanVersioningExtra.setVisibility(VISIBLE);
-                binding.simpleVersioningExtra.setVisibility(GONE);
-                binding.staggeredVersioningExtra.setVisibility(GONE);
-                binding.externalVersioningExtra.setVisibility(GONE);
+                mPresenter.setVersioningType(VersioningType.TRASHCAN);
                 break;
             case R.id.radio_simple_versioning:
-                binding.trashcanVersioningExtra.setVisibility(GONE);
-                binding.simpleVersioningExtra.setVisibility(VISIBLE);
-                binding.staggeredVersioningExtra.setVisibility(GONE);
-                binding.externalVersioningExtra.setVisibility(GONE);
+                mPresenter.setVersioningType(VersioningType.SIMPLE);
                 break;
             case R.id.radio_staggered_versioning:
-                binding.trashcanVersioningExtra.setVisibility(GONE);
-                binding.simpleVersioningExtra.setVisibility(GONE);
-                binding.staggeredVersioningExtra.setVisibility(VISIBLE);
-                binding.externalVersioningExtra.setVisibility(GONE);
+                mPresenter.setVersioningType(VersioningType.STAGGERED);
                 break;
             case R.id.radio_external_versioning:
-                binding.trashcanVersioningExtra.setVisibility(GONE);
-                binding.simpleVersioningExtra.setVisibility(GONE);
-                binding.staggeredVersioningExtra.setVisibility(GONE);
-                binding.externalVersioningExtra.setVisibility(VISIBLE);
+                mPresenter.setVersioningType(VersioningType.EXTERNAL);
                 break;
             case R.id.radio_no_versioning:
-            default:
-                binding.trashcanVersioningExtra.setVisibility(GONE);
-                binding.simpleVersioningExtra.setVisibility(GONE);
-                binding.staggeredVersioningExtra.setVisibility(GONE);
-                binding.externalVersioningExtra.setVisibility(GONE);
+                mPresenter.setVersioningType(VersioningType.NONE);
                 break;
         }
     }
@@ -388,12 +232,4 @@ public class EditFolderScreenView extends CoordinatorLayout {
         }
     }
 
-    @SuppressLint("ViewConstructor")
-    static class DeviceCheckBox extends CheckBox {
-        final DeviceConfig device;
-        DeviceCheckBox(Context context, DeviceConfig device) {
-            super(context);
-            this.device = device;
-        }
-    }
 }

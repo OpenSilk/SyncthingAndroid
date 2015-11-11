@@ -21,6 +21,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data class="syncthing.android.ui.sessionsettings.EditFolderScreenViewBinding">
+        <import type="android.view.View"/>
+        <import type="syncthing.api.model.PullOrder"/>
+        <import type="syncthing.api.model.VersioningType"/>
         <variable name="presenter" type="syncthing.android.ui.sessionsettings.EditFolderPresenter"/>
     </data>
     <syncthing.android.ui.sessionsettings.EditFolderScreenView
@@ -61,53 +64,41 @@
                     android:text="@string/folder_id"
                     style="@style/session.edit.FieldHeader"/>
 
-                <EditText
-                    android:id="@+id/edit_folder_id"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_folder_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:nextFocusDown="@+id/edit_folder_path"
-                    style="@style/session.edit.EditText"
-                    />
+                    app:errorEnabled="true">
+
+                    <EditText
+                        android:id="@+id/edit_folder_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edit_folder_path"
+                        android:enabled="@{(presenter.isAdd &amp;&amp; !presenter.newShare) ? true : false}"
+                        android:text="@{presenter.folderID}"
+                        style="@style/session.edit.EditText"
+                        />
+
+                </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:id="@+id/desc_folder_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/short_identifier_for_the_folder_must_be_the_same_on_all_cluster_devices"
+                    android:visibility="@{(presenter.isAdd &amp;&amp; !presenter.newShare) ? View.VISIBLE : View.GONE}"
                     style="@style/session.edit.FieldDescription"
                     />
-
-                <TextView
-                    android:id="@+id/error_folder_id_unique"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/the_folder_id_must_be_unique"
-                    style="@style/session.edit.FieldError"
-                    tools:visibility="visible"/>
-
-                <TextView
-                    android:id="@+id/error_folder_id_blank"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/the_folder_id_cannot_be_blank"
-                    style="@style/session.edit.FieldError"
-                    tools:visibility="visible"/>
-
-                <TextView
-                    android:id="@+id/error_folder_id_invalid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/the_folder_id_must_be_a_short_identifier_64_characters_or_less_consisting_of_letters_numbers_and_the_dot_dash_and_underscode_characters_only"
-                    style="@style/session.edit.FieldError"
-                    tools:visibility="visible"/>
 
                 <TextView
                     android:id="@+id/add_warning"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/when_adding_a_new_folder_keep_in_mind_that_the_folder_id_is_used_to_tie_folders_together_between_devices_they_are_case_sensitive_and_must_match_exactly_between_all_devices"
-                    style="@style/session.edit.Warning"/>
+                    android:visibility="@{(presenter.isAdd &amp;&amp; !presenter.newShare) ? View.VISIBLE : View.GONE}"
+                    style="@style/session.edit.FieldDescription"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -122,15 +113,25 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/edit_folder_path"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_folder_path"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:nextFocusDown="@+id/edit_rescan_interval"
-                        style="@style/session.edit.EditText"
-                        />
+                        app:errorEnabled="true">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/edit_folder_path"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/edit_rescan_interval"
+                            android:enabled="@{presenter.isAdd}"
+                            android:text="@{presenter.folderPath}"
+                            style="@style/session.edit.EditText"
+                            />
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <ImageButton
                         android:id="@+id/edit_folder_path_picker_btn"
@@ -140,26 +141,20 @@
                         android:src="@drawable/ic_folder_grey600_36dp"
                         android:scaleType="centerInside"
                         android:onClick="@{presenter.openFolderPicker}"
+                        android:visibility="@{presenter.isAdd ? View.VISIBLE : View.GONE}"
+                        android:contentDescription="@string/show_file_picker"
                         style="?android:borderlessButtonStyle"
                         />
 
                 </LinearLayout>
-
 
                 <TextView
                     android:id="@+id/desc_folder_path"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for"
+                    android:visibility="@{presenter.isAdd ? View.VISIBLE : View.GONE}"
                     style="@style/session.edit.FieldDescription"/>
-
-                <TextView
-                    android:id="@+id/error_folder_path_blank"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/the_folder_path_cannot_be_blank"
-                    style="@style/session.edit.FieldError"
-                    tools:visibility="visible"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -167,26 +162,28 @@
                     android:text="@string/rescan_interval"
                     style="@style/session.edit.FieldHeader"/>
 
-                <EditText
-                    android:id="@+id/edit_rescan_interval"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_rescan_interval"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/session.edit.EditText.Number"
-                    />
+                    app:errorEnabled="true">
 
-                <TextView
-                    android:id="@+id/error_rescan_interval"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/the_rescan_interval_must_be_a_nonnegative_number_of_seconds"
-                    style="@style/session.edit.FieldError"
-                    tools:visiblility="visible"/>
+                    <EditText
+                        android:id="@+id/edit_rescan_interval"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{presenter.rescanInterval}"
+                        style="@style/session.edit.EditText.Number"
+                        />
+
+                </android.support.design.widget.TextInputLayout>
 
                 <CheckBox
                     android:id="@+id/check_folder_master"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/folder_master"
+                    android:checked="@{presenter.readOnly}"
                     style="@style/session.edit.Checkbox"/>
 
                 <TextView
@@ -200,6 +197,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/ignore_permissions"
+                    android:checked="@{presenter.ignorePerms}"
                     style="@style/session.edit.Checkbox"
                     />
 
@@ -224,36 +222,42 @@
                         android:id="@+id/radio_pullorder_random"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.pullOrder == PullOrder.RANDOM}"
                         android:text="@string/random"/>
 
                     <RadioButton
                         android:id="@+id/radio_pullorder_alphabetic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.pullOrder == PullOrder.ALPHABETIC}"
                         android:text="@string/alphabetic"/>
 
                     <RadioButton
                         android:id="@+id/radio_pullorder_smallestfirst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.pullOrder == PullOrder.SMALLESTFIRST}"
                         android:text="@string/smallest_first"/>
 
                     <RadioButton
                         android:id="@+id/radio_pullorder_largestfirst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.pullOrder == PullOrder.LARGESTFIRST}"
                         android:text="@string/largest_first"/>
 
                     <RadioButton
                         android:id="@+id/radio_pullorder_oldestfirst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.pullOrder == PullOrder.OLDESTFIRST}"
                         android:text="@string/oldest_first"/>
 
                     <RadioButton
                         android:id="@+id/radio_pullorder_newestfirst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.pullOrder == PullOrder.NEWESTFIRST}"
                         android:text="@string/newest_first"/>
 
                 </RadioGroup>
@@ -273,30 +277,35 @@
                         android:id="@+id/radio_no_versioning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.versioningType == VersioningType.NONE}"
                         android:text="@string/no_file_versioning"/>
 
                     <RadioButton
                         android:id="@+id/radio_trashcan_versioning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.versioningType == VersioningType.TRASHCAN}"
                         android:text="@string/trash_can_file_versioning"/>
 
                     <RadioButton
                         android:id="@+id/radio_simple_versioning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.versioningType == VersioningType.SIMPLE}"
                         android:text="@string/simple_file_versioning"/>
 
                     <RadioButton
                         android:id="@+id/radio_staggered_versioning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.versioningType == VersioningType.STAGGERED}"
                         android:text="@string/staggered_file_versioning"/>
 
                     <RadioButton
                         android:id="@+id/radio_external_versioning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="@{presenter.versioningType == VersioningType.EXTERNAL}"
                         android:text="@string/external_file_versioning"/>
 
                 </RadioGroup>
@@ -306,7 +315,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="@{presenter.versioningType == VersioningType.TRASHCAN ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible">
 
                     <TextView
@@ -326,17 +335,27 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <EditText
-                            android:id="@+id/edit_trashcan_versioning_keep"
-                            android:layout_width="match_parent"
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_trashcan_versioning_keep"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="0"
-                            style="@style/session.edit.EditText.Number"/>
+                            app:errorEnabled="true">
+
+                            <EditText
+                                android:id="@+id/edit_trashcan_versioning_keep"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@{presenter.trashCanParams.cleanoutDays}"
+                                style="@style/session.edit.EditText.Number"/>
+
+                        </android.support.design.widget.TextInputLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/days"/>
+                            android:text="@string/days"
+                            android:layout_gravity="center_vertical"/>
 
                     </LinearLayout>
 
@@ -347,15 +366,6 @@
                         android:text="@string/the_number_of_days_to_keep_files_in_the_trash_can_zero_means_forever"
                         style="@style/session.edit.FieldDescription" />
 
-                    <TextView
-                        android:id="@+id/error_trashcan_versioning"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/the_number_of_days_must_be_a_number_and_cannot_be_blank"
-                        android:visibility="gone"
-                        style="@style/session.edit.FieldError"
-                        tools:visibility="visible"/>
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -363,7 +373,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="@{presenter.versioningType == VersioningType.SIMPLE ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible">
 
                     <TextView
@@ -378,11 +388,20 @@
                         android:text="@string/keep_versions"
                         style="@style/session.edit.FieldHeader"/>
 
-                    <EditText
-                        android:id="@+id/edit_simple_versioning_keep"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_simple_versioning_keep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/session.edit.EditText.Number"/>
+                        app:errorEnabled="true">
+
+                        <EditText
+                            android:id="@+id/edit_simple_versioning_keep"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{presenter.simpleParams.keep}"
+                            style="@style/session.edit.EditText.Number"/>
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <TextView
                         android:id="@+id/desc_simple_versioning_keep"
@@ -391,22 +410,6 @@
                         android:text="@string/the_number_of_old_versions_to_keep_per_file"
                         style="@style/session.edit.FieldDescription"/>
 
-                    <TextView
-                        android:id="@+id/error_simple_versioning_keep_blank"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/the_number_of_versions_must_be_a_number_and_cannot_be_blank"
-                        style="@style/session.edit.FieldError"
-                        tools:visibility="visible"/>
-
-                    <TextView
-                        android:id="@+id/error_simple_versioning_keep_invalid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/you_must_keep_at_least_one_version"
-                        style="@style/session.edit.FieldError"
-                        tools:visibility="visible"/>
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -414,7 +417,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="@{presenter.versioningType == VersioningType.STAGGERED ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible">
 
                     <TextView
@@ -442,13 +445,22 @@
                         android:text="@string/maximum_age"
                         style="@style/session.edit.FieldHeader"/>
 
-                    <EditText
-                        android:id="@+id/edit_staggered_max_age"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_staggered_max_age"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:nextFocusDown="@+id/edit_staggered_path"
-                        style="@style/session.edit.EditText.Number"/>
+                        app:errorEnabled="true">
+
+                        <EditText
+                            android:id="@+id/edit_staggered_max_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/edit_staggered_path"
+                            android:text="@{presenter.staggeredParamsMaxAge}"
+                            style="@style/session.edit.EditText.Number"/>
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <TextView
                         android:id="@+id/desc_staggered_max_age"
@@ -456,14 +468,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever"
                         style="@style/session.edit.FieldDescription"/>
-
-                    <TextView
-                        android:id="@+id/error_staggered_max_age_invalid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/the_maximum_age_must_be_a_number_and_cannot_be_blank"
-                        style="@style/session.edit.FieldError"
-                        tools:visibility="visible"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -475,6 +479,7 @@
                         android:id="@+id/edit_staggered_path"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@{presenter.staggeredParams.versionPath}"
                         style="@style/session.edit.EditText"/>
 
                     <TextView
@@ -490,7 +495,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="@{presenter.versioningType == VersioningType.EXTERNAL ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible">
 
                     <TextView
@@ -505,14 +510,23 @@
                         android:text="@string/command"
                         style="@style/session.edit.FieldHeader"/>
 
-                    <EditText
-                        android:id="@+id/edit_external_versioning_command"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_external_versioning_cmd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/session.edit.EditText"/>
+                        app:errorEnabled="true">
+
+                        <EditText
+                            android:id="@+id/edit_external_versioning_cmd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{presenter.externalParams.command}"
+                            style="@style/session.edit.EditText"/>
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <TextView
-                        android:id="@+id/desc_external_versioning_command"
+                        android:id="@+id/desc_external_versioning_cmd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/the_first_command_line_parameter_is_the_folder_path_and_the_second_parameter_is_the_relative_path_in_the_folder"
@@ -560,6 +574,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/remove"
                         android:onClick="@{presenter.deleteFolder}"
+                        android:visibility="@{presenter.isAdd ? View.GONE : View.VISIBLE}"
                         style="@style/mtrl.ButtonBarButton.Small"/>
 
                     <android.support.v4.widget.Space
