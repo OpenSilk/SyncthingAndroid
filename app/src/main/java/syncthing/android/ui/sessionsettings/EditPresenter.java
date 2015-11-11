@@ -22,11 +22,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.databinding.PropertyChangeRegistry;
 import android.databinding.adapters.ViewBindingAdapter;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import org.opensilk.common.core.rx.RxUtils;
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogPresenter;
@@ -37,16 +37,18 @@ import mortar.ViewPresenter;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 import syncthing.android.R;
 import syncthing.api.Credentials;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
+import timber.log.Timber;
 
 /**
  * Created by drew on 3/23/15.
  */
-public class EditPresenter<V extends View> extends ViewPresenter<V> implements android.databinding.Observable {
+public class EditPresenter<V extends View> extends ViewPresenter<V> implements android.databinding.Observable, BindingSubscriptionsHolder {
 
     protected final SessionManager manager;
     protected final SessionController controller;
@@ -59,7 +61,8 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
     protected final Credentials credentials;
     protected final ToolbarOwner toolbarOwner;
 
-    protected final PropertyChangeRegistry mRegistry = new PropertyChangeRegistry();
+    protected final PropertyChangeRegistry registry = new PropertyChangeRegistry();
+    protected CompositeSubscription bindingSubscriptions;
     protected Subscription saveSubscription;
     protected int titleRes;
     protected boolean wasPreviouslyLoaded;
@@ -148,19 +151,23 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
                 .setTitle(titleRes).build();
     }
 
-
     @Override
     public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
-        mRegistry.add(callback);
+        registry.add(callback);
     }
 
     @Override
     public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
-        mRegistry.remove(callback);
+        registry.remove(callback);
     }
 
     protected void notifyChange(int val) {
-        mRegistry.notifyChange(this, val);
+        registry.notifyChange(this, val);
+    }
+
+    @Override
+    public CompositeSubscription bindingSubscriptions() {
+        return (bindingSubscriptions != null) ? bindingSubscriptions : (bindingSubscriptions = new CompositeSubscription());
     }
 
     public final ViewBindingAdapter.OnViewAttachedToWindow toolbarAttachedListener =
@@ -179,6 +186,17 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
                 public void onViewDetachedFromWindow(View v) {
                     Toolbar toolbar = (Toolbar) v;
                     toolbarOwner.detachToolbar(toolbar);
+                }
+            };
+
+    public final ViewBindingAdapter.OnViewDetachedFromWindow dropViewListener =
+            new ViewBindingAdapter.OnViewDetachedFromWindow() {
+                @Override @SuppressWarnings("unchecked")
+                public void onViewDetachedFromWindow(View v) {
+                    Timber.d("Dropping view %s");
+                    dropView((V)v);
+                    RxUtils.unsubscribe(bindingSubscriptions);
+                    bindingSubscriptions = null;
                 }
             };
 }

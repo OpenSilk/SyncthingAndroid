@@ -17,19 +17,21 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
+import android.databinding.BindingAdapter;
+import android.widget.TextView;
 
-import dagger.Component;
-import syncthing.android.ui.ManageActivityComponent;
+import com.jakewharton.rxbinding.widget.RxTextView;
+
+import rx.functions.Action1;
 
 /**
- * Created by drew on 3/23/15.
+ * Created by drew on 11/11/15.
  */
-@ScreenScope
-@Component(
-        dependencies = ManageActivityComponent.class,
-        modules = EditIgnoresModule.class
-)
-public interface EditIgnoresComponent extends EditPresenterBindingComponent {
-    void inject(EditIgnoresScreenView viewe);
+public class TextViewEventBinding {
+
+    @BindingAdapter("textChanges")
+    public static void subscribeTextChanges(BindingSubscriptionsHolder bsh, TextView view, Action1<CharSequence> onNext) {
+        bsh.bindingSubscriptions().add(RxTextView.textChanges(view).subscribe(onNext));
+    }
+
 }

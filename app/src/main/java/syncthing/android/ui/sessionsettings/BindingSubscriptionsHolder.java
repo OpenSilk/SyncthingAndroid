@@ -17,19 +17,11 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
-
-import dagger.Component;
-import syncthing.android.ui.ManageActivityComponent;
+import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by drew on 3/23/15.
+ * Created by drew on 11/11/15.
  */
-@ScreenScope
-@Component(
-        dependencies = ManageActivityComponent.class,
-        modules = EditIgnoresModule.class
-)
-public interface EditIgnoresComponent extends EditPresenterBindingComponent {
-    void inject(EditIgnoresScreenView viewe);
+public interface BindingSubscriptionsHolder extends android.databinding.DataBindingComponent {
+    CompositeSubscription bindingSubscriptions();
 }

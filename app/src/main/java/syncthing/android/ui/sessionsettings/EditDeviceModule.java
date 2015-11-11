@@ -17,6 +17,11 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.databinding.DataBindingUtil;
+import android.view.View;
+
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -39,5 +44,15 @@ public class EditDeviceModule {
                 .setIsAdd(screen.isAdd)
                 .setCredentials(screen.credentials)
                 .build();
+    }
+
+    @Provides @ScreenScope
+    public EditPresenterBinding providePresenerBinding(EditDevicePresenter presenter) {
+        return new EditPresenterBinding() {
+            @Override
+            public void bindView(View view) {
+
+            }
+        };
     }
 }

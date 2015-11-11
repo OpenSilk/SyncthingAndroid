@@ -17,19 +17,20 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
+import android.databinding.BindingAdapter;
+import android.widget.RadioGroup;
 
-import dagger.Component;
-import syncthing.android.ui.ManageActivityComponent;
+import com.jakewharton.rxbinding.widget.RxRadioGroup;
+
+import rx.functions.Action1;
 
 /**
- * Created by drew on 3/23/15.
+ * Created by drew on 11/11/15.
  */
-@ScreenScope
-@Component(
-        dependencies = ManageActivityComponent.class,
-        modules = EditIgnoresModule.class
-)
-public interface EditIgnoresComponent extends EditPresenterBindingComponent {
-    void inject(EditIgnoresScreenView viewe);
+public class RadioGroupEventBinding {
+
+    @BindingAdapter("checkedChanges")
+    public static void subscribeCheckedChanges(BindingSubscriptionsHolder bsh, RadioGroup radioGroup, Action1<Integer> onNext) {
+        bsh.bindingSubscriptions().add(RxRadioGroup.checkedChanges(radioGroup).subscribe(onNext));
+    }
 }

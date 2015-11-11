@@ -21,8 +21,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.LinearLayout;
+
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
@@ -44,6 +53,8 @@ import javax.inject.Inject;
 
 import mortar.MortarScope;
 import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Action2;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.ManageActivity;
@@ -70,7 +81,8 @@ import static syncthing.android.ui.sessionsettings.EditPresenterConfig.INVALID_I
  * Created by drew on 3/16/15.
  */
 @ScreenScope
-public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> implements ActivityResultsListener {
+public class EditFolderPresenter extends EditPresenter<EditFolderScreenView>
+        implements ActivityResultsListener, android.databinding.DataBindingComponent {
 
     final FragmentManagerOwner fm;
 
@@ -83,6 +95,14 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
     TreeMap<String, Boolean> sharedDevices;
 
     Subscription deleteSubscription;
+
+    String errorFolderId;
+    String errorFolderPath;
+    String errorRescanInterval;
+    String errorTrashCanParamCleanoutDays;
+    String errorSimpleParamKeep;
+    String errorStaggeredParamMaxAge;
+    String errorExternalParamCmd;
 
     @Inject
     public EditFolderPresenter(
@@ -188,117 +208,6 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
                 }).build()).build();
     }
 
-    boolean validateFolderId(CharSequence text) {
-        int e = 0;
-        if (StringUtils.isEmpty(text.toString())) {
-            e = R.string.the_folder_id_cannot_be_blank;
-        } else if (!isFolderIdUnique(text.toString(), controller.getFolders())) {
-            e = R.string.the_folder_id_must_be_unique;
-        }
-        if (hasView()) {
-            CharSequence err = e != 0 ? getView().getContext().getString(e) : null;
-            if (!StringUtils.equals(getView().binding.inputFolderId.getError(), err)) {
-                getView().binding.inputFolderId.setError(err);
-            }
-        }
-        return e == 0;
-    }
-
-    static boolean isFolderIdUnique(CharSequence text, Collection<FolderConfig> folders) {
-        for (FolderConfig f : folders) if (StringUtils.equals(f.id, text)) return false;
-        return true;
-    }
-
-    boolean validateFolderPath(CharSequence text) {
-        boolean invalid = false;
-        if (StringUtils.isEmpty(text)) {
-            invalid = true;
-        }
-        if (hasView()) {
-            CharSequence err = invalid ? getView().getContext().getString(R.string.the_folder_path_cannot_be_blank) : null;
-            if (!StringUtils.equals(getView().binding.inputFolderPath.getError(), err)) {
-                getView().binding.inputFolderPath.setError(err);
-            }
-        }
-        return !invalid;
-    }
-
-    boolean validateRescanInterval(CharSequence text) {
-        boolean invalid = false;
-        //input disallows negative numbers and non numerals;
-        if (StringUtils.isEmpty(text)) {
-            invalid = true;
-        }
-        if (hasView()) {
-            CharSequence err = invalid ? getView().getContext().getString(R.string.the_rescan_interval_must_be_a_nonnegative_number_of_seconds) : null;
-            if (!StringUtils.equals(getView().binding.inputRescanInterval.getError(), err)) {
-                getView().binding.inputRescanInterval.setError(err);
-            }
-        }
-        return !invalid;
-    }
-
-    boolean validateTrashCanVersioningCleanDays(CharSequence text) {
-        boolean invalid = false;
-        //input disallows negative numbers and non numerals;
-        if (StringUtils.isEmpty(text)) {
-            invalid = true;
-        }
-        if (hasView()) {
-            CharSequence err = invalid ? getView().getContext().getString(R.string.the_number_of_days_must_be_a_number_and_cannot_be_blank) : null;
-            if (!StringUtils.equals(getView().binding.inputTrashcanVersioningKeep.getError(), err)) {
-                getView().binding.inputTrashcanVersioningKeep.setError(err);
-            }
-        }
-        return !invalid;
-    }
-
-    boolean validateSimpleVersioningKeep(CharSequence text) {
-        int e = 0;
-        //input disallows negative numbers and non numerals;
-        if (StringUtils.isEmpty(text)) {
-            e = R.string.the_number_of_versions_must_be_a_number_and_cannot_be_blank;
-        } else if (Integer.parseInt(text.toString()) == 0) {
-            e = R.string.you_must_keep_at_least_one_version;
-        }
-        if (hasView()) {
-            CharSequence err = e != 0 ? getView().getContext().getString(e) : null;
-            if (!StringUtils.equals(getView().binding.inputSimpleVersioningKeep.getError(), err)) {
-                getView().binding.inputSimpleVersioningKeep.setError(err);
-            }
-        }
-        return e == 0;
-    }
-
-    boolean validateStaggeredMaxAge(CharSequence text) {
-        boolean invalid = false;
-        //input disallows negative numbers and non numerals;
-        if (StringUtils.isEmpty(text)) {
-            invalid = true;
-        }
-        if (hasView()) {
-            CharSequence err = invalid ? getView().getContext().getString(R.string.the_maximum_age_must_be_a_number_and_cannot_be_blank) : null;
-            if (!StringUtils.equals(getView().binding.inputStaggeredMaxAge.getError(), err)) {
-                getView().binding.inputStaggeredMaxAge.setError(err);
-            }
-        }
-        return !invalid;
-    }
-
-    boolean validateExternalVersioningCmd(CharSequence text) {
-        boolean invalid = false;
-        if (StringUtils.isEmpty(text)) {
-            invalid = true;
-        }
-        if (hasView()) {
-            CharSequence err = invalid ? getView().getContext().getString(R.string.the_path_cannot_be_blank) : null;
-            if (!StringUtils.equals(getView().binding.inputExternalVersioningCmd.getError(), err)) {
-                getView().binding.inputExternalVersioningCmd.setError(err);
-            }
-        }
-        return !invalid;
-    }
-
     @Bindable
     public boolean isAdd() {
         return isAdd;
@@ -314,13 +223,50 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         return origFolder.id;
     }
 
-    public void setFolderId(CharSequence text) {
+    public void setFolderID(CharSequence text) {
         if (!isAdd || newShare) {
             return;
         }
         if (validateFolderId(text)) {
             origFolder.id = text.toString();
         }
+    }
+
+    public final Action1<CharSequence> actionSetFolderID = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setFolderID(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getFolderIDError() {
+        return errorFolderId;
+    }
+
+    public void setFolderIDError(String text) {
+        if (!StringUtils.equals(errorFolderId, text)) {
+            errorFolderId = text;
+            notifyChange(syncthing.android.BR.folderIDError);
+        }
+    }
+
+    boolean validateFolderId(CharSequence text) {
+        int e = 0;
+        if (StringUtils.isEmpty(text.toString())) {
+            e = R.string.the_folder_id_cannot_be_blank;
+        } else if (!isFolderIdUnique(text.toString(), controller.getFolders())) {
+            e = R.string.the_folder_id_must_be_unique;
+        }
+        if (hasView()) {
+            setFolderIDError(e != 0 ? getView().getContext().getString(e) : null);
+        }
+        return e == 0;
+    }
+
+    static boolean isFolderIdUnique(CharSequence text, Collection<FolderConfig> folders) {
+        for (FolderConfig f : folders) if (StringUtils.equals(f.id, text)) return false;
+        return true;
     }
 
     @Bindable
@@ -337,6 +283,36 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         }
     }
 
+    public final Action1<CharSequence> actionSetFolderPath = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setFolderPath(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getFolderPathError() {
+        return errorFolderPath;
+    }
+
+    public void setFolderPathError(String text) {
+        if (!StringUtils.equals(errorFolderPath, text)) {
+            errorFolderPath = text;
+            notifyChange(syncthing.android.BR.folderPathError);
+        }
+    }
+
+    boolean validateFolderPath(CharSequence text) {
+        boolean invalid = false;
+        if (StringUtils.isEmpty(text)) {
+            invalid = true;
+        }
+        if (hasView()) {
+            setFolderPathError(invalid ? getView().getContext().getString(R.string.the_folder_path_cannot_be_blank) : null);
+        }
+        return !invalid;
+    }
+
     @Bindable
     public String getRescanInterval() {
         return String.valueOf(origFolder.rescanIntervalS);
@@ -348,6 +324,37 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         }
     }
 
+    public final Action1<CharSequence> actionSetRescanInterval = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setRescanInterval(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getRescanIntervalError() {
+        return errorRescanInterval;
+    }
+
+    public void setRescanIntervalError(String text) {
+        if (!StringUtils.equals(errorRescanInterval, text)) {
+            errorRescanInterval = text;
+            notifyChange(syncthing.android.BR.rescanIntervalError);
+        }
+    }
+
+    boolean validateRescanInterval(CharSequence text) {
+        boolean invalid = false;
+        //input disallows negative numbers and non numerals;
+        if (StringUtils.isEmpty(text)) {
+            invalid = true;
+        }
+        if (hasView()) {
+            setRescanIntervalError(invalid ? getView().getContext().getString(R.string.the_rescan_interval_must_be_a_nonnegative_number_of_seconds) : null);
+        }
+        return !invalid;
+    }
+
     @Bindable
     public boolean isReadOnly() {
         return origFolder.readOnly;
@@ -356,6 +363,13 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
     public void setReadOnly(boolean readOnly) {
         origFolder.readOnly = readOnly;
     }
+
+    public final Action1<Boolean> actionSetReadOnly = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setReadOnly(aBoolean);
+        }
+    };
 
     @Bindable
     public boolean isIgnorePerms() {
@@ -366,6 +380,13 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         origFolder.ignorePerms = ignorePerms;
     }
 
+    public final Action1<Boolean> actionSetIgnorePerms = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setIgnorePerms(aBoolean);
+        }
+    };
+
     @Bindable
     public PullOrder getPullOrder() {
         return origFolder.order;
@@ -374,6 +395,32 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
     public void setPullOrder(PullOrder order) {
         origFolder.order = order;
     }
+
+    public final Action1<Integer> actionOnPullOrderChanged = new Action1<Integer>() {
+        @Override
+        public void call(Integer checkedId) {
+            switch (checkedId) {
+                case R.id.radio_pullorder_alphabetic:
+                    setPullOrder(PullOrder.ALPHABETIC);
+                    break;
+                case R.id.radio_pullorder_smallestfirst:
+                    setPullOrder(PullOrder.SMALLESTFIRST);
+                    break;
+                case R.id.radio_pullorder_largestfirst:
+                    setPullOrder(PullOrder.LARGESTFIRST);
+                    break;
+                case R.id.radio_pullorder_oldestfirst:
+                    setPullOrder(PullOrder.OLDESTFIRST);
+                    break;
+                case R.id.radio_pullorder_newestfirst:
+                    setPullOrder(PullOrder.NEWESTFIRST);
+                    break;
+                case R.id.radio_pullorder_random:
+                    setPullOrder(PullOrder.RANDOM);
+                    break;
+            }
+        }
+    };
 
     @Bindable
     public VersioningType getVersioningType() {
@@ -401,6 +448,29 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         notifyChange(syncthing.android.BR.versioningType);
     }
 
+    public final Action1<Integer> actionOnVersioningChanged = new Action1<Integer>() {
+        @Override
+        public void call(Integer checkedId) {
+            switch (checkedId) {
+                case R.id.radio_trashcan_versioning:
+                    setVersioningType(VersioningType.TRASHCAN);
+                    break;
+                case R.id.radio_simple_versioning:
+                    setVersioningType(VersioningType.SIMPLE);
+                    break;
+                case R.id.radio_staggered_versioning:
+                    setVersioningType(VersioningType.STAGGERED);
+                    break;
+                case R.id.radio_external_versioning:
+                    setVersioningType(VersioningType.EXTERNAL);
+                    break;
+                case R.id.radio_no_versioning:
+                    setVersioningType(VersioningType.NONE);
+                    break;
+            }
+        }
+    };
+
     private void initParams(FolderConfig f) {
         if (f == null || f.versioning == null) return;
         switch (origFolder.versioning.type) {
@@ -425,9 +495,40 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
     }
 
     public void setTrashCanParamCleanDays(CharSequence text) {
-        if (validateTrashCanVersioningCleanDays(text)) {
+        if (validateTrashCanVersioningCleanoutDays(text)) {
             trashCanParams.cleanoutDays = text.toString();
         }
+    }
+
+    public final Action1<CharSequence> actionSetTrashCanParamCleanoutDays = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setTrashCanParamCleanDays(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getTrashCanParamCleanoutDaysError() {
+        return errorTrashCanParamCleanoutDays;
+    }
+
+    public void setTrashCanParamCleanoutDaysError(String text) {
+        if (!StringUtils.equals(errorTrashCanParamCleanoutDays, text))  {
+            errorTrashCanParamCleanoutDays = text;
+            notifyChange(syncthing.android.BR.trashCanParamCleanoutDaysError);
+        }
+    }
+
+    boolean validateTrashCanVersioningCleanoutDays(CharSequence text) {
+        boolean invalid = false;
+        //input disallows negative numbers and non numerals;
+        if (StringUtils.isEmpty(text)) {
+            invalid = true;
+        }
+        if (hasView()) {
+            setTrashCanParamCleanoutDaysError(invalid ? getView().getContext().getString(R.string.the_number_of_days_must_be_a_number_and_cannot_be_blank) : null);
+        }
+        return !invalid;
     }
 
     @Bindable
@@ -441,13 +542,46 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         }
     }
 
+    public final Action1<CharSequence> actionSetSimpleParamKeep = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setSimpleParamKeep(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getSimpleParamKeepError() {
+        return errorSimpleParamKeep;
+    }
+
+    public void setSimpleParamKeepError(String text) {
+        if (!StringUtils.equals(errorSimpleParamKeep, text)) {
+            errorSimpleParamKeep = text;
+            notifyChange(syncthing.android.BR.simpleParamKeepError);
+        }
+    }
+
+    boolean validateSimpleVersioningKeep(CharSequence text) {
+        int e = 0;
+        //input disallows negative numbers and non numerals;
+        if (StringUtils.isEmpty(text)) {
+            e = R.string.the_number_of_versions_must_be_a_number_and_cannot_be_blank;
+        } else if (Integer.parseInt(text.toString()) == 0) {
+            e = R.string.you_must_keep_at_least_one_version;
+        }
+        if (hasView()) {
+            setSimpleParamKeepError(e != 0 ? getView().getContext().getString(e) : null);
+        }
+        return e == 0;
+    }
+
     @Bindable
     public VersioningStaggered.Params getStaggeredParams() {
         return staggeredParams;
     }
 
     @Bindable
-    public String getStaggeredParamsMaxAge() {
+    public String getStaggeredParamMaxAge() {
         return SyncthingUtils.secondsToDays(staggeredParams.maxAge);
     }
 
@@ -457,9 +591,47 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         }
     }
 
+    public final Action1<CharSequence> actionSetStaggeredParamMaxAge = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setStaggeredParamMaxAge(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getStaggeredParamMaxAgeError(){
+        return errorStaggeredParamMaxAge;
+    }
+
+    public void setStaggeredParamMaxAgeError(String text) {
+        if (!StringUtils.equals(errorStaggeredParamMaxAge, text)) {
+            errorStaggeredParamMaxAge = text;
+            notifyChange(syncthing.android.BR.staggeredParamMaxAgeError);
+        }
+    }
+
+    boolean validateStaggeredMaxAge(CharSequence text) {
+        boolean invalid = false;
+        //input disallows negative numbers and non numerals;
+        if (StringUtils.isEmpty(text)) {
+            invalid = true;
+        }
+        if (hasView()) {
+            setStaggeredParamMaxAgeError(invalid ? getView().getContext().getString(R.string.the_maximum_age_must_be_a_number_and_cannot_be_blank) : null);
+        }
+        return !invalid;
+    }
+
     public void setStaggeredParamPath(CharSequence text) {
         staggeredParams.versionPath = StringUtils.isEmpty(text) ? "" : text.toString();
     }
+
+    public final Action1<CharSequence> actionSetStaggeredParamPath = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setStaggeredParamPath(charSequence);
+        }
+    };
 
     @Bindable
     public VersioningExternal.Params getExternalParams() {
@@ -472,13 +644,95 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
         }
     }
 
+    public final Action1<CharSequence> actionSetExternalParamCmd = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setExternalParamCmd(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getExternalParamCmdError() {
+        return errorExternalParamCmd;
+    }
+
+    public void setExternalParamCmdError(String text) {
+        if (!StringUtils.equals(errorExternalParamCmd, text)) {
+            errorExternalParamCmd = text;
+            notifyChange(syncthing.android.BR.externalParamCmdError);
+        }
+    }
+
+    boolean validateExternalVersioningCmd(CharSequence text) {
+        boolean invalid = false;
+        if (StringUtils.isEmpty(text)) {
+            invalid = true;
+        }
+        if (hasView()) {
+            setExternalParamCmdError(invalid ? getView().getContext().getString(R.string.the_path_cannot_be_blank) : null);
+        }
+        return !invalid;
+    }
+
     public void setDeviceShared(String id, boolean shared) {
         sharedDevices.put(id, shared);
     }
 
+    @BindingAdapter("addShareDevices")
+    public static void addShareDevices(LinearLayout shareDevicesContainer, EditFolderPresenter presenter) {
+        shareDevicesContainer.removeAllViews();
+        for (Map.Entry<String, Boolean> e : presenter.sharedDevices.entrySet()) {
+            final String id = e.getKey();
+            CheckBox checkBox = new CheckBox(shareDevicesContainer.getContext());
+            DeviceConfig device = presenter.controller.getDevice(id);
+            if (device == null) {
+                device = new DeviceConfig();
+                device.deviceID = id;
+            }
+            checkBox.setText(SyncthingUtils.getDisplayName(device));
+            checkBox.setChecked(e.getValue());
+            shareDevicesContainer.addView(checkBox);
+            presenter.bindingSubscriptions().add(RxCompoundButton.checkedChanges(checkBox)
+                    .subscribe(b -> {
+                        presenter.setDeviceShared(id, b);
+                    }));
+        }
+    }
+
     public void saveFolder(View btn) {
-        if(!hasView()) return;
-        //TODO check if any input fields are invalid
+        boolean invalid = false;
+        invalid |= errorFolderId != null;
+        invalid |= errorFolderPath != null;
+        invalid |= errorRescanInterval != null;
+        switch (getVersioningType()) {
+            case TRASHCAN:
+                invalid |= errorTrashCanParamCleanoutDays != null;
+                break;
+            case STAGGERED:
+                invalid |= errorStaggeredParamMaxAge != null;
+                break;
+            case SIMPLE:
+                invalid |= errorSimpleParamKeep != null;
+                break;
+            case EXTERNAL:
+                invalid |= errorExternalParamCmd != null;
+                break;
+        }
+        if (invalid) {
+            dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                    .setTitle(R.string.input_error)
+                    .setMessage(R.string.input_error_message)
+                    .setPositiveButton(android.R.string.cancel, null)
+                    .setNegativeButton(R.string.save, (d,w) -> {
+                        saveFolder();
+                    })
+                    .create());
+        } else {
+            saveFolder();
+        }
+    }
+
+    private void saveFolder() {
         List<FolderDeviceConfig> devices = new ArrayList<>();
         for (Map.Entry<String, Boolean> e : sharedDevices.entrySet()) {
             if (e.getValue()) {
@@ -537,6 +791,50 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
             return true;
         } else {
             return false;
+        }
+    }
+
+    static class DirectoryAutoCompleteAdapter extends ArrayAdapter<String> {
+        final EditFolderPresenter presenter;
+        DirectoryAutoCompleteAdapter(Context context, EditFolderPresenter presenter) {
+            super(context, android.R.layout.simple_dropdown_item_1line);
+            this.presenter = presenter;
+            setNotifyOnChange(false);
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    try {
+                        List<String> results = presenter.controller
+                                .getAutoCompleteDirectoryList(constraint.toString())
+                                .toBlocking().first();
+                        FilterResults fr = new FilterResults();
+                        fr.values = results;
+                        fr.count = results.size();
+                        return fr;
+                    } catch (Exception e) { //cant remember what in throws
+                        FilterResults fr = new FilterResults();
+                        fr.values = new ArrayList<String>();
+                        fr.count = 0;
+                        return fr;
+                    }
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    if (results.count == 0) {
+                        clear();
+                        notifyDataSetInvalidated();
+                    } else {
+                        clear();
+                        addAll((List<String>)results.values);
+                        notifyDataSetChanged();
+                    }
+                }
+            };
         }
     }
 

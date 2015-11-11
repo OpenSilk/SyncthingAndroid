@@ -17,6 +17,8 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.view.View;
+
 import org.opensilk.common.core.dagger2.ScreenScope;
 
 import dagger.Module;
@@ -39,5 +41,15 @@ public class SettingsModule {
                 .setCredentials(screen.credentials)
                 .build();
         return c;
+    }
+
+    @Provides @ScreenScope
+    public EditPresenterBinding providePresenerBinding(SettingsPresenter presenter) {
+        return new EditPresenterBinding() {
+            @Override
+            public void bindView(View view) {
+
+            }
+        };
     }
 }

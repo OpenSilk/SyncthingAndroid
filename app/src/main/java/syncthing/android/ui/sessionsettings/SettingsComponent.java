@@ -30,6 +30,6 @@ import syncthing.android.ui.ManageActivityComponent;
         dependencies = ManageActivityComponent.class,
         modules = SettingsModule.class
 )
-public interface SettingsComponent  {
+public interface SettingsComponent extends EditPresenterBindingComponent {
     void inject(SettingsScreenView view);
 }

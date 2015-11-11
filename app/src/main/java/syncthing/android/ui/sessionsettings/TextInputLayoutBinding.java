@@ -17,19 +17,22 @@
 
 package syncthing.android.ui.sessionsettings;
 
-import org.opensilk.common.core.dagger2.ScreenScope;
-
-import dagger.Component;
-import syncthing.android.ui.ManageActivityComponent;
+import android.databinding.BindingAdapter;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
+import android.support.design.widget.TextInputLayout;
 
 /**
- * Created by drew on 3/23/15.
+ * Created by drew on 11/11/15.
  */
-@ScreenScope
-@Component(
-        dependencies = ManageActivityComponent.class,
-        modules = EditIgnoresModule.class
-)
-public interface EditIgnoresComponent extends EditPresenterBindingComponent {
-    void inject(EditIgnoresScreenView viewe);
+@BindingMethods({
+        @BindingMethod(type= TextInputLayout.class, attribute = "error", method = "setError")
+})
+public class TextInputLayoutBinding {
+    @BindingAdapter("error")
+    public static void setInputError(TextInputLayout view, CharSequence error) {
+        if (view.isErrorEnabled()) {
+            view.setError(error);
+        }
+    }
 }

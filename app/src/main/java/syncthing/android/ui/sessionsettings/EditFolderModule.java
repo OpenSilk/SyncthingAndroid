@@ -17,6 +17,13 @@
 
 package syncthing.android.ui.sessionsettings;
 
+import android.databinding.DataBindingUtil;
+import android.view.View;
+
+import com.google.gson.annotations.Since;
+
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -40,6 +47,20 @@ public class EditFolderModule {
                 .setIsAdd(screen.isAdd)
                 .setCredentials(screen.credentials)
                 .build();
+    }
+
+    @Provides @ScreenScope
+    public EditPresenterBinding providePresenerBinding(EditFolderPresenter presenter) {
+        return new EditPresenterBinding() {
+            @Override
+            public void bindView(View view) {
+                EditFolderScreenViewBinding binding = DataBindingUtil.bind(view, presenter);
+                presenter.takeView((EditFolderScreenView) view);
+                binding.setPresenter(presenter);
+                binding.editFolderPath.setAdapter(new EditFolderPresenter.DirectoryAutoCompleteAdapter(view.getContext(), presenter));
+                binding.executePendingBindings();
+            }
+        };
     }
 
 }

@@ -28,7 +28,9 @@
     </data>
     <syncthing.android.ui.sessionsettings.EditFolderScreenView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:onViewDetachedFromWindow="@{presenter.dropViewListener}">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -70,7 +72,8 @@
                     android:id="@+id/input_folder_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    app:error="@{presenter.folderIDError}">
 
                     <EditText
                         android:id="@+id/edit_folder_id"
@@ -80,6 +83,7 @@
                         android:nextFocusDown="@+id/edit_folder_path"
                         android:enabled="@{(presenter.isAdd &amp;&amp; !presenter.newShare) ? true : false}"
                         android:text="@{presenter.folderID}"
+                        app:textChanges="@{presenter.actionSetFolderID}"
                         style="@style/session.edit.EditText"
                         />
 
@@ -120,7 +124,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
+                        app:errorEnabled="true"
+                        app:error="@{presenter.folderPathError}">
 
                         <AutoCompleteTextView
                             android:id="@+id/edit_folder_path"
@@ -130,6 +135,7 @@
                             android:nextFocusDown="@+id/edit_rescan_interval"
                             android:enabled="@{presenter.isAdd}"
                             android:text="@{presenter.folderPath}"
+                            app:textChanges="@{presenter.actionSetFolderPath}"
                             style="@style/session.edit.EditText"
                             />
 
@@ -168,13 +174,15 @@
                     android:id="@+id/input_rescan_interval"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    app:error="@{presenter.rescanIntervalError}">
 
                     <EditText
                         android:id="@+id/edit_rescan_interval"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{presenter.rescanInterval}"
+                        app:textChanges="@{presenter.actionSetRescanInterval}"
                         style="@style/session.edit.EditText.Number"
                         />
 
@@ -186,6 +194,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/folder_master"
                     android:checked="@{presenter.readOnly}"
+                    app:checkedChanges="@{presenter.actionSetReadOnly}"
                     style="@style/session.edit.Checkbox"/>
 
                 <TextView
@@ -200,6 +209,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/ignore_permissions"
                     android:checked="@{presenter.ignorePerms}"
+                    app:checkedChanges="@{presenter.actionSetIgnorePerms}"
                     style="@style/session.edit.Checkbox"
                     />
 
@@ -218,7 +228,8 @@
                 <RadioGroup
                     android:id="@+id/radio_group_pullorder"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:checkedChanges="@{presenter.actionOnPullOrderChanged}">
 
                     <RadioButton
                         android:id="@+id/radio_pullorder_random"
@@ -273,9 +284,10 @@
                 <RadioGroup
                     android:id="@+id/radio_group_versioning"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:checkedChanges="@{presenter.actionOnVersioningChanged}">
 
-                    <RadioButton
+                <RadioButton
                         android:id="@+id/radio_no_versioning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -342,13 +354,15 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            app:errorEnabled="true">
+                            app:errorEnabled="true"
+                            app:error="@{presenter.trashCanParamCleanoutDaysError}">
 
                             <EditText
                                 android:id="@+id/edit_trashcan_versioning_keep"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@{presenter.trashCanParams.cleanoutDays}"
+                                app:textChanges="@{presenter.actionSetTrashCanParamCleanoutDays}"
                                 style="@style/session.edit.EditText.Number"/>
 
                         </android.support.design.widget.TextInputLayout>
@@ -394,13 +408,15 @@
                         android:id="@+id/input_simple_versioning_keep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
+                        app:errorEnabled="true"
+                        app:error="@{presenter.simpleParamKeepError}">
 
                         <EditText
                             android:id="@+id/edit_simple_versioning_keep"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@{presenter.simpleParams.keep}"
+                            app:textChanges="@{presenter.actionSetSimpleParamKeep}"
                             style="@style/session.edit.EditText.Number"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -451,7 +467,8 @@
                         android:id="@+id/input_staggered_max_age"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
+                        app:errorEnabled="true"
+                        app:error="@{presenter.staggeredParamMaxAgeError}">
 
                         <EditText
                             android:id="@+id/edit_staggered_max_age"
@@ -459,7 +476,8 @@
                             android:layout_height="wrap_content"
                             android:imeOptions="actionNext"
                             android:nextFocusDown="@+id/edit_staggered_path"
-                            android:text="@{presenter.staggeredParamsMaxAge}"
+                            android:text="@{presenter.staggeredParamMaxAge}"
+                            app:textChanges="@{presenter.actionSetStaggeredParamMaxAge}"
                             style="@style/session.edit.EditText.Number"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -482,6 +500,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{presenter.staggeredParams.versionPath}"
+                        app:textChanges="@{presenter.actionSetStaggeredParamPath}"
                         style="@style/session.edit.EditText"/>
 
                     <TextView
@@ -516,13 +535,15 @@
                         android:id="@+id/input_external_versioning_cmd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
+                        app:errorEnabled="true"
+                        app:error="@{presenter.externalParamCmdError}">
 
                         <EditText
                             android:id="@+id/edit_external_versioning_cmd"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@{presenter.externalParams.command}"
+                            app:textChanges="@{presenter.actionSetExternalParamCmd}"
                             style="@style/session.edit.EditText"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -560,7 +581,8 @@
                     android:id="@+id/share_devices_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical"
+                    app:addShareDevices="@{presenter}"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

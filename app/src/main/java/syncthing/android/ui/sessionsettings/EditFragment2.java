@@ -18,7 +18,9 @@
 package syncthing.android.ui.sessionsettings;
 
 import android.os.Bundle;
+import android.view.View;
 
+import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import mortar.MortarScope;
@@ -30,6 +32,13 @@ import syncthing.api.Credentials;
 public abstract class EditFragment2 extends MortarFragment {
 
     protected Credentials mCredentials;
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        EditPresenterBindingComponent cmp = DaggerService.getDaggerComponent(getScope());
+        cmp.presenterBinding().bindView(view);
+    }
 
     protected static Bundle putCredentials(Credentials credentials) {
         Bundle b = new Bundle();
