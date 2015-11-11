@@ -19,11 +19,11 @@ package syncthing.android.ui.sessionsettings;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
@@ -61,7 +61,7 @@ import timber.log.Timber;
  * Created by drew on 3/16/15.
  */
 @ScreenScope
-public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> implements ActivityResultsListener {
+public class EditDevicePresenter extends EditPresenter<CoordinatorLayout> implements ActivityResultsListener {
 
     DeviceConfig originalDevice;
     TreeMap<String, Boolean> sharedFolders;

@@ -20,13 +20,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="syncthing.android.ui.sessionsettings.EditFolderScreenViewBinding">
+    <data class="syncthing.android.ui.sessionsettings.EditFolderViewBinding">
         <import type="android.view.View"/>
         <import type="syncthing.api.model.PullOrder"/>
         <import type="syncthing.api.model.VersioningType"/>
         <variable name="presenter" type="syncthing.android.ui.sessionsettings.EditFolderPresenter"/>
     </data>
-    <syncthing.android.ui.sessionsettings.EditFolderScreenView
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
@@ -628,6 +628,6 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-    </syncthing.android.ui.sessionsettings.EditFolderScreenView>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
 

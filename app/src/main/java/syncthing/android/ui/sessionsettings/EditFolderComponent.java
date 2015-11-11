@@ -31,5 +31,4 @@ import syncthing.android.ui.ManageActivityComponent;
         modules = EditFolderModule.class
 )
 public interface EditFolderComponent extends EditPresenterBindingComponent {
-    void inject(EditFolderScreenView view);
 }

@@ -23,9 +23,9 @@ import android.content.Intent;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Filter;
@@ -54,7 +54,6 @@ import javax.inject.Inject;
 import mortar.MortarScope;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.functions.Action2;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.ManageActivity;
@@ -81,7 +80,7 @@ import static syncthing.android.ui.sessionsettings.EditPresenterConfig.INVALID_I
  * Created by drew on 3/16/15.
  */
 @ScreenScope
-public class EditFolderPresenter extends EditPresenter<EditFolderScreenView>
+public class EditFolderPresenter extends EditPresenter<CoordinatorLayout>
         implements ActivityResultsListener, android.databinding.DataBindingComponent {
 
     final FragmentManagerOwner fm;

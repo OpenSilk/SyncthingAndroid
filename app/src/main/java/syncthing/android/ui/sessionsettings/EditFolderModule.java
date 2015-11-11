@@ -18,9 +18,8 @@
 package syncthing.android.ui.sessionsettings;
 
 import android.databinding.DataBindingUtil;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
-
-import com.google.gson.annotations.Since;
 
 import org.opensilk.common.core.dagger2.ScreenScope;
 
@@ -54,8 +53,8 @@ public class EditFolderModule {
         return new EditPresenterBinding() {
             @Override
             public void bindView(View view) {
-                syncthing.android.ui.sessionsettings.EditFolderScreenViewBinding binding = DataBindingUtil.bind(view, presenter);
-                presenter.takeView((EditFolderScreenView) view);
+                syncthing.android.ui.sessionsettings.EditFolderViewBinding binding = DataBindingUtil.bind(view, presenter);
+                presenter.takeView((CoordinatorLayout) view);
                 binding.setPresenter(presenter);
                 binding.editFolderPath.setAdapter(new EditFolderPresenter.DirectoryAutoCompleteAdapter(view.getContext(), presenter));
                 binding.executePendingBindings();

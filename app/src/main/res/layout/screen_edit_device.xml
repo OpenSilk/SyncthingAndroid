@@ -20,12 +20,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="syncthing.android.ui.sessionsettings.EditDeviceScreenViewBinding">
+    <data class="syncthing.android.ui.sessionsettings.EditDeviceViewBinding">
         <import type="android.view.View"/>
         <import type="syncthing.api.model.Compression"/>
         <variable name="presenter" type="syncthing.android.ui.sessionsettings.EditDevicePresenter"/>
     </data>
-    <syncthing.android.ui.sessionsettings.EditDeviceScreenView
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:onViewDetachedFromWindow="@{presenter.dropViewListener}">
@@ -285,5 +285,5 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-    </syncthing.android.ui.sessionsettings.EditDeviceScreenView>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
