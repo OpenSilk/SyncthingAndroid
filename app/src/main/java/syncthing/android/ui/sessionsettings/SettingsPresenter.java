@@ -30,6 +30,7 @@ import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import javax.inject.Inject;
 
@@ -62,11 +63,12 @@ public class SettingsPresenter extends EditPresenter<SettingsScreenView> {
             SessionManager manager,
             DialogPresenter dialogPresenter,
             ActivityResultsController activityResultContoller,
+            ToolbarOwner toolbarOwner,
             EditPresenterConfig config,
             @ForApplication Context appContext,
             AppSettings appSettings
     ) {
-        super(manager, dialogPresenter, activityResultContoller, config);
+        super(manager, dialogPresenter, activityResultContoller, toolbarOwner, config);
         this.appContext = appContext;
         this.appSettings = appSettings;
     }

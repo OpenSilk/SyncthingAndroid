@@ -21,13 +21,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.databinding.PropertyChangeRegistry;
+import android.databinding.adapters.ViewBindingAdapter;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
 import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import mortar.MortarScope;
 import mortar.ViewPresenter;
@@ -54,6 +57,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
     protected final DialogPresenter dialogPresenter;
     protected final ActivityResultsController activityResultsController;
     protected final Credentials credentials;
+    protected final ToolbarOwner toolbarOwner;
 
     protected final PropertyChangeRegistry mRegistry = new PropertyChangeRegistry();
     protected Subscription saveSubscription;
@@ -64,11 +68,13 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
             SessionManager manager,
             DialogPresenter dialogPresenter,
             ActivityResultsController activityResultContoller,
+            ToolbarOwner toolbarOwner,
             EditPresenterConfig config
     ) {
         this.manager = manager;
         this.dialogPresenter = dialogPresenter;
         this.activityResultsController = activityResultContoller;
+        this.toolbarOwner = toolbarOwner;
         this.session = manager.acquire(config.credentials);
         this.controller = this.session.controller();
         this.folderId = config.folderId;
@@ -156,4 +162,23 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
     protected void notifyChange(int val) {
         mRegistry.notifyChange(this, val);
     }
+
+    public final ViewBindingAdapter.OnViewAttachedToWindow toolbarAttachedListener =
+            new ViewBindingAdapter.OnViewAttachedToWindow() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    Toolbar toolbar = (Toolbar)v;
+                    toolbarOwner.attachToolbar(toolbar);
+                    toolbarOwner.setConfig(getToolbarConfig());
+                }
+            };
+
+    public final ViewBindingAdapter.OnViewDetachedFromWindow toolbarDetachedListener =
+            new ViewBindingAdapter.OnViewDetachedFromWindow() {
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    Toolbar toolbar = (Toolbar) v;
+                    toolbarOwner.detachToolbar(toolbar);
+                }
+            };
 }

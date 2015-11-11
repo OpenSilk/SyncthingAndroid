@@ -37,7 +37,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class SettingsScreenView extends CoordinatorLayout {
 
-    @Inject ToolbarOwner mToolbarOwner;
     @Inject SettingsPresenter mPresenter;
     CompositeSubscription subscriptions;
     syncthing.android.ui.sessionsettings.SettingsScreenViewBinding binding;
@@ -57,19 +56,8 @@ public class SettingsScreenView extends CoordinatorLayout {
             binding = DataBindingUtil.bind(this);
             mPresenter.takeView(this);
             binding.setPresenter(mPresenter);
-            // we must eagerly execute to prevent the change
-            // subscriptions from wiping out the data with nulls
             binding.executePendingBindings();
-        }
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (!isInEditMode()) {
             subscribeChanges();
-            mToolbarOwner.attachToolbar(binding.toolbar);
-            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
     }
 
@@ -77,7 +65,6 @@ public class SettingsScreenView extends CoordinatorLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
-        mToolbarOwner.detachToolbar(binding.toolbar);
         if (subscriptions != null) subscriptions.unsubscribe();
     }
 

@@ -50,7 +50,6 @@ import syncthing.api.model.VersioningType;
  */
 public class EditFolderScreenView extends CoordinatorLayout {
 
-    @Inject ToolbarOwner mToolbarOwner;
     @Inject EditFolderPresenter mPresenter;
     final DirectoryAutoCompleteAdapter editFolderPathAdapter;
     CompositeSubscription subscriptions;
@@ -80,21 +79,10 @@ public class EditFolderScreenView extends CoordinatorLayout {
         }
     }
 
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (!isInEditMode()) {
-            mToolbarOwner.attachToolbar(binding.toolbar);
-            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
-        }
-    }
-
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
-        mToolbarOwner.detachToolbar(binding.toolbar);
         if (subscriptions != null) subscriptions.unsubscribe();
     }
 

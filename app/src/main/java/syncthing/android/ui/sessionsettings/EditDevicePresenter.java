@@ -31,6 +31,7 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.Collection;
 import java.util.TreeMap;
@@ -65,9 +66,10 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
             SessionManager manager,
             DialogPresenter dialogPresenter,
             ActivityResultsController activityResultContoller,
+            ToolbarOwner toolbarOwner,
             EditPresenterConfig config
     ) {
-        super(manager, dialogPresenter, activityResultContoller, config);
+        super(manager, dialogPresenter, activityResultContoller, toolbarOwner, config);
     }
 
     @Override

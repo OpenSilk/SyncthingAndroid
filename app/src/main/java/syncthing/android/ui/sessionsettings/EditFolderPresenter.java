@@ -31,6 +31,7 @@ import org.opensilk.common.ui.mortar.ActionBarMenuConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.ActivityResultsListener;
 import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 import org.opensilk.common.ui.mortarfragment.FragmentManagerOwner;
 
 import java.util.ArrayList;
@@ -88,10 +89,11 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView> imp
             SessionManager manager,
             DialogPresenter dialogPresenter,
             ActivityResultsController activityResultContoller,
+            ToolbarOwner toolbarOwner,
             EditPresenterConfig config,
             FragmentManagerOwner fm
     ) {
-        super(manager, dialogPresenter, activityResultContoller, config);
+        super(manager, dialogPresenter, activityResultContoller, toolbarOwner, config);
         this.fm = fm;
     }
 

@@ -37,7 +37,6 @@ import syncthing.api.model.SystemInfo;
  */
 public class EditIgnoresScreenView extends CoordinatorLayout {
 
-    @Inject ToolbarOwner mToolbarOwner;
     @Inject EditIgnoresPresenter mPresenter;
 
     syncthing.android.ui.sessionsettings.EditIgnoresScreenViewBinding binding;
@@ -53,19 +52,11 @@ public class EditIgnoresScreenView extends CoordinatorLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        binding = DataBindingUtil.bind(this);
-        binding.setPresenter(mPresenter);
         if (!isInEditMode()) {
+            binding = DataBindingUtil.bind(this);
             mPresenter.takeView(this);
-        }
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (!isInEditMode()) {
-            mToolbarOwner.attachToolbar(binding.toolbar);
-            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
+            binding.setPresenter(mPresenter);
+            binding.executePendingBindings();
         }
     }
 
@@ -73,7 +64,6 @@ public class EditIgnoresScreenView extends CoordinatorLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
-        mToolbarOwner.detachToolbar(binding.toolbar);
     }
 
     void initialize(FolderConfig folder, SystemInfo system, Ignores ignores) {

@@ -43,7 +43,6 @@ import syncthing.api.model.Compression;
  */
 public class EditDeviceScreenView extends CoordinatorLayout {
 
-    @Inject ToolbarOwner mToolbarOwner;
     @Inject EditDevicePresenter mPresenter;
     CompositeSubscription subscriptons;
     syncthing.android.ui.sessionsettings.EditDeviceScreenViewBinding binding;
@@ -64,17 +63,8 @@ public class EditDeviceScreenView extends CoordinatorLayout {
             mPresenter.takeView(this);
             binding.setPresenter(mPresenter);
             binding.executePendingBindings();
-        }
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (!isInEditMode()) {
             subscribeChanges();
             initializeSharedFolders();
-            mToolbarOwner.attachToolbar(binding.toolbar);
-            mToolbarOwner.setConfig(mPresenter.getToolbarConfig());
         }
     }
 
@@ -82,7 +72,6 @@ public class EditDeviceScreenView extends CoordinatorLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mPresenter.dropView(this);
-        mToolbarOwner.detachToolbar(binding.toolbar);
         if (subscriptons != null) subscriptons.unsubscribe();
     }
 
