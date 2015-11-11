@@ -54,7 +54,7 @@ public class EditFolderModule {
         return new EditPresenterBinding() {
             @Override
             public void bindView(View view) {
-                EditFolderScreenViewBinding binding = DataBindingUtil.bind(view, presenter);
+                syncthing.android.ui.sessionsettings.EditFolderScreenViewBinding binding = DataBindingUtil.bind(view, presenter);
                 presenter.takeView((EditFolderScreenView) view);
                 binding.setPresenter(presenter);
                 binding.editFolderPath.setAdapter(new EditFolderPresenter.DirectoryAutoCompleteAdapter(view.getContext(), presenter));

@@ -680,6 +680,7 @@ public class EditFolderPresenter extends EditPresenter<EditFolderScreenView>
 
     @BindingAdapter("addShareDevices")
     public static void addShareDevices(LinearLayout shareDevicesContainer, EditFolderPresenter presenter) {
+        if (presenter == null) return;
         shareDevicesContainer.removeAllViews();
         for (Map.Entry<String, Boolean> e : presenter.sharedDevices.entrySet()) {
             final String id = e.getKey();

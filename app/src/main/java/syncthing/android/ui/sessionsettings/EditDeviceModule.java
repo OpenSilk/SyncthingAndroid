@@ -51,7 +51,10 @@ public class EditDeviceModule {
         return new EditPresenterBinding() {
             @Override
             public void bindView(View view) {
-
+                syncthing.android.ui.sessionsettings.EditDeviceScreenViewBinding binding = DataBindingUtil.bind(view, presenter);
+                presenter.takeView((EditDeviceScreenView)view);
+                binding.setPresenter(presenter);
+                binding.executePendingBindings();
             }
         };
     }

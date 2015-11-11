@@ -22,9 +22,14 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ScreenScope;
@@ -34,12 +39,14 @@ import org.opensilk.common.ui.mortar.DialogPresenter;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
 
 import mortar.MortarScope;
 import rx.Subscription;
+import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.ActivityRequestCodes;
@@ -60,6 +67,9 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     TreeMap<String, Boolean> sharedFolders;
 
     Subscription deleteSubscription;
+
+    String errorDeviceId;
+    String errorAddresses;
 
     @Inject
     public EditDevicePresenter(
@@ -127,26 +137,97 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         outState.putSerializable("folders", sharedFolders);
     }
 
+    @Bindable
+    public boolean isAdd() {
+        return isAdd;
+    }
+
+    @Bindable
+    public String getDeviceID() {
+        return originalDevice.deviceID;
+    }
+
+    public void setDeviceID(CharSequence deviceID) {
+        if (validateDeviceId(deviceID, true)) {
+            originalDevice.deviceID = deviceID.toString();
+        }
+    }
+
+    public final Action1<CharSequence> actionSetDeviceID = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setDeviceID(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getDeviceIDError() {
+        return errorDeviceId;
+    }
+
+    public void setDeviceIDError(String error) {
+        if (!StringUtils.equals(errorDeviceId, error)) {
+            errorDeviceId = error;
+            notifyChange(syncthing.android.BR.deviceIDError);
+        }
+    }
+
     boolean validateDeviceId(CharSequence text, boolean strict) {
+        int e = 0;
         if (StringUtils.isEmpty(text)) {
-            if (hasView()) {
-                CharSequence err = getView().getContext().getString(R.string.the_device_id_cannot_be_blank);
-                getView().binding.inputDeviceId.setError(err);
-            }
-            return false;
+            e = R.string.the_device_id_cannot_be_blank;
         } else if (strict && !StringUtils.remove(text.toString(), ' ').matches(("^[- \\w\\s]{50,64}$"))) {
-            if (hasView()) {
-                CharSequence err = getView().getContext().getString(R.string.the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional);
-                if (!StringUtils.equals(getView().binding.inputDeviceId.getError(), err)) {
-                    getView().binding.inputDeviceId.setError(err);
-                }
-            }
-            return false;
-        } else {
-            if (hasView()) {
-                getView().binding.inputDeviceId.setError(null);
-            }
-            return true;
+            e = R.string.the_entered_device_id_does_not_look_valid_it_should_be_a_52_or_56_character_string_consisting_of_letters_and_numbers_with_spaces_and_dashes_being_optional;
+        }
+        if (hasView()) {
+            setDeviceIDError(e != 0 ? getView().getContext().getString(e) : null);
+        }
+        return e == 0;
+    }
+
+    @Bindable
+    public String getDeviceName() {
+        return originalDevice.name;
+    }
+
+    public void setDeviceName(CharSequence name) {
+        originalDevice.name = StringUtils.isEmpty(name) ? "" : name.toString();
+    }
+
+    public final Action1<CharSequence> actionSetDeviceName = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setDeviceID(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getAddressesText() {
+        return SyncthingUtils.unrollArray(originalDevice.addresses);
+    }
+
+    public void setAddresses(CharSequence addressesText) {
+        if (validateAddresses(addressesText)) {
+            originalDevice.addresses = SyncthingUtils.rollArray(addressesText.toString());
+        }
+    }
+
+    public final Action1<CharSequence> actionSetAddresses = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setDeviceID(charSequence);
+        }
+    };
+
+    @Bindable
+    public String getAddressesError() {
+        return errorAddresses;
+    }
+
+    public void setAddressesError(String text) {
+        if (!StringUtils.equals(errorAddresses, text)) {
+            errorAddresses = text;
+            notifyChange(syncthing.android.BR.addressesError);
         }
     }
 
@@ -171,8 +252,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
             }
         }
         if (hasView()) {
-            CharSequence err = getView().getContext().getString(R.string.input_error);
-            getView().binding.inputAddresses.setError(invalid ? err : null);
+            setAddressesError(invalid ? getView().getContext().getString(R.string.input_error) : null);
         }
         return !invalid;
     }
@@ -180,43 +260,7 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
     boolean validateAddress(String addr) {
         return StringUtils.startsWith(addr.trim(), "tcp://") &&
                 (SyncthingUtils.isIpAddressWithPort(StringUtils.removeStart(addr.trim(), "tcp://")) ||
-                SyncthingUtils.isDomainNameWithPort(StringUtils.removeStart(addr.trim(), "tcp://")));
-    }
-
-    @Bindable
-    public boolean isAdd() {
-        return isAdd;
-    }
-
-    @Bindable
-    public String getDeviceID() {
-        return originalDevice.deviceID;
-    }
-
-    public void setDeviceID(CharSequence deviceID) {
-        if (validateDeviceId(deviceID, true)) {
-            originalDevice.deviceID = deviceID.toString();
-        }
-    }
-
-    @Bindable
-    public String getDeviceName() {
-        return originalDevice.name;
-    }
-
-    public void setDeviceName(CharSequence name) {
-        originalDevice.name = StringUtils.isEmpty(name) ? "" : name.toString();
-    }
-
-    @Bindable
-    public String getAddressesText() {
-        return SyncthingUtils.unrollArray(originalDevice.addresses);
-    }
-
-    public void setAddresses(CharSequence addressesText) {
-        if (validateAddresses(addressesText)) {
-            originalDevice.addresses = SyncthingUtils.rollArray(addressesText.toString());
-        }
+                        SyncthingUtils.isDomainNameWithPort(StringUtils.removeStart(addr.trim(), "tcp://")));
     }
 
     @Bindable
@@ -228,6 +272,23 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         originalDevice.compression = compression;
     }
 
+    public final Action1<Integer> actionOnCompressionChanged = new Action1<Integer>() {
+        @Override
+        public void call(Integer checkedId) {
+            switch (checkedId) {
+                case R.id.radio_all_compression:
+                    setCompression(Compression.ALWAYS);
+                    break;
+                case R.id.radio_meta_compression:
+                    setCompression(Compression.METADATA);
+                    break;
+                case R.id.radio_no_compression:
+                    setCompression(Compression.NEVER);
+                    break;
+            }
+        }
+    };
+
     @Bindable
     public boolean isIntroducer() {
         return originalDevice.introducer;
@@ -237,13 +298,53 @@ public class EditDevicePresenter extends EditPresenter<EditDeviceScreenView> imp
         originalDevice.introducer = introducer;
     }
 
+    public final Action1<Boolean> actionSetIntroducer = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            setIntroducer(aBoolean);
+        }
+    };
+
     public void setFolderShared(String folderId, boolean shared) {
         sharedFolders.put(folderId, shared);
     }
 
+    @BindingAdapter("addShareFolders")
+    public static void addSharedFolders(LinearLayout shareFoldersContainer, EditDevicePresenter presenter) {
+        if (presenter == null) return;
+        shareFoldersContainer.removeAllViews();
+        for (Map.Entry<String, Boolean> e : presenter.sharedFolders.entrySet()) {
+            final String id = e.getKey();
+            CheckBox checkBox = new CheckBox(shareFoldersContainer.getContext());
+            checkBox.setText(id);
+            checkBox.setChecked(e.getValue());
+            shareFoldersContainer.addView(checkBox);
+            presenter.bindingSubscriptions().add(RxCompoundButton.checkedChanges(checkBox)
+                    .subscribe(checked -> {
+                        presenter.setFolderShared(id, checked);
+                    }));
+        }
+    }
+
     public void saveDevice(View btn) {
-        if (!hasView()) return;
-        //TODO check if any input fields are invalid
+        boolean invalid = false;
+        invalid |= errorDeviceId != null;
+        invalid |= errorAddresses != null;
+        if (invalid) {
+            dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                    .setTitle(R.string.input_error)
+                    .setMessage(R.string.input_error_message)
+                    .setPositiveButton(android.R.string.cancel, null)
+                    .setNegativeButton(R.string.save, (d,w) -> {
+                        saveDevice();
+                    })
+                    .create());
+        } else {
+            saveDevice();
+        }
+    }
+
+    private void saveDevice() {
         unsubscribe(saveSubscription);
         onSaveStart();
         saveSubscription = controller.editDevice(originalDevice, sharedFolders,

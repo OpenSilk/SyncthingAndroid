@@ -28,8 +28,7 @@
     <syncthing.android.ui.sessionsettings.EditDeviceScreenView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
-
+        android:onViewDetachedFromWindow="@{presenter.dropViewListener}">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -77,7 +76,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
+                        app:errorEnabled="true"
+                        app:error="@{presenter.deviceIDError}">
 
                         <EditText
                             android:id="@+id/edit_device_id"
@@ -85,6 +85,7 @@
                             android:layout_height="wrap_content"
                             android:text="@{presenter.deviceID}"
                             android:enabled="@{presenter.isAdd}"
+                            app:textChanges="@{presenter.actionSetDeviceID}"
                             style="@style/session.edit.EditText"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -130,6 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@{presenter.deviceName}"
+                    app:textChanges="@{presenter.actionSetDeviceName}"
                     style="@style/session.edit.EditText"/>
 
                 <TextView
@@ -148,13 +150,15 @@
                     android:id="@+id/input_addresses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    app:error="@{presenter.addressesError}">
 
                     <EditText
                         android:id="@+id/edit_addresses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{presenter.addressesText}"
+                        app:textChanges="@{presenter.actionSetAddresses}"
                         style="@style/session.edit.EditText"/>
 
                 </android.support.design.widget.TextInputLayout>
@@ -174,7 +178,8 @@
                 <RadioGroup
                     android:id="@+id/radio_group_compression"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:checkedChanges="@{presenter.actionOnCompressionChanged}">
 
                     <RadioButton
                         android:id="@+id/radio_all_compression"
@@ -208,6 +213,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/introducer"
                     android:checked="@{presenter.introducer}"
+                    app:checkedChanges="@{presenter.actionSetIntroducer}"
                     style="@style/session.edit.Checkbox"/>
 
                 <TextView
@@ -232,7 +238,8 @@
                     android:id="@+id/share_folders_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical"
+                    app:addShareFolders="@{presenter}"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
