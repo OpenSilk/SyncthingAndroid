@@ -26,7 +26,7 @@ public class FolderConfig implements Serializable, Cloneable {
     public int rescanIntervalS;
     public boolean ignorePerms;
     public boolean autoNormalize;
-    public VersioningConfig versioning;
+    public Versioning versioning;
     public int copiers;// = 1;
     public int pullers;// = 16;
     public int hashers;// = 0;
@@ -39,7 +39,7 @@ public class FolderConfig implements Serializable, Cloneable {
         f.readOnly = false;
         f.rescanIntervalS = 86400;
         f.autoNormalize = true;
-        f.versioning = new VersioningConfig();
+        f.versioning = new VersioningNone(VersioningType.NONE);
         f.order = PullOrder.RANDOM;
         f.invalid = "";
         return f;

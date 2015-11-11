@@ -29,6 +29,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import syncthing.api.model.Versioning;
+import syncthing.api.model.VersioningTypeConverter;
 import syncthing.api.model.event.Event;
 import syncthing.api.model.event.EventDeserializer;
 
@@ -44,6 +46,7 @@ public class GsonModule {
                 .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
                 .registerTypeAdapter(Event.class, new EventDeserializer())
+                .registerTypeAdapter(Versioning.class, new VersioningTypeConverter())
                 .create();
     }
 
