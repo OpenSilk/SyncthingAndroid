@@ -28,7 +28,6 @@
     <string name="double_star">**</string>
     <string name="double_slash">//</string>
     <string name="ignore_files_help">https://github.com/syncthing/syncthing/wiki/Ignoring-Files</string>
-    <string name="default_port">8384</string>
     <string name="opensilk_org_url">http://www.opensilk.org/</string>
     <string name="feedback_email">mailto:market.opensilk@gmail.com</string>
     <string name="feedback_email_subject">Feedback: Syncthing app</string>

@@ -55,7 +55,6 @@ import syncthing.android.service.SyncthingUtils;
 import syncthing.android.settings.AppSettings;
 import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.login.LoginFragment;
-import syncthing.android.ui.login.LoginUtils;
 import syncthing.api.SessionManager;
 import syncthing.api.SynchingApiWrapper;
 import syncthing.api.SyncthingApi;
@@ -195,7 +194,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
      * calls are oneshot deals.
      */
     void onInstanceInitialized() {
-        configBuilder.setUrl(LoginUtils.buildUrl(ConfigXml.LOCALHOST_IP, ConfigXml.DEFAULT_PORT, true));
+        configBuilder.setUrl(SyncthingUtils.buildUrl(ConfigXml.LOCALHOST_IP, ConfigXml.DEFAULT_PORT, true));
         subscription = Observable.using(
                 () -> {
                     Timber.d("Acquiring session");
@@ -206,7 +205,7 @@ public class WelcomePresenter extends ViewPresenter<WelcomeScreenView>{
                     return Observable.defer(() -> Observable.zip(api.system(), api.config(), (systemInfo, config) -> {
                         //build our localhost credentials
                         Credentials.Builder builder = Credentials.builder();
-                        builder.setUrl(LoginUtils.buildUrl(ConfigXml.LOCALHOST_IP,
+                        builder.setUrl(SyncthingUtils.buildUrl(ConfigXml.LOCALHOST_IP,
                                 ConfigXml.DEFAULT_PORT, true));
                         builder.setApiKey(config.gui.apiKey);
                         builder.setId(systemInfo.myID);

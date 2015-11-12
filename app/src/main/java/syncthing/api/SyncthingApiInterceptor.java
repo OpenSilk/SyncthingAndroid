@@ -25,6 +25,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 /**
  * Created by drew on 10/10/15.
  */
@@ -46,6 +48,9 @@ public class SyncthingApiInterceptor implements Interceptor {
             request = request.newBuilder()
                     .addHeader("Authorization", StringUtils.trim(config.getAuth()))
                     .build();
+        }
+        if (config.isDebug()) {
+            Timber.d("Calling %s", request.urlString());
         }
         return chain.proceed(request);
     }

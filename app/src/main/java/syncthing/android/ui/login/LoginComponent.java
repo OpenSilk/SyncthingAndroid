@@ -21,6 +21,7 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 
 import rx.functions.Func2;
 import syncthing.android.ui.ManageActivityComponent;
+import syncthing.android.ui.binding.ViewBinderComponent;
 
 /**
 * Created by drew on 3/11/15.
@@ -30,7 +31,7 @@ import syncthing.android.ui.ManageActivityComponent;
         dependencies = ManageActivityComponent.class,
         modules = LoginModule.class
 )
-public interface LoginComponent {
+public interface LoginComponent extends ViewBinderComponent {
     Func2<ManageActivityComponent, LoginScreen, LoginComponent> FACTORY =
             new Func2<ManageActivityComponent, LoginScreen, LoginComponent>() {
                 @Override
@@ -41,5 +42,4 @@ public interface LoginComponent {
                             .build();
                 }
             };
-    void inject(LoginScreenView view);
 }

@@ -21,6 +21,7 @@ import syncthing.api.model.DeviceConfig;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static syncthing.android.service.SyncthingUtils.*;
 
 /**
@@ -60,12 +61,12 @@ public class SyncthingUtilsTest {
     public void testRollArray() {
         assertArrayEquals(new String[] {"one", "two", "three"}, rollArray("one,two,three"));
         assertArrayEquals(new String[] {"one", "two", "three"}, rollArray("one two three"));
-        assertArrayEquals(new String[] {"one", "two", "three"}, rollArray("one, two,  three"));
+        assertArrayEquals(new String[]{"one", "two", "three"}, rollArray("one, two,  three"));
     }
 
     @Test
     public void testUnrollArray() {
-        assertEquals("one,two,three", unrollArray(new String[] {"one", "two", "three"}));
+        assertEquals("one,two,three", unrollArray(new String[]{"one", "two", "three"}));
     }
 
 
@@ -131,5 +132,30 @@ public class SyncthingUtilsTest {
         assertEquals(interval.getStartMillis(), DateTime.parse("2015-03-20T15:12:00").getMillis());
         assertEquals(interval.getEndMillis(), DateTime.parse("2015-03-21T10:12:00").getMillis());
 
+    }
+
+    @Test
+    public void testBuildUrl() {
+        assertThat(buildUrl("opensilk.org", "8384", false)).isEqualTo("http://opensilk.org:8384");
+        assertThat(buildUrl("opensilk.org", "8384", true)).isEqualTo("https://opensilk.org:8384");
+        assertThat(buildUrl("http://opensilk.org", "8384", true)).isEqualTo("https://opensilk.org:8384");
+        assertThat(buildUrl("opensilk.org/foo", "8384", false)).isEqualTo("http://opensilk.org:8384/foo/");
+        assertThat(buildUrl("opensilk.org/foo/bar/", "8384", false)).isEqualTo("http://opensilk.org:8384/foo/bar/");
+        assertThat(buildUrl("3.3.3.3", "8384", false)).isEqualTo("http://3.3.3.3:8384");
+    }
+
+    @Test
+    public void testExtractHost() {
+        assertThat(extractHost("http://opensilk.org")).isEqualTo("opensilk.org");
+        assertThat(extractHost("http://opensilk.org:8384")).isEqualTo("opensilk.org");
+        assertThat(extractHost("http://opensilk.org:8384/foo/bar")).isEqualTo("opensilk.org");
+        assertThat(extractHost("http://3.3.3.3")).isEqualTo("3.3.3.3");
+    }
+
+    @Test
+    public void testExtractPort() {
+        assertThat(extractPort("http://opensilk.org:8384")).isEqualTo("8384");
+        assertThat(extractPort("http://opensilk.org:8384/foo/bar")).isEqualTo("8384");
+        assertThat(extractPort("http://3.3.3.3:8384")).isEqualTo("8384");
     }
 }

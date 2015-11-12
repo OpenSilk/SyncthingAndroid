@@ -74,6 +74,7 @@ public class EditIgnoresPresenter extends EditPresenter<CoordinatorLayout> {
         } else if (!wasPreviouslyLoaded) {
             getIgnores();
         }
+        wasPreviouslyLoaded = true;
     }
 
     @Override

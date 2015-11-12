@@ -17,7 +17,14 @@
 
 package syncthing.android.ui.login;
 
+import android.databinding.DataBindingUtil;
+import android.support.design.widget.CoordinatorLayout;
+import android.view.View;
+
+import org.opensilk.common.core.dagger2.ScreenScope;
+
 import dagger.Provides;
+import syncthing.android.ui.binding.ViewBinder;
 import syncthing.api.Credentials;
 
 /**
@@ -25,7 +32,9 @@ import syncthing.api.Credentials;
 */
 @dagger.Module
 public class LoginModule {
+
     final LoginScreen screen;
+
     public LoginModule(LoginScreen screen) {
         this.screen = screen;
     }
@@ -35,4 +44,16 @@ public class LoginModule {
         return screen.credentials;
     }
 
+    @Provides @ScreenScope
+    public ViewBinder provideViewBinder(LoginPresenter presenter) {
+        return new ViewBinder() {
+            @Override
+            public void bindView(View view) {
+                syncthing.android.ui.login.LoginViewBinding binding = DataBindingUtil.bind(view, presenter);
+                presenter.takeView((CoordinatorLayout) view);
+                binding.setPresenter(presenter);
+                binding.executePendingBindings();
+            }
+        };
+    }
 }

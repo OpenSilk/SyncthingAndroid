@@ -19,19 +19,16 @@
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data class="syncthing.android.ui.login.LoginScreenViewBinding">
-        <variable
-            name="model"
-            type="syncthing.android.ui.login.LoginScreenViewModel"/>
-        <variable
-            name="presenter"
-            type="syncthing.android.ui.login.LoginPresenter"/>
+    <data class="syncthing.android.ui.login.LoginViewBinding">
+        <variable name="presenter" type="syncthing.android.ui.login.LoginPresenter"/>
     </data>
-    <syncthing.android.ui.login.LoginScreenView
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:transitionGroup="true"
+        android:onViewDetachedFromWindow="@{presenter.dropViewListener}">
 
-        <android.support.design.widget.AppBarLayout
+    <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,6 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
+                android:onViewAttachedToWindow="@{presenter.toolbarAttachedListener}"
+                android:onViewDetachedFromWindow="@{presenter.toolbarDetachedListener}"
                 style="?toolbarStyle"/>
 
         </android.support.design.widget.AppBarLayout>
@@ -72,7 +71,9 @@
                         android:inputType="text"
                         android:singleLine="true"
                         android:imeOptions="actionNext"
-                        android:nextFocusDown="@+id/edit_server_url"/>
+                        android:nextFocusDown="@+id/edit_server_url"
+                        android:text="@{presenter.alias}"
+                        app:textChanges="@{presenter.actionSetAlias}"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -85,7 +86,9 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:hint="@string/ip_or_domain">
+                        android:hint="@string/ip_or_domain"
+                        app:errorEnabled="true"
+                        app:error="@{presenter.errorHost}">
 
                         <EditText
                             android:id="@+id/edit_server_url"
@@ -94,7 +97,9 @@
                             android:inputType="textUri"
                             android:singleLine="true"
                             android:imeOptions="actionNext"
-                            android:nextFocusDown="@+id/edit_server_port"/>
+                            android:nextFocusDown="@+id/edit_server_port"
+                            android:text="@{presenter.host}"
+                            app:textChanges="@{presenter.actionSetHost}"/>
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -111,7 +116,8 @@
                             android:inputType="number"
                             android:imeOptions="actionNext"
                             android:nextFocusDown="@+id/edit_user"
-                            android:text="@string/default_port" />
+                            android:text="@{presenter.port}"
+                            app:textChanges="@{presenter.actionSetPort}"/>
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -129,7 +135,9 @@
                         android:layout_height="wrap_content"
                         android:inputType="textUri"
                         android:imeOptions="actionNext"
-                        android:nextFocusDown="@+id/edit_password"/>
+                        android:nextFocusDown="@+id/edit_password"
+                        android:text="@{presenter.user}"
+                        app:textChanges="@{presenter.actionSetUser}"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -145,7 +153,9 @@
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
                         android:singleLine="true"
-                        android:imeOptions="actionGo"/>
+                        android:imeOptions="actionGo"
+                        android:text="@{presenter.pass}"
+                        app:textChanges="@{presenter.actionSetPass}"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -155,7 +165,9 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/use_tls"/>
+                    android:text="@string/use_tls"
+                    android:checked="@{presenter.tls}"
+                    app:checkedChanges="@{presenter.actionSetTls}"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -187,5 +199,5 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-    </syncthing.android.ui.login.LoginScreenView>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

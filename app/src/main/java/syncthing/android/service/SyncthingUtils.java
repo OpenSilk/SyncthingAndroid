@@ -25,6 +25,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.util.Base64;
 import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
@@ -361,10 +363,14 @@ public class SyncthingUtils {
 
     private static final Pattern ipv4Pattern;
     private static final Pattern ipv4PatternPort;
+    //private static final Pattern ipv4PatternPortPath;
     private static final Pattern ipv6Pattern;
     private static final Pattern ipv6PatternPort;
+    //private static final Pattern ipv6PatternPortPath;
     private static final Pattern domainNamePattern;
     private static final Pattern domainNamePatternPort;
+    private static final Pattern domainNamePatternPath;
+    //private static final Pattern domainNamePatternPortPath;
     static {
         try {
             ipv4Pattern = Pattern.compile("(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])", Pattern.CASE_INSENSITIVE);
@@ -372,8 +378,9 @@ public class SyncthingUtils {
             ipv6Pattern = Pattern.compile("([0-9a-f]{1,4})(:([0-9a-f]){1,4}){7}", Pattern.CASE_INSENSITIVE);
             ipv6PatternPort = Pattern.compile("(\\[)([0-9a-f]{1,4})(:([0-9a-f]){1,4}){7}(\\])(:([1-9]|[1-9]\\d{1,3}|[1-3]\\d{4}|4[0-8]\\d{3}|490\\d{2}|491[0-4]\\d|49150))", Pattern.CASE_INSENSITIVE);
             //TODO support abbreviated form
-            domainNamePattern = Pattern.compile("((?!-)[a-z0-9-]{1,63}(?<!-)\\.)+([a-z]{2,6})", Pattern.CASE_INSENSITIVE);
+            domainNamePattern = Pattern.compile("((?!-)[a-z0-9-]{1,63}(?<!-)\\.)+([a-z]{2,6})(/)?", Pattern.CASE_INSENSITIVE);
             domainNamePatternPort = Pattern.compile("((?!-)[a-z0-9-]{1,63}(?<!-)\\.)+([a-z]{2,6})(:([1-9]|[1-9]\\d{1,3}|[1-3]\\d{4}|4[0-8]\\d{3}|490\\d{2}|491[0-4]\\d|49150))", Pattern.CASE_INSENSITIVE);
+            domainNamePatternPath = Pattern.compile("((?!-)[a-z0-9-]{1,63}(?<!-)\\.)+([a-z]{2,6})(/.+)", Pattern.CASE_INSENSITIVE);
         } catch (PatternSyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -407,5 +414,46 @@ public class SyncthingUtils {
 
     public static boolean isDomainNameWithPort(String hostName) {
         return domainNamePatternPort.matcher(hostName).matches();
+    }
+
+    public static boolean isDomainNameWithPath(String hostname) {
+        return domainNamePatternPath.matcher(hostname).matches();
+    }
+
+    public static String extractHost(String uri) {
+        return Uri.parse(uri).getHost();
+    }
+
+    public static String extractPort(String uri) {
+        return String.valueOf(Uri.parse(uri).getPort());
+    }
+
+    public static boolean isHttps(String uri) {
+        return StringUtils.startsWithIgnoreCase(uri, "https");
+    }
+
+    public static String buildUrl(@NonNull String host, @NonNull String port, boolean tls) {
+        host = stripHttp(StringUtils.trim(host).toLowerCase(Locale.US));
+        port = StringUtils.strip(StringUtils.trim(port), ":");
+        String path = "";
+        if (isDomainNameWithPath(host)) {
+            path = Uri.parse("http://" + host).getPath();
+            host = StringUtils.remove(host, path);
+        }
+        return (tls ? "https://" : "http://") + host + ":" + port +
+                //without the trailing slash retrofit wont build the url correctly
+                ((StringUtils.isEmpty(path) || StringUtils.endsWith(path, "/")) ? path : (path + "/"));
+    }
+
+    private static String stripHttp(String uri) {
+        if (StringUtils.startsWithAny(uri, "http://", "https://")) {
+            uri = StringUtils.remove(uri, "http://");
+            uri = StringUtils.remove(uri, "https://");
+        }
+        return uri;
+    }
+
+    public static String buildAuthorization(String user, String pass) {
+        return "Basic " + Base64.encodeToString((user + ":" + pass).getBytes(), 0);
     }
 }

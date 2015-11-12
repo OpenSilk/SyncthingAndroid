@@ -18,38 +18,48 @@
 package syncthing.android.ui.login;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.databinding.Bindable;
+import android.databinding.PropertyChangeRegistry;
+import android.databinding.adapters.ViewBindingAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.View;
-import android.widget.Toast;
+import android.view.inputmethod.InputMethodManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.dagger2.ForApplication;
 import org.opensilk.common.core.dagger2.ScreenScope;
+import org.opensilk.common.core.rx.RxUtils;
+import org.opensilk.common.ui.mortar.ActionBarConfig;
 import org.opensilk.common.ui.mortar.ActivityResultsController;
 import org.opensilk.common.ui.mortar.DialogPresenter;
+import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
-import mortar.MortarScope;
 import mortar.ViewPresenter;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 import syncthing.android.R;
-import syncthing.api.Credentials;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.settings.AppSettings;
 import syncthing.android.ui.ManageActivity;
+import syncthing.android.ui.binding.BindingSubscriptionsHolder;
+import syncthing.api.Credentials;
 import syncthing.api.Session;
 import syncthing.api.SessionManager;
 import syncthing.api.SynchingApiWrapper;
@@ -62,7 +72,8 @@ import timber.log.Timber;
 * Created by drew on 3/11/15.
 */
 @ScreenScope
-public class LoginPresenter extends ViewPresenter<LoginScreenView> {
+public class LoginPresenter extends ViewPresenter<CoordinatorLayout> implements
+        android.databinding.Observable, BindingSubscriptionsHolder {
 
     enum State {
         NONE,
@@ -76,15 +87,26 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
     final AppSettings settings;
     final SessionManager manager;
     final DialogPresenter dialogPresenter;
+    final ToolbarOwner toolbarOwner;
 
-    final LoginScreenViewModel viewModel = new LoginScreenViewModel();
     final AtomicReference<Credentials> credentials = new AtomicReference<>();
     final SyncthingApiConfig.Builder configBuilder = SyncthingApiConfig.builder();
+    final PropertyChangeRegistry registry = new PropertyChangeRegistry();
 
+    String alias = "";
+    String host = "";
+    String port = "8384";
+    String user = "";
+    String pass = "";
+    boolean tls;
+    String errorHost;
+
+    CompositeSubscription bindingSubscriptions;
     Subscription subscription;
     String error;
     Session session;
     State state = State.NONE;
+    boolean wasPreviouslyLoaded;
 
     @Inject
     public LoginPresenter(
@@ -93,7 +115,8 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
             ActivityResultsController activityResultsController,
             SessionManager manager,
             AppSettings settings,
-            DialogPresenter dialogPresenter
+            DialogPresenter dialogPresenter,
+            ToolbarOwner toolbarOwner
     ) {
         this.appContext = context;
         this.credentials.set(initialCredentials);
@@ -104,12 +127,7 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
             configBuilder.forCredentials(initialCredentials);
         }
         this.dialogPresenter = dialogPresenter;
-    }
-
-    @Override
-    protected void onEnterScope(MortarScope scope) {
-        Timber.d("onEnterScope");
-        super.onEnterScope(scope);
+        this.toolbarOwner = toolbarOwner;
     }
 
     @Override
@@ -127,16 +145,17 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        if (savedInstanceState == null) {
+        if (!wasPreviouslyLoaded && savedInstanceState != null) {
+            credentials.set(savedInstanceState.getParcelable("creds"));
+        } else if (!wasPreviouslyLoaded) {
             if (credentials.get() != Credentials.NONE) {
                 Credentials c = credentials.get();
-                viewModel.setAlias(c.alias);
-                viewModel.setHost(LoginUtils.extractHost(c.url));
-                viewModel.setPort(LoginUtils.extractPort(c.url));
-                viewModel.setTls(LoginUtils.isHttps(c.url));
+                alias = c.alias;
+                host = SyncthingUtils.extractHost(c.url);
+                port = SyncthingUtils.extractPort(c.url);
+                tls = SyncthingUtils.isHttps(c.url);
             }
         }
-        getView().binding.setModel(viewModel);
         switch (state) {
             case ERROR:
                 showError();
@@ -150,15 +169,44 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
         }
     }
 
+    @Override
+    protected void onSave(Bundle outState) {
+        super.onSave(outState);
+        outState.putParcelable("creds", credentials.get());
+    }
+
+    @Override
+    public CompositeSubscription bindingSubscriptions() {
+        return (bindingSubscriptions != null) ? bindingSubscriptions : (bindingSubscriptions = new CompositeSubscription());
+    }
+
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        registry.add(callback);
+    }
+
+    @Override
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+        registry.remove(callback);
+    }
+
+    private void notifyChange(int id) {
+        registry.notifyChange(this, id);
+    }
+
     public void submit(View btn) {
-        if (!hasView()) return;
-        LoginScreenView v = getView();
-        if (LoginUtils.validateHost(viewModel.getHost())
-                && LoginUtils.validatePort(viewModel.getPort())) {
-            v.dismissKeyboard();
-            fetchApiKey();
+        dismissKeyboard(btn);
+        if (isInputInvalid()) {
+            dialogPresenter.showDialog(context -> new AlertDialog.Builder(context)
+                    .setTitle(R.string.input_error)
+                    .setMessage(R.string.input_error_message)
+                    .setPositiveButton(android.R.string.cancel, null)
+                    .setNegativeButton(R.string.save, (d, w) -> {
+                        fetchApiKey();
+                    })
+                    .create());
         } else {
-            Toast.makeText(v.getContext(), R.string.input_error, Toast.LENGTH_SHORT).show();
+            fetchApiKey();
         }
     }
 
@@ -170,10 +218,16 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
         if (!hasView()) return;
         state = State.LOADING;
         showLoading();
-        String url = LoginUtils.buildUrl(viewModel.getHost(), viewModel.getPort(), viewModel.isTls());
+        String url = SyncthingUtils.buildUrl(
+                host, //TODO undocumented behavior (default port)
+                StringUtils.isEmpty(port) ? (tls ? "443" : "80") : port,
+                tls
+        );
+        Timber.d("Logging into %s", url);
         credentials.set(credentials.get().buildUpon().setUrl(url).build());
         configBuilder.setUrl(url);
-        configBuilder.setAuth(LoginUtils.buildAuthorization(viewModel.getUser(), viewModel.getPass()));
+        configBuilder.setAuth(SyncthingUtils.buildAuthorization(user, pass));
+        configBuilder.setDebug(true);
         if (session != null) {
             manager.release(session);
         }
@@ -186,7 +240,7 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
                             Credentials.Builder builder = credentials.get().buildUpon();
                             builder.setId(pair.second.myID);
                             builder.setApiKey(pair.first.gui.apiKey);
-                            if (StringUtils.isEmpty(viewModel.getAlias())) {
+                            if (StringUtils.isEmpty(alias)) {
                                 for (DeviceConfig d : pair.first.devices) {
                                     if (StringUtils.equals(d.deviceID, pair.second.myID)) {
                                         builder.setAlias(SyncthingUtils.getDisplayName(d));
@@ -194,13 +248,13 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
                                     }
                                 }
                             } else {
-                                builder.setAlias(viewModel.getAlias());
+                                builder.setAlias(alias);
                             }
                             credentials.set(builder.build());
                         },
                         this::notifyLoginError,
                         this::saveKeyAndFinish
-        );
+                );
     }
 
     void notifyLoginError(Throwable t) {
@@ -265,5 +319,153 @@ public class LoginPresenter extends ViewPresenter<LoginScreenView> {
     public void exitCanceled() {
         activityResultsController.setResultAndFinish(Activity.RESULT_CANCELED, new Intent());
     }
+
+    void dismissKeyboard(View v) {
+        final InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
+    boolean isInputInvalid() {
+        boolean invalid = false;
+        invalid |= errorHost != null;
+        return invalid;
+    }
+
+    @Bindable
+    public String getAlias() {
+        return alias;
+    }
+
+    public final Action1<CharSequence> actionSetAlias = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            String s = StringUtils.isEmpty(charSequence) ? "" : charSequence.toString();
+            if (!StringUtils.equals(s, alias)) {
+                alias = s;
+            }
+        }
+    };
+
+    @Bindable
+    public String getHost() {
+        return host;
+    }
+
+    @Bindable
+    public String getErrorHost() {
+        return errorHost;
+    }
+
+    public final Action1<CharSequence> actionSetHost = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            String s = StringUtils.isEmpty(charSequence) ? "" : charSequence.toString();
+            boolean invalid = false;
+            if (StringUtils.isEmpty(s)) {
+                invalid = true;
+            }
+            if (hasView()) {
+                String err = (invalid ? getView().getContext().getString(R.string.input_error) : null);
+                if (!StringUtils.equals(err, errorHost)) {
+                    errorHost = err;
+                    notifyChange(syncthing.android.BR.errorHost);
+                }
+            }
+            if (!invalid && !StringUtils.equals(s, host)) {
+                host = s;
+            }
+        }
+    };
+
+    @Bindable
+    public String getPort() {
+        return port;
+    }
+
+    public final Action1<CharSequence> actionSetPort = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            String s = StringUtils.isEmpty(charSequence) ? "" : charSequence.toString();
+            if (!StringUtils.equals(s, port)) {
+                port = s;
+            }
+        }
+    };
+
+    @Bindable
+    public String getUser() {
+        return user;
+    }
+
+    public final Action1<CharSequence> actionSetUser = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            String s = StringUtils.isEmpty(charSequence) ? "" : charSequence.toString();
+            if (!StringUtils.equals(s, user)) {
+                user = s;
+            }
+        }
+    };
+
+    @Bindable
+    public String getPass() {
+        return pass;
+    }
+
+    public final Action1<CharSequence> actionSetPass = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            String s = StringUtils.isEmpty(charSequence) ? "" : charSequence.toString();
+            if (!StringUtils.equals(s, pass)) {
+                pass = s;
+            }
+        }
+    };
+
+    @Bindable
+    public boolean isTls() {
+        return tls;
+    }
+
+    public final Action1<Boolean> actionSetTls = new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            tls = aBoolean;
+        }
+    };
+
+    public final ViewBindingAdapter.OnViewAttachedToWindow toolbarAttachedListener =
+            new ViewBindingAdapter.OnViewAttachedToWindow() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    Timber.d("attachingtoolbar");
+                    Toolbar toolbar = (Toolbar)v;
+                    toolbarOwner.attachToolbar(toolbar);
+                    toolbarOwner.setConfig(ActionBarConfig.builder().setTitle(R.string.login).build());
+                }
+            };
+
+    public final ViewBindingAdapter.OnViewDetachedFromWindow toolbarDetachedListener =
+            new ViewBindingAdapter.OnViewDetachedFromWindow() {
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    Timber.d("detachingToolbar");
+                    Toolbar toolbar = (Toolbar) v;
+                    toolbarOwner.detachToolbar(toolbar);
+                }
+            };
+
+    public final ViewBindingAdapter.OnViewDetachedFromWindow dropViewListener =
+            new ViewBindingAdapter.OnViewDetachedFromWindow() {
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    Timber.d("Dropping view %s");
+                    dropView((CoordinatorLayout) v);
+                    RxUtils.unsubscribe(bindingSubscriptions);
+                    bindingSubscriptions = null;
+                }
+            };
 
 }

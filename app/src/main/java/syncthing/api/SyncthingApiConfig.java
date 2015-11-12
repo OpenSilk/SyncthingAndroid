@@ -28,12 +28,14 @@ public class SyncthingApiConfig {
     final String caCert;
     final String apiKey;
     final String auth;
+    final boolean debug;
 
     private SyncthingApiConfig(Builder builder) {
         this.url = builder.url;
         this.caCert = builder.caCert;
         this.apiKey = builder.apiKey;
         this.auth = builder.auth;
+        this.debug = builder.debug;
     }
 
     public String getBaseUrl() {
@@ -52,6 +54,10 @@ public class SyncthingApiConfig {
         return auth;
     }
 
+    boolean isDebug() {
+        return debug;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -61,6 +67,7 @@ public class SyncthingApiConfig {
         String caCert;
         String apiKey;
         String auth;
+        boolean debug;
 
         public Builder forCredentials(Credentials credentials) {
             this.url = credentials.url;
@@ -87,6 +94,11 @@ public class SyncthingApiConfig {
 
         public Builder setAuth(String auth) {
             this.auth = auth;
+            return this;
+        }
+
+        public Builder setDebug(boolean debug) {
+            this.debug = debug;
             return this;
         }
 
