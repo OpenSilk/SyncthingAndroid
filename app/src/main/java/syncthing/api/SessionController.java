@@ -156,22 +156,22 @@ public class SessionController implements EventMonitor.EventListener {
     final FolderStatsMap folderStats = new FolderStatsMap();
     final AtomicReference<Version> version = new AtomicReference<>();
     //synchronize on self
-    final Map<String, Model> models = new LinkedHashMap<>(10);
+    final Map<String, Model> models = new HashMap<>(10);
     //synchronize on self
-    final Map<String, FolderConfig> folders = new LinkedHashMap<>(10);
+    final Map<String, FolderConfig> folders = new LinkedHashMap<>(10); //we pre sort this
     //synchronize on self
-    final Map<String, DeviceConfig> devices = new LinkedHashMap<>(10);
+    final Map<String, DeviceConfig> devices = new LinkedHashMap<>(10); //we pre sort this
     //synchronize on self TODO a map of a map? really???
-    final Map<String, Map<String, Integer>> completion = new LinkedHashMap<>(10);
+    final Map<String, Map<String, Float>> completion = new HashMap<>(10);
     //synchronize on self
-    final Map<String, DeviceRejected> deviceRejections = new LinkedHashMap<>();
+    final Map<String, DeviceRejected> deviceRejections = new LinkedHashMap<>(); //want displayed in order received
     //synchronize on self
-    final Map<String, FolderRejected> folderRejections = new LinkedHashMap<>();
+    final Map<String, FolderRejected> folderRejections = new LinkedHashMap<>(); //want displayed in order received
     final AtomicReference<SystemErrors> errorsList = new AtomicReference<>();
     //synchronize on self
     final WeakHashMap<String, Subscription> activeSubscriptions = new WeakHashMap<>();
     //synchronize on self
-    final Map<String, FolderScanProgress.Data> folderScanProgress = new LinkedHashMap<>();
+    final Map<String, FolderScanProgress.Data> folderScanProgress = new HashMap<>();
 
     //Following synchronized by lock
     private final Object lock = new Object();
@@ -761,9 +761,7 @@ public class SessionController implements EventMonitor.EventListener {
                     }
                 }
                 //also update completion
-                if (!StringUtils.equals("total", key)) {
-                    updateCompletionTotal(key, 100);
-                }
+                resetCompletionTotal(key);
             }
             connections.connections = conns.connections;
             connections.total = conns.total;
@@ -869,9 +867,9 @@ public class SessionController implements EventMonitor.EventListener {
         Timber.d("Updating completion for %s", device);
         synchronized (completion) {
             if (!completion.containsKey(device)) {
-                completion.put(device, new HashMap<String, Integer>());
+                completion.put(device, new HashMap<String, Float>());
             }
-            completion.get(device).put(folder, Math.round(comp.completion));
+            completion.get(device).put(folder, comp.completion);
             float tot = 0;
             int cnt = 0;
             for (String key : completion.get(device).keySet()) {
@@ -879,30 +877,30 @@ public class SessionController implements EventMonitor.EventListener {
                 tot += completion.get(device).get(key);
                 cnt++;
             }
-            completion.get(device).put("_total", Math.min(100, Math.round(tot / cnt)));
+            completion.get(device).put("_total", tot / cnt);
         }
     }
 
-    void updateCompletionTotal(String deviceId, int comp) {
+    void resetCompletionTotal(String deviceId) {
         synchronized (completion) {
             if (!completion.containsKey(deviceId)) {
-                completion.put(deviceId, new HashMap<String, Integer>());
+                completion.put(deviceId, new HashMap<String, Float>());
             }
-            completion.get(deviceId).put("_total", comp);
+            completion.get(deviceId).put("_total", 100f);
         }
     }
 
     public int getCompletionTotal(String deviceId) {
         synchronized (completion) {
             if (completion.containsKey(deviceId)) {
-                return completion.get(deviceId).get("_total");
+                return Math.min(100, Math.round(completion.get(deviceId).get("_total")));
             } else {
                 return -1;
             }
         }
     }
 
-    public @Nullable Map<String, Integer> getCompletionStats(String deviceId) {
+    public @Nullable Map<String, Float> getCompletionStats(String deviceId) {
         synchronized (completion) {
             return Collections.unmodifiableMap(completion.get(deviceId));
         }
