@@ -17,6 +17,7 @@ import com.google.gson.annotations.SerializedName;
 public enum ConnectionType {
     @SerializedName("direct-accept") DIRECT_ACCEPT,
     @SerializedName("direct-dial") DIRECT_DIAL,
-    @SerializedName("") UNKNOWN
-    //TODO MORE?
+    @SerializedName("relay-accept") RELAY_ACCEPT,
+    @SerializedName("relay-dial") RELAY_DIAL,
+    UNKNOWN
 }
