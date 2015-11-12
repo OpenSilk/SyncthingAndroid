@@ -34,7 +34,7 @@
     <string name="copied_from_original">Copiado del original</string>
     <string name="copyright_2015_the_following_contributors">Derechos de autor © 2015 los siguientes colaboradores:</string>
     <string name="cpu_utilization">Uso de CPU</string>
-    <string name="days">days</string>
+    <string name="days">días</string>
     <string name="delete">Suprimir</string>
     <string name="deleted">Suprimido</string>
     <string name="device_device_address_wants_to_connect_add_new_device">El dispositivo %1$s (%2$s) se quiere conectar. ¿Agregar nuevo dispositivo?</string>
@@ -80,12 +80,12 @@
     <string name="gui_authentication_user">Usuario de la GUI</string>
     <string name="gui_listen_addresses">Direcciones de escucha para la GUI.</string>
     <string name="help">Ayuda</string>
-    <string name="home_page">Home page</string>
+    <string name="home_page">Pagina de inicio</string>
     <string name="ignore">Ignorar</string>
     <string name="ignore_patterns">Patrones de exclusión</string>
     <string name="ignore_permissions">Ignorar permisos</string>
     <string name="incoming_rate_limit_kibs">Límite de velocidad de entrada (KiB/s)</string>
-    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Incorrect configuration may damage your folder contents and render Syncthing inoperable.</string>
+    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Configuración incorrecta puede dañar los contenidos de la carpeta y hacer Syncthing inoperable.</string>
     <string name="introducer">Introductor</string>
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Inversión de la condición dada (es decir, no excluir)</string>
     <string name="items">ítems</string>
@@ -100,7 +100,7 @@
     <string name="major_upgrade">Actualización mayor</string>
     <string name="maximum_age">Edad máxima</string>
     <string name="metadata_only">Sólo metadatos</string>
-    <string name="minimum_free_disk_space">Minimum Free Disk Space</string>
+    <string name="minimum_free_disk_space">Espacio mínimo libre en disco</string>
     <string name="move_to_top_of_queue">Mover al principio de la cola.</string>
     <string name="multi_level_wildcard_matches_multiple_directory_levels">Carácter comodín multinivel (coincide en el directorio y  sus subdirectorios)</string>
     <string name="never">Nunca</string>
@@ -129,8 +129,8 @@
     <string name="quick_guide_to_supported_patterns">Guía rápida sobre los patrones soportados</string>
     <string name="ram_utilization">Utilización de RAM</string>
     <string name="random">Aleatorio</string>
-    <string name="relayed_via">Relayed via</string>
-    <string name="relays">Relays</string>
+    <string name="relayed_via">retransmitida vía</string>
+    <string name="relays">Relés</string>
     <string name="release_notes">Notas de lanzamiento</string>
     <string name="remove">Eliminar</string>
     <string name="rescan">Reescanear</string>

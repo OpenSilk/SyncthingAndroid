@@ -36,7 +36,7 @@
     <string name="cpu_utilization">CPU </string>
     <string name="days">Zile</string>
     <string name="delete">Şterge</string>
-    <string name="deleted">Deleted</string>
+    <string name="deleted">Șters</string>
     <string name="device_device_address_wants_to_connect_add_new_device">Dispozitivul%1$s(%2$s)vrea sa se conecteze.Adaug un dispozitiv nou?</string>
     <string name="device_id">ID Dispozitiv</string>
     <string name="device_identification">Identificare Dispozitiv</string>
@@ -113,7 +113,7 @@
     <string name="off">Închis</string>
     <string name="ok">OK</string>
     <string name="oldest_first">Oldest First</string>
-    <string name="options">Options</string>
+    <string name="options">Opțiuni</string>
     <string name="out_of_sync">Out of Sync</string>
     <string name="out_of_sync_items">Elemente Nesincronizate</string>
     <string name="outgoing_rate_limit_kibs">Limită Viteză de Upload (KB/s)</string>
@@ -192,7 +192,7 @@
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Câte zile să se păstreze o versiune (setează 0 pentru nelimitat)</string>
     <string name="the_minimum_free_disk_space_percentage_must_be_a_nonnegative_number_between_0_and_100_inclusive">The minimum free disk space percentage must be a non-negative number between 0 and 100 (inclusive).</string>
     <string name="the_number_of_days_must_be_a_number_and_cannot_be_blank">The number of days must be a number and cannot be blank.</string>
-    <string name="the_number_of_days_to_keep_files_in_the_trash_can_zero_means_forever">The number of days to keep files in the trash can. Zero means forever.</string>
+    <string name="the_number_of_days_to_keep_files_in_the_trash_can_zero_means_forever">Numărul de zile pentru a păstra fișierele in urnă.Zero înseamnă permanent.</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Numărul de versiuni vechi de salvat per fişier.</string>
     <string name="the_number_of_versions_must_be_a_number_and_cannot_be_blank">Numărul de versiuni trebuie să fie un număr şi nu poate fi gol.</string>
     <string name="the_path_cannot_be_blank">Locația nu poate fi goală.</string>

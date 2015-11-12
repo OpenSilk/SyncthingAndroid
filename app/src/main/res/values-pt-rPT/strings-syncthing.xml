@@ -44,7 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s quer partilhar a pasta \"%2$s\".</string>
     <string name="devices">Dispositivos</string>
     <string name="disconnected">Desconectado</string>
-    <string name="discovery">Busca</string>
+    <string name="discovery">Detecção</string>
     <string name="documentation">Documentação</string>
     <string name="download_rate">Velocidade de recepção</string>
     <string name="downloaded">Recebido</string>
@@ -54,7 +54,7 @@
     <string name="edit_folder">Editar pasta</string>
     <string name="editing">Editando</string>
     <string name="enable_upnp">Activar UPnP</string>
-    <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Introduza endereços separados por vírgulas (\"tcp://ip:porto\", \"tcp://máquina:porto\") ou \"dynamic\" para descobrir automaticamente os endereços.</string>
+    <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Introduza endereços separados por vírgulas (\"tcp://ip:porto\", \"tcp://máquina:porto\") ou \"dynamic\" para detectar automaticamente os endereços.</string>
     <string name="enter_ignore_patterns_one_per_line">Escreva os padrões de exclusão, um por linha.</string>
     <string name="error">Erro</string>
     <string name="external_file_versioning">Externa</string>
@@ -72,8 +72,8 @@
     <string name="folders">Pastas</string>
     <string name="full_documentation">documentação completa</string>
     <string name="generate">Gerar</string>
-    <string name="global_discovery">Busca global</string>
-    <string name="global_discovery_server">Servidor da busca global</string>
+    <string name="global_discovery">Detecção global</string>
+    <string name="global_discovery_server">Servidor de detecção global</string>
     <string name="global_state">Estado global</string>
     <string name="gui">GUI</string>
     <string name="gui_authentication_password">Senha da autenticação na interface gráfica</string>
@@ -94,7 +94,7 @@
     <string name="last_file_received">Último ficheiro recebido</string>
     <string name="last_seen">Última vez que foi verificado</string>
     <string name="later">Mais tarde</string>
-    <string name="local_discovery">Busca local</string>
+    <string name="local_discovery">Detecção local</string>
     <string name="local_state">Estado local</string>
     <string name="local_state_total">Estado local (total)</string>
     <string name="major_upgrade">Actualização importante</string>
@@ -129,8 +129,8 @@
     <string name="quick_guide_to_supported_patterns">Guia rápido dos padrões suportados</string>
     <string name="ram_utilization">Utilização da RAM</string>
     <string name="random">Aleatória</string>
-    <string name="relayed_via">Transmitido via</string>
-    <string name="relays">Transmissores</string>
+    <string name="relayed_via">Retransmitido via</string>
+    <string name="relays">Retransmissores</string>
     <string name="release_notes">Notas de lançamento</string>
     <string name="remove">Remover</string>
     <string name="rescan">Verificar agora</string>
