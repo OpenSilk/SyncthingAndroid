@@ -17,19 +17,14 @@
 
 package syncthing.android.service;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.IBinder;
 import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
@@ -47,7 +42,6 @@ import java.io.InputStream;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.util.Locale;
-import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -60,88 +54,7 @@ import timber.log.Timber;
  */
 public class SyncthingUtils {
 
-    //private static ISyncthingInstance sService;
     private static int sForegroundActivities;
-    private static final WeakHashMap<Context, ServiceBinder> sConnectionMap;
-
-    static {
-        sConnectionMap = new WeakHashMap<>();
-    }
-
-    /**
-     * @param context The {@link Context} to use
-     * @param callback The {@link ServiceConnection} to use
-     * @return The new instance of {@link ServiceToken}
-     */
-    public static ServiceToken bindToService(final Context context, final ServiceConnection callback) {
-        final ContextWrapper contextWrapper;
-        if (context instanceof Activity) {
-            Activity realActivity = ((Activity)context).getParent();
-            if (realActivity == null) {
-                realActivity = (Activity) context;
-            }
-            contextWrapper = new ContextWrapper(realActivity);
-        } else {
-            contextWrapper = new ContextWrapper(context);
-        }
-        contextWrapper.startService(new Intent(contextWrapper, SyncthingInstance.class));
-        final ServiceBinder binder = new ServiceBinder(callback);
-        if (contextWrapper.bindService(new Intent(contextWrapper, SyncthingInstance.class), binder, 0)) {
-            sConnectionMap.put(contextWrapper, binder);
-            return new ServiceToken(contextWrapper);
-        }
-        return null;
-    }
-
-    /**
-     * @param token The {@link ServiceToken} to unbind from
-     */
-    public static void unbindFromService(final ServiceToken token) {
-        if (token == null) {
-            return;
-        }
-        final ContextWrapper contextWrapper = token.mWrappedContext;
-        final ServiceBinder binder = sConnectionMap.remove(contextWrapper);
-        if (binder == null) {
-            return;
-        }
-        contextWrapper.unbindService(binder);
-        if (sConnectionMap.isEmpty()) {
-            //sService = null;
-        }
-    }
-
-    public static class ServiceBinder implements ServiceConnection {
-        private final ServiceConnection mCallback;
-
-        public ServiceBinder(final ServiceConnection callback) {
-            mCallback = callback;
-        }
-
-        @Override
-        public void onServiceConnected(final ComponentName className, final IBinder service) {
-            //sService = SyncthingInstanceBinder.asInterface (service);
-            if (mCallback != null) {
-                mCallback.onServiceConnected(className, service);
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(final ComponentName className) {
-            if (mCallback != null) {
-                mCallback.onServiceDisconnected(className);
-            }
-            //sService = null;
-        }
-    }
-
-    public static final class ServiceToken {
-        public ContextWrapper mWrappedContext;
-
-        public ServiceToken(final ContextWrapper context) {
-            mWrappedContext = context;
-        }
-    }
 
     /**
      * Used to build and show a notification when Syncthing is sent into the background
