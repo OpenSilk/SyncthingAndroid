@@ -75,7 +75,6 @@ import syncthing.api.model.Model;
 import syncthing.api.model.ModelState;
 import syncthing.api.model.Ok;
 import syncthing.api.model.OptionsConfig;
-import syncthing.api.model.Report;
 import syncthing.api.model.SystemErrors;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.SystemMessage;
@@ -156,7 +155,6 @@ public class SessionController implements EventMonitor.EventListener {
     //synchronize on self
     final FolderStatsMap folderStats = new FolderStatsMap();
     final AtomicReference<Version> version = new AtomicReference<>();
-    final AtomicReference<Report> report = new AtomicReference<>();
     //synchronize on self
     final Map<String, Model> models = new LinkedHashMap<>(10);
     //synchronize on self
@@ -423,8 +421,7 @@ public class SessionController implements EventMonitor.EventListener {
                         restApi.connections(),
                         restApi.deviceStats(),
                         restApi.folderStats(),
-                        restApi.version(),
-                        restApi.report()
+                        restApi.version()
                 ).toMap(
                         Object::getClass
                 ).subscribe(
@@ -436,7 +433,6 @@ public class SessionController implements EventMonitor.EventListener {
                             setDeviceStats((DeviceStatsMap) map.get(DeviceStatsMap.class));
                             setFolderStats((FolderStatsMap) map.get(FolderStatsMap.class));
                             setVersion((Version) map.get(Version.class));
-                            setReport((Report) map.get(Report.class));
                         },
                         this::logException,
                         () -> {
@@ -568,11 +564,6 @@ public class SessionController implements EventMonitor.EventListener {
     public void refreshVersion() {
         Subscription s = restApi.version()
                 .subscribe(this::setVersion, this::logException);
-    }
-
-    public void refreshReport() {
-        Subscription s = restApi.report()
-                .subscribe(this::setReport, this::logException);
     }
 
     public void refreshFolder(String name) {
@@ -804,14 +795,6 @@ public class SessionController implements EventMonitor.EventListener {
 
     void setVersion(Version version) {
         this.version.set(version);
-    }
-
-    public Report getReport() {
-        return report.get();
-    }
-
-    void setReport(Report report) {
-        this.report.set(report);
     }
 
     public @Nullable Model getModel(String folderName) {

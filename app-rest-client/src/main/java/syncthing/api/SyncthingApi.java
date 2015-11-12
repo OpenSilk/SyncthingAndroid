@@ -33,7 +33,6 @@ import syncthing.api.model.Model;
 import syncthing.api.model.Need;
 import syncthing.api.model.Ok;
 import syncthing.api.model.Ping;
-import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.SystemMessages;
 import syncthing.api.model.Version;
@@ -86,8 +85,7 @@ public interface SyncthingApi {
 
     //@GET("/rest/svc/lang")
 
-    @GET("/rest/svc/report")
-    Observable<Report> report();
+    //@GET("/rest/svc/report")
 
     @GET("/rest/system/browse")
     Observable<List<String>> autocompleteDirectory(@Query("current") String current);

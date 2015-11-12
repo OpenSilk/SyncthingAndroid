@@ -32,7 +32,6 @@ import syncthing.api.model.Model;
 import syncthing.api.model.Need;
 import syncthing.api.model.Ok;
 import syncthing.api.model.Ping;
-import syncthing.api.model.Report;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.SystemMessages;
 import syncthing.api.model.Version;
@@ -106,11 +105,6 @@ public class SynchingApiWrapper implements SyncthingApi {
     @Override
     public Observable<DeviceId> deviceId(@Query("id") String id) {
         return api.deviceId(id).subscribeOn(scheduler);
-    }
-
-    @Override
-    public Observable<Report> report() {
-        return api.report().subscribeOn(scheduler);
     }
 
     @Override
