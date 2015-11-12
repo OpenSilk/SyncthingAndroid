@@ -145,7 +145,7 @@ public class EditFolderPresenter extends EditPresenter<CoordinatorLayout>
                 }
                 SystemInfo sys = controller.getSystemInfo();
                 if (sys != null) {
-                    origFolder.path = controller.getSystemInfo().tilde;
+                    origFolder.path = sys.tilde;
                 }
                 Version ver = controller.getVersion();
                 if (ver != null && StringUtils.equals(ver.os, "android")) {
@@ -277,9 +277,6 @@ public class EditFolderPresenter extends EditPresenter<CoordinatorLayout>
     }
 
     public void setFolderPath(CharSequence text) {
-        if (!isAdd || newShare) {
-            return;
-        }
         if (validateFolderPath(text)) {
             origFolder.path = text.toString();
         }

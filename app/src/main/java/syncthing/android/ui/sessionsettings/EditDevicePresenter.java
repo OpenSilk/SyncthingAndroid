@@ -198,7 +198,7 @@ public class EditDevicePresenter extends EditPresenter<CoordinatorLayout> implem
     public final Action1<CharSequence> actionSetDeviceName = new Action1<CharSequence>() {
         @Override
         public void call(CharSequence charSequence) {
-            setDeviceID(charSequence);
+            setDeviceName(charSequence);
         }
     };
 
@@ -216,7 +216,7 @@ public class EditDevicePresenter extends EditPresenter<CoordinatorLayout> implem
     public final Action1<CharSequence> actionSetAddresses = new Action1<CharSequence>() {
         @Override
         public void call(CharSequence charSequence) {
-            setDeviceID(charSequence);
+            setAddresses(charSequence);
         }
     };
 
