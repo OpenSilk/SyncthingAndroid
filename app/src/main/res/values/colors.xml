@@ -27,6 +27,7 @@
     <color name="folder_scanning">@color/syncthing_brand</color>
     <color name="folder_unshared">@color/amber_500</color>
     <color name="folder_default">@color/black_text</color>
+    <color name="folder_error">@color/red2_500</color>
 
     <color name="device_idle">@color/green_500</color>
     <color name="device_disconnected">@color/purple_500</color>

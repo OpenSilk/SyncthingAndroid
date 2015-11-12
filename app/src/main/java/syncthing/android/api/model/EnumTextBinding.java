@@ -109,8 +109,8 @@ public class EnumTextBinding {
             case SCANNING:
                 view.setText(R.string.scanning);
                 break;
-            case CLEANING:
-                view.setText(R.string.cleaning);
+            case ERROR:
+                view.setText(R.string.error);
                 break;
             case SYNCING:
                 view.setText(R.string.syncing);
@@ -131,6 +131,9 @@ public class EnumTextBinding {
             case SCANNING:
             case SYNCING:
                 view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.folder_scanning));
+                break;
+            case ERROR:
+                view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.folder_error));
                 break;
             default:
                 view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.folder_default));

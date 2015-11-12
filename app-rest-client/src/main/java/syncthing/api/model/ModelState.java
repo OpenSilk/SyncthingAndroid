@@ -17,7 +17,7 @@ import com.google.gson.annotations.SerializedName;
 public enum ModelState {
     @SerializedName("idle") IDLE,
     @SerializedName("scanning") SCANNING,
-    @SerializedName("cleaning") CLEANING,
     @SerializedName("syncing") SYNCING,
+    @SerializedName("error") ERROR,
     @SerializedName("unknown") UNKNOWN,
 }
