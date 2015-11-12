@@ -1291,11 +1291,11 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     void logException(Throwable e) {
-        Timber.e("%s: %s", e.getClass().getSimpleName(), e.getMessage(), e);
+        Timber.e(e, "%s: %s", e.getClass().getSimpleName(), e.getMessage());
     }
 
     void logException(Throwable e, String key) {
-        logException(e);
+        Timber.e(e, "%s: %s", key, e.getMessage());
         removeSubscription(key);
     }
 
