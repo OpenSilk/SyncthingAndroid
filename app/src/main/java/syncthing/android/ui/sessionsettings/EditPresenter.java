@@ -39,6 +39,7 @@ import rx.Subscription;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import syncthing.android.R;
+import syncthing.android.ui.binding.BindingSubscriptionsHolder;
 import syncthing.api.Credentials;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
@@ -194,7 +195,7 @@ public class EditPresenter<V extends View> extends ViewPresenter<V> implements a
                 @Override @SuppressWarnings("unchecked")
                 public void onViewDetachedFromWindow(View v) {
                     Timber.d("Dropping view %s");
-                    dropView((V)v);
+                    dropView((V) v);
                     RxUtils.unsubscribe(bindingSubscriptions);
                     bindingSubscriptions = null;
                 }

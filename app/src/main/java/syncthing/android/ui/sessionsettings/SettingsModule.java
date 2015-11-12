@@ -25,6 +25,7 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 
 import dagger.Module;
 import dagger.Provides;
+import syncthing.android.ui.binding.ViewBinder;
 
 /**
  * Created by drew on 10/11/15.
@@ -46,8 +47,8 @@ public class SettingsModule {
     }
 
     @Provides @ScreenScope
-    public EditPresenterBinding providePresenerBinding(SettingsPresenter presenter) {
-        return new EditPresenterBinding() {
+    public ViewBinder providePresenerBinding(SettingsPresenter presenter) {
+        return new ViewBinder() {
             @Override
             public void bindView(View view) {
                 syncthing.android.ui.sessionsettings.SettingsViewBinding binding = DataBindingUtil.bind(view, presenter);

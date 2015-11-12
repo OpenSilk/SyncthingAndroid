@@ -15,13 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.sessionsettings;
+package syncthing.android.ui.binding;
 
-import rx.subscriptions.CompositeSubscription;
+import android.databinding.BindingAdapter;
+import android.widget.TextView;
+
+import com.jakewharton.rxbinding.widget.RxTextView;
+
+import rx.functions.Action1;
 
 /**
  * Created by drew on 11/11/15.
  */
-public interface BindingSubscriptionsHolder extends android.databinding.DataBindingComponent {
-    CompositeSubscription bindingSubscriptions();
+public class TextViewEventBinding {
+
+    @BindingAdapter("textChanges")
+    public static void subscribeTextChanges(BindingSubscriptionsHolder bsh, TextView view, Action1<CharSequence> onNext) {
+        bsh.bindingSubscriptions().add(RxTextView.textChanges(view).subscribe(onNext));
+    }
+
 }

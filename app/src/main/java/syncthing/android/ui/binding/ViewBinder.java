@@ -15,11 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.sessionsettings;
+package syncthing.android.ui.binding;
+
+import android.view.View;
 
 /**
  * Created by drew on 11/11/15.
  */
-public interface EditPresenterBindingComponent {
-    EditPresenterBinding presenterBinding();
+public interface ViewBinder {
+    void bindView(View view);
 }

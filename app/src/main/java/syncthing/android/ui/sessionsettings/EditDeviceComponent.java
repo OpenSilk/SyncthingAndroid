@@ -21,6 +21,7 @@ import org.opensilk.common.core.dagger2.ScreenScope;
 
 import dagger.Component;
 import syncthing.android.ui.ManageActivityComponent;
+import syncthing.android.ui.binding.ViewBinderComponent;
 
 /**
  * Created by drew on 3/16/15.
@@ -30,5 +31,5 @@ import syncthing.android.ui.ManageActivityComponent;
         dependencies = ManageActivityComponent.class,
         modules = EditDeviceModule.class
 )
-public interface EditDeviceComponent extends EditPresenterBindingComponent {
+public interface EditDeviceComponent extends ViewBinderComponent {
 }

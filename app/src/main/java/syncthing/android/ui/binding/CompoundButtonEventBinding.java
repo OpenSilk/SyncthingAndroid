@@ -15,22 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.sessionsettings;
+package syncthing.android.ui.binding;
 
 import android.databinding.BindingAdapter;
-import android.widget.RadioGroup;
+import android.widget.CompoundButton;
 
-import com.jakewharton.rxbinding.widget.RxRadioGroup;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import rx.functions.Action1;
 
 /**
  * Created by drew on 11/11/15.
  */
-public class RadioGroupEventBinding {
-
+public class CompoundButtonEventBinding {
     @BindingAdapter("checkedChanges")
-    public static void subscribeCheckedChanges(BindingSubscriptionsHolder bsh, RadioGroup radioGroup, Action1<Integer> onNext) {
-        bsh.bindingSubscriptions().add(RxRadioGroup.checkedChanges(radioGroup).subscribe(onNext));
+    public static void subscribeCheckedChanges(BindingSubscriptionsHolder bsh, CompoundButton button, Action1<Boolean> onNext) {
+        bsh.bindingSubscriptions().add(RxCompoundButton.checkedChanges(button).subscribe(onNext));
     }
 }

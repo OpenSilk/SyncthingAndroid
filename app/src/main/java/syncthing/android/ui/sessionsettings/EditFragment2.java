@@ -24,6 +24,7 @@ import org.opensilk.common.core.mortar.DaggerService;
 import org.opensilk.common.ui.mortarfragment.MortarFragment;
 
 import mortar.MortarScope;
+import syncthing.android.ui.binding.ViewBinderComponent;
 import syncthing.api.Credentials;
 
 /**
@@ -36,8 +37,8 @@ public abstract class EditFragment2 extends MortarFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EditPresenterBindingComponent cmp = DaggerService.getDaggerComponent(getScope());
-        cmp.presenterBinding().bindView(view);
+        ViewBinderComponent cmp = DaggerService.getDaggerComponent(getScope());
+        cmp.viewBinder().bindView(view);
     }
 
     protected static Bundle putCredentials(Credentials credentials) {

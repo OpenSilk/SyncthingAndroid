@@ -15,23 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.sessionsettings;
+package syncthing.android.ui.binding;
 
 import android.databinding.BindingAdapter;
-import android.widget.TextView;
-
-import com.jakewharton.rxbinding.widget.RxTextView;
-
-import rx.functions.Action1;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
+import android.support.design.widget.TextInputLayout;
 
 /**
  * Created by drew on 11/11/15.
  */
-public class TextViewEventBinding {
-
-    @BindingAdapter("textChanges")
-    public static void subscribeTextChanges(BindingSubscriptionsHolder bsh, TextView view, Action1<CharSequence> onNext) {
-        bsh.bindingSubscriptions().add(RxTextView.textChanges(view).subscribe(onNext));
+@BindingMethods({
+        @BindingMethod(type= TextInputLayout.class, attribute = "error", method = "setError")
+})
+public class TextInputLayoutBinding {
+    @BindingAdapter("error")
+    public static void setInputError(TextInputLayout view, CharSequence error) {
+        if (view.isErrorEnabled()) {
+            view.setError(error);
+        }
     }
-
 }

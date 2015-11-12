@@ -15,24 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.sessionsettings;
-
-import android.databinding.BindingAdapter;
-import android.databinding.BindingMethod;
-import android.databinding.BindingMethods;
-import android.support.design.widget.TextInputLayout;
+package syncthing.android.ui.binding;
 
 /**
  * Created by drew on 11/11/15.
  */
-@BindingMethods({
-        @BindingMethod(type= TextInputLayout.class, attribute = "error", method = "setError")
-})
-public class TextInputLayoutBinding {
-    @BindingAdapter("error")
-    public static void setInputError(TextInputLayout view, CharSequence error) {
-        if (view.isErrorEnabled()) {
-            view.setError(error);
-        }
-    }
+public interface ViewBinderComponent {
+    ViewBinder viewBinder();
 }

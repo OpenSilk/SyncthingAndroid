@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package syncthing.android.ui.sessionsettings;
+package syncthing.android.ui.binding;
 
-import android.view.View;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by drew on 11/11/15.
  */
-public interface EditPresenterBinding {
-    void bindView(View view);
+public interface BindingSubscriptionsHolder extends android.databinding.DataBindingComponent {
+    CompositeSubscription bindingSubscriptions();
 }
