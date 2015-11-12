@@ -349,7 +349,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     }
 
     void updateFolders() {
-        Collection<FolderConfig> folderConfigs = controller.getFolders();
+        List<FolderConfig> folderConfigs = controller.getFolders();
         if (folderConfigs.size() > 0) {
             Set<String> configIds = new HashSet<>(folderConfigs.size());
             for (FolderConfig c : folderConfigs) {

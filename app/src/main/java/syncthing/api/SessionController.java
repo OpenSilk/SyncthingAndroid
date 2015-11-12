@@ -160,7 +160,7 @@ public class SessionController implements EventMonitor.EventListener {
     //synchronize on self
     final Map<String, FolderConfig> folders = new LinkedHashMap<>(10);
     //synchronize on self
-    final List<DeviceConfig> devices = new LinkedList<>();
+    final Map<String, DeviceConfig> devices = new LinkedHashMap<>(10);
     //synchronize on self TODO a map of a map? really???
     final Map<String, Map<String, Integer>> completion = new LinkedHashMap<>(10);
     //synchronize on self
@@ -332,7 +332,7 @@ public class SessionController implements EventMonitor.EventListener {
                 FolderRejected fr = (FolderRejected) e;
                 if (getFolder(fr.data.folder) == null) {
                     synchronized (folderRejections) {
-                        folderRejections.put(fr.data.folder + "-" + fr.data.device, fr);
+                        folderRejections.put(fr.data.folder + "★" + fr.data.device, fr);
                     }
                     postChange(Change.FOLDER_REJECTED);
                 } else {
@@ -678,15 +678,19 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     void updateConfig(Config config) {
+        Collections.sort(config.folders, (lhs, rhs) -> lhs.id.compareTo(rhs.id));
         synchronized (folders) {
             folders.clear();
             for (FolderConfig f : config.folders) {
                 folders.put(f.id, f);
             }
         }
+        Collections.sort(config.devices, (lhs, rhs) -> lhs.deviceID.compareTo(rhs.deviceID));
         synchronized (devices) {
             devices.clear();
-            devices.addAll(config.devices);
+            for (DeviceConfig d : config.devices) {
+                devices.put(d.deviceID, d);
+            }
         }
         int fold, fnew;
         synchronized (folderRejections) {
@@ -694,8 +698,11 @@ public class SessionController implements EventMonitor.EventListener {
             //remove any stale rejections
             Iterator<Map.Entry<String, FolderRejected>> ii = folderRejections.entrySet().iterator();
             while (ii.hasNext()) {
-                if (getFolder(ii.next().getKey()) != null) {
-                    ii.remove();
+                String[] split = StringUtils.split(ii.next().getKey(), '★');
+                if (split != null && split.length > 0) {
+                    if (getFolder(split[0]) != null) {
+                        ii.remove();
+                    }
                 }
             }
             fnew = folderRejections.size();
@@ -813,13 +820,13 @@ public class SessionController implements EventMonitor.EventListener {
         }
     }
 
-    public FolderConfig getFolder(String name) {
+    public @Nullable FolderConfig getFolder(String name) {
         synchronized (folders) {
             return folders.get(name);
         }
     }
 
-    public Collection<FolderConfig> getFolders() {
+    public List<FolderConfig> getFolders() {
         synchronized (folders) {
             return new ArrayList<>(folders.values());
         }
@@ -833,38 +840,29 @@ public class SessionController implements EventMonitor.EventListener {
 
     public List<DeviceConfig> getDevices() {
         synchronized (devices) {
-            return new ArrayList<>(devices);
+            return new ArrayList<>(devices.values());
         }
     }
 
     public @Nullable DeviceConfig getThisDevice() {
-        final String myid = myId.get();
-        for (DeviceConfig d : getDevices()) {
-            if (StringUtils.equals(d.deviceID, myid)){
-                return d;
-            }
+        synchronized (devices) {
+            return devices.get(getMyID());
         }
-        return null;
     }
 
     public @NonNull List<DeviceConfig> getRemoteDevices() {
-        final String myid = myId.get();
-        List<DeviceConfig> dvs = new ArrayList<>();
-        for (DeviceConfig d : getDevices()) {
-            if (!StringUtils.equals(d.deviceID, myid)) {
-                dvs.add(d);
-            }
+        Map<String, DeviceConfig> devs;
+        synchronized (devices) {
+            devs = new HashMap<>(devices);
         }
-        return dvs;
+        devs.remove(getMyID());
+        return new ArrayList<>(devs.values());
     }
 
     public @Nullable DeviceConfig getDevice(String deviceId) {
-        for (DeviceConfig d : getDevices()) {
-            if (StringUtils.equals(deviceId, d.deviceID)) {
-                return d;
-            }
+        synchronized (devices) {
+            return devices.get(deviceId);
         }
-        return null;
     }
 
     void updateCompletion(String device, String folder, Completion comp) {

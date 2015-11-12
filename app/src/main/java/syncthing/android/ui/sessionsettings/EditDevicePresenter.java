@@ -39,6 +39,7 @@ import org.opensilk.common.ui.mortar.DialogPresenter;
 import org.opensilk.common.ui.mortar.ToolbarOwner;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -110,7 +111,7 @@ public class EditDevicePresenter extends EditPresenter<CoordinatorLayout> implem
                 }
             }
             sharedFolders = new TreeMap<>();
-            Collection<FolderConfig> folders = controller.getFolders();
+            List<FolderConfig> folders = controller.getFolders();
             for (FolderConfig f : folders) {
                 sharedFolders.put(f.id, false);
                 if (!StringUtils.isEmpty(getDeviceID())) {
