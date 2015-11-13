@@ -59,7 +59,7 @@ ext.gsonVersion = "2.4"
 ext.okHttpVersion = "2.5.0"
 ext.retrofitVersion = "2.0.0-beta2"
 ext.rxBindingVersion = "0.3.0"
-ext.acraVersion = "4.7.0-RC.1"
+ext.acraVersion = "4.6.2"
 
 ext.testJunitVersion = "4.12"
 ext.testAssertJVersion = "1.7.0"
