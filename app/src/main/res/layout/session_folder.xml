@@ -362,40 +362,47 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:animateLayoutChanges="true"
-                    style="@style/mtrl.ButtonBar">
+                    android:fillViewport="true">
 
-                    <Button
-                        android:id="@+id/btn_override"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/override_changes"
-                        android:visibility="@{(card.state != ModelState.IDLE) ? View.GONE : (card.readOnly ? View.VISIBLE : View.GONE)}"
-                        android:onClick="@{card.overrideFolderChanges}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
+                        android:gravity="end"
+                        android:animateLayoutChanges="true"
+                        style="@style/mtrl.ButtonBar">
 
-                    <Button
-                        android:id="@+id/btn_rescan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rescan"
-                        android:visibility="@{card.state == ModelState.IDLE ? View.VISIBLE : View.GONE}"
-                        android:onClick="@{card.rescanFolder}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
+                        <Button
+                            android:id="@+id/btn_override"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/override_changes"
+                            android:visibility="@{(card.state != ModelState.IDLE) ? View.GONE : (card.readOnly ? View.VISIBLE : View.GONE)}"
+                            android:onClick="@{card.overrideFolderChanges}"
+                            style="@style/mtrl.ButtonBarButton.Small"/>
 
-                    <Button
-                        android:id="@+id/btn_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/edit"
-                        android:onClick="@{card.editFolder}"
-                        style="@style/mtrl.ButtonBarButton.Small"/>
+                        <Button
+                            android:id="@+id/btn_rescan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rescan"
+                            android:visibility="@{card.state == ModelState.IDLE ? View.VISIBLE : View.GONE}"
+                            android:onClick="@{card.rescanFolder}"
+                            style="@style/mtrl.ButtonBarButton.Small"/>
 
-                </LinearLayout>
+                        <Button
+                            android:id="@+id/btn_edit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/edit"
+                            android:onClick="@{card.editFolder}"
+                            style="@style/mtrl.ButtonBarButton.Small"/>
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
 
             </LinearLayout>
 
