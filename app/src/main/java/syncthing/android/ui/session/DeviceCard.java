@@ -32,6 +32,7 @@ import syncthing.android.service.SyncthingUtils;
 import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.Compression;
 import syncthing.api.model.ConnectionInfo;
+import syncthing.api.model.ConnectionType;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import timber.log.Timber;
@@ -54,6 +55,7 @@ public class DeviceCard extends ExpandableCard {
     private String clientVersion = "?";
     private boolean connected;
     private boolean paused;
+    private boolean relayed;
 
     public DeviceCard(
             SessionPresenter presenter,
@@ -123,6 +125,12 @@ public class DeviceCard extends ExpandableCard {
             if (paused != connection.paused) {
                 paused = connection.paused;
                 notifyChange(syncthing.android.BR.paused);
+            }
+            boolean rlyd = (connection.type == ConnectionType.RELAY_ACCEPT ||
+                    connection.type == ConnectionType.RELAY_DIAL);
+            if (relayed != rlyd) {
+                relayed = rlyd;
+                notifyChange(syncthing.android.BR.relayed);
             }
         }
     }
@@ -238,6 +246,11 @@ public class DeviceCard extends ExpandableCard {
             view.setText(R.string.syncing);
             view.setTextColor(ContextCompat.getColor(view.getContext(), R.color.device_syncing));
         }
+    }
+
+    @Bindable
+    public boolean isRelayed() {
+        return relayed;
     }
 
     public void editDevice(View btn) {

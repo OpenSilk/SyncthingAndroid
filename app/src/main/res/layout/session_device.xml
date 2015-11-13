@@ -145,7 +145,7 @@
 
                     <TextView
                         android:id="@+id/address_title"
-                        android:text="@string/address"
+                        android:text="@{card.relayed ? @string/relayed_via : @string/address}"
                         style="@style/session.RecyclerTextLeftColumn"
                         />
 
