@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -175,12 +174,11 @@ public class SessionController implements EventMonitor.EventListener {
 
     //Following synchronized by lock
     private final Object lock = new Object();
-    long prevDate;
     boolean online;
     boolean restarting;
     boolean running;
-    Subscription onlineSub;
-    Subscription subspendSubscription;
+
+    static final String suspendSubscriptionKey = "suspendSubscription";
 
     final Scheduler subscribeOn;
     final SyncthingApi restApi;
@@ -198,10 +196,11 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void init() {
         synchronized (lock) {
-            if (subspendSubscription != null
-                    && !subspendSubscription.isUnsubscribed()) {
-                subspendSubscription.unsubscribe();
-            } else if (!eventMonitor.isRunning()) {
+            Subscription s = removeSubscription(suspendSubscriptionKey);
+            if (s != null) {
+                s.unsubscribe();
+            }
+            if (!eventMonitor.isRunning()) {
                 eventMonitor.start();
             }
             running = true;
@@ -211,16 +210,17 @@ public class SessionController implements EventMonitor.EventListener {
     public void suspend() {
         synchronized (lock) {
             if (running) {
-                if (subspendSubscription != null) {
-                    subspendSubscription.unsubscribe();
+                Subscription s = removeSubscription(suspendSubscriptionKey);
+                if (s != null) {
+                    s.unsubscribe();
                 }
                 // add delay to allow for configuration changes
-                subspendSubscription = Observable.timer(30, TimeUnit.SECONDS, subscribeOn)
+                s = Observable.timer(30, TimeUnit.SECONDS, subscribeOn)
                         .subscribe(ii -> {
-                            if (eventMonitor.isRunning()) {
-                                eventMonitor.stop();
-                            }
+                            eventMonitor.stop();
+                            removeSubscription(suspendSubscriptionKey);
                         });
+                addSubscription(suspendSubscriptionKey, s);
                 running = false;
             }
         }
@@ -229,14 +229,11 @@ public class SessionController implements EventMonitor.EventListener {
     /*package*/ void kill() {
         final Scheduler.Worker worker = subscribeOn.createWorker();
         worker.schedule(() -> {
-            unsubscribeActiveSubscriptions();
             synchronized (lock) {
-                if (subspendSubscription != null) {
-                    subspendSubscription.unsubscribe();
-                }
                 eventMonitor.stop();
                 running = false;
             }
+            unsubscribeActiveSubscriptions();
             worker.unsubscribe();
         });
     }
@@ -394,58 +391,81 @@ public class SessionController implements EventMonitor.EventListener {
                 updateState(false);
                 break;
             case STOPPING:
-                running = false;
+                synchronized (lock) {
+                    running = false;
+                }
                 updateState(false);
                 postChange(Change.FAILURE);
                 break;
         }
     }
 
+    static final String updateStateKey = "updateState";
     boolean updateState(boolean online) {
         synchronized (lock) {
             //No state change dont eat event;
             if (this.online == online) return false;
             //New event came in while we are initializing, eat it
-            if (online && onlineSub != null && !onlineSub.isUnsubscribed()) return true;
+            if (online && hasActiveSubscription(updateStateKey)) return true;
             if (online) {
                 this.restarting = false;
                 //Our online state depends on all these items
                 //so we merge them together so we can defer
-                //posting the ONLINE status until we have set
-                //all the values, the extra toMap step
-                //is to prevent sideeffects and synchronization errors
-                onlineSub = Observable.merge(
-                        restApi.system(),
-                        restApi.config(),
-                        restApi.configStatus(),
-                        restApi.connections(),
-                        restApi.deviceStats(),
-                        restApi.folderStats(),
-                        restApi.version()
-                ).toMap(
-                        Object::getClass
+                //posting the ONLINE status until we have set all the values
+                Subscription s = Observable.merge(
+                        retryOnce(restApi.system()).map(r -> Pair.of(1, r)),
+                        retryOnce(restApi.config()).map(r -> Pair.of(2, r)),
+                        retryOnce(restApi.configStatus()).map(r -> Pair.of(3, r)),
+                        retryOnce(restApi.connections()).map(r -> Pair.of(4, r)),
+                        retryOnce(restApi.deviceStats()).map(r -> Pair.of(5, r)),
+                        retryOnce(restApi.folderStats()).map(r -> Pair.of(6, r)),
+                        retryOnce(restApi.version()).map(r -> Pair.of(7, r))
                 ).subscribe(
-                        (map) -> {
-                            updateSystemInfo((SystemInfo) map.get(SystemInfo.class));
-                            updateConfig((Config) map.get(Config.class));
-                            updateConfigStats((ConfigStats) map.get(ConfigStats.class));
-                            updateConnections((Connections) map.get(Connections.class));
-                            setDeviceStats((DeviceStatsMap) map.get(DeviceStatsMap.class));
-                            setFolderStats((FolderStatsMap) map.get(FolderStatsMap.class));
-                            setVersion((Version) map.get(Version.class));
+                        (p) -> {
+                            switch (p.getLeft()) {
+                                case 1:
+                                    updateSystemInfo((SystemInfo) p.getRight());
+                                    break;
+                                case 2:
+                                    updateConfig((Config) p.getRight());
+                                    break;
+                                case 3:
+                                    updateConfigStats((ConfigStats) p.getRight());
+                                    break;
+                                case 4:
+                                    updateConnections((Connections) p.getRight());
+                                    break;
+                                case 5:
+                                    setDeviceStats((DeviceStatsMap) p.getRight());
+                                    break;
+                                case 6:
+                                    setFolderStats((FolderStatsMap) p.getRight());
+                                    break;
+                                case 7:
+                                    setVersion((Version) p.getRight());
+                                    break;
+                            }
                         },
-                        this::logException,
+                        (t) -> {
+                            synchronized (lock) {
+                                this.online = false;
+                                logException(t, updateStateKey);
+                            }
+                            //TODO this isnt really the right thing to do
+                            postChange(Change.FAILURE);
+                        },
                         () -> {
                             synchronized (lock) {
                                 this.online = true;
-                                onlineSub = null;
+                                removeSubscription(updateStateKey);
                             }
                             postChange(Change.ONLINE);
                         }
                 );
+                addSubscription(updateStateKey, s);
             } else {
                 this.online = false;
-                if (onlineSub != null) onlineSub.unsubscribe();
+                removeSubscription(updateStateKey);
                 postChange(Change.OFFLINE);
             }
             return true;
@@ -495,14 +515,18 @@ public class SessionController implements EventMonitor.EventListener {
     public void refreshConfig() {
         if (hasActiveSubscription(refreshConfigKey)) return;
         Subscription s = Observable.merge(
-                restApi.config(),
-                restApi.configStatus()
-        ).toMap(
-                Object::getClass
+                restApi.config().map(r -> Pair.of(1, r)),
+                restApi.configStatus().map(r -> Pair.of(2, r))
         ).subscribe(
-                map -> {
-                    updateConfig((Config) map.get(Config.class));
-                    updateConfigStats((ConfigStats) map.get(ConfigStats.class));
+                p -> {
+                    switch (p.getLeft()) {
+                        case 1:
+                            updateConfig((Config) p.getRight());
+                            break;
+                        case 2:
+                            updateConfigStats((ConfigStats) p.getRight());
+                            break;
+                    }
                 },
                 (t) -> logException(t, refreshConfigKey),
                 () -> {
@@ -1287,9 +1311,9 @@ public class SessionController implements EventMonitor.EventListener {
         }
     }
 
-    void removeSubscription(String key) {
+    @Nullable Subscription removeSubscription(String key) {
         synchronized (activeSubscriptions) {
-            activeSubscriptions.remove(key);
+            return activeSubscriptions.remove(key);
         }
     }
 
@@ -1308,6 +1332,10 @@ public class SessionController implements EventMonitor.EventListener {
         }
     }
 
+    private static <T> Observable<T> retryOnce(Observable<T> o) {
+        return Observable.defer(() -> o).retry(1);
+    }
+
     public Subscription subscribeChanges(Action1<ChangeEvent> onNext, Change... changes) {
         Observable<ChangeEvent> o;
         if (changes.length == 0) {
@@ -1320,6 +1348,10 @@ public class SessionController implements EventMonitor.EventListener {
                         }
                         return false;
                     });
+        }
+        final boolean online;
+        synchronized (lock) {
+            online = this.online;
         }
         return o.onBackpressureBuffer()
                 //always post online event for new subscribers

@@ -19,14 +19,12 @@ package syncthing.api;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import retrofit.HttpException;
@@ -34,7 +32,6 @@ import rx.Observable;
 import rx.Observer;
 import rx.Scheduler;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.android.schedulers.HandlerScheduler;
 import rx.observers.Subscribers;
 import syncthing.api.model.event.Event;
@@ -64,10 +61,12 @@ public class EventMonitor {
     final Observer<Event> eventsObserver;
 
     final AtomicLong lastEvent = new AtomicLong(0);
+
     int unhandledErrorCount = 0;
     int connectExceptionCount = 0;
     Subscription eventSubscription;
 
+    boolean running;
     HandlerThread handlerThread;
     Scheduler scheduler;
 
@@ -77,7 +76,8 @@ public class EventMonitor {
         this.eventsObservable = Observable.timer(1000, TimeUnit.MILLISECONDS)
                 .flatMap(ii -> getRestCall())
                 .flatMap(events -> {
-                    if (events == null) {
+                    if (events == null || events.length == 0) {
+                        lastEvent.set(0);
                         return Observable.empty();
                     } else if (lastEvent.get() == 0) {
                         // if we are just starting
@@ -183,6 +183,7 @@ public class EventMonitor {
     }
 
     public synchronized void start(long delay) {
+        running = true;
         Timber.d("start(%d) lastEvent=%d", delay, lastEvent.get());
         if (handlerThread == null) {
             handlerThread = new HandlerThread("EventMonitor");
@@ -205,6 +206,7 @@ public class EventMonitor {
     }
 
     public synchronized void stop() {
+        running = false;
         if (eventSubscription != null) {
             eventSubscription.unsubscribe();
             eventSubscription = null;
@@ -217,7 +219,7 @@ public class EventMonitor {
     }
 
     public synchronized boolean isRunning() {
-        return eventSubscription != null && !eventSubscription.isUnsubscribed();
+        return running;
     }
 
     public void resetCounter() {
