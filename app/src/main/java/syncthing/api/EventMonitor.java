@@ -19,11 +19,10 @@ package syncthing.api;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -79,29 +78,6 @@ public class EventMonitor {
                     if (events == null || events.length == 0) {
                         lastEvent.set(0);
                         return Observable.empty();
-                    } else if (lastEvent.get() == 0) {
-                        // if we are just starting
-                        // we eat all the events to
-                        // avoid flooding the clients
-                        List<Event> topass = new ArrayList<>();
-                        for (Event e : events) {
-                            switch (e.type) {
-                                case STARTUP_COMPLETE:
-                                case DEVICE_REJECTED:
-                                case FOLDER_REJECTED:
-                                    topass.add(e);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        lastEvent.set(events[events.length - 1].id);
-                        Timber.d("Dropped %d events", events.length - topass.size());
-                        if (topass.isEmpty()) {
-                            //pass at least one event for online change
-                            topass.add(events[events.length - 1]);
-                        }
-                        return Observable.from(topass);
                     } else {
                         lastEvent.set(events[events.length - 1].id);
                         return Observable.from(events);
@@ -197,12 +173,12 @@ public class EventMonitor {
     }
 
     private Observable<Event[]> getRestCall() {
-        //TODO is there any other way to get device/folder rejections?
-//        if (lastEvent == 0) {
-//            return restApi.events(0, 1);
-//        } else {
+        if (lastEvent.get() == 0) {
+            //only pull the last event
+            return restApi.events(0, 1);
+        } else {
             return restApi.events(lastEvent.get());
-//        }
+        }
     }
 
     public synchronized void stop() {
@@ -212,7 +188,8 @@ public class EventMonitor {
             eventSubscription = null;
         }
         if (handlerThread != null) {
-            handlerThread.getLooper().quit();
+            Looper l = handlerThread.getLooper();
+            if (l != null) l.quit();
             handlerThread = null;
             scheduler = null;
         }

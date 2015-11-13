@@ -246,14 +246,7 @@ public class SessionController implements EventMonitor.EventListener {
 
     public void handleEvent(Event e) {
         if (updateState(true)) {
-            switch (e.type) {
-                case DEVICE_REJECTED:
-                case FOLDER_REJECTED:
-                    break; //Don't know of another way to get these so pass them through
-                default:
-                    Timber.d("Eating event %s", e.type);
-                    return;//Eat event
-            }
+            Timber.d("Eating event %s", e.type);
         }
         Timber.d("New event %s", e.type);
         switch (e.type) {
