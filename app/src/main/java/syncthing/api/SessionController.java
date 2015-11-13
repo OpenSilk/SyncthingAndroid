@@ -571,34 +571,20 @@ public class SessionController implements EventMonitor.EventListener {
         if (hasActiveSubscription(key)) return;
         Subscription s = restApi.model(name)
                 .subscribe(
-                        model -> updateModel(name, model),
+                        model -> {
+                            updateModel(name, model);
+                            postChange(Change.FOLDER_SUMMARY, new FolderSummary.Data(name, model));
+                        },
                         (t) -> logException(t, key),
-                        () -> {
-                            postChange(Change.FOLDER_SUMMARY);
-                            removeSubscription(key);
-                        }
+                        () -> removeSubscription(key)
                 );
         addSubscription(key, s);
     }
 
-    //TODO how to make key?
     public void refreshFolders(Collection<String> names) {
-        if (names.isEmpty()) {
-            return;
+        for (String name : names) {
+            refreshFolder(name);
         }
-        //Group all the network calls so we only receive one completion
-        //event this will prevent change observers from receiving
-        //mutliple FOLDER_SUMMARY changes
-        List<Observable<Map.Entry<String, Model>>> observables = new LinkedList<>();
-        for (String name: names) {
-            observables.add(Observable.zip(Observable.just(name), restApi.model(name).first(), Pair::of));
-        }
-        Subscription s = Observable.merge(observables)
-                .subscribe(
-                        entry -> updateModel(entry.getKey(), entry.getValue()),
-                        this::logException,
-                        () -> postChange(Change.FOLDER_SUMMARY)
-                );
     }
 
     public void refreshCompletion(String device, String folder) {
