@@ -1,5 +1,13 @@
-* Updates ui
-* Out-of-sync items list
+--Critical--
+* Integration tests
 
-----
-* Tests
+--Normal--
+* Allow backgrounding sessions.
+    leave long poll running in a service and show notifications on events/errors
+
+--Low--
+* Updates ui (i use custom builds on all nodes so this is useless for me)
+
+--Wish list--
+* Use go bind (gomobile) and syncthings discovery protocol to dynamically locate remote instances,
+    or less ambitiously allow multiple ips/hosts
