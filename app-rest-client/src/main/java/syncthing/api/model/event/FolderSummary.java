@@ -24,5 +24,13 @@ public class FolderSummary extends Event<FolderSummary.Data> {
     public static class Data {
         public String folder;
         public Model summary;
+
+        public Data() {
+        }
+
+        public Data(String folder, Model summary) {
+            this.folder = folder;
+            this.summary = summary;
+        }
     }
 }
