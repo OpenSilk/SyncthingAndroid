@@ -70,12 +70,14 @@ import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import syncthing.api.model.FolderConfig;
+import syncthing.api.model.FolderStats;
 import syncthing.api.model.SystemMessage;
 import syncthing.api.model.Model;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.Version;
 import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.FolderCompletion;
+import syncthing.api.model.event.FolderErrors;
 import syncthing.api.model.event.FolderRejected;
 import syncthing.api.model.event.FolderScanProgress;
 import syncthing.api.model.event.FolderSummary;
@@ -267,18 +269,16 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                 onFolderStateChange(e.data);
                 break;
             case FOLDER_STATS:
-                Timber.w("Ignoring FOLDER_STATS update");
-                //TODO pretty sure not needed
-//                if (hasView()) {
-//                    getView().refreshFolders(updateFolders());
-//                }
+                postFolderStatsUpdate();
                 break;
+            case FOLDER_ERRORS: {
+                FolderErrors.Data d = (FolderErrors.Data) e.data;
+                onFolderErrors(d);
+                break;
+            }
             case FOLDER_SCAN_PROGRESS: {
                 FolderScanProgress.Data d = (FolderScanProgress.Data) e.data;
-                FolderCard c = getFolderCard(d.folder);
-                if (c != null) {
-                    c.setScanProgress(d.current, d.total);
-                }
+                onFolderScanProgress(d);
                 break;
             }
             default:
@@ -370,29 +370,33 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         List<String> needsUpdate = new ArrayList<>();
         for (FolderConfig folder : folderConfigs) {
             Model model = controller.getModel(folder.id);
-            FolderScanProgress.Data scanP = controller.getFolderScanProgress(folder.id);
             FolderCard card = getFolderCard(folder.id);
-            if (card != null && model != null) {
+            if (card == null) {
+                card = new FolderCard(this, folder, model);
+                folders.add(card);
+            } else {
                 card.setFolder(folder);
                 card.setModel(model);
-                if (scanP != null) {
-                    card.setScanProgress(scanP.current, scanP.total);
-                }
-            } else if (card == null) {
-                card = new FolderCard(this, folder, model);
-                if (scanP != null) {
-                    card.setScanProgress(scanP.current, scanP.total);
-                }
-                folders.add(card);
             }
             if (model == null) {
                 needsUpdate.add(folder.id);
+                continue;
             }
+            card.setScanProgress(controller.getFolderScanProgress(folder.id));
+            card.setErrors(controller.getFolderErrors(folder.id));
+            card.setStats(controller.getFolderStats(folder.id));
         }
         if (!needsUpdate.isEmpty()) {
             controller.refreshFolders(needsUpdate);
         }
         Collections.sort(folders, (lhs, rhs) -> lhs.getId().compareTo(rhs.getId()));
+    }
+
+    void updateFoldersAndNotify() {
+        updateFolders();
+        if (hasView()) {
+            getView().refreshFolders(folders);
+        }
     }
 
     private FolderCard getFolderCard(String id) {
@@ -414,6 +418,13 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         } else {
             myDevice.setConnectionInfo(conn);
             myDevice.setSystemInfo(sys);
+        }
+    }
+
+    void updateThisDeviceAndNotify() {
+        updateThisDevice();
+        if (hasView()) {
+            getView().refreshThisDevice(myDevice);
         }
     }
 
@@ -449,6 +460,13 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         Collections.sort(devices, (lhs, rhs) -> lhs.getDeviceID().compareTo(rhs.getDeviceID()));
     }
 
+    void updateDevicesAndNotify() {
+        updateDevices();
+        if (hasView()) {
+            getView().refreshDevices(devices);
+        }
+    }
+
     private DeviceCard getDeviceCard(String id) {
         for (DeviceCard c : devices) {
             if (StringUtils.equals(c.device.deviceID, id)) {
@@ -469,10 +487,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (c != null) {
                 c.setCompletion(controller.getCompletionTotal(c.getDeviceID()));
             } else {
-                updateDevices();
-                if (hasView()) {
-                    getView().refreshDevices(devices);
-                }
+                updateDevicesAndNotify();
             }
         }
 
@@ -489,10 +504,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (myDevice != null) {
                 myDevice.setConnectionInfo(tConn);
             } else {
-                updateThisDevice();
-                if (hasView()) {
-                    getView().refreshThisDevice(myDevice);
-                }
+                updateThisDeviceAndNotify();
             }
         }
     }
@@ -511,10 +523,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
         if (myDevice != null) {
             myDevice.setSystemInfo(controller.getSystemInfo());
         } else {
-            updateThisDevice();
-            if (hasView()) {
-                getView().refreshThisDevice(myDevice);
-            }
+            updateThisDeviceAndNotify();
         }
     }
 
@@ -527,10 +536,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (fc != null) {
                 fc.setModel(data.summary);
             } else {
-                updateFolders();
-                if (hasView()) {
-                    getView().refreshFolders(folders);
-                }
+                updateFoldersAndNotify();
             }
         }
     }
@@ -544,13 +550,31 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             if (fc != null) {
                 fc.setState(data.to);
             } else {
-                updateFolders();
-                if (hasView()) {
-                    getView().refreshFolders(folders);
-                }
+                updateFoldersAndNotify();
             }
         }
+    }
 
+    void onFolderErrors(FolderErrors.Data data) {
+        FolderCard fc = getFolderCard(data.folder);
+        if (fc != null) {
+            fc.setErrors(data.errors);
+        } else {
+            updateFoldersAndNotify();
+        }
+    }
+
+    void postFolderStatsUpdate() {
+        for (FolderCard c : folders) {
+            c.setStats(controller.getFolderStats(c.getId()));
+        }
+    }
+
+    void onFolderScanProgress(FolderScanProgress.Data d) {
+        FolderCard c = getFolderCard(d.folder);
+        if (c != null) {
+            c.setScanProgress(d);
+        }
     }
 
     public void showSavingDialog() {

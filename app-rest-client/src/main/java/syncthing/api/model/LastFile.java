@@ -17,4 +17,5 @@ import org.joda.time.DateTime;
 public class LastFile {
     public DateTime at;
     public String filename;
+    public boolean deleted;
 }

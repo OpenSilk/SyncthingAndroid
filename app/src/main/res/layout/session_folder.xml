@@ -184,7 +184,7 @@
 
                     <TextView
                         android:id="@+id/need_files_title"
-                        android:text="@string/out_of_sync"
+                        android:text="@string/out_of_sync_items"
                         style="@style/session.RecyclerTextLeftColumn"/>
 
                     <TextView
@@ -192,6 +192,26 @@
                         android:text="@{@string/num_items_size(card.needFiles,SyncthingUtils.humanReadableSize(card.needBytes))}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="0 items, ~0B"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/failed_files_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{(!card.readOnly &amp;&amp; card.numFolderErrors > 0) ? View.VISIBLE : View.GONE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/failed_files_title"
+                        android:text="@string/failed_items"
+                        style="@style/session.RecyclerTextLeftColumn"/>
+
+                    <TextView
+                        android:id="@+id/failed_files"
+                        android:textColor="@color/error_text"
+                        android:text="@{String.valueOf(card.numFolderErrors)}"
+                        style="@style/session.RecyclerTextRightColumn"/>
 
                 </LinearLayout>
 
@@ -319,6 +339,26 @@
                         android:text="@{card.sharedWith}"
                         style="@style/session.RecyclerTextRightColumn"
                         tools:text="master, slave"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/last_file_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{(!card.readOnly &amp;&amp; card.lastFile != null) ? View.VISIBLE : View.GONE}"
+                    style="@style/session.RecyclerCardRow">
+
+                    <TextView
+                        android:id="@+id/last_file_title"
+                        android:text="@string/last_file_received"
+                        style="@style/session.RecyclerTextLeftColumn"/>
+
+                    <TextView
+                        android:id="@+id/last_file"
+                        app:folderLastFile="@{card.lastFile}"
+                        style="@style/session.RecyclerTextRightColumn"
+                        tools:text="Updated foo.bar"/>
 
                 </LinearLayout>
 

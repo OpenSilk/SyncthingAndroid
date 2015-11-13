@@ -83,6 +83,7 @@ import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.DeviceResumed;
 import syncthing.api.model.event.Event;
 import syncthing.api.model.event.FolderCompletion;
+import syncthing.api.model.event.FolderErrors;
 import syncthing.api.model.event.FolderRejected;
 import syncthing.api.model.event.FolderScanProgress;
 import syncthing.api.model.event.FolderSummary;
@@ -126,7 +127,7 @@ public class SessionController implements EventMonitor.EventListener {
         DOWNLOAD_PROGRESS,
         FOLDER_COMPLETION,
         FOLDER_SUMMARY, //FolderSummary.Data
-        FOLDER_ERRORS,
+        FOLDER_ERRORS, //FolderErrors.Data
         FOLDER_SCAN_PROGRESS, //FolderScanProgress.Data
     }
 
@@ -171,6 +172,8 @@ public class SessionController implements EventMonitor.EventListener {
     final WeakHashMap<String, Subscription> activeSubscriptions = new WeakHashMap<>();
     //synchronize on self
     final Map<String, FolderScanProgress.Data> folderScanProgress = new HashMap<>();
+    //synchronize on self
+    final Map<String, List<FolderErrors.Error>> folderErrors = new HashMap<>();
 
     //Following synchronized by lock
     private final Object lock = new Object();
@@ -345,6 +348,9 @@ public class SessionController implements EventMonitor.EventListener {
                 postChange(Change.COMPLETION, fc.data);
                 break;
             } case FOLDER_ERRORS: {
+                FolderErrors fe = (FolderErrors) e;
+                updateFolderErrors(fe.data.folder, fe.data.errors);
+                postChange(Change.FOLDER_ERRORS, fe.data);
                 break;
             } case FOLDER_SCAN_PROGRESS: {
                 FolderScanProgress.Data d = (FolderScanProgress.Data) e.data;
@@ -965,13 +971,29 @@ public class SessionController implements EventMonitor.EventListener {
         addSubscription(clearErrorsKey, s);
     }
 
-    @Nullable
-    public SystemMessage getLatestError() {
+    public @Nullable SystemMessage getLatestError() {
         List<SystemMessage> errors = errorsList.get() != null ? errorsList.get().errors : null;
         if (errors != null && errors.size() > 0) {
             return errors.get(errors.size() - 1);
         } else {
             return null;
+        }
+    }
+
+    void updateFolderErrors(String folder, List<FolderErrors.Error> errors) {
+        synchronized (folderErrors) {
+            folderErrors.put(folder, errors);
+        }
+    }
+
+    public @NonNull List<FolderErrors.Error> getFolderErrors(String folder) {
+        synchronized (folderErrors) {
+            List<FolderErrors.Error> errors = folderErrors.get(folder);
+            if (errors != null) {
+                return new ArrayList<>(errors);
+            } else {
+                return Collections.emptyList();
+            }
         }
     }
 

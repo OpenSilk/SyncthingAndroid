@@ -34,10 +34,14 @@ import syncthing.android.ui.common.ExpandableCard;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.FolderConfig;
 import syncthing.api.model.FolderDeviceConfig;
+import syncthing.api.model.FolderStats;
+import syncthing.api.model.LastFile;
 import syncthing.api.model.Model;
 import syncthing.api.model.ModelState;
 import syncthing.api.model.PullOrder;
 import syncthing.api.model.VersioningType;
+import syncthing.api.model.event.FolderErrors;
+import syncthing.api.model.event.FolderScanProgress;
 
 /**
  * Created by drew on 3/10/15.
@@ -46,6 +50,9 @@ public class FolderCard extends ExpandableCard {
 
     private final SessionPresenter presenter;
     private FolderConfig folder;
+    private FolderScanProgress.Data scanProgress;
+    private List<FolderErrors.Error> errors;
+    private FolderStats stats;
 
     // model
     private ModelState state = ModelState.UNKNOWN;
@@ -58,10 +65,6 @@ public class FolderCard extends ExpandableCard {
     private long needBytes;
     private long inSyncBytes;
     private boolean ignorePatterns;
-
-    //scan progress
-    private long scanProgressCurrent;
-    private long scanProgressTotal;
 
     public FolderCard(SessionPresenter presenter, FolderConfig folder, Model model) {
         this.presenter = presenter;
@@ -134,18 +137,41 @@ public class FolderCard extends ExpandableCard {
             notifyChange(syncthing.android.BR.state);
             if (oldState != ModelState.SCANNING && state == ModelState.SCANNING) {
                 //reset scan progress on new scan
-                setScanProgress(0, 0);
+                setScanProgress(null);
             }
         } else {
             this.state = ModelState.UNKNOWN;
         }
     }
 
-    public void setScanProgress(long current, long total) {
-        if (scanProgressCurrent != current || scanProgressTotal != total) {
-            scanProgressCurrent = current;
-            scanProgressTotal = total;
+    public void setScanProgress(FolderScanProgress.Data progress) {
+        boolean notify = true;
+        if (scanProgress != null && progress != null &&
+                scanProgress.current == progress.current &&
+                scanProgress.total == progress.total) {
+            notify = false;
+        }
+        scanProgress = progress;
+        if (notify) {
             notifyChange(syncthing.android.BR.completion);
+        }
+    }
+
+    public void setErrors(List<FolderErrors.Error> errors) {
+        this.errors = errors;
+        notifyChange(syncthing.android.BR.numFolderErrors);
+    }
+
+    public void setStats(FolderStats stats) {
+        boolean notify = false;
+        if (this.stats != null && stats != null) {
+            if (!this.stats.lastFile.at.equals(stats.lastFile.at)) {
+                notify = true;
+            }
+        }
+        this.stats = stats;
+        if (notify) {
+            notifyChange(syncthing.android.BR.lastFile);
         }
     }
 
@@ -236,8 +262,8 @@ public class FolderCard extends ExpandableCard {
                     ? Math.min(100, Math.round(100f * inSyncBytes / globalBytes))
                     : 100;
         } else if (state == ModelState.SCANNING) {
-            return scanProgressTotal != 0
-                    ? Math.min(100, Math.round(100f * scanProgressCurrent / scanProgressTotal))
+            return scanProgress != null
+                    ? Math.min(100, Math.round(100f * scanProgress.current / scanProgress.total))
                     : 100;
         } else {
             return 0;
@@ -269,6 +295,29 @@ public class FolderCard extends ExpandableCard {
                 b.append(", ").append(sharedNames.get(ii));
             }
             return b.toString();
+        }
+    }
+
+    @Bindable
+    public int getNumFolderErrors() {
+        return (errors != null) ? errors.size() : 0;
+    }
+
+    @Bindable
+    public LastFile getLastFile() {
+        return stats != null ? stats.lastFile : null;
+    }
+
+    @BindingAdapter("folderLastFile")
+    public static void folderLastFile(TextView view, LastFile lastFile) {
+        if (lastFile != null) {
+            if (StringUtils.isEmpty(lastFile.filename)) {
+                view.setText(R.string.na);
+            } else {
+                int r = lastFile.deleted ? R.string.deleted : R.string.updated;
+                String n = view.getContext().getString(r) + " " + lastFile.filename;
+                view.setText(n);
+            }
         }
     }
 
