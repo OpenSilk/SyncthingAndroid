@@ -362,6 +362,10 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
                     ic.remove();
                 }
             }
+        } else {
+            //remove all
+            folders.clear();
+            return;
         }
         List<String> needsUpdate = new ArrayList<>();
         for (FolderConfig folder : folderConfigs) {
