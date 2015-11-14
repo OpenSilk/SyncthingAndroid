@@ -31,4 +31,5 @@
     <string name="opensilk_org_url">http://www.opensilk.org/</string>
     <string name="feedback_email">mailto:market.opensilk@gmail.com</string>
     <string name="feedback_email_subject">Feedback: Syncthing app</string>
+    <string name="ten_stars">**********</string>
 </resources>

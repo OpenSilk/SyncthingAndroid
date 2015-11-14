@@ -39,8 +39,10 @@ import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.settings.AppSettings;
+import syncthing.android.ui.binding.Action1IgnoreFirst;
 import syncthing.api.Credentials;
 import syncthing.api.SessionManager;
+import syncthing.api.model.Config;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.GUIConfig;
 import syncthing.api.model.OptionsConfig;
@@ -54,11 +56,12 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
 
     final Context appContext;
     final AppSettings appSettings;
-    final String hiddenPass = SyncthingUtils.hiddenString(20);
 
     DeviceConfig thisDevice;
     OptionsConfig options;
     GUIConfig guiConfig;
+
+    String hiddenPass;
 
     String errorListenAddress;
     String errorGlobalDiscoverServers;
@@ -91,13 +94,16 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
             if (d != null) {
                 thisDevice = d.clone();
             }
-            OptionsConfig o = controller.getConfig().options;
-            if (o != null) {
-                options = o.clone();
-            }
-            GUIConfig g = controller.getConfig().gui;
-            if (g != null) {
-                guiConfig = g.clone();
+            Config config = controller.getConfig();
+            if (config != null) {
+                OptionsConfig o = config.options;
+                if (o != null) {
+                    options = o.clone();
+                }
+                GUIConfig g = config.gui;
+                if (g != null) {
+                    guiConfig = g.clone();
+                }
             }
         }
         wasPreviouslyLoaded = true;
@@ -105,6 +111,7 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
             Timber.e("Incomplete data! Cannot continue");
             dismissDialog();
         }
+        hiddenPass = getView().getContext().getString(R.string.ten_stars);
     }
 
     @Override
@@ -325,8 +332,8 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
     }
 
     boolean validateGuiListenAddress(CharSequence text) {
-        if (!StringUtils.isEmpty(text)) {
-            //TODO
+        if (StringUtils.isEmpty(text)) {
+            //TODO notify
             return false;
         }
         return true;
@@ -348,25 +355,16 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
         }
     };
 
-    @Bindable
-    public String getGuiPassword() {
-        return hiddenPass;
-    }
-
     public void setGuiPassword(CharSequence text) {
         if (StringUtils.isEmpty(text)) {
             guiConfig.password = "";
-        } else if (!StringUtils.equals(hiddenPass, text)) {
+        } else if (!StringUtils.equals(hiddenPass, text.toString())) {
             guiConfig.password = text.toString();
         }
     }
 
-    public final Action1<CharSequence> actionSetGuiPassword = new Action1<CharSequence>() {
-        @Override
-        public void call(CharSequence charSequence) {
-            setGuiPassword(charSequence);
-        }
-    };
+    public final Action1<CharSequence> actionSetGuiPassword =
+            Action1IgnoreFirst.wrap(SettingsPresenter.this::setGuiPassword);
 
     @Bindable
     public boolean isUseTLS() {

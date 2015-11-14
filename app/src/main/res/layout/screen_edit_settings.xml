@@ -236,7 +236,7 @@
                     android:id="@+id/edit_gui_pass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{presenter.guiPassword}"
+                    android:text="@string/ten_stars"
                     app:textChanges="@{presenter.actionSetGuiPassword}"
                     style="@style/session.edit.EditText.Password"/>
 
