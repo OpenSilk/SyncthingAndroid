@@ -1228,6 +1228,7 @@ public class SessionController implements EventMonitor.EventListener {
                 restarting = false;
                 eventMonitor.stop();
                 updateState(false);
+                postChange(Change.FAILURE);
             }
             unsubscribeActiveSubscriptions();
             try {

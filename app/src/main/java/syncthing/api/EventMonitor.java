@@ -183,6 +183,7 @@ public class EventMonitor {
 
     public synchronized void stop() {
         running = false;
+        resetCounter();
         if (eventSubscription != null) {
             eventSubscription.unsubscribe();
             eventSubscription = null;
