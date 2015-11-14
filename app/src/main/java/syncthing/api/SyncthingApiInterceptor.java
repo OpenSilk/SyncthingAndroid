@@ -18,13 +18,18 @@
 package syncthing.api;
 
 import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
+import okio.Buffer;
+import okio.ByteString;
 import timber.log.Timber;
 
 /**
@@ -50,7 +55,17 @@ public class SyncthingApiInterceptor implements Interceptor {
                     .build();
         }
         if (config.isDebug()) {
-            Timber.d("Calling %s", request.urlString());
+            Timber.d(request.toString());
+            if (StringUtils.equalsIgnoreCase(request.method(), "POST")) {
+                Buffer buffer = new Buffer();
+                request.body().writeTo(buffer);
+                ByteString content = buffer.snapshot();
+                Timber.d("body=%s", buffer.readString(Charset.defaultCharset()));
+                MediaType type= request.body().contentType();
+                request = request.newBuilder()
+                        .post(RequestBody.create(type, content))
+                        .build();
+            }
         }
         return chain.proceed(request);
     }
