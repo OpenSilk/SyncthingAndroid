@@ -98,6 +98,7 @@ public class SyncthingInstance extends MortarService {
 
     int mConnectedClients = 0;
     boolean mAnyActivityInForeground;
+    boolean wasShutdown;
 
     static class SessionHelper {
         Subscription eventSubscripion;
@@ -158,6 +159,12 @@ public class SyncthingInstance extends MortarService {
 
             if (intent.hasExtra(EXTRA_NOW_IN_FOREGROUND)) {
                 mAnyActivityInForeground = intent.getBooleanExtra(EXTRA_NOW_IN_FOREGROUND, false);
+                if (!mAnyActivityInForeground && wasShutdown) {
+                    doOrderlyShutdown();
+                    return START_NOT_STICKY;
+                }
+            } else {
+                wasShutdown = false;
             }
 
             if (SHUTDOWN.equals(action) || SCHEDULED_SHUTDOWN.equals(action)) {
@@ -230,6 +237,7 @@ public class SyncthingInstance extends MortarService {
     }
 
     void doOrderlyShutdown() {
+        wasShutdown = true;
         ensureSyncthingKilled();
         mNotificationHelper.killNotification();
         //always stick around while activity is running
