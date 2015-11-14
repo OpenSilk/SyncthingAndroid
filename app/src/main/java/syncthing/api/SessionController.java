@@ -52,7 +52,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.observers.Subscribers;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.SerializedSubject;
@@ -72,7 +71,6 @@ import syncthing.api.model.GUIConfig;
 import syncthing.api.model.Ignores;
 import syncthing.api.model.Model;
 import syncthing.api.model.ModelState;
-import syncthing.api.model.Ok;
 import syncthing.api.model.OptionsConfig;
 import syncthing.api.model.SystemErrors;
 import syncthing.api.model.SystemInfo;
@@ -960,8 +958,7 @@ public class SessionController implements EventMonitor.EventListener {
     public void clearErrors() {
         if (hasActiveSubscription(clearErrorsKey)) return;
         Subscription s = restApi.clearErrors().subscribe(
-                v -> {
-                },
+                ignoreOnNext(),
                 (t) -> logException(t, clearErrorsKey),
                 () -> {
                     errorsList.set(null);
@@ -1015,7 +1012,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {},
+                        ignoreOnNext(),
                         onError,
                         onComplete
                 );
@@ -1033,7 +1030,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {},
+                        ignoreOnNext(),
                         onError,
                         onComplete
                 );
@@ -1070,8 +1067,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {
-                        },
+                        ignoreOnNext(),
                         onError,
                         onComplete
                 );
@@ -1128,8 +1124,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {
-                        },
+                        ignoreOnNext(),
                         onError,
                         onComplete
                 );
@@ -1155,7 +1150,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {},
+                        ignoreOnNext(),
                         onError,
                         onComplete
                 );
@@ -1175,7 +1170,7 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {},
+                        ignoreOnNext(),
                         onError,
                         onComplete
                 );
@@ -1194,11 +1189,22 @@ public class SessionController implements EventMonitor.EventListener {
                 .flatMap(restApi::updateConfig)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        v -> {
-                        },
+                        ignoreOnNext(),
                         onError,
                         onComplete
                 );
+    }
+
+    public Subscription getIgnores(String id, Action1<Ignores> onNext, Action1<Throwable> onError) {
+        return restApi.ignores(id)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError);
+    }
+
+    public Subscription editIgnores(String id, Ignores ignores, Action1<Ignores> onNext, Action1<Throwable> onError, Action0 onComplete) {
+        return restApi.updateIgnores(id, ignores)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError, onComplete);
     }
 
     public void restart() {
@@ -1210,13 +1216,10 @@ public class SessionController implements EventMonitor.EventListener {
                 updateState(false);
             }
             unsubscribeActiveSubscriptions();
-            try {
-                Ok ok= restApi.restart().toBlocking().first();
-            } catch (RuntimeException e) {
-                logException(e);
-            } finally {
-                worker.unsubscribe();
-            }
+            //synchronous call
+            SynchingApiWrapper.unwrap(restApi)
+                    .restart().subscribe(ignoreOnNext(), SessionController.this::logException);
+            worker.unsubscribe();
         });
     }
 
@@ -1231,13 +1234,10 @@ public class SessionController implements EventMonitor.EventListener {
                 postChange(Change.FAILURE);
             }
             unsubscribeActiveSubscriptions();
-            try {
-                Ok ok = restApi.shutdown().toBlocking().first();
-            } catch (RuntimeException e) {
-                logException(e);
-            } finally {
-                worker.unsubscribe();
-            }
+            //synchronous call
+            SynchingApiWrapper.unwrap(restApi)
+                    .shutdown().subscribe(ignoreOnNext(), SessionController.this::logException);
+            worker.unsubscribe();
         });
     }
 
@@ -1263,53 +1263,25 @@ public class SessionController implements EventMonitor.EventListener {
                 });
     }
 
-    public Subscription overrideChanges(String id, Action1<Throwable> onError) {
+    public Subscription overrideChanges(String id) {
         return restApi.override(id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (v) -> {
-                        },
-                        onError
-                );
+                .subscribe(ignoreOnNext(), this::logException);
     }
 
-    public Subscription scanFolder(String id, Action1<Throwable> onError) {
+    public Subscription scanFolder(String id) {
         return restApi.scan(id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        (v) -> {
-                        },
-                        onError
-                );
+                .subscribe(ignoreOnNext(), this::logException);
     }
 
-    public Subscription getIgnores(String id, Action1<Ignores> onNext, Action1<Throwable> onError) {
-        return restApi.ignores(id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        onNext,
-                        onError
-                );
-    }
-
-    public Subscription editIgnores(String id, Ignores ignores, Action1<Ignores> onNext, Action1<Throwable> onError, Action0 onComplete) {
-        return restApi.updateIgnores(id, ignores)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        onNext,
-                        onError,
-                        onComplete
-                );
-    }
 
     public Subscription pauseDevice(String deviceId) {
         return restApi.pause(deviceId)
-                .subscribe(Subscribers.create(v -> {}, this::logException));
+                .subscribe(ignoreOnNext(), this::logException);
     }
 
     public Subscription resumeDevice(String deviceId) {
         return restApi.resume(deviceId)
-                .subscribe(Subscribers.create(v -> {}, this::logException));
+                .subscribe(ignoreOnNext(), this::logException);
     }
 
     void logException(Throwable e) {
@@ -1350,6 +1322,10 @@ public class SessionController implements EventMonitor.EventListener {
 
     private static <T> Observable<T> retryOnce(Observable<T> o) {
         return Observable.defer(() -> o).retry(1);
+    }
+
+    private static <T> Action1<T> ignoreOnNext() {
+        return t -> {};
     }
 
     public Subscription subscribeChanges(Action1<ChangeEvent> onNext, Change... changes) {

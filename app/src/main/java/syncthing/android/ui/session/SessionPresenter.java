@@ -641,11 +641,11 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     }
 
     void overrideChanges(String id) {
-        controller.overrideChanges(id, t -> showError(R.string.connection_error, t.getMessage()));
+        controller.overrideChanges(id);
     }
 
     void scanFolder(String id) {
-        controller.scanFolder(id, t -> showError(R.string.connection_error, t.getMessage()));
+        controller.scanFolder(id);
     }
 
     void openLoginScreen() {
