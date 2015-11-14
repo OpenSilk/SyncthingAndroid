@@ -379,7 +379,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/override_changes"
-                            android:visibility="@{(card.state != ModelState.IDLE) ? View.GONE : (card.readOnly ? View.VISIBLE : View.GONE)}"
+                            android:visibility="@{(card.state != ModelState.IDLE) ? View.GONE : ((card.readOnly &amp;&amp; card.needFiles > 0) ? View.VISIBLE : View.GONE)}"
                             android:onClick="@{card.overrideFolderChanges}"
                             style="@style/mtrl.ButtonBarButton.Small"/>
 
