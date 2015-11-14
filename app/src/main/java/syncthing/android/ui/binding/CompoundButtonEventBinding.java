@@ -30,6 +30,6 @@ import rx.functions.Action1;
 public class CompoundButtonEventBinding {
     @BindingAdapter("checkedChanges")
     public static void subscribeCheckedChanges(BindingSubscriptionsHolder bsh, CompoundButton button, Action1<Boolean> onNext) {
-        bsh.bindingSubscriptions().add(RxCompoundButton.checkedChanges(button).subscribe(onNext));
+        bsh.bindingSubscriptions().add(RxCompoundButton.checkedChanges(button).skip(1).subscribe(onNext));
     }
 }

@@ -31,6 +31,6 @@ public class RadioGroupEventBinding {
 
     @BindingAdapter("checkedChanges")
     public static void subscribeCheckedChanges(BindingSubscriptionsHolder bsh, RadioGroup radioGroup, Action1<Integer> onNext) {
-        bsh.bindingSubscriptions().add(RxRadioGroup.checkedChanges(radioGroup).subscribe(onNext));
+        bsh.bindingSubscriptions().add(RxRadioGroup.checkedChanges(radioGroup).skip(1).subscribe(onNext));
     }
 }

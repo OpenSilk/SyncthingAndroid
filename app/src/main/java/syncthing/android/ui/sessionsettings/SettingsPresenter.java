@@ -39,7 +39,6 @@ import rx.functions.Action1;
 import syncthing.android.R;
 import syncthing.android.service.SyncthingUtils;
 import syncthing.android.settings.AppSettings;
-import syncthing.android.ui.binding.Action1IgnoreFirst;
 import syncthing.api.Credentials;
 import syncthing.api.SessionManager;
 import syncthing.api.model.Config;
@@ -363,8 +362,12 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
         }
     }
 
-    public final Action1<CharSequence> actionSetGuiPassword =
-            Action1IgnoreFirst.wrap(SettingsPresenter.this::setGuiPassword);
+    public final Action1<CharSequence> actionSetGuiPassword = new Action1<CharSequence>() {
+        @Override
+        public void call(CharSequence charSequence) {
+            setGuiPassword(charSequence);
+        }
+    };
 
     @Bindable
     public boolean isUseTLS() {

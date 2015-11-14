@@ -31,7 +31,7 @@ public class TextViewEventBinding {
 
     @BindingAdapter("textChanges")
     public static void subscribeTextChanges(BindingSubscriptionsHolder bsh, TextView view, Action1<CharSequence> onNext) {
-        bsh.bindingSubscriptions().add(RxTextView.textChanges(view).subscribe(onNext));
+        bsh.bindingSubscriptions().add(RxTextView.textChanges(view).skip(1).subscribe(onNext));
     }
 
 }
