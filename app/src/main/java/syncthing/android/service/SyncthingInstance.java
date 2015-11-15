@@ -455,8 +455,8 @@ public class SyncthingInstance extends MortarService {
     void ensureBinary(String asset, String destPath) {
         long myTime = getAPKModTime();
         File f = new File(destPath);
-        Timber.d("My Time: %d", myTime);
-        Timber.d("Bin Time: " + f.lastModified());
+        Timber.d("My Time:  %d", myTime);
+        Timber.d("Bin Time: %d", f.lastModified());
         if (f.exists() && f.lastModified() > myTime) {
             Timber.d("%s modtime up-to-date.", f.getName());
             return;
@@ -476,7 +476,7 @@ public class SyncthingInstance extends MortarService {
             Runtime.getRuntime().exec("mv " + writingFilePath + " " + destPath).waitFor();
             Timber.d("moved %s to %s", writingFilePath, destPath);
             f = new File(destPath);
-            if (f.setLastModified(myTime)) {
+            if (f.setLastModified(System.currentTimeMillis())) {
                 Timber.d("set modtime of %s", destPath);
             }
         } catch (IOException|InterruptedException e) {
