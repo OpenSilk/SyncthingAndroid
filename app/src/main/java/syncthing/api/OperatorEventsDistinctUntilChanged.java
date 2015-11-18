@@ -49,6 +49,8 @@ public final class OperatorEventsDistinctUntilChanged implements Operator<Event,
                     boolean canDrop;
                     switch (currentType) {
                         case PING:
+                        case LOCAL_INDEX_UPDATED:
+                        case REMOTE_INDEX_UPDATED:
                             canDrop = true;
                             break;
                         default:
