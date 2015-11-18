@@ -9,37 +9,17 @@
 
 package syncthing.api.model.event;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.joda.time.DateTime;
 
-import java.util.Collections;
-import java.util.List;
-
-import syncthing.api.model.DeviceConfig;
-import syncthing.api.model.FolderConfig;
-import syncthing.api.model.GUIConfig;
-import syncthing.api.model.OptionsConfig;
+import syncthing.api.model.Config;
 
 /**
  * Created by drew on 10/11/15.
  */
-public class ConfigSaved extends Event<ConfigSaved.Data> {
+public class ConfigSaved extends Event<Config> {
 
-    public ConfigSaved(long id, DateTime time, EventType type, Data data) {
+    public ConfigSaved(long id, DateTime time, EventType type, Config data) {
         super(id, time, type, data);
     }
 
-    public static class Data {
-        @SerializedName("Version")
-        public int version;
-        @SerializedName("Folders")
-        public List<FolderConfig> folders = Collections.emptyList();
-        @SerializedName("Devices")
-        public List<DeviceConfig> devices = Collections.emptyList();
-        @SerializedName("GUI")
-        public GUIConfig gui;
-        @SerializedName("Options")
-        public OptionsConfig options;
-    }
 }

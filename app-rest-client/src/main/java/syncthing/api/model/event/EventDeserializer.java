@@ -19,6 +19,8 @@ import org.joda.time.DateTime;
 
 import java.lang.reflect.Type;
 
+import syncthing.api.model.Config;
+
 /**
  * Created by drew on 10/11/15.
  */
@@ -38,7 +40,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
         }
         switch (type) {
             case CONFIG_SAVED: {
-                return new ConfigSaved(id, time, type, context.deserialize(data, ConfigSaved.Data.class));
+                return new ConfigSaved(id, time, type, context.deserialize(data, Config.class));
             }
             case DEVICE_CONNECTED: {
                 return new DeviceConnected(id, time, type, context.deserialize(data, DeviceConnected.Data.class));
