@@ -50,9 +50,10 @@ export ANDROID_HOME=/opt/android/sdk
 export TOOLCHAIN_ROOT=/opt/android/ndk/toolchains
 # If yours differs you can set TOOLCHAIN_ROOT to the proper location,
 # However the subdirectory structure is mandatory
+# The plaform argument must be set to the lowest sdk you want to build for (16 is lowest supported by app)
 
 # Create standalone ARM toolchain
-./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=arm --install-dir=$TOOLCHAIN_ROOT/arm
+./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-16 --arch=arm --install-dir=$TOOLCHAIN_ROOT/arm
 # Create standalone x86 toolchain
 ./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=x86  --install-dir=$TOOLCHAIN_ROOT/386
 # Create standalone x86_64 toolchain
