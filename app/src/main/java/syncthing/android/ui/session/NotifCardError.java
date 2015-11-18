@@ -32,8 +32,9 @@ public class NotifCardError extends NotifCard {
 
     private SystemMessage message;
 
-    public NotifCardError(SessionPresenter presenter) {
-        super(presenter);
+    public NotifCardError(SessionPresenter presenter, SystemMessage message) {
+        super(presenter, Kind.ERROR);
+        setError(message);
     }
 
     @Override

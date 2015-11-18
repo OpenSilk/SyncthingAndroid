@@ -33,8 +33,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,6 +78,7 @@ import syncthing.api.model.SystemErrors;
 import syncthing.api.model.SystemInfo;
 import syncthing.api.model.SystemMessage;
 import syncthing.api.model.Version;
+import syncthing.api.model.event.ConfigSaved;
 import syncthing.api.model.event.DevicePaused;
 import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.DeviceResumed;
@@ -331,7 +334,10 @@ public class SessionController implements EventMonitor.EventListener {
                 }
                 break;
             } case CONFIG_SAVED: {
-                refreshConfig();
+                ConfigSaved cs = (ConfigSaved) e;
+                updateConfig(cs.data);
+                postChange(Change.CONFIG_UPDATE);
+                refreshConfigStats();
                 break;
             } case DOWNLOAD_PROGRESS: {
                 break;
@@ -369,6 +375,7 @@ public class SessionController implements EventMonitor.EventListener {
                 refreshSystem();
                 refreshConnections(true);
                 refreshErrors();
+                refreshConfigStats();
                 break;
             } default: {
                 break;
@@ -511,27 +518,28 @@ public class SessionController implements EventMonitor.EventListener {
     static final String refreshConfigKey = "refreshConfig";
     public void refreshConfig() {
         if (hasActiveSubscription(refreshConfigKey)) return;
-        Subscription s = Observable.merge(
-                restApi.config().map(r -> Pair.of(1, r)),
-                restApi.configStatus().map(r -> Pair.of(2, r))
-        ).subscribe(
-                p -> {
-                    switch (p.getLeft()) {
-                        case 1:
-                            updateConfig((Config) p.getRight());
-                            break;
-                        case 2:
-                            updateConfigStats((ConfigStats) p.getRight());
-                            break;
-                    }
-                },
-                (t) -> logException(t, refreshConfigKey),
-                () -> {
-                    postChange(Change.CONFIG_UPDATE);
-                    removeSubscription(refreshConfigKey);
-                }
-        );
+        Subscription s = restApi.config()
+                .subscribe(
+                        this::updateConfig,
+                        (t) -> logException(t, refreshConfigKey),
+                        () -> {
+                            postChange(Change.CONFIG_UPDATE);
+                            removeSubscription(refreshConfigKey);
+                        }
+                );
         addSubscription(refreshConfigKey, s);
+    }
+
+    static final String refreshConfigStatsKey = "refreshConfigStats";
+    public void refreshConfigStats() {
+        if (hasActiveSubscription(refreshConfigStatsKey)) return;
+        Subscription s = restApi.configStatus()
+                .subscribe(
+                        this::updateConfigStats,
+                        (t) -> logException(t, refreshConfigStatsKey),
+                        () -> removeSubscription(refreshConfigStatsKey)
+                );
+        addSubscription(refreshConfigStatsKey, s);
     }
 
     public void refreshConnections() {
@@ -705,6 +713,10 @@ public class SessionController implements EventMonitor.EventListener {
             //remove any stale rejections
             Iterator<Map.Entry<String, FolderRejected>> ii = folderRejections.entrySet().iterator();
             while (ii.hasNext()) {
+                //TODO this isnt right
+                //we need to check the device as well
+                //but not doing that now as the add folder screen cant
+                //handle adding a device to a folder that already exists
                 String[] split = StringUtils.split(ii.next().getKey(), '★');
                 if (split != null && split.length > 0) {
                     if (getFolder(split[0]) != null) {
@@ -737,7 +749,11 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     void updateConfigStats(ConfigStats configStats) {
-        this.configInSync.set(configStats.configInSync);
+        boolean inSync = this.configInSync.getAndSet(configStats.configInSync);
+        if (inSync != configStats.configInSync) {
+            postChange(Change.NOTICE);
+            refreshConfig();
+        }
     }
 
     public @Nullable ConnectionInfo getConnection(String id) {
@@ -871,7 +887,6 @@ public class SessionController implements EventMonitor.EventListener {
     }
 
     void updateCompletion(String device, String folder, Completion comp) {
-        Timber.d("Updating completion for %s", device);
         synchronized (completion) {
             if (!completion.containsKey(device)) {
                 completion.put(device, new HashMap<String, Float>());
@@ -915,7 +930,7 @@ public class SessionController implements EventMonitor.EventListener {
 
     public Set<Map.Entry<String, DeviceRejected>> getDeviceRejections() {
         synchronized (deviceRejections) {
-            return Collections.unmodifiableSet(deviceRejections.entrySet());
+            return new LinkedHashSet<>(deviceRejections.entrySet());
         }
     }
 
@@ -928,7 +943,7 @@ public class SessionController implements EventMonitor.EventListener {
 
     public Set<Map.Entry<String, FolderRejected>> getFolderRejections() {
         synchronized (folderRejections) {
-            return Collections.unmodifiableSet(folderRejections.entrySet());
+            return new LinkedHashSet<>(folderRejections.entrySet());
         }
     }
 

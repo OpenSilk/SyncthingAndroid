@@ -17,7 +17,6 @@
 
 package syncthing.android.ui.session;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -56,13 +55,13 @@ import syncthing.android.R;
 import syncthing.android.identicon.IdenticonComponent;
 import syncthing.android.identicon.IdenticonGenerator;
 import syncthing.android.service.SyncthingUtils;
-import syncthing.api.Credentials;
 import syncthing.android.ui.ManageActivity;
 import syncthing.android.ui.common.ActivityRequestCodes;
 import syncthing.android.ui.sessionsettings.EditDeviceFragment;
 import syncthing.android.ui.sessionsettings.EditFolderFragment;
 import syncthing.android.ui.sessionsettings.EditIgnoresFragment;
 import syncthing.android.ui.sessionsettings.SettingsFragment;
+import syncthing.api.Credentials;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
 import syncthing.api.SessionManager;
@@ -70,10 +69,9 @@ import syncthing.api.model.ConnectionInfo;
 import syncthing.api.model.DeviceConfig;
 import syncthing.api.model.DeviceStats;
 import syncthing.api.model.FolderConfig;
-import syncthing.api.model.FolderStats;
-import syncthing.api.model.SystemMessage;
 import syncthing.api.model.Model;
 import syncthing.api.model.SystemInfo;
+import syncthing.api.model.SystemMessage;
 import syncthing.api.model.Version;
 import syncthing.api.model.event.DeviceRejected;
 import syncthing.api.model.event.FolderCompletion;
@@ -225,22 +223,20 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
             case DEVICE_REJECTED:
             case FOLDER_REJECTED:
             case NOTICE:
+                updateNotifications();
                 if (hasView()) {
-                    updateNotifications();
                     getView().refreshNotifications(notifications);
                 }
                 break;
             case CONFIG_UPDATE:
+                updateNotifications();
+                updateFolders();
+                updateDevices();
+                updateThisDevice();
                 if (hasView()) {
-                    if (!controller.isConfigInSync()) {
-                        updateNotifications();
-                        getView().refreshNotifications(notifications);
-                    }
-                    updateFolders();
+                    getView().refreshNotifications(notifications);
                     getView().refreshFolders(folders);
-                    updateDevices();
                     getView().refreshDevices(devices);
-                    updateThisDevice();
                     getView().refreshThisDevice(myDevice);
                 }
                 break;
@@ -301,51 +297,86 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
     }
 
     void updateNotifications() {
-        /*todo compare device/foler rej and update
-        if (!controller.isConfigInSync()) {
-            if (notifications.indexOf(NotifCardRestart.INSTANCE) == -1) {
-                notifications.add(0, NotifCardRestart.INSTANCE);
-            }
-        } else {
-            int idx;
-            if ((idx = notifications.indexOf(NotifCardRestart.INSTANCE)) != -1) {
-                notifications.remove(idx);
-            }
-        }
-        GuiError guiError = controller.getLatestError();
-        if (guiError != null) {
-            NotifCardError.INSTANCE.setError(guiError);
-            if (notifications.indexOf(NotifCardError.INSTANCE) == -1) {
-                if (notifications.size() >= 1) {
-                    //we want to be second
-                    notifications.add(1, NotifCardError.INSTANCE);
-                } else {
-                    notifications.add(NotifCardError.INSTANCE);
+        boolean hasResartNotif = false;
+        boolean hasErrorNotif = false;
+
+        final boolean configInSync = controller.isConfigInSync();
+        final SystemMessage lastError = controller.getLatestError();
+        final Set<Map.Entry<String, DeviceRejected>> deviceRejs = controller.getDeviceRejections();
+        final Set<Map.Entry<String, FolderRejected>> folderRejs = controller.getFolderRejections();
+
+        Iterator<NotifCard> ni = notifications.iterator();
+        while (ni.hasNext()) {
+            NotifCard n = ni.next();
+            switch (n.getKind()) {
+                case RESTART: {
+                    if (!configInSync) {
+                        hasResartNotif = true;
+                    } else {
+                        ni.remove();
+                    }
+                    break;
+                }
+                case ERROR: {
+                    if (lastError != null) {
+                        NotifCardError ne = (NotifCardError) n;
+                        ne.setError(lastError);
+                        hasErrorNotif = true;
+                    } else {
+                        ni.remove();
+                    }
+                    break;
+                }
+                case DEVICE_REJ: {
+                    NotifCardRejDevice nd = (NotifCardRejDevice) n;
+                    Iterator<Map.Entry<String, DeviceRejected>> di = deviceRejs.iterator();
+                    boolean found = false;
+                    while (di.hasNext()) {
+                        Map.Entry<String, DeviceRejected> e = di.next();
+                        if (StringUtils.equals(nd.getKey(), e.getKey())) {
+                            di.remove();
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        ni.remove();
+                    }
+                    break;
+                }
+                case FOLDER_REJ: {
+                    NotifCardRejFolder nf = (NotifCardRejFolder) n;
+                    Iterator<Map.Entry<String, FolderRejected>> fi = folderRejs.iterator();
+                    boolean found = false;
+                    while (fi.hasNext()) {
+                        Map.Entry<String, FolderRejected> e = fi.next();
+                        if (StringUtils.equals(nf.getKey(), e.getKey())) {
+                            fi.remove();
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        ni.remove();
+                    }
+                    break;
                 }
             }
-        } else {
-            int idx;
-            if ((idx = notifications.indexOf(NotifCardError.INSTANCE)) != -1) {
-                notifications.remove(idx);
-            }
         }
-        */
-        notifications.clear();
-        if (!controller.isConfigInSync()) {
+
+        if (!configInSync && !hasResartNotif) {
             notifications.add(new NotifCardRestart(this));
         }
-        SystemMessage guiError = controller.getLatestError();
-        if (guiError != null) {
-            NotifCardError errCard = new NotifCardError(this);
-            errCard.setError(guiError);
-            notifications.add(errCard);
+        if (lastError != null && !hasErrorNotif) {
+            notifications.add(new NotifCardError(this, lastError));
         }
-        for (Map.Entry<String, DeviceRejected> e : controller.getDeviceRejections()) {
+        for (Map.Entry<String, DeviceRejected> e : deviceRejs) {
             notifications.add(new NotifCardRejDevice(this, e.getKey(), e.getValue()));
         }
-        for (Map.Entry<String, FolderRejected> e : controller.getFolderRejections()) {
+        for (Map.Entry<String, FolderRejected> e : folderRejs) {
             notifications.add(new NotifCardRejFolder(this, e.getKey(), e.getValue()));
         }
+        Collections.sort(notifications);
     }
 
     void updateFolders() {
@@ -529,7 +560,7 @@ public class SessionPresenter extends Presenter<ISessionScreenView> implements
 
     void onFolderModelUpdate(Object o) {
         if (SessionController.ChangeEvent.NONE == o) {
-            updateFolders();
+            updateFoldersAndNotify();
         } else {
             FolderSummary.Data data = (FolderSummary.Data) o;
             FolderCard fc = getFolderCard(data.folder);

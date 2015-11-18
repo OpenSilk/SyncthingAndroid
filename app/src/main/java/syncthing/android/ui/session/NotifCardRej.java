@@ -24,13 +24,16 @@ import syncthing.api.model.event.Event;
  */
 public abstract class NotifCardRej<E extends Event> extends NotifCard {
 
-    final String id;
+    final String key;
     final E event;
 
-    public NotifCardRej(SessionPresenter presenter, String id, E event) {
-        super(presenter);
-        this.id = id;
+    public NotifCardRej(SessionPresenter presenter, Kind kind, String key, E event) {
+        super(presenter, kind);
+        this.key = key;
         this.event = event;
     }
 
+    public String getKey() {
+        return key;
+    }
 }

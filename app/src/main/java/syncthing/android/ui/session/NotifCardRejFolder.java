@@ -30,8 +30,8 @@ import syncthing.api.model.event.FolderRejected;
  */
 public class NotifCardRejFolder extends NotifCardRej<FolderRejected> {
 
-    public NotifCardRejFolder(SessionPresenter presenter, String id, FolderRejected event) {
-        super(presenter, id, event);
+    public NotifCardRejFolder(SessionPresenter presenter, String key, FolderRejected event) {
+        super(presenter, Kind.FOLDER_REJ, key, event);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class NotifCardRejFolder extends NotifCardRej<FolderRejected> {
     }
 
     public void dismissFolder(View btn) {
-        presenter.controller.removeFolderRejection(id);
+        presenter.controller.removeFolderRejection(key);
     }
 
 }

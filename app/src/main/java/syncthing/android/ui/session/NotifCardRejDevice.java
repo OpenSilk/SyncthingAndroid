@@ -31,8 +31,8 @@ import syncthing.api.model.event.DeviceRejected;
  */
 public class NotifCardRejDevice extends NotifCardRej<DeviceRejected> {
 
-    public NotifCardRejDevice(SessionPresenter presenter, String id, DeviceRejected event) {
-        super(presenter, id, event);
+    public NotifCardRejDevice(SessionPresenter presenter, String key, DeviceRejected event) {
+        super(presenter, Kind.DEVICE_REJ, key, event);
     }
 
     @Override
@@ -88,6 +88,6 @@ public class NotifCardRejDevice extends NotifCardRej<DeviceRejected> {
     }
 
     public void dismissDevice(View btn) {
-        presenter.controller.removeDeviceRejection(getDeviceID());
+        presenter.controller.removeDeviceRejection(key);
     }
 }

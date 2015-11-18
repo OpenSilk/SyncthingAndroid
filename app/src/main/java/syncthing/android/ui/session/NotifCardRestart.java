@@ -27,7 +27,7 @@ import syncthing.android.R;
 public class NotifCardRestart extends NotifCard {
 
     public NotifCardRestart(SessionPresenter presenter) {
-        super(presenter);
+        super(presenter, Kind.RESTART);
     }
 
     @Override

@@ -17,14 +17,36 @@
 
 package syncthing.android.ui.session;
 
+import android.support.annotation.NonNull;
+
 import syncthing.android.ui.common.ExpandableCard;
 
 /**
  * Created by drew on 10/12/15.
  */
-public abstract class NotifCard extends ExpandableCard {
+public abstract class NotifCard extends ExpandableCard implements Comparable<NotifCard> {
+
+    enum Kind {
+        RESTART,
+        ERROR,
+        DEVICE_REJ,
+        FOLDER_REJ,
+    }
+
     protected final SessionPresenter presenter;
-    public NotifCard(SessionPresenter presenter) {
+    protected final Kind kind;
+
+    public NotifCard(SessionPresenter presenter, Kind kind) {
         this.presenter = presenter;
+        this.kind = kind;
+    }
+
+    public Kind getKind() {
+        return kind;
+    }
+
+    @Override
+    public int compareTo(@NonNull NotifCard another) {
+        return getKind().ordinal() - another.getKind().ordinal();
     }
 }
