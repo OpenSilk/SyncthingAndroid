@@ -171,8 +171,7 @@ public class ServiceSettings {
         if (StringUtils.equals(BundleHelper.getString(reply), "ok")) {
             receiverHelper.setBootReceiverEnabled(enabled);
             if (enabled) {
-                //TODO add setting to run regardless of connectivity state
-                receiverHelper.setConnectivityReceiverEnabled(true);
+                receiverHelper.setConnectivityReceiverEnabled(onlyOnWifi());
                 receiverHelper.setChargingReceiverEnabled(onlyWhenCharging());
             } else {
                 receiverHelper.setConnectivityReceiverEnabled(false);
@@ -239,6 +238,9 @@ public class ServiceSettings {
 
     public void setOnlyOnWifi(boolean onlyOnWifi) {
         Bundle reply = putCall(ONLY_WIFI, BundleHelper.b().putInt(onlyOnWifi ? 1 : 0).get());
+        if (StringUtils.equals(BundleHelper.getString(reply), "ok")) {
+            receiverHelper.setConnectivityReceiverEnabled(onlyOnWifi);
+        }
     }
 
     public Set<String> allowedWifiNetworks() {
@@ -298,26 +300,38 @@ public class ServiceSettings {
 
     boolean hasSuitableConnection() {
         NetworkInfo info = cm.getActiveNetworkInfo();
-        //TODO add setting to run regardless of network connection
-        if (info == null || !info.isConnectedOrConnecting()) {
-            Timber.d("Not connected to any networks");
-            return false;
+        if (onlyOnWifi()) {
+            if (info != null && info.isConnectedOrConnecting()) {
+                if (!isWifiOrEthernet(info.getType())) {
+                    Timber.d("Connection is not wifi network");
+                    return false;
+                } else if (isWifi(info.getType()) && !isConnectedToWhitelistedNetwork()) {
+                    Timber.d("Connected wifi network not in whitelist");
+                    return false;
+                } else {
+                    Timber.d("Connected to wifi or ethernet");
+                    return true;
+                }
+            } else {
+                Timber.d("No wifi or ethernet connection");
+                return false;
+            }
+        } else if (info != null && info.isConnectedOrConnecting()) {
+            Timber.d("Connected to network");
+            return true;
+        } else {
+            Timber.d("Not connected to any networks... running anyway");
+            //TODO add setting to only run when connected
+            return true;
         }
-        boolean wifiOnly = onlyOnWifi();
-        if (wifiOnly && !isWifiOrEthernet(info.getType())) {
-            Timber.d("Connection is not wifi network and wifiOnly=true");
-            return false;
-        }
-        if (wifiOnly && !isConnectedToWhitelistedNetwork()) {
-            Timber.d("Connected network not in whitelist wifiOnly=true");
-            return false;
-        }
-        Timber.d("Connected network passes all preconditions");
-        return true;
+    }
+
+    static boolean isWifi(int type) {
+        return type == ConnectivityManager.TYPE_WIFI;
     }
 
     static boolean isWifiOrEthernet(int type) {
-        return type == ConnectivityManager.TYPE_WIFI || type == ConnectivityManager.TYPE_ETHERNET;
+        return isWifi(type) || type == ConnectivityManager.TYPE_ETHERNET;
     }
 
     boolean isConnectedToWhitelistedNetwork() {
