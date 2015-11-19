@@ -11,9 +11,6 @@ package syncthing.api.model.event;
 
 import org.joda.time.DateTime;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by drew on 10/11/15.
  */
@@ -24,12 +21,8 @@ public class DeviceDiscovered extends Event<DeviceDiscovered.Data> {
 
     public static class Data {
         public String device;
-        public List<Address> addrs = Collections.emptyList();
-        public List<Relay> relays = Collections.emptyList();
-    }
-
-    public static class Address {
-        public String URL;
+        public String[] addrs;
+        public Relay[] relays;
     }
 
     public static class Relay {
