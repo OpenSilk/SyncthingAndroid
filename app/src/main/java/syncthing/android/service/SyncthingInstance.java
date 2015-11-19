@@ -29,6 +29,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.MediaStore;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.mortar.DaggerService;
@@ -72,6 +73,8 @@ public class SyncthingInstance extends MortarService {
     static final String BINARY_NEED_RESTART = PACKAGE + ".action.binaryneedrestart";
     //binary exited with clean shutdown status
     static final String BINARY_WAS_SHUTDOWN = PACKAGE + ".action.binarywasshutdown";
+    //binary exited with unhandled exit code
+    static final String BINARY_DIED = PACKAGE + ".action.binarydied";
     //Reload settings
     public static final String REEVALUATE = PACKAGE + ".action.reevaluate";
     //shutdown service
@@ -176,6 +179,10 @@ public class SyncthingInstance extends MortarService {
             }
 
             switch (action) {
+                case BINARY_DIED:
+                    doOrderlyShutdown();
+                    mNotificationHelper.showError();
+                    break;
                 case BINARY_WAS_SHUTDOWN:
                     doOrderlyShutdown();
                     break;
@@ -458,18 +465,18 @@ public class SyncthingInstance extends MortarService {
         Timber.d("My Time:  %d", myTime);
         Timber.d("Bin Time: %d", f.lastModified());
         if (f.exists() && f.lastModified() > myTime) {
-            Timber.d("%s modtime up-to-date.", f.getName());
+            Timber.i("%s modtime up-to-date.", f.getName());
             return;
         }
-        Timber.d("%s missing or modtime stale. Re-copying from APK.", f.getName());
+        Timber.i("%s missing or modtime stale. Re-copying from APK.", f.getName());
+        String writingFilePath = destPath + ".writing";
         InputStream is = null;
         FileOutputStream fos = null;
         try {
             is = getAssets().open(asset);
-            fos = getApplicationContext().openFileOutput(f.getName() + ".writing", MODE_PRIVATE);
+            fos = new FileOutputStream(new File(writingFilePath));
             IOUtils.copy(is, fos);
             fos.flush();
-            String writingFilePath = f.getAbsolutePath() + ".writing";
             Timber.d("wrote out %s", writingFilePath);
             Runtime.getRuntime().exec("chmod 0700 " + writingFilePath).waitFor();
             Timber.d("did chmod 0700 on %s", writingFilePath);
@@ -480,6 +487,8 @@ public class SyncthingInstance extends MortarService {
                 Timber.d("set modtime of %s", destPath);
             }
         } catch (IOException|InterruptedException e) {
+            FileUtils.deleteQuietly(new File(destPath));
+            FileUtils.deleteQuietly(new File(writingFilePath));
             throw new RuntimeException(e);
         } finally {
             IOUtils.closeQuietly(is);

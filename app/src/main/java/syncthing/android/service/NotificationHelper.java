@@ -22,6 +22,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 
 import javax.inject.Inject;
 
@@ -35,6 +37,7 @@ import syncthing.android.ui.LauncherActivity;
 public class NotificationHelper {
 
     public static final int SERVICE_NOTIFICATION = 1;
+    private static final int ERROR_NOTIFICATION = 2;
 
     final SyncthingInstance service;
     final NotificationManager notificationManager;
@@ -55,7 +58,7 @@ public class NotificationHelper {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setSmallIcon(R.drawable.ic_cloud_circle_white_24dp)//TODO real icon
-                .setLargeIcon(((BitmapDrawable) service.getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap())
+                .setLargeIcon(((BitmapDrawable) ContextCompat.getDrawable(service, R.mipmap.ic_launcher)).getBitmap())
                 .setContentTitle(service.getString(R.string.syncthing_is_running))
                 .setContentIntent(PendingIntent.getActivity(service, 0,
                         new Intent(service, LauncherActivity.class)
@@ -69,15 +72,33 @@ public class NotificationHelper {
                         service.getResources().getString(R.string.shutdown),
                         PendingIntent.getService(service, 0,
                                 new Intent(service, SyncthingInstance.class)
-                                    .setAction(SyncthingInstance.SHUTDOWN),
+                                        .setAction(SyncthingInstance.SHUTDOWN),
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         )
                 )
                 ;
         service.startForeground(SERVICE_NOTIFICATION, builder.build());
+        killError();
     }
 
     void killNotification() {
         service.stopForeground(true);
+    }
+
+    void showError() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(service);
+        builder.setCategory(NotificationCompat.CATEGORY_ERROR)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.ic_error_white_36dp)
+                .setLargeIcon(((BitmapDrawable) ContextCompat.getDrawable(service, R.mipmap.ic_launcher)).getBitmap())
+                .setContentTitle(service.getString(R.string.error))
+                .setContentText(service.getString(R.string.syncthing_died_unexpectedly))
+                ;
+        notificationManager.notify(ERROR_NOTIFICATION, builder.build());
+    }
+
+    void killError() {
+        notificationManager.cancel(ERROR_NOTIFICATION);
     }
 }

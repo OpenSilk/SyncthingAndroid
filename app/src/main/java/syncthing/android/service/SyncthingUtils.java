@@ -34,6 +34,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.opensilk.common.core.util.VersionUtils;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.BufferedReader;
@@ -106,11 +107,19 @@ public class SyncthingUtils {
     }
 
     public static String getSyncthingBinaryPath(Context context) {
-        return new File(context.getApplicationContext().getFilesDir(), "syncthing.bin").getAbsolutePath();
+        if (VersionUtils.hasMarshmallow()) {
+            return new File(context.getApplicationContext().getNoBackupFilesDir(), "syncthing.bin").getAbsolutePath();
+        } else {
+            return new File(context.getApplicationContext().getFilesDir(), "syncthing.bin").getAbsolutePath();
+        }
     }
 
     public static String getSyncthingInotifyBinaryPath(Context context) {
-        return new File(context.getApplicationContext().getFilesDir(), "syncthing-inotify.bin").getAbsolutePath();
+        if (VersionUtils.hasMarshmallow()) {
+            return new File(context.getApplicationContext().getNoBackupFilesDir(), "syncthing-inotify.bin").getAbsolutePath();
+        } else {
+            return new File(context.getApplicationContext().getFilesDir(), "syncthing-inotify.bin").getAbsolutePath();
+        }
     }
 
     /*

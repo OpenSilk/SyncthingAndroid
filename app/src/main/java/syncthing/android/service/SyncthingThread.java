@@ -102,9 +102,12 @@ public class SyncthingThread extends Thread {
                 if (ret == 3) { //restart requested
                     mService.startService(new Intent(mService, SyncthingInstance.class)
                             .setAction(SyncthingInstance.BINARY_NEED_RESTART));
-                } else if (ret == 0 || ret == 1) { //shutdown
+                } else if (ret == 0 || ret == 9) { //shutdown, killed
                     mService.startService(new Intent(mService, SyncthingInstance.class)
                             .setAction(SyncthingInstance.BINARY_WAS_SHUTDOWN));
+                } else {
+                    mService.startService(new Intent(mService, SyncthingInstance.class)
+                            .setAction(SyncthingInstance.BINARY_DIED));
                 }
             }
         } catch (IOException|InterruptedException e) {

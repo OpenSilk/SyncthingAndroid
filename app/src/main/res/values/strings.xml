@@ -70,6 +70,7 @@
 
     <!--Notification-->
     <string name="syncthing_is_running">Syncthing is running</string>
+    <string name="syncthing_died_unexpectedly">Syncthing died unexpectedly</string>
 
     <!--Accessibility-->
     <string name="accessibility_qr">Open QR Scanner</string>
