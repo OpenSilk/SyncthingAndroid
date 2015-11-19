@@ -221,8 +221,11 @@ public class SessionController implements EventMonitor.EventListener {
                 // add delay to allow for configuration changes
                 s = Observable.timer(30, TimeUnit.SECONDS, subscribeOn)
                         .subscribe(ii -> {
-                            eventMonitor.stop();
-                            removeSubscription(suspendSubscriptionKey);
+                            synchronized (lock) {
+                                eventMonitor.stop();
+                                online = false;
+                                removeSubscription(suspendSubscriptionKey);
+                            }
                         });
                 addSubscription(suspendSubscriptionKey, s);
                 running = false;
@@ -236,10 +239,23 @@ public class SessionController implements EventMonitor.EventListener {
             synchronized (lock) {
                 eventMonitor.stop();
                 running = false;
+                online = false;
             }
             unsubscribeActiveSubscriptions();
             worker.unsubscribe();
         });
+    }
+
+    public boolean isOnline() {
+        synchronized (lock) {
+            return online;
+        }
+    }
+
+    public boolean isRestarting() {
+        synchronized (lock) {
+            return restarting;
+        }
     }
 
     public boolean isRunning() {
@@ -661,18 +677,6 @@ public class SessionController implements EventMonitor.EventListener {
                         () -> removeSubscription(localIndexUpdatedKey)
                 );
         addSubscription(localIndexUpdatedKey, s);
-    }
-
-    public boolean isOnline() {
-        synchronized (lock) {
-            return online;
-        }
-    }
-
-    public boolean isRestarting() {
-        synchronized (lock) {
-            return restarting;
-        }
     }
 
     public SystemInfo getSystemInfo() {
