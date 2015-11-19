@@ -4,33 +4,32 @@ set -e
 
 RESET=1
 
-if [ -z "$TOOLCHAIN_ROOT" ]; then
-    TOOLCHAIN_ROOT=/opt/android/ndk/toolchains/
-fi
-
 MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ASSETSDIR=${MYDIR}/app/src/main/assets/
 
 case "$1" in
     arm)
-        export CC=${TOOLCHAIN_ROOT}/arm/bin/arm-linux-androideabi-gcc
-        export CXX=${TOOLCHAIN_ROOT}/arm/bin/arm-linux-androideabi-g++
+        TOOLCHAIN_ROOT="${MYDIR}"/golang/build/toolchains/arm
+        export CC="${TOOLCHAIN_ROOT}"/bin/arm-linux-androideabi-gcc
+        export CXX="${TOOLCHAIN_ROOT}"/bin/arm-linux-androideabi-g++
         export CGO_ENABLED=1
         export GOOS=android
         export GOARCH=arm
         export GOARM=7
         ;;
     386)
-        export CC_FOR_TARGET=${TOOLCHAIN_ROOT}/386/bin/i686-linux-android-gcc
-        export CXX_FOR_TARGET=${TOOLCHAIN_ROOT}/386/bin/i686-linux-android-g++
+        TOOLCHAIN_ROOT="${MYDIR}"/golang/build/toolchains/386
+        export CC_FOR_TARGET="${TOOLCHAIN_ROOT}"/bin/i686-linux-android-gcc
+        export CXX_FOR_TARGET="${TOOLCHAIN_ROOT}"/bin/i686-linux-android-g++
         export CGO_ENABLED=1
         export GOOS=android
         export GOARCH=386
         export GO386=387
         ;;
     amd64)
-        export CC_FOR_TARGET=${TOOLCHAIN_ROOT}/amd64/bin/x86_64-linux-android-gcc
-        export CXX_FOR_TARGET=${TOOLCHAIN_ROOT}/amd64/bin/x86_64-linux-android-g++
+        TOOLCHAIN_ROOT="${MYDIR}"/golang/build/toolchains/amd64
+        export CC_FOR_TARGET="${TOOLCHAIN_ROOT}"/bin/x86_64-linux-android-gcc
+        export CXX_FOR_TARGET="${TOOLCHAIN_ROOT}"/bin/x86_64-linux-android-g++
         export CGO_ENABLED=1
         export GOOS=android
         export GOARCH=amd64

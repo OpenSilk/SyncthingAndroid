@@ -43,49 +43,34 @@ export ANDROID_HOME=/opt/android/sdk
 ./android update sdk --all -t "<selected nr1,nr2,...>" -u
 ```
 
-* Android ndk. Set `TOOLCHAIN_ROOT` or update scripts to point to yours
-
-```bash
-# The build scripts expect TOOLCHAIN_ROOT set as defined here
-export TOOLCHAIN_ROOT=/opt/android/ndk/toolchains
-# If yours differs you can set TOOLCHAIN_ROOT to the proper location,
-# However the subdirectory structure is mandatory
-# The plaform argument must be set to the lowest sdk you want to build for (16 is lowest supported by app)
-
-# Create standalone ARM toolchain
-./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-16 --arch=arm --install-dir=$TOOLCHAIN_ROOT/arm
-# Create standalone x86 toolchain
-./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-16 --arch=x86  --install-dir=$TOOLCHAIN_ROOT/386
-# Create standalone x86_64 toolchain
-./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=x86_64  --install-dir=$TOOLCHAIN_ROOT/amd64
-```
+* Android ndk. Set `ANDROID_NDK` to root of ndk install
 
 * Building Syncthing
 
 ```bash
 # You only need to run these once (or whenever the submodules are updated)
-# If you are building for your self and know what arch you want you can omit
-# the other to reduce apk size (ie only build the arm versions)
 
 # You must have go 1.5+ installed on the host to bootstrap the cross compilation
 # the scripts expect the install to be at /usr/lib/go if yours differs you can
 # set GOROOT_BOOTSTRAP to the proper location
 
-# Build go for android/arm
+# If ANDROID_NDK is not set it defaults to /opt/android/ndk/android-ndk-r10e
+
+# This will build go, syncthing, and syncthing-inotify for arm/x86/amd64
+# Binaries will be installed to app/src/main/assets
+./make-all.bash
+
+# OR If you are building for your self and know what arch you want.
+
+# Build for android/arm
 ./make-go.bash arm
-# Build go for android/386 (x86)
-./make-go.bash 386
-# Build go for android/amd64 (x86_64) (only useful for emulator right now)
-./make-go.bash amd64
-
-# Build syncthing for android/arm
 ./make-syncthing.bash arm
-# Build syncthing for android/386
+# Build for android/386 (x86)
+./make-go.bash 386
 ./make-syncthing.bash 386
-# Build syncthing for android/amd64
+# Build for android/amd64 (x86_64) (only useful for emulator right now)
+./make-go.bash amd64
 ./make-syncthing.bash amd64
-
-#Binaries will be installed to app/src/main/assets
 
 ```
 
