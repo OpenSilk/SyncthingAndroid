@@ -44,7 +44,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s quiere compartir repositorio \"%2$s\".</string>
     <string name="devices">Dispositivos</string>
     <string name="disconnected">Desconectado</string>
-    <string name="discovery">Discovery</string>
+    <string name="discovery">Búsqueda</string>
     <string name="documentation">Documentación</string>
     <string name="download_rate">Tasa de descarga</string>
     <string name="downloaded">Descargado</string>
@@ -114,7 +114,7 @@
     <string name="ok">OK</string>
     <string name="oldest_first">Antiguo primero</string>
     <string name="options">Opciones</string>
-    <string name="out_of_sync">Out of Sync</string>
+    <string name="out_of_sync">Fuera de sincronización</string>
     <string name="out_of_sync_items">Ítems no sincronizados</string>
     <string name="outgoing_rate_limit_kibs">Tasa máxima de envío (KiB/s)</string>
     <string name="override_changes">Reemplazar los cambios</string>
@@ -130,7 +130,7 @@
     <string name="ram_utilization">Utilización de RAM</string>
     <string name="random">Aleatorio</string>
     <string name="relayed_via">retransmitida vía</string>
-    <string name="relays">Relés</string>
+    <string name="relays">Retransmisores</string>
     <string name="release_notes">Notas de lanzamiento</string>
     <string name="remove">Eliminar</string>
     <string name="rescan">Reescanear</string>
@@ -139,7 +139,7 @@
     <string name="restart">Reiniciar</string>
     <string name="restart_needed">Es necesario reiniciar</string>
     <string name="restarting">Reiniciando</string>
-    <string name="resume">Resume</string>
+    <string name="resume">Reanudar</string>
     <string name="reused">Reutilizado</string>
     <string name="save">Guardar</string>
     <string name="scanning">Actualización</string>

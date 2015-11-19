@@ -115,7 +115,7 @@
     <string name="oldest_first">Mais antigo primeiro</string>
     <string name="options">Opções</string>
     <string name="out_of_sync">Fora de sincronia</string>
-    <string name="out_of_sync_items">Itens fora de sincronia</string>
+    <string name="out_of_sync_items">Fora de sincronia</string>
     <string name="outgoing_rate_limit_kibs">Limite de velocidade de envio (KiB/s)</string>
     <string name="override_changes">Sobrescrever mudanças</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Caminho para a pasta na máquina local. Será criado caso não exista. O caractere til (~) pode ser usado como um atalho para</string>

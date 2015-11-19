@@ -2,7 +2,7 @@
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
     <string name="a_negative_number_of_days_doesnt_make_sense">Et negativt antall dager gir ikke mening.</string>
-    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">En ny hovedversjon kan bli ikke-kompatibel med en eldre versjon.</string>
+    <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">En ny hovedversjon er ikke nødvendigvis kompatibel med eldre versjoner.</string>
     <string name="about">Om</string>
     <string name="actions">Handlinger</string>
     <string name="add">Legg til</string>
@@ -59,11 +59,11 @@
     <string name="error">Feilmelding</string>
     <string name="external_file_versioning">Ekstern Versjonskontroll</string>
     <string name="failed_items">Elementsynkronisering som har feilet</string>
-    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Fil bit-rettigheter ignoreres når forandringer oppdages. Bruk FAT filsystem. </string>
+    <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Informasjon om filrettigheter ignoreres når det letes etter endringer. Bruk på FAT filsystem. </string>
     <string name="file_pull_order">Filenes Henterekkefølge</string>
     <string name="file_versioning">Versjonskontroll</string>
     <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Filer flyttes til en datostemplet versjon i .stversions-katalogen når den oppdateres eller slettes av Syncthing.</string>
-    <string name="files_are_moved_to_stversions_folder_when_replaced_or_deleted_by_syncthing">Filer som slettes eller erstattes av Syncthing flyttes til katalogen .stversions</string>
+    <string name="files_are_moved_to_stversions_folder_when_replaced_or_deleted_by_syncthing">Filer som slettes eller erstattes av Syncthing flyttes til katalogen .stversions.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">Filer er beskyttet mot endringer som er gjort på andre enheter, men endringer som er gjort på denne enheten blir sendt til resten av gruppen.</string>
     <string name="folder">Katalog</string>
     <string name="folder_id">Mappe ID</string>
@@ -85,7 +85,7 @@
     <string name="ignore_patterns">Utelatelsesmønster</string>
     <string name="ignore_permissions">Ignorer Tilgangsbit</string>
     <string name="incoming_rate_limit_kibs">Innkommende Hastighetsbegrensning (KiB/s)</string>
-    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Feilaktige innstillinger kan skade innholdet i dine delte kataloger og hindre Syncthing i å fungere. </string>
+    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Feilaktige innstillinger kan skade innholdet i dine delte kataloger og hindre Syncthing i å fungere.</string>
     <string name="introducer">Introduktør</string>
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Invers av den gitte tilstanden (t.d. ikke ekskluder)</string>
     <string name="items">element</string>
@@ -200,7 +200,7 @@
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Antall sekund i skanneintervallet kan ikke være negativt.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Disse hentes automatisk og vil synkroniseres når feilen er blitt utbedret.</string>
     <string name="this_is_a_major_version_upgrade">Dette er en hovedoppgradering</string>
-    <string name="trash_can_file_versioning">Fil Versjonskontroll i papirkurven</string>
+    <string name="trash_can_file_versioning">Papirkurv Versjonskontroll</string>
     <string name="unknown">Ukjent</string>
     <string name="unshared">Ikke delt</string>
     <string name="unused">Ikke i bruk</string>

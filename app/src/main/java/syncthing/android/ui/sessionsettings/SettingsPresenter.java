@@ -169,14 +169,20 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
     }
 
     boolean validateListenAddresses(CharSequence text) {
+        int err = 0;
         if (StringUtils.isEmpty(text)) {
-            //TODO
-            return false;
-        } else if (!StringUtils.startsWith(text, "tcp://")) {
-            //TODO
-            return false;
+            err = R.string.input_error;
+        } else {
+            String string = StringUtils.trim(text.toString());
+            if (!StringUtils.startsWith(string, "tcp://")) {
+                err = R.string.input_error;
+            } //todo ip w/ port or ?
         }
-        return true;
+        if (hasView()) {
+            String msg = err != 0 ? getView().getContext().getString(err) : null;
+            setGuiListenAddressError(msg);
+        }
+        return err == 0;
     }
 
     @Bindable
@@ -293,11 +299,18 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
     }
 
     boolean validateGlobalDiscoveryServers(CharSequence text) {
+        int err = 0;
         if (StringUtils.isEmpty(text)) {
-            //TODO
-            return false;
+            err = R.string.input_error;
+        } else {
+            //TODO dynamic dynamic-v4 dynamic-v6 or hosts or ips
+            // (too many combinations so just use user discretion)
         }
-        return true;
+        if (hasView()) {
+            String msg = err != 0 ? getView().getContext().getString(err) : null;
+            setGuiListenAddressError(msg);
+        }
+        return err == 0;
     }
 
     @Bindable
@@ -331,11 +344,20 @@ public class SettingsPresenter extends EditPresenter<CoordinatorLayout> {
     }
 
     boolean validateGuiListenAddress(CharSequence text) {
+        int err = 0;
         if (StringUtils.isEmpty(text)) {
-            //TODO notify
-            return false;
+            err = R.string.input_error;
+        } else {
+            String string = StringUtils.trim(text.toString());
+            if (!SyncthingUtils.isIpAddressWithPort(string)) {
+                err = R.string.input_error;
+            }
         }
-        return true;
+        if (hasView()) {
+            String msg = err != 0 ? getView().getContext().getString(err) : null;
+            setGuiListenAddressError(msg);
+        }
+        return err == 0;
     }
 
     @Bindable

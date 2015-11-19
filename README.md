@@ -55,7 +55,7 @@ export TOOLCHAIN_ROOT=/opt/android/ndk/toolchains
 # Create standalone ARM toolchain
 ./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-16 --arch=arm --install-dir=$TOOLCHAIN_ROOT/arm
 # Create standalone x86 toolchain
-./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=x86  --install-dir=$TOOLCHAIN_ROOT/386
+./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-16 --arch=x86  --install-dir=$TOOLCHAIN_ROOT/386
 # Create standalone x86_64 toolchain
 ./android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=android-21 --arch=x86_64  --install-dir=$TOOLCHAIN_ROOT/amd64
 ```
