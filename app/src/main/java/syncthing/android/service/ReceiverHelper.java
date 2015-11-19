@@ -21,6 +21,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import org.opensilk.common.core.dagger2.ForApplication;
+
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 /**
@@ -30,8 +34,9 @@ public class ReceiverHelper {
 
     final Context appContext;
 
-    public ReceiverHelper(Context appContext) {
-        this.appContext = appContext.getApplicationContext();
+    @Inject
+    public ReceiverHelper(@ForApplication Context appContext) {
+        this.appContext = appContext;
     }
 
     public void setBootReceiverEnabled(boolean enabled) {

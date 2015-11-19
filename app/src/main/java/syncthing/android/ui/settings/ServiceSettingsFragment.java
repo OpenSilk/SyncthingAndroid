@@ -80,7 +80,6 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
 
     @Inject WifiManager mWifimanager;
     @Inject ServiceSettings mSettings;
-    ReceiverHelper mReceiverHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,8 +91,6 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         mSettings.setCached(true);
 
         addPreferencesFromResource(R.xml.prefs_service);
-
-        mReceiverHelper = new ReceiverHelper(getActivity());
 
         runWhen = (ListPreference) findPreference(ServiceSettings.RUN_WHEN);
         runWhen.setPersistent(false);
@@ -164,7 +161,6 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 setEnabled(isChecked);
                 getPreferenceScreen().setEnabled(isChecked);
-                updateReceievers();
             }
         });
     }
@@ -226,12 +222,6 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
         } else if (preference == scheduleEnd) {
             mSettings.setScheduledEndTime((String) newValue);
         }
-        getView().post(new Runnable() {
-            @Override
-            public void run() {
-                updateReceievers();
-            }
-        });
         return true;
     }
 
@@ -276,21 +266,6 @@ public class ServiceSettingsFragment extends PreferenceFragment implements
             ssids[ii] = networks.get(ii).SSID;
         }
         return ssids;
-    }
-
-    void updateReceievers() {
-        boolean enabled = isEnabled();
-        if (!enabled) {
-            mReceiverHelper.setBootReceiverEnabled(false);
-            mReceiverHelper.setChargingReceiverEnabled(false);
-            mReceiverHelper.setConnectivityReceiverEnabled(false);
-        } else {
-            //Dont care if not allowed to run in background
-            mReceiverHelper.setBootReceiverEnabled(true);
-            //dont care if we can run whenever
-            mReceiverHelper.setChargingReceiverEnabled(onlyCharging.isChecked());
-            mReceiverHelper.setConnectivityReceiverEnabled(true);
-        }
     }
 
     void showFilePicker() {

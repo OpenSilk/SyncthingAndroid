@@ -71,6 +71,7 @@ public class ServiceSettings {
     private final ConnectivityManager cm;
     private final WifiManager wm;
     private final Uri callUri;
+    private final ReceiverHelper receiverHelper;
 
     private final Object clientLock = new Object();
 
@@ -82,13 +83,15 @@ public class ServiceSettings {
             @ForApplication Context appContext,
             ConnectivityManager cm,
             WifiManager wm,
-            @Named("settingsAuthority") String authority
+            @Named("settingsAuthority") String authority,
+            ReceiverHelper receiverHelper
     ) {
         this.appContext = appContext;
         this.cm = cm;
         this.wm = wm;
         this.callUri = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT).authority(authority).build();
+        this.receiverHelper = receiverHelper;
     }
 
     private Bundle getCall(String pref, Bundle extras) {
@@ -165,6 +168,17 @@ public class ServiceSettings {
 
     public void setEnabled(boolean enabled) {
         Bundle reply = putCall(ENABLED, BundleHelper.b().putInt(enabled ? 1 : 0).get());
+        if (StringUtils.equals(BundleHelper.getString(reply), "ok")) {
+            receiverHelper.setBootReceiverEnabled(enabled);
+            if (enabled) {
+                //TODO add setting to run regardless of connectivity state
+                receiverHelper.setConnectivityReceiverEnabled(true);
+                receiverHelper.setChargingReceiverEnabled(onlyWhenCharging());
+            } else {
+                receiverHelper.setConnectivityReceiverEnabled(false);
+                receiverHelper.setChargingReceiverEnabled(false);
+            }
+        }
     }
 
     public boolean isInitialised() {
@@ -195,6 +209,9 @@ public class ServiceSettings {
 
     public void setOnlyWhenCharging(boolean onlyWhenCharging) {
         Bundle reply = putCall(ONLY_CHARGING, BundleHelper.b().putInt(onlyWhenCharging ? 1 : 0).get());
+        if (StringUtils.equals(BundleHelper.getString(reply), "ok")) {
+            receiverHelper.setChargingReceiverEnabled(onlyWhenCharging);
+        }
     }
 
     public String getScheduledStartTime() {
@@ -250,8 +267,7 @@ public class ServiceSettings {
             Timber.d("isAllowedToRun(): SyncthingInstance initiating credentials");
             return true;
         }
-        boolean chargingOnly = onlyWhenCharging();
-        if (chargingOnly && !isCharging()) {
+        if (onlyWhenCharging() && !isCharging()) {
             Timber.d("isAllowedToRun(): chargingOnly=true and not charging... rejecting");
             return false;
         }
@@ -282,6 +298,7 @@ public class ServiceSettings {
 
     boolean hasSuitableConnection() {
         NetworkInfo info = cm.getActiveNetworkInfo();
+        //TODO add setting to run regardless of network connection
         if (info == null || !info.isConnectedOrConnecting()) {
             Timber.d("Not connected to any networks");
             return false;
