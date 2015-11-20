@@ -22,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
@@ -410,7 +411,8 @@ public class SyncthingInstance extends MortarService {
     }
 
     boolean isConnectedToWifi() {
-        return mConnectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
+        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIMAX;
     }
 
     void acquireWifiLock() {
