@@ -43,12 +43,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import mortar.MortarScope;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import syncthing.android.BuildConfig;
 import syncthing.api.Session;
 import syncthing.api.SessionController;
@@ -57,6 +59,7 @@ import syncthing.api.SynchingApiWrapper;
 import syncthing.api.SyncthingApi;
 import syncthing.api.SyncthingApiConfig;
 import syncthing.api.model.FolderConfig;
+import syncthing.api.model.Ok;
 import syncthing.api.model.event.ItemFinished;
 import timber.log.Timber;
 
@@ -173,6 +176,7 @@ public class SyncthingInstance extends MortarService {
 
             switch (action) {
                 case BINARY_DIED:
+                    tryKillingRougeInstance();
                     doOrderlyShutdown();
                     mNotificationHelper.showError();
                     break;
@@ -314,7 +318,7 @@ public class SyncthingInstance extends MortarService {
     void startInotify() {
         mSyncthingInotifyThread = new SyncthingInotifyThread(this);
         mSyncthingInotifyThread.start();
-        acquireSession();
+        startMonitor();
     }
 
     void maybeStartInotify() {
@@ -344,12 +348,12 @@ public class SyncthingInstance extends MortarService {
         bob.setUrl(config.getUrl());
         bob.setApiKey(config.getApiKey());
         bob.setCaCert(SyncthingUtils.getSyncthingCACert(this));
-        if (mSession != null) {
-            mSessionManager.release(mSession);
-            mSession = null;
-        }
-        mSessionHelper.release();
+        releaseSession();
         mSession = mSessionManager.acquire(bob.build());
+    }
+
+    void startMonitor() {
+        acquireSession();
         final SessionController controller = mSession.controller();
         controller.init();
         mSessionHelper.eventSubscripion =
@@ -396,6 +400,15 @@ public class SyncthingInstance extends MortarService {
                 }
             }
         }, SessionController.Change.ONLINE, SessionController.Change.ITEM_FINISHED);
+    }
+
+    void tryKillingRougeInstance() {
+        acquireSession();
+        try {
+            Ok ok = SynchingApiWrapper.wrap(mSession.api(), Schedulers.newThread())
+                    .shutdown().timeout(2, TimeUnit.SECONDS).toBlocking().first();
+        } catch (RuntimeException ignored) {
+        }
     }
 
     public ServiceSettings getSettings() {
