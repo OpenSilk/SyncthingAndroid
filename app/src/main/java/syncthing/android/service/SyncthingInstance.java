@@ -100,7 +100,6 @@ public class SyncthingInstance extends MortarService {
     Session mSession;
     final SessionHelper mSessionHelper = new SessionHelper();
 
-    int mConnectedClients = 0;
     boolean mAnyActivityInForeground;
     boolean wasShutdown;
 
@@ -145,14 +144,7 @@ public class SyncthingInstance extends MortarService {
 
     @Override
     public IBinder onBind(Intent intent) {
-        mConnectedClients++;
-        return null; //unused for now
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        mConnectedClients--;
-        return false;
+        throw new UnsupportedOperationException("service not bindable");
     }
 
     @Override
@@ -249,7 +241,7 @@ public class SyncthingInstance extends MortarService {
         ensureSyncthingKilled();
         mNotificationHelper.killNotification();
         //always stick around while activity is running
-        if (mConnectedClients == 0 && !mAnyActivityInForeground) {
+        if (!mAnyActivityInForeground) {
             stopSelf();
         }
     }
