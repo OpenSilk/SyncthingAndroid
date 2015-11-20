@@ -24,6 +24,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.opensilk.common.ui.recycler.DividerItemDecoration;
+
 
 public class CardRecyclerView extends RecyclerView implements ExpandableView.OnExpandListener {
 

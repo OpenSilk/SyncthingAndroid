@@ -21,12 +21,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import syncthing.android.ui.common.NoDecorate;
+import org.opensilk.common.ui.recycler.NoDecorate;
+
 
 /**
  * Created by drew on 3/1/15.
  */
-public class HeaderCardView extends TextView implements NoDecorate {
+@NoDecorate
+public class HeaderCardView extends TextView {
 
     public HeaderCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
