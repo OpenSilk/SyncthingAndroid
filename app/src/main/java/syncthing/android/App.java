@@ -23,6 +23,7 @@ import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpSender;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.opensilk.common.core.app.BaseApp;
 import org.opensilk.common.core.mortar.DaggerService;
 
@@ -92,14 +93,12 @@ import static org.acra.ReportField.USER_CRASH_DATE;
                 INSTALLATION_ID,
                 DEVICE_FEATURES,
                 ENVIRONMENT,
-                SHARED_PREFERENCES,
                 THREAD_DETAILS,
-        },
-        excludeMatchingSharedPreferencesKeys = {
-                "TRANSIENT.*", //Private stuff
         }
 )
 public class App extends BaseApp {
+
+    private String mProcess;
 
     @Override
     public void onCreate() {
@@ -113,6 +112,8 @@ public class App extends BaseApp {
     protected Object getRootComponent() {
         if (isServiceProcess()) {
             return ServiceComponent.FACTORY.call(this);
+        } else if (isEmulator()) {
+            return EmulatorComponent.FACTORY.call(this);
         } else {
             setupReporting();
             return AppComponent.FACTORY.call(this);
@@ -127,18 +128,31 @@ public class App extends BaseApp {
         ACRA.init(this);
     }
 
+    boolean isEmulator() {
+        readProcess();
+        return StringUtils.isEmpty(mProcess);
+    }
+
     boolean isServiceProcess() {
-        try {
-            final File comm = new File("/proc/self/comm");
-            if (comm.exists() && comm.canRead()) {
-                final List<String> commLines = FileUtils.readLines(comm);
-                if (commLines.size() > 0) {
-                    final String procName = commLines.get(0).trim();
-                    Timber.i("%s >> %s ", comm.getAbsolutePath(), procName);
-                    return procName.endsWith(":service");
+        readProcess();
+        return StringUtils.endsWith(mProcess, ":service");
+    }
+
+    void readProcess() {
+        if (mProcess == null) {
+            try {
+                final File comm = new File("/proc/self/comm");
+                if (comm.exists() && comm.canRead()) {
+                    final List<String> commLines = FileUtils.readLines(comm);
+                    if (commLines.size() > 0) {
+                        final String procName = commLines.get(0).trim();
+                        Timber.i("%s >> %s ", comm.getAbsolutePath(), procName);
+                        mProcess = procName;
+                    }
                 }
+            } catch (IOException ignored) {
+                mProcess = "";
             }
-        } catch (IOException ignored) { }
-        return false;
+        }
     }
 }
