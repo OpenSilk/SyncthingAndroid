@@ -15,13 +15,14 @@ import java.io.Serializable;
  * Created by drew on 3/1/15.
  */
 public class GUIConfig implements Serializable, Cloneable {
-    private static final long serialVersionUID = 2361764664373127666L;
+    private static final long serialVersionUID = -3114592263160879843L;
     public boolean enabled;
     public String address;
     public String user;
     public String password;
     public boolean useTLS;
     public String apiKey;
+    public boolean insecureAdminAccess;
 
     public static GUIConfig withDefaults() {
         GUIConfig c = new GUIConfig();

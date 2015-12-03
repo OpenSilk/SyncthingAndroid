@@ -24,5 +24,6 @@ public class FolderScanProgress extends Event<FolderScanProgress.Data> {
         public String folder;
         public long current;
         public long total;
+        public long rate; //bytes / sec
     }
 }

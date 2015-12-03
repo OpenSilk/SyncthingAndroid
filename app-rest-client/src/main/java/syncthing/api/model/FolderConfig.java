@@ -18,7 +18,7 @@ import java.util.List;
  * Created by drew on 3/1/15.
  */
 public class FolderConfig implements Serializable, Cloneable {
-    private static final long serialVersionUID = -1620434875319958462L;
+    private static final long serialVersionUID = 4211699699166691007L;
     public String id;
     public String path;
     public List<FolderDeviceConfig> devices = Collections.emptyList();
@@ -27,10 +27,16 @@ public class FolderConfig implements Serializable, Cloneable {
     public boolean ignorePerms;
     public boolean autoNormalize;
     public Versioning versioning;
-    public int copiers;// = 1;
-    public int pullers;// = 16;
-    public int hashers;// = 0;
+    public int copiers;
+    public int pullers;
+    public int hashers;
     public PullOrder order = PullOrder.UNKNOWN;
+    public boolean ignoreDelete;
+    public int scanProgressIntervalS;
+    public int pullerSleepS;
+    public int pullerPauseS;
+    public int maxConflicts;
+    public boolean disableSparseFiles;
     public String invalid;
 
     public static FolderConfig withDefaults() {
