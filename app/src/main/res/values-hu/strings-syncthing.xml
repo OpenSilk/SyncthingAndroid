@@ -16,7 +16,7 @@
     <string name="all_data">Minden adat</string>
     <string name="allow_anonymous_usage_reporting">Engedélyezed a névtelen felhasználási adatok küldését?</string>
     <string name="alphabetic">ABC rendben</string>
-    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Egy külső program kezeli a fájl verziózást. El kell távolítsa a fájlt a szinkronizált mappából.</string>
+    <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Külső program kezeli a fájl verziókövetést. A fájlt  el kell távolítania a szinkronizált mappából.</string>
     <string name="anonymous_usage_reporting">Névtelen felhasználási adatok küldése</string>
     <string name="any_devices_configured_on_an_introducer_device_will_be_added_to_this_device_as_well">Minden eszköz ami a bevezető eszközön lett beállítva hozzá lesz adva ehhez az eszközhöz is.</string>
     <string name="api_key">API kulcs</string>
@@ -34,6 +34,7 @@
     <string name="copied_from_original">Másolva az eredetiről</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 az alábbi Közreműködők:</string>
     <string name="cpu_utilization">Processzor használat</string>
+    <string name="danger">Veszély!</string>
     <string name="days">nap</string>
     <string name="delete">Törlés</string>
     <string name="deleted">Törölve</string>
@@ -57,12 +58,12 @@
     <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Vesszővel elválasztva több cím is bevihető (\"tcp://ip:port\", \"tcp://host:port\"), az automatikus felderítéshez a \'dynamic\' kulcsszó használatos. </string>
     <string name="enter_ignore_patterns_one_per_line">Figyelmen kívül hagyáshoz ide írhatod a mintákat, soronként egyet</string>
     <string name="error">Hiba</string>
-    <string name="external_file_versioning">Külső fájl verziózás</string>
+    <string name="external_file_versioning">Külső fájl verziókövetés</string>
     <string name="failed_items">Hibás elemek</string>
     <string name="file_permission_bits_are_ignored_when_looking_for_changes_use_on_fat_file_systems">Fájl jogosultságok figyelmen kívül hagyása változások keresésekor. FAT fájlrendszerek használatakor.</string>
     <string name="file_pull_order">Fájl küldési sorrend</string>
-    <string name="file_versioning">Fájl verziózás</string>
-    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Ha a Syncthing áthelyezi vagy törli a fájlokat, akkor azok a .stversions mappába lesznek áthelyezve, időbélyegzővel ellátva.</string>
+    <string name="file_versioning">Fájl verziókövetés</string>
+    <string name="files_are_moved_to_date_stamped_versions_in_a_stversions_folder_when_replaced_or_deleted_by_syncthing">Ha a Syncthing felülírja vagy törli a fájlokat, akkor azok a .stversions mappába lesznek áthelyezve, időbélyegzővel ellátva.</string>
     <string name="files_are_moved_to_stversions_folder_when_replaced_or_deleted_by_syncthing">Ha a Syncthing áthelyezi vagy törli a fájlokat, akkor azok a .stversions mappába lesznek áthelyezve.</string>
     <string name="files_are_protected_from_changes_made_on_other_devices_but_changes_made_on_this_device_will_be_sent_to_the_rest_of_the_cluster">A fájlok védve vannak a más eszközökön történt változásokkal szemben, de az ezen az eszközön történt változások érvényesek lesznek a többire.</string>
     <string name="folder">Mappa</string>
@@ -108,7 +109,7 @@
     <string name="new_folder">Új mappa</string>
     <string name="newest_first">Újabb először</string>
     <string name="no">Nem</string>
-    <string name="no_file_versioning">Nincs fájl verziózás</string>
+    <string name="no_file_versioning">Nincs fájl verziókövetés</string>
     <string name="notice">Megjegyzés</string>
     <string name="off">Kikapcsolva</string>
     <string name="ok">Rendben</string>
@@ -123,6 +124,7 @@
     <string name="pause">Szünet</string>
     <string name="paused">Szünetel</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Nagyobb frissítés előtt ellenőrizni kell a kiadási megjegyzéseket.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Kérlek állítsd be a grafikus felület felhasználónevét és jelszavát a Beállítások ablakban</string>
     <string name="please_wait">Kérlek, várj</string>
     <string name="preview">Előnézet</string>
     <string name="preview_usage_report">Felhasználási adatok átnézése</string>
@@ -142,6 +144,7 @@
     <string name="resume">Folytatás</string>
     <string name="reused">Újrafelhasználva</string>
     <string name="save">Mentés</string>
+    <string name="scan_time_remaining">Fennmaradó átnézési idő</string>
     <string name="scanning">Átnézés</string>
     <string name="select_the_devices_to_share_this_folder_with">Válaszd ki az eszközöket amelyekkel meg szeretnéd osztani a mappát</string>
     <string name="select_the_folders_to_share_with_this_device">Válaszd ki a mappákat amiket meg szeretnél osztani ezzel az eszközzel</string>
@@ -198,9 +201,11 @@
     <string name="the_path_cannot_be_blank">Elérési út nem lehet üres.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Az arány limitnek pozitív számnak kell lennie (0: nincs limit)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Az átnézési intervallum nullánál nagyobb másodperc érték kell legyen</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">A Syncthing adminisztrációs felületének távoli elérése be van kapcsolva jelszó nélkül.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">A hiba javítása után automatikusan újra megpróbálja a szinkronizálást.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">Így a hekkerek könnyedén hozzáférhetnek a számítógépen található fájlokhoz. </string>
     <string name="this_is_a_major_version_upgrade">Ez egy főverzió frissítés.</string>
-    <string name="trash_can_file_versioning">Szemetes fájl verziózás</string>
+    <string name="trash_can_file_versioning">Szemetes fájl verziókövetés</string>
     <string name="unknown">Ismeretlen</string>
     <string name="unshared">Nincs megosztva</string>
     <string name="unused">Nincs használatban</string>

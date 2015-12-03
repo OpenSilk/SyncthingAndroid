@@ -34,6 +34,7 @@
     <string name="copied_from_original">從原來複製</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 下列貢獻者：</string>
     <string name="cpu_utilization">CPU 使用</string>
+    <string name="danger">Danger!</string>
     <string name="days">日</string>
     <string name="delete">刪除</string>
     <string name="deleted">已刪除</string>
@@ -123,6 +124,7 @@
     <string name="pause">暫停</string>
     <string name="paused">暫停</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">執行重大升級前請先參閱版本資訊。</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Please set a GUI Authentication User and Password in the Settings dialog.</string>
     <string name="please_wait">請稍後</string>
     <string name="preview">預覽</string>
     <string name="preview_usage_report">預覽使用資訊報告</string>
@@ -142,6 +144,7 @@
     <string name="resume">繼續</string>
     <string name="reused">重用</string>
     <string name="save">儲存</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">正在掃描</string>
     <string name="select_the_devices_to_share_this_folder_with">選擇要共享這個資料夾的裝置。</string>
     <string name="select_the_folders_to_share_with_this_device">選擇要共享這個資料夾的裝置。</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">路徑不能空白。</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">限制速率必須為非負的數字 (0: 不設限制)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">重新掃描間隔必須為一個非負數的秒數。</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">The Syncthing admin interface is configured to allow remote access without a password.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">解決間題後，將會自動重試和同步。</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">This can easily give hackers access to read and change any files on your computer.</string>
     <string name="this_is_a_major_version_upgrade">這是一個主要版本更新。</string>
     <string name="trash_can_file_versioning">Trash Can File Versioning</string>
     <string name="unknown">未知</string>

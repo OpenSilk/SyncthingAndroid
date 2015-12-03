@@ -34,7 +34,8 @@
     <string name="copied_from_original">从源复制</string>
     <string name="copyright_2015_the_following_contributors">版权 ©2015 由下列贡献者所有：</string>
     <string name="cpu_utilization">CPU使用率</string>
-    <string name="days">days</string>
+    <string name="danger">危险！</string>
+    <string name="days">天</string>
     <string name="delete">删除</string>
     <string name="deleted">已删除</string>
     <string name="device_device_address_wants_to_connect_add_new_device">设备：%1$s 地址：(%2$s) 请求连接。是否添加新设备？</string>
@@ -44,7 +45,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s 想将 “%2$s” 文件夹共享给您</string>
     <string name="devices">设备</string>
     <string name="disconnected">连接已断开</string>
-    <string name="discovery">Discovery</string>
+    <string name="discovery">寻找</string>
     <string name="documentation">文档</string>
     <string name="download_rate">下载速度</string>
     <string name="downloaded">已下载</string>
@@ -124,14 +125,15 @@
     <string name="pause">暂停</string>
     <string name="paused">暂停中</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">请在进行重大更新前查看发布说明。</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">请在设置对话框中设置 GUI 验证用户及其密码。</string>
     <string name="please_wait">请稍候</string>
     <string name="preview">预览</string>
     <string name="preview_usage_report">预览使用报告</string>
     <string name="quick_guide_to_supported_patterns">支持的通配符的简单教程：</string>
     <string name="ram_utilization">内存使用量</string>
     <string name="random">随机顺序</string>
-    <string name="relayed_via">Relayed via</string>
-    <string name="relays">Relays</string>
+    <string name="relayed_via">中转经由</string>
+    <string name="relays">中转</string>
     <string name="release_notes">发布说明</string>
     <string name="remove">移除</string>
     <string name="rescan">重新扫描</string>
@@ -143,6 +145,7 @@
     <string name="resume">恢复</string>
     <string name="reused">复用</string>
     <string name="save">保存</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">扫描中</string>
     <string name="select_the_devices_to_share_this_folder_with">选择将本文件夹共享给哪些设备</string>
     <string name="select_the_folders_to_share_with_this_device">选择与该设备共享的文件夹。</string>
@@ -199,7 +202,9 @@
     <string name="the_path_cannot_be_blank">路径不能为空</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">传输速度限制为非负整数（0 表示不限制）</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">扫描间隔单位为秒，且不能为负数。</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">The Syncthing admin interface is configured to allow remote access without a password.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">系统将会自动重试，当错误被解决时，它们将会被同步。</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">This can easily give hackers access to read and change any files on your computer.</string>
     <string name="this_is_a_major_version_upgrade">这是一个重大版本更新。</string>
     <string name="trash_can_file_versioning">回收站式版本控制</string>
     <string name="unknown">未知</string>

@@ -34,6 +34,7 @@
     <string name="copied_from_original">Copied from original</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 the following Contributors:</string>
     <string name="cpu_utilization">CPU Utilisation</string>
+    <string name="danger">Danger!</string>
     <string name="days">days</string>
     <string name="delete">Delete</string>
     <string name="deleted">Deleted</string>
@@ -123,6 +124,7 @@
     <string name="pause">Pause</string>
     <string name="paused">Paused</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Please consult the release notes before performing a major upgrade.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Please set a GUI Authentication User and Password in the Settings dialogue.</string>
     <string name="please_wait">Please wait</string>
     <string name="preview">Preview</string>
     <string name="preview_usage_report">Preview Usage Report</string>
@@ -142,6 +144,7 @@
     <string name="resume">Resume</string>
     <string name="reused">Reused</string>
     <string name="save">Save</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">Scanning</string>
     <string name="select_the_devices_to_share_this_folder_with">Select the devices to share this folder with.</string>
     <string name="select_the_folders_to_share_with_this_device">Select the folders to share with this device.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">The path cannot be blank.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">The rate limit must be a non-negative number (0: no limit)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">The rescan interval must be a non-negative number of seconds.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">The Syncthing admin interface is configured to allow remote access without a password.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">They are retried automatically and will be synced when the error is resolved.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">This can easily give hackers access to read and change any files on your computer.</string>
     <string name="this_is_a_major_version_upgrade">This is a major version upgrade.</string>
     <string name="trash_can_file_versioning">Rubbish Bin File Versioning</string>
     <string name="unknown">Unknown</string>

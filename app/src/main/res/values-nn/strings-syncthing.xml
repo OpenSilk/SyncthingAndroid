@@ -34,6 +34,7 @@
     <string name="copied_from_original">Kopiert frå originalen</string>
     <string name="copyright_2015_the_following_contributors">Opphavsrett © 2015 og desse bidragsytarane:</string>
     <string name="cpu_utilization">CPU-utnytting</string>
+    <string name="danger">Danger!</string>
     <string name="days">dagar</string>
     <string name="delete">Slett</string>
     <string name="deleted">Sletta</string>
@@ -123,6 +124,7 @@
     <string name="pause">Stans</string>
     <string name="paused">Stansa</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Sjå \"release notes\" før ei hovudoppgradering vert utført.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Please set a GUI Authentication User and Password in the Settings dialog.</string>
     <string name="please_wait">Gjer vel og vent</string>
     <string name="preview">Førehandsvisning</string>
     <string name="preview_usage_report">Førehandsvis bruksrapporten</string>
@@ -142,6 +144,7 @@
     <string name="resume">Start</string>
     <string name="reused">Gjenbrukt</string>
     <string name="save">Lagre</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">Skannar</string>
     <string name="select_the_devices_to_share_this_folder_with">Vel einingane du vil dela denne mappa med.</string>
     <string name="select_the_folders_to_share_with_this_device">Vel mappene du vil dela med denne eininga.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Bana kan ikkje vera tom.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Hastigheitsgrensa må ver eit positivt tall (0: ingen grensa)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Talet på sekund i skanneintervallet kan ikkje vera negativt.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">The Syncthing admin interface is configured to allow remote access without a password.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Desse vil bli prøvd på nytt automatisk og vil bli synkronisert når feilen har blitt utbetra.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">This can easily give hackers access to read and change any files on your computer.</string>
     <string name="this_is_a_major_version_upgrade">Dette er ei hovudoppgradering</string>
     <string name="trash_can_file_versioning">Papirkorg filutgåvehandtering</string>
     <string name="unknown">Ukjent</string>

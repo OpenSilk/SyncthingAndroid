@@ -34,6 +34,7 @@
     <string name="copied_from_original">Скопировано с оригинала</string>
     <string name="copyright_2015_the_following_contributors">Все права защищены ©, 2015 участники:</string>
     <string name="cpu_utilization">Загрузка ЦПУ</string>
+    <string name="danger">Опасно!</string>
     <string name="days">Дней</string>
     <string name="delete">Удалить</string>
     <string name="deleted">Удалено</string>
@@ -123,6 +124,7 @@
     <string name="pause">Пауза</string>
     <string name="paused">Остановлено</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Перед проведением обновления основной версии ознакомтесь, пожалуйста, с Замечаниями к версии</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Установите имя пользователя и пароль для интерфейса в настройках</string>
     <string name="please_wait">Пожалуйста, подождите</string>
     <string name="preview">Предварительный просмотр</string>
     <string name="preview_usage_report">Посмотреть отчёт об использовании</string>
@@ -142,6 +144,7 @@
     <string name="resume">Возобновить</string>
     <string name="reused">Повторно использовано</string>
     <string name="save">Сохранить</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">Сканирование</string>
     <string name="select_the_devices_to_share_this_folder_with">Выберите устройства, для которых будет доступна эта папка.</string>
     <string name="select_the_folders_to_share_with_this_device">Выберите папку для предоставления доступа данному устройству</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Путь не может быть пустым.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Скорость должна быть неотрицательным числом (0: нет ограничения)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Интервал пересканирования должен быть неотрицательным количеством секунд.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">Административный интерфейс Syncthing настроен разрешать удаленный доступ без пароля.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Будут синхронизированы автоматически когда ошибка будет исправлена.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">Это может дать доступ хакерам для чтения и изменения любых файлов на вашем компьютере.</string>
     <string name="this_is_a_major_version_upgrade">Это обновление основной версии продукта.</string>
     <string name="trash_can_file_versioning">Использовать версионность для файлов в Корзине</string>
     <string name="unknown">Неизвестно</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--AUTO GENERATED RESOURCE DO NOT EDIT!!!!-->
 <resources>
-    <string name="a_negative_number_of_days_doesnt_make_sense">Від\'ємна кількість днів не має сенсу.</string>
+    <string name="a_negative_number_of_days_doesnt_make_sense">Від\'ємна кількість днів немає сенсу.</string>
     <string name="a_new_major_version_may_not_be_compatible_with_previous_versions">Нова мажорна версія може бути несумісною із попередніми версіями.</string>
     <string name="about">Про програму</string>
     <string name="actions">Дії</string>
@@ -34,6 +34,7 @@
     <string name="copied_from_original">Скопійовано з оригіналу</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 наступних контриб’юторів:</string>
     <string name="cpu_utilization">Навантаження CPU</string>
+    <string name="danger">Небезпечно!</string>
     <string name="days">днів</string>
     <string name="delete">Видалити</string>
     <string name="deleted">Видалене</string>
@@ -44,7 +45,7 @@
     <string name="device_wants_to_share_folder_folder">%1$s хоче поділитися директорією \"%2$s\".</string>
     <string name="devices">Пристрої</string>
     <string name="disconnected">З’єднання відсутнє</string>
-    <string name="discovery">Discovery</string>
+    <string name="discovery">Виявлення</string>
     <string name="documentation">Документація</string>
     <string name="download_rate">Швидкість завантаження</string>
     <string name="downloaded">Завантажено</string>
@@ -123,6 +124,7 @@
     <string name="pause">Пауза</string>
     <string name="paused">Призупинено</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Будь ласка перегляньте примітки до випуску перед мажорним оновленням. </string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Будь ласка, встановіть у налаштуваннях ім\'я користувача та пароль до графічного інтерфейсу.</string>
     <string name="please_wait">Будь ласка, зачекайте</string>
     <string name="preview">Попередній перегляд</string>
     <string name="preview_usage_report">Попередній перегляд статистичного звіту</string>
@@ -142,6 +144,7 @@
     <string name="resume">Продовжити</string>
     <string name="reused">Використано вдруге</string>
     <string name="save">Зберегти</string>
+    <string name="scan_time_remaining">Час до кінця сканування</string>
     <string name="scanning">Сканування</string>
     <string name="select_the_devices_to_share_this_folder_with">Оберіть пристрої, які матимуть доступ до цієї директорії.</string>
     <string name="select_the_folders_to_share_with_this_device">Оберіть директорії до яких матиме доступ цей пристрій.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Шлях не може бути порожнім.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Швидкість має бути додатнім числом.</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Інтервал повторного сканування повинен бути неід’ємною величиною.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">Інтерфейс адміністрування Syncthing налаштовано на дозвіл віддаленого доступу без пароля.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Вони будуть автоматично повторно синхронізовані, коли помилку буде усунено. </string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">Це легко може дати хакерам доступ до читання та зміни будь-яких файлів на вашому комп\'ютері.</string>
     <string name="this_is_a_major_version_upgrade">Це оновлення мажорної версії</string>
     <string name="trash_can_file_versioning">Версіонування файлів у кошику </string>
     <string name="unknown">Невідомо</string>

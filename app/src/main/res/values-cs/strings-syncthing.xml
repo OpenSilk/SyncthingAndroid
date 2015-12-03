@@ -34,6 +34,7 @@
     <string name="copied_from_original">Zkopírováno z originálu</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 následující přispěvatelé:</string>
     <string name="cpu_utilization">Využití CPU</string>
+    <string name="danger">Pozor!</string>
     <string name="days">dní</string>
     <string name="delete">Smazat</string>
     <string name="deleted">Smazáno</string>
@@ -123,6 +124,7 @@
     <string name="pause">Pozastavit</string>
     <string name="paused">Pozastaveno</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Před spuštěním důležité aktualizace si nejdříve přečtěte poznámky k vydání nové verze.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Zadejte prosím přihlašovací jméno a heslo pro GUI v dialogu nastavení.</string>
     <string name="please_wait">Chvíli strpení</string>
     <string name="preview">Náhled</string>
     <string name="preview_usage_report">Náhled záznamu o využítí</string>
@@ -142,6 +144,7 @@
     <string name="resume">Pokračovat</string>
     <string name="reused">Opakovaně použité</string>
     <string name="save">Uložit</string>
+    <string name="scan_time_remaining">Zbývající čas skenování</string>
     <string name="scanning">Skenování</string>
     <string name="select_the_devices_to_share_this_folder_with">Vybrat přístroje, se kterými sdílet tento adresář.</string>
     <string name="select_the_folders_to_share_with_this_device">Vybrat adresáře sdílené s tímto přístrojem.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Cesta nesmí být prázdná.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Limit rychlosti musí být nezáporné číslo (0: bez limitu)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Interval opakování skenování musí být pozitivní číslo.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">V nastavení aplikace Syncthing je povoleno vzdálené připojení k administrátorskému rozhraní bez zadání hesla.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Nové pokusy o synchronizaci budou probíhat automaticky a položky budou synchronizovány jakmile bude chyba odstraněna.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">To může útočníkům jednoduše povolit čtení a úpravy souborů na vašem přístroji. </string>
     <string name="this_is_a_major_version_upgrade">Toto je důležitá aktualizace.</string>
     <string name="trash_can_file_versioning">Verzování souborů v koši</string>
     <string name="unknown">Neznámý</string>

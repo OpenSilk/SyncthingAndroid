@@ -14,7 +14,7 @@
     <string name="advanced">Zaawansowane</string>
     <string name="advanced_configuration">Konfiguracja zaawansowana</string>
     <string name="all_data">Wszystkie dane</string>
-    <string name="allow_anonymous_usage_reporting">Zezwalaj na anonimowe statystyki użycia</string>
+    <string name="allow_anonymous_usage_reporting">Zezwalaj na anonimowe statystyki użycia?</string>
     <string name="alphabetic">Alfabetycznie</string>
     <string name="an_external_command_handles_the_versioning_it_has_to_remove_the_file_from_the_synced_folder">Zewnętrzna komenda obsługuje kontrolę wersji. Musi ona usunąć ten plik z synchronizowanego folderu.</string>
     <string name="anonymous_usage_reporting">Anonimowe statystyki użycia</string>
@@ -34,6 +34,7 @@
     <string name="copied_from_original">Skopiowane z oryginału</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015: </string>
     <string name="cpu_utilization">Użycie CPU</string>
+    <string name="danger">Danger!</string>
     <string name="days">dni</string>
     <string name="delete">Usuń</string>
     <string name="deleted">Usunięto</string>
@@ -55,7 +56,7 @@
     <string name="editing">Edytowanie</string>
     <string name="enable_upnp">Włącz UPnP</string>
     <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Wpisz oddzielone przecinkiem adresy (\"tcp://ip:port\", \"tcp://host:port\") lub \"dynamic\" by przeprowadzić automatyczne odnalezienie adresu.</string>
-    <string name="enter_ignore_patterns_one_per_line">Wprowadz wzorce ignorowania, jeden w każdej linii.</string>
+    <string name="enter_ignore_patterns_one_per_line">Wprowadź wzorce ignorowania, jeden w każdej linii.</string>
     <string name="error">Błąd</string>
     <string name="external_file_versioning">Zewnętrzne wersjonowanie pliku</string>
     <string name="failed_items">Niepowodzenia</string>
@@ -124,6 +125,7 @@ Znak tyldy (~) może zostać użyty jako skrót do</string>
     <string name="pause">Zatrzymaj</string>
     <string name="paused">Zatrzymany</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Zaleca się przeanalizowanie \"release notes\" przed przeprowadzeniem znaczącej aktualizacji.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Please set a GUI Authentication User and Password in the Settings dialog.</string>
     <string name="please_wait">Proszę czekać</string>
     <string name="preview">Podgląd</string>
     <string name="preview_usage_report">Podgląd raportu użycia.</string>
@@ -143,6 +145,7 @@ Znak tyldy (~) może zostać użyty jako skrót do</string>
     <string name="resume">Wznów</string>
     <string name="reused">Ponownie użyte</string>
     <string name="save">Zapisz</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">Skanowanie</string>
     <string name="select_the_devices_to_share_this_folder_with">Wybierz urządzenie, któremu udostępnić folder.</string>
     <string name="select_the_folders_to_share_with_this_device">Wybierz foldery do współdzielenia z tym urządzeniem.</string>
@@ -200,7 +203,9 @@ Odstępy i myślniki są opcjonalne (ignorowane)</string>
     <string name="the_path_cannot_be_blank">Ścieżka nie może być pusta.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Ograniczenie prędkości powinno być nieujemną liczbą całkowitą (0: brak ograniczeń)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Interwał skanowania musi być niezerową liczbą sekund.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">The Syncthing admin interface is configured to allow remote access without a password.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Ponowne próby zachodzą automatycznie, synchronizacja nastąpi po usunięciu usterki.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">This can easily give hackers access to read and change any files on your computer.</string>
     <string name="this_is_a_major_version_upgrade">To jest ważna aktualizacja</string>
     <string name="trash_can_file_versioning">Kontrola werjsi plików w koszu</string>
     <string name="unknown">Nieznany</string>

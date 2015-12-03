@@ -34,6 +34,7 @@
     <string name="copied_from_original">Nukopijuota iš originalo</string>
     <string name="copyright_2015_the_following_contributors">Visos teisės saugomos © 2015 šių bendraautorių:</string>
     <string name="cpu_utilization">Procesoriaus panaudojimas</string>
+    <string name="danger">Pavojus!</string>
     <string name="days">dienos</string>
     <string name="delete">Trinti</string>
     <string name="deleted">Ištrinta</string>
@@ -54,7 +55,7 @@
     <string name="edit_folder">Keisti aplanką</string>
     <string name="editing">Redagavimas</string>
     <string name="enable_upnp">Įjungti UPnP</string>
-    <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Enter comma separated  (\"tcp://ip:port\", \"tcp://host:port\") addresses or \"dynamic\" to perform automatic discovery of the address.</string>
+    <string name="enter_comma_separated_tcpipport_tcphostport_addresses_or_dynamic_to_perform_automatic_discovery_of_the_address">Įveskite kableliais atskirtus (\"tcp://ip:prievadas\", \"tcp://serveris:prievadas\") adresus arba \"dynamic\", kad atliktumėte automatinį adresų aptikimą.</string>
     <string name="enter_ignore_patterns_one_per_line">Suveskite nepaisomus šablonus, kiekvieną naujoje eilutėje.</string>
     <string name="error">Klaida</string>
     <string name="external_file_versioning">Išorinis versijų valdymas</string>
@@ -85,7 +86,7 @@
     <string name="ignore_patterns">Nepaisyti šablonų</string>
     <string name="ignore_permissions">Nepaisyti failų prieigos leidimų</string>
     <string name="incoming_rate_limit_kibs">Įeinančio srauto maksimalus greitis (KiB/s)</string>
-    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Incorrect configuration may damage your folder contents and render Syncthing inoperable.</string>
+    <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Neteisinga konfigūracija gali pažeisti jūsų aplankų turinį ir padaryti Syncthing neoperuotina.</string>
     <string name="introducer">Supažindintojas</string>
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Apversti sąlygas (pvz.: nenustoti naudoti)</string>
     <string name="items">įrašai</string>
@@ -123,6 +124,7 @@
     <string name="pause">Sustabdyti</string>
     <string name="paused">Sustabdyta</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Peržvelkite laidos informaciją prieš atlikdami stambų atnaujinimą.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Prašome nustatymų dialoge nustatyti valdymo skydelio vartotojo vardą ir slaptažodį.</string>
     <string name="please_wait">Prašome palaukti</string>
     <string name="preview">Peržiūra</string>
     <string name="preview_usage_report">Vartojimo statistikos peržiūra</string>
@@ -142,6 +144,7 @@
     <string name="resume">Pratęsti</string>
     <string name="reused">Pakartotinas</string>
     <string name="save">Išsaugoti</string>
+    <string name="scan_time_remaining">Likęs nuskaitymo laikas</string>
     <string name="scanning">Skenuojama</string>
     <string name="select_the_devices_to_share_this_folder_with">Pasirinkite įrenginius, su kuriais dalinsitės šį aplanką.</string>
     <string name="select_the_folders_to_share_with_this_device">Pasirinkite aplankus kuriais norite dalintis su šiuo įrenginiu.</string>
@@ -190,7 +193,7 @@
     <string name="the_following_items_could_not_be_synchronized">Nepavyko parsiųsti šių failų</string>
     <string name="the_maximum_age_must_be_a_number_and_cannot_be_blank">Maksimalus amžius  turi būti skaitmuo ir negali būti tuščias laukelis.</string>
     <string name="the_maximum_time_to_keep_a_version_in_days_set_to_0_to_keep_versions_forever">Maksimalus laikas kurį bus saugojama versija (dienomis, nustatykite 0 norėdami saugoti amžinai).</string>
-    <string name="the_minimum_free_disk_space_percentage_must_be_a_nonnegative_number_between_0_and_100_inclusive">The minimum free disk space percentage must be a non-negative number between 0 and 100 (inclusive).</string>
+    <string name="the_minimum_free_disk_space_percentage_must_be_a_nonnegative_number_between_0_and_100_inclusive">Mažiausia laisvos disko vietos procentinė reikšmė privalo būti neneigiamas skaičius tarp 0 ir 100 (imtinai).</string>
     <string name="the_number_of_days_must_be_a_number_and_cannot_be_blank">Dienų skaičius turi būti teigiamas skaičius.</string>
     <string name="the_number_of_days_to_keep_files_in_the_trash_can_zero_means_forever">Kiek dienų laikyti failus šiukšliadėžėje. Nulis reiškia amžinai.</string>
     <string name="the_number_of_old_versions_to_keep_per_file">Kiek failo versijų saugoti.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Kelias negali būti tuščias.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Srauto maksimalus greitis privalo būti ne neigiamas skaičius (0: nėra apribojimo)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Nuskaitymo dažnis negali būti neigiamas skaičius.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">Syncthing administratoriaus sąsaja yra sukonfigūruota taip, kad be slaptažodžio leistų nuotolinę prieigą.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Failus bus automatiškai badoma parsiųsti dar kartą kai išspręsite klaidas</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">Tai gali suteikti programišiams lengvą prieigą skaityti ir keisti bet kokius failus jūsų kompiuteryje.</string>
     <string name="this_is_a_major_version_upgrade">Tai yra stambus atnaujinimas.</string>
     <string name="trash_can_file_versioning">Šiukšliadėžės versijų valdymas</string>
     <string name="unknown">Nežinoma</string>

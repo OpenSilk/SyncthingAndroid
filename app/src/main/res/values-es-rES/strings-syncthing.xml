@@ -34,6 +34,7 @@
     <string name="copied_from_original">Copiado del original</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 los siguientes Colaboradores:</string>
     <string name="cpu_utilization">Uso de CPU</string>
+    <string name="danger">Danger!</string>
     <string name="days">días</string>
     <string name="delete">Borrar</string>
     <string name="deleted">Borrado</string>
@@ -123,6 +124,7 @@
     <string name="pause">Pausar</string>
     <string name="paused">Pausado</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Por favor, consultar las notas de la versión antes de realizar una actualización importante.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Please set a GUI Authentication User and Password in the Settings dialog.</string>
     <string name="please_wait">Por favor, espere</string>
     <string name="preview">Vista previa</string>
     <string name="preview_usage_report">Informe de uso de vista previa</string>
@@ -142,6 +144,7 @@
     <string name="resume">Continuar</string>
     <string name="reused">Reutilizado</string>
     <string name="save">Guardar</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">Rastreando</string>
     <string name="select_the_devices_to_share_this_folder_with">Selecciona los dispositivos con los que compartir esta carpeta.</string>
     <string name="select_the_folders_to_share_with_this_device">Selecciona las carpetas para compartir con este dispositivo.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">La ruta no puede estar vacía.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">El límite de velocidad debe ser un número no negativo (0: sin límite)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">El intervalo de actualización debe ser un número positivo de segundos.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">The Syncthing admin interface is configured to allow remote access without a password.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Se reintentarán de forma automática y se sincronizarán cuando se resuelva el error.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">This can easily give hackers access to read and change any files on your computer.</string>
     <string name="this_is_a_major_version_upgrade">Hay una actualización importante.</string>
     <string name="trash_can_file_versioning">Versionado de archivos de la papelera</string>
     <string name="unknown">Desconocido</string>

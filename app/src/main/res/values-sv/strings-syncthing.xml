@@ -34,6 +34,7 @@
     <string name="copied_from_original">Oförändrat</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 följande medverkande:</string>
     <string name="cpu_utilization">CPU-användning</string>
+    <string name="danger">Danger!</string>
     <string name="days">dagar</string>
     <string name="delete">Radera</string>
     <string name="deleted">Borttaget</string>
@@ -123,6 +124,7 @@
     <string name="pause">Paus</string>
     <string name="paused">Pausad</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Läs igenom versionsnyheterna innan den stora uppgraderingen.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Please set a GUI Authentication User and Password in the Settings dialog.</string>
     <string name="please_wait">Var god vänta</string>
     <string name="preview">Förhandsgranska</string>
     <string name="preview_usage_report">Förhandsgranska statistik</string>
@@ -142,6 +144,7 @@
     <string name="resume">Återuppta</string>
     <string name="reused">Återanvänt</string>
     <string name="save">Spara</string>
+    <string name="scan_time_remaining">Scan Time Remaining</string>
     <string name="scanning">Uppdaterar</string>
     <string name="select_the_devices_to_share_this_folder_with">Ange enheterna att dela den här katalogen med.</string>
     <string name="select_the_folders_to_share_with_this_device">Välj kataloger att dela med den här enheten.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Ange en sökväg</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Frekvensgränsen måste vara ett icke-negativt tal (0: ingen gräns)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Förnyelseintervallet måste vara ett positivt antal sekunder</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">The Syncthing admin interface is configured to allow remote access without a password.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">De omprövas automatiskt och kommer att synkroniseras när felet är löst.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">This can easily give hackers access to read and change any files on your computer.</string>
     <string name="this_is_a_major_version_upgrade">Det här är en stor uppgradering.</string>
     <string name="trash_can_file_versioning">Versionshantering på filer i papperskorgen</string>
     <string name="unknown">Okänt</string>

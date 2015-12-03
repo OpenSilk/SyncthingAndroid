@@ -34,6 +34,7 @@
     <string name="copied_from_original">Копиран от оригинала</string>
     <string name="copyright_2015_the_following_contributors">Всички правата запазени © 2015 Сътрудници:</string>
     <string name="cpu_utilization">Процесор в употреба</string>
+    <string name="danger">Опасност!</string>
     <string name="days">дни</string>
     <string name="delete">Изтрий</string>
     <string name="deleted">Изтрито</string>
@@ -84,7 +85,7 @@
     <string name="ignore">Игнорирай</string>
     <string name="ignore_patterns">Шаблони за игнориране</string>
     <string name="ignore_permissions">Игнорирай правата за достъп</string>
-    <string name="incoming_rate_limit_kibs">Входящ лимит на скоростта (KiB/s)</string>
+    <string name="incoming_rate_limit_kibs">Лимит на скоростта за сваляне (KiB/s)</string>
     <string name="incorrect_configuration_may_damage_your_folder_contents_and_render_syncthing_inoperable">Неправилни настройки могат да повредят файловете и да попречат на синхронизирането.</string>
     <string name="introducer">Introducer</string>
     <string name="inversion_of_the_given_condition_ie_do_not_exclude">Обратното на даденото условие (пр. не изключвай)</string>
@@ -116,13 +117,14 @@
     <string name="options">Настройки</string>
     <string name="out_of_sync">Несинхронизирано</string>
     <string name="out_of_sync_items">Несинхронизирани елементи</string>
-    <string name="outgoing_rate_limit_kibs">Лимит на изходящата скорост (KiB/s)</string>
+    <string name="outgoing_rate_limit_kibs">Лимит на скорост за качване (KiB/s)</string>
     <string name="override_changes">Наложи локалните промени</string>
     <string name="path_to_the_folder_on_the_local_computer_will_be_created_if_it_does_not_exist_the_tilde_character_can_be_used_as_a_shortcut_for">Път до папката на това устройство. Ако не съществува ще бъде създадена. Символът тилда (~) може да бъде използван като заместител на</string>
     <string name="path_where_versions_should_be_stored_leave_empty_for_the_default_stversions_folder_in_the_folder">Пътят, където версиите да бъдат складирани(остави празно за папката .stversions).</string>
     <string name="pause">Пауза</string>
     <string name="paused">На пауза</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Моля прочети бележките по обновяването преди да започнеш.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">Моля задайте потребителско име и парола за потребителския интерфейс в секцията Настройки.</string>
     <string name="please_wait">Моля изчакай</string>
     <string name="preview">Преглед</string>
     <string name="preview_usage_report">Разгледай доклада за използване</string>
@@ -142,6 +144,7 @@
     <string name="resume">Пусни</string>
     <string name="reused">Повторно използван</string>
     <string name="save">Запази</string>
+    <string name="scan_time_remaining">Оставащо време за сканиране</string>
     <string name="scanning">Сканиране</string>
     <string name="select_the_devices_to_share_this_folder_with">Изберете устройствата, с които да споделите папката.</string>
     <string name="select_the_folders_to_share_with_this_device">Изберете папките за споделяне с това устройство.</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Пътят не може да бъде празен.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">Ограничението на скоростта трябва да бъде положително число (0: неограничено)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">Интервала на сканиране трябва да бъде не отрицателно число в секунди.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">Администраторския панел на Syncthing е настроен да приема дистанционни връзки без парола.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Ще бъдат спрени и автоматично синхронизирани, когато грешката бъде оправена.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">Това дава лесен достъп на хакери да разглеждат и променят всякакви файлове на компютъра Ви.</string>
     <string name="this_is_a_major_version_upgrade">Това е нова основна версия.</string>
     <string name="trash_can_file_versioning">Само на файловете в кошчето</string>
     <string name="unknown">Неясно</string>

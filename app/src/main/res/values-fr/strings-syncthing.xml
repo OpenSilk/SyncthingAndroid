@@ -34,6 +34,7 @@
     <string name="copied_from_original">Copié depuis l\'original</string>
     <string name="copyright_2015_the_following_contributors">Copyright © 2015 Les contributeurs suivants:</string>
     <string name="cpu_utilization">Utilisation du CPU</string>
+    <string name="danger">Attention !</string>
     <string name="days">Jours</string>
     <string name="delete">Supprimer</string>
     <string name="deleted">Supprimé</string>
@@ -123,6 +124,7 @@
     <string name="pause">Pause</string>
     <string name="paused">En pause</string>
     <string name="please_consult_the_release_notes_before_performing_a_major_upgrade">Veuillez consulter les notes de version avant de réaliser une mise à jour majeure.</string>
+    <string name="please_set_a_gui_authentication_user_and_password_in_the_settings_dialog">SVP, mettez un nom d\'utilisateur et un mot de passe dans la fenêtre de paramétrage.</string>
     <string name="please_wait">Merci de patienter</string>
     <string name="preview">Aperçu</string>
     <string name="preview_usage_report">Aperçu du rapport de statistiques d\'utilisation</string>
@@ -133,16 +135,17 @@
     <string name="relays">Relais</string>
     <string name="release_notes">Notes de version</string>
     <string name="remove">Enlever</string>
-    <string name="rescan">Rescanner</string>
+    <string name="rescan">Réanalyse</string>
     <string name="rescan_all">Réanalyser tout</string>
-    <string name="rescan_interval">Intervalle de scan</string>
+    <string name="rescan_interval">Intervalle d\'analyse</string>
     <string name="restart">Redémarrer</string>
     <string name="restart_needed">Redémarrage nécessaire</string>
     <string name="restarting">Redémarrage</string>
     <string name="resume">Résumer</string>
     <string name="reused">Réutilisé</string>
     <string name="save">Sauver</string>
-    <string name="scanning">En cours de scan</string>
+    <string name="scan_time_remaining">Intervalle entre chaque analyse</string>
+    <string name="scanning">En cours d\'analyse</string>
     <string name="select_the_devices_to_share_this_folder_with">Sélectionner les appareils avec qui partager ce dossier.</string>
     <string name="select_the_folders_to_share_with_this_device">Sélectionner les dossiers à partager avec cet appareil.</string>
     <string name="settings">Configuration</string>
@@ -198,7 +201,9 @@
     <string name="the_path_cannot_be_blank">Le chemin ne peut pas être vide.</string>
     <string name="the_rate_limit_must_be_a_nonnegative_number_0_no_limit">La limite de débit ne doit pas être négative (0: Aucune limite)</string>
     <string name="the_rescan_interval_must_be_a_nonnegative_number_of_seconds">L\'intervalle d\'analyse ne doit pas être un nombre négatif de secondes.</string>
+    <string name="the_syncthing_admin_interface_is_configured_to_allow_remote_access_without_a_password">L\'interface d\'administration de Syncthing est paramétrée pour autoriser les accès à distance sans mot de passe.</string>
     <string name="they_are_retried_automatically_and_will_be_synced_when_the_error_is_resolved">Ils seront réessayés automatiquement et synchronisés quand l\'erreur sera résolue.</string>
+    <string name="this_can_easily_give_hackers_access_to_read_and_change_any_files_on_your_computer">Cela permet facilement aux pirates de lire et modifier n\'importe quel fichier de votre machine.</string>
     <string name="this_is_a_major_version_upgrade">Ceci est une mise à jour majeure.</string>
     <string name="trash_can_file_versioning">Gestion des versions de fichier style poubelle.</string>
     <string name="unknown">Inconnu</string>
